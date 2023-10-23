@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TMI - 전통시장 홍보 플랫폼</title>
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../static/assets/css/bootstrap.css">
+    <link rel="stylesheet" href="../../static/assets/css/font.css">
+    <link rel="stylesheet" href="../../static/assets/vendors/iconly/bold.css">
+
+    <link rel="stylesheet" href="../../static/assets/vendors/perfect-scrollbar/perfect-scrollbar.css">
+    <link rel="stylesheet" href="../../static/assets/vendors/bootstrap-icons/bootstrap-icons.css">
+    <link rel="stylesheet" href="../../static/assets/css/app.css">
+    <link rel="shortcut icon" href="../static/assets/images/favicon.svg" type="image/x-icon">
+</head>
+
+<body>
+    <div id="app">
+        <div id="sidebar" class="active">
+            <div class="sidebar-wrapper active">
+                <div class="sidebar-header">
+                    <div class="d-flex justify-content-between">
+                        <div class="logo">
+                            <a href="traderIndex.html"><img src="../../static/assets/images/logo/aengmusae.jpeg" style="width: 200px; height: 200px" alt="Logo" srcset=""></a>
+                        </div>
+                        <div class="toggler">
+                            <a href="#" class="sidebar-hide d-xl-none d-block"><i class="bi bi-x bi-middle"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="sidebar-menu">
+                    <ul class="menu">
+                        <li class="sidebar-title">MENU</li>
+
+                        <li class="sidebar-item active ">
+                            <a href="traderIndex.html" class='sidebar-link'>
+                                <i class="bi bi-grid-fill"></i>
+                                <span>한눈에 보기</span>
+                            </a>
+                        </li>
+
+                        <li class="sidebar-item  has-sub">
+                            <a href="#" class='sidebar-link'>
+                                <i class="bi bi-stack"></i>
+                                <span>내 상점</span>
+                            </a>
+                            <ul class="submenu ">
+                                <li class="submenu-item ">
+                                    <a href="shopInfo.html">상점 정보</a>
+                                </li>
+                                <li class="submenu-item ">
+                                    <a href="traderInfo.html">상인 정보</a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <li class="sidebar-item  has-sub">
+                            <a href="#" class='sidebar-link'>
+                                <i class="bi bi-collection-fill"></i>
+                                <span>상품관리</span>
+                            </a>
+                            <ul class="submenu ">
+                                <li class="submenu-item ">
+                                    <a href="goodsMng.html">상품 관리</a>
+                                </li>
+                                <li class="submenu-item ">
+                                    <a href="reviewMng.html">리뷰 관리</a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <li class="sidebar-item  has-sub">
+                            <a href="#" class='sidebar-link'>
+                                <i class="bi bi-grid-1x2-fill"></i>
+                                <span>예약관리</span>
+                            </a>
+                            <ul class="submenu ">
+                                <li class="submenu-item ">
+                                    <a href="reservMng.html">예약 관리</a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <li class="sidebar-item  ">
+                            <a href="#" class='sidebar-link'>
+                                <i class="bi bi-file-earmark-medical-fill"></i>
+                                <span>채팅</span>
+                            </a>
+                        </li>
+
+
+                        <li class="sidebar-item  ">
+                            <a href="customerService.html" class='sidebar-link'>
+                                <i class="bi bi-grid-1x2-fill"></i>
+                                <span>고객센터</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <button class="sidebar-toggler btn x"><i data-feather="x"></i></button>                  
+            </div>
+        </div>
+        <div id="main">
+            <header class="mb-3">
+                <a href="#" class="burger-btn d-block d-xl-none">
+                    <i class="bi bi-justify fs-3"></i>
+                </a>
+            </header>
+
+            <div class="page-heading">
+                <h3>OO님의 상점</h3>
+            </div>
+            <div class="page-content">
+                <section class="row">
+                    <div class="col-12 col-lg-9">
+                        <div class="row">
+                            <div class="col-6 col-lg-3 col-md-6">
+                                <div class="card">
+                                    <div class="card-body px-3 py-4-5">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="stats-icon purple">
+                                                    <i class="iconly-boldShow"></i>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-8">
+                                                <h6 class="text-muted font-semibold">구매</h6>
+                                                <h6 class="font-extrabold mb-0">112.000</h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-lg-3 col-md-6">
+                                <div class="card">
+                                    <div class="card-body px-3 py-4-5">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="stats-icon blue">
+                                                    <i class="iconly-boldProfile"></i>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-8">
+                                                <h6 class="text-muted font-semibold">예약현황</h6>
+                                                <h6 class="font-extrabold mb-0">183.000</h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-lg-3 col-md-6">
+                                <div class="card">
+                                    <div class="card-body px-3 py-4-5">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="stats-icon green">
+                                                    <i class="iconly-boldAdd-User"></i>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-8">
+                                                <h6 class="text-muted font-semibold">신규예약</h6>
+                                                <h6 class="font-extrabold mb-0">80.000</h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-lg-3 col-md-6">
+                                <div class="card">
+                                    <div class="card-body px-3 py-4-5">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="stats-icon red">
+                                                    <i class="iconly-boldBookmark"></i>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-8">
+                                                <h6 class="text-muted font-semibold">리뷰</h6>
+                                                <h6 class="font-extrabold mb-0">112</h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h4>판매량</h4>
+                                    </div>
+                                    <div class="card-body">
+                                        <div id="chart-profile-visit"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-3">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>최근 예약자</h4>
+                            </div>
+                            <div class="card-content pb-4">
+                                <div class="recent-message d-flex px-4 py-3">
+                                    <div class="goodsMng goodsMng-lg">
+                                        <img src="../../static/assets/images/faces/4.jpg">
+                                    </div>
+                                    <div class="name ms-4">
+                                        <h5 class="mb-1">준상초이</h5>
+                                        <h6 class="text-muted mb-0">100,000원</h6>
+                                    </div>
+                                </div>
+                                <div class="recent-message d-flex px-4 py-3">
+                                    <div class="goodsMng goodsMng-lg">
+                                        <img src="../../static/assets/images/faces/5.jpg">
+                                    </div>
+                                    <div class="name ms-4">
+                                        <h5 class="mb-1">별의 알렉산더</h5>
+                                        <h6 class="text-muted mb-0">50,000원</h6>
+                                    </div>
+                                </div>
+                                <div class="recent-message d-flex px-4 py-3">
+                                    <div class="goodsMng goodsMng-lg">
+                                        <img src="../../static/assets/images/faces/1.jpg">
+                                    </div>
+                                    <div class="name ms-4">
+                                        <h5 class="mb-1">과일귀신</h5>
+                                        <h6 class="text-muted mb-0">24000원</h6>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <footer>
+                <div class="footer clearfix mb-0 text-muted">
+                    <div class="float-start">
+                        <p>2021 &copy; Mazer</p>
+                    </div>
+                    <div class="float-end">
+                        <p>Crafted with <span class="text-danger"><i class="bi bi-heart"></i></span> by <a
+                                href="http://ahmadsaugi.com">A. Saugi</a></p>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+    <script src="../../static/assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+    <script src="../../static/assets/js/bootstrap.bundle.min.js"></script>
+
+    <script src="../../static/assets/vendors/apexcharts/apexcharts.js"></script>
+    <script src="../../static/assets/js/pages/dashboard.js"></script>
+
+    <script src="../../static/assets/js/main.js"></script>
+</body>
+
+</html>
