@@ -8,19 +8,66 @@
 
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../../static/assets/css/bootstrap.css">
-    <link rel="stylesheet" href="../../static/assets/css/font.css">
-    <link rel="stylesheet" href="../../static/assets/vendors/perfect-scrollbar/perfect-scrollbar.css">
-    <link rel="stylesheet" href="../../static/assets/vendors/bootstrap-icons/bootstrap-icons.css">
-    <link rel="stylesheet" href="../../static/assets/css/app.css">
+    <link rel="stylesheet" href="/assets/css/bootstrap.css">
+    <link rel="stylesheet" href="/assets/css/font.css">
+    <link rel="stylesheet" href="/assets/vendors/perfect-scrollbar/perfect-scrollbar.css">
+    <link rel="stylesheet" href="/assets/vendors/bootstrap-icons/bootstrap-icons.css">
+    <link rel="stylesheet" href="/assets/css/app.css">
     <link rel="shortcut icon" href="../static/assets/images/favicon.svg" type="image/x-icon">
        <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/index.global.min.js'></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             var calendarEl = document.getElementById('calendar');
             var calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: 'dayGridMonth',
+                timeZone: 'UTC',
                 locale: 'ko',
+                initialView: 'dayGridMonth', // 홈페이지에서 다른 형태의 view를 확인할  수 있다.
+                events: [ // 일정 데이터 추가 , DB의 event를 가져오려면 JSON 형식으로 변환해 events에 넣어주면된다.
+                    {
+                        title: '일정',
+                        start: '2023-10-23',
+                        end: '2023-10-27'
+                    }
+                ],
+                headerToolbar: {
+                    center: 'addEventButton'
+                },
+                customButtons: {
+                    addEventButton: { // 추가한 버튼 설정
+                        text: "일정 추가", // 버튼 내용
+                        click: function() { // 버튼 클릭 시 이벤트 추가
+                            $("#calendarModal").modal("show"); // modal 나타내기
+
+                            $("#addCalendar").on("click", function() { // modal의 추가 버튼 클릭 시
+                                var content = $("#calendar_content").val();
+                                var date = $("#calendar_date").val();
+                                var price = $("#calendar_price").val();
+                                var customer = $("#calendar_customer").val();
+
+                                //내용 입력 여부 확인
+                                if (content == null || content == "") {
+                                    alert("내용을 입력하세요.");
+                                } else if (new Date(date) == null || new Date(date) == "") { // date 타입으로 변경 후 확인
+                                    alert("날짜를 입력하세요.");
+                                } else if (price == null || price == "") {
+                                    alert("가격을 입력하세요.");
+                                } else if (customer == null || customer == "") {
+                                    alert("예약자를 입력하세요.");
+                                } else { // 정상적인 입력 시
+                                    var obj = {
+                                        "title": content,
+                                        "date": date,
+                                        "price": price,
+                                        "customer" : customer
+                                    } //전송할 객체 생성
+
+                                    console.log(obj); //서버로 해당 객체를 전달해서 DB 연동 가능
+                                }
+                            });
+                        }
+                    }
+                },
+                editable: true // false로 변경 시 draggable 작동 x
             });
             calendar.render();
         });
@@ -28,112 +75,142 @@
 </head>
 
 <body>
-    <div id="app">
-        <div id="sidebar" class="active">
-            <div class="sidebar-wrapper active">
-                <div class="sidebar-header">
-                    <div class="d-flex justify-content-between">
-                        <div class="logo">
-                            <a href="traderIndex.html"><img src="../../static/assets/images/logo/logo.png" alt="Logo" srcset=""></a>
-                        </div>
-                        <div class="toggler">
-                            <a href="#" class="sidebar-hide d-xl-none d-block"><i class="bi bi-x bi-middle"></i></a>
-                        </div>
+<div id="app">
+    <div id="sidebar" class="active">
+        <div class="sidebar-wrapper active">
+            <div class="sidebar-header">
+                <div class="d-flex justify-content-between">
+                    <div class="logo">
+                        <a href="traderIndex.html"><img src="../../static/assets/images/logo/logo.png" alt="Logo" srcset=""></a>
+                    </div>
+                    <div class="toggler">
+                        <a href="#" class="sidebar-hide d-xl-none d-block"><i class="bi bi-x bi-middle"></i></a>
                     </div>
                 </div>
-                <div class="sidebar-menu">
-                    <ul class="menu">
-                        <li class="sidebar-title">MENU</li>
-
-                        <li class="sidebar-item active ">
-                            <a href="traderIndex.html" class='sidebar-link'>
-                                <i class="bi bi-grid-fill"></i>
-                                <span>한눈에 보기</span>
-                            </a>
-                        </li>
-
-                        <li class="sidebar-item  has-sub">
-                            <a href="#" class='sidebar-link'>
-                                <i class="bi bi-stack"></i>
-                                <span>내 상점</span>
-                            </a>
-                            <ul class="submenu ">
-                                <li class="submenu-item ">
-                                    <a href="shopInfo.html">상점 정보</a>
-                                </li>
-                                <li class="submenu-item ">
-                                    <a href="traderInfo.html">상인 정보</a>
-                                </li>
-                            </ul>
-                        </li>
-
-                        <li class="sidebar-item  has-sub">
-                            <a href="#" class='sidebar-link'>
-                                <i class="bi bi-collection-fill"></i>
-                                <span>상품관리</span>
-                            </a>
-                            <ul class="submenu ">
-                                <li class="submenu-item ">
-                                    <a href="goodsMng.html">상품 관리</a>
-                                </li>
-                                <li class="submenu-item ">
-                                    <a href="reviewMng.html">리뷰 관리</a>
-                                </li>
-                            </ul>
-                        </li>
-
-                        <li class="sidebar-item  has-sub">
-                            <a href="reservMng.html" class='sidebar-link'>
-                                <i class="bi bi-grid-1x2-fill"></i>
-                                <span>예약관리</span>
-                            </a>
-                        </li>
-
-                        <li class="sidebar-item  ">
-                            <a href="chat.html" class='sidebar-link'>
-                                <i class="bi bi-file-earmark-medical-fill"></i>
-                                <span>채팅</span>
-                            </a>
-                        </li>
-
-
-                        <li class="sidebar-item  ">
-                            <a href="customerService.html" class='sidebar-link'>
-                                <i class="bi bi-grid-1x2-fill"></i>
-                                <span>고객센터</span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-                <button class="sidebar-toggler btn x"><i data-feather="x"></i></button>                  
             </div>
-        </div>
-        <div id="main">
-            <header class="mb-3">
-                <a href="#" class="burger-btn d-block d-xl-none">
-                    <i class="bi bi-justify fs-3"></i>
-                </a>
-            </header>
+            <div class="sidebar-menu">
+                <ul class="menu">
+                    <li class="sidebar-title">MENU</li>
 
-         <div id='calendar'></div>
-          
-            <footer>
-                <div class="footer clearfix mb-0 text-muted">
-                    <div class="float-start">
-                        <p>2021 &copy; Mazer</p>
-                    </div>
-                    <div class="float-end">
-                        <p>Crafted with <span class="text-danger"><i class="bi bi-heart"></i></span> by <a
-                                href="http://ahmadsaugi.com">A. Saugi</a></p>
-                    </div>
-                </div>
-            </footer>
+                    <li class="sidebar-item active ">
+                        <a href="traderIndex.html" class='sidebar-link'>
+                            <i class="bi bi-grid-fill"></i>
+                            <span>한눈에 보기</span>
+                        </a>
+                    </li>
+
+                    <li class="sidebar-item  has-sub">
+                        <a href="#" class='sidebar-link'>
+                            <i class="bi bi-stack"></i>
+                            <span>내 상점</span>
+                        </a>
+                        <ul class="submenu ">
+                            <li class="submenu-item ">
+                                <a href="shopInfo.html">상점 정보</a>
+                            </li>
+                            <li class="submenu-item ">
+                                <a href="traderInfo.html">상인 정보</a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li class="sidebar-item  has-sub">
+                        <a href="#" class='sidebar-link'>
+                            <i class="bi bi-collection-fill"></i>
+                            <span>상품관리</span>
+                        </a>
+                        <ul class="submenu ">
+                            <li class="submenu-item ">
+                                <a href="goodsMng.html">상품 관리</a>
+                            </li>
+                            <li class="submenu-item ">
+                                <a href="reviewMng.html">리뷰 관리</a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li class="sidebar-item  has-sub">
+                        <a href="reservMng.html" class='sidebar-link'>
+                            <i class="bi bi-grid-1x2-fill"></i>
+                            <span>예약관리</span>
+                        </a>
+                    </li>
+
+                    <li class="sidebar-item  ">
+                        <a href="chat.html" class='sidebar-link'>
+                            <i class="bi bi-file-earmark-medical-fill"></i>
+                            <span>채팅</span>
+                        </a>
+                    </li>
+
+
+                    <li class="sidebar-item  ">
+                        <a href="customerService.html" class='sidebar-link'>
+                            <i class="bi bi-grid-1x2-fill"></i>
+                            <span>고객센터</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <button class="sidebar-toggler btn x"><i data-feather="x"></i></button>
         </div>
     </div>
-    <script src="../../static/assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
-    <script src="../../static/assets/js/bootstrap.bundle.min.js"></script>
+    <div id="main">
+        <header class="mb-3">
+            <a href="#" class="burger-btn d-block d-xl-none">
+                <i class="bi bi-justify fs-3"></i>
+            </a>
+        </header>
 
-    <script src="../../static/assets/js/main.js"></script>
+        <div id='calendar'></div>
+
+        <!-- modal 추가 -->
+        <div class="modal fade" id="calendarModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">예약 정보</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label class="col-form-label">예약 내용</label>
+                            <input type="text" class="form-control" id="calendar_content" name="calendar_content">
+                            <label class="col-form-label">예약자</label>
+                            <input type="text" class="form-control" id="calendar_customer" name="calendar_customer">
+                            <label class="col-form-label">예약 날짜</label>
+                            <input type="date" class="form-control" id="calendar_date" name="calendar_date">
+                            <label class="col-form-label">가격</label>
+                            <input type="text" class="form-control" id="calendar_price" name="calendar_price">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-warning" id="addCalendar">추가</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" id="sprintSettingModalClose">취소</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <div class="footer clearfix mb-0 text-muted">
+                <div class="float-start">
+                    <p>2021 &copy; Mazer</p>
+                </div>
+                <div class="float-end">
+                    <p>Crafted with <span class="text-danger"><i class="bi bi-heart"></i></span> by <a href="http://ahmadsaugi.com">A. Saugi</a></p>
+                </div>
+            </div>
+        </footer>
+    </div>
+</div>
+    <script src="/assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+    <script src="/assets/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="/assets/js/main.js"></script>
 </body>
 
 </html>
