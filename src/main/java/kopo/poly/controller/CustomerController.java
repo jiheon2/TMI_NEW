@@ -25,9 +25,15 @@ public class CustomerController {
 
     private final ICustomerService customerService;
     @GetMapping(value = "/login")
-    public String login() {
+    public String login(HttpSession session) {
 
         log.info(this.getClass().getName() + ".customerLogin");
+
+        String type = (String) session.getAttribute("SS_TYPE");
+
+        if(!type.equals("Customer")) {
+            session.invalidate();
+        }
 
         return "/customer/login";
     }
@@ -60,17 +66,21 @@ public class CustomerController {
             //비밀번호는 절대로 복호화되지 않도록 해시 알고리즘으로 암호화함
             pDTO.setPw(EncryptUtil.encHashSHA256(pw));
 
+            log.info(pDTO.toString());
+
             // 로그인을 위해 아이디와 비밀번호가 일치하는지 확인하기 위한 customerService 호출하기
             CustomerDTO rDTO = customerService.getLogin(pDTO);
 
+            log.info(rDTO.toString());
             if (CmmUtil.nvl(rDTO.getId()).length() > 0) { //로그인 성공
 
                 res = 1;
 
                 msg = "로그인이 성공했습니다.";
 
-                session.setAttribute("SS_USER_ID", id);
-                session.setAttribute("SS_USER_NAME", CmmUtil.nvl(rDTO.getName()));
+                session.setAttribute("SS_ID", CmmUtil.nvl(rDTO.getId()));
+
+                session.setAttribute("SS_TYPE", "Customer");
 
             } else {
                 msg = "아이디와 비밀번호가 올바르지 않습니다.";
@@ -100,6 +110,7 @@ public class CustomerController {
     @GetMapping(value = "/userIndex")
     public String customerIndex() {
         log.info("start!");
+
         return "/customer/userIndex";
     }
 

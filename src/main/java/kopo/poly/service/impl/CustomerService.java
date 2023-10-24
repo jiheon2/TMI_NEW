@@ -19,10 +19,12 @@ public class CustomerService implements ICustomerService {
     public CustomerDTO getLogin(CustomerDTO pDTO) throws Exception {
         log.info(this.getClass().getName() + ".getLogin Start!");
 
+        log.info(pDTO.toString());
+
         CustomerDTO rDTO = Optional.ofNullable(customerMapper.getLogin(pDTO)).orElseGet(CustomerDTO::new);
 
         log.info(this.getClass().getName() + ".getLogin Start!");
-        return null;
+        return rDTO;
     }
 
     @Override

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- JAVA와 연결할 Mapper 파일 설정 -->
+<mapper namespace="kopo.poly.persistance.mapper.ITraderMapper">
+    <select id="getUserIdExists" parameterType="TraderDTO" resultType="TraderDTO">
+        SELECT IF(COUNT(1) = 0, 'N', 'Y') AS EXISTS_YN
+        FROM TRADER
+        WHERE ID = #{id}
+    </select>
+    <select id="getBusinessNumExists" parameterType="TraderDTO" resultType="TraderDTO">
+        SELECT IF(COUNT(1) = 0, 'N', 'Y') AS EXISTS_YN
+        FROM TRADER
+        WHERE BUSINESS_NUM = #{businessNum}
+    </select>
+    <insert id="insertTrader" parameterType="TraderDTO">
+        INSERT INTO TRADER (ID, PW, BUSINESS_NUM, NAME, PN, SHOP_CODE)
+        VALUES (#{id}, #{pw}, #{businessNum}, #{name}, #{pn}, #{shopCode})
+    </insert>
+    <select id="getLogin" parameterType="TraderDTO" resultType="TraderDTO">
+        SELECT ID
+        FROM TRADER
+        WHERE ID = #{id}
+        ANd PW = #{pw}
+    </select>
+
+</mapper>

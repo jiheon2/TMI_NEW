@@ -47,7 +47,7 @@
 
                 // Ajax 호출해서 로그인하기
                 $.ajax({
-                        url: "/customer/loginProc",
+                        url: "/trader/loginProc",
                         type: "post", // 전송방식은 Post
                         dataType: "JSON", // 전송 결과는 JSON으로 받기
                         data: $("#f").serialize(), // form 태그 내 input 등 객체를 자동으로 전송할 형태로 변경하기
@@ -55,7 +55,7 @@
 
                             if (json.result === 1) { // 로그인 성공
                                 alert(json.msg); // 메시지 띄우기
-                                location.href = "/customer/userIndex"; // 로그인 성공 페이지 이동
+                                location.href = "/trader/traderIndex"; // 로그인 성공 페이지 이동
 
                             } else { // 로그인 실패
                                 alert(json.msg); // 메시지 띄우기
@@ -135,7 +135,7 @@
                 <div style="width: 48%">
                     <div class="login_part_text text-center" style="width: 100%">
                         <div class="login_part_text_iner">
-                            <h2>상인이신가요?</h2>
+                            <h2>소비자이신가요?</h2>
                             <p>여기서 로그인하세요</p>
                             <a href="#" class="btn_3">상인 로그인 하러 가기</a>
                         </div>
@@ -158,7 +158,7 @@
                                     <button id="btnLogin" type="button" value="submit" class="btn_3">
                                         로그인
                                     </button>
-                                    <a class="register" href="userSignUp" style="float: left; color: #333">회원가입</a>
+                                    <a class="register" href="traderSignUp" style="float: left; color: #333">회원가입</a>
                                     <a class="lost_id" href="#" style="float: right; color: #333">아이디 찾기</a>
                                     <br>
                                     <a class="lost_pass" href="#" style="color: #333">비밀번호 찾기</a>

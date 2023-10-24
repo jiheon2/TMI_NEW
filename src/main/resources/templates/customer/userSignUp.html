@@ -73,25 +73,7 @@
                 f.id.focus();
                 return
             }
-            $.ajax({
-                    url: "/customer/getUserIdExists",
-                    type: "post", // 전송방식은 Post
-                    dataType: "JSON", // 전송 결과는 JSON으로 받기
-                    data: $("#register-form").serialize(), // form 태그 내 input 등 객체를 자동으로 전송할 형태로 변경하기
-                    success: function (json) { // /notice/noticeUpdate 호출이 성공했다면..
 
-                        if (json.existsYn === "Y") {
-                            alert("이미 가입된 아이디가 존재합니다.");
-                            f.id.focus();
-
-                        } else { // 회원가입 실패
-                            alert("가입 가능한 아이디입니다.");
-                            idCheck = "N";
-                        }
-
-                    }
-                }
-            )
             if (idCheck !== "N") {
                 return
             }
@@ -126,10 +108,10 @@
                 return
             }
             $.ajax({
-                    url: "/user/insertCustomer",
+                    url: "/customer/insertCustomer",
                     type: "post", // 전송방식은 Post
                     dataType: "JSON", // 전송 결과는 JSON으로 받기
-                    data: $("#f").serialize(), // form 태그 내 input 등 객체를 자동으로 전송할 형태로 변경하기
+                    data: $("#register-form").serialize(), // form 태그 내 input 등 객체를 자동으로 전송할 형태로 변경하기
                     success: function (json) { // /notice/noticeUpdate 호출이 성공했다면..
 
                         if (json.result === 1) { // 회원가입 성공
@@ -244,7 +226,8 @@
                         </div>
 
                         <div class="form-group form-button">
-                            <input type="button" name="btnSend" id="btnSend" class="form-submit" value="다음"/>
+                            <input type="button" name="btnId" id="btnId" class="form-submit" value="아이디 확인"/>
+                            <input type="button" name="btnSend" id="btnSend" class="form-submit" value="회원가입"/>
                         </div>
                     </form>
                 </div>
