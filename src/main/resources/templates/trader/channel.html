@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TMI - 고객센터</title>
+    <title>TMI - 채널</title>
 
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
@@ -14,6 +14,24 @@
     <link rel="stylesheet" href="/assets/vendors/bootstrap-icons/bootstrap-icons.css">
     <link rel="stylesheet" href="/assets/css/app.css">
     <link rel="shortcut icon" href="../static/assets/images/favicon.svg" type="image/x-icon">
+    <script type="text/javascript">
+        let Kakao;
+
+        Kakao.Channel.createAddChannelButton({
+            container: '#kakao-add-channel-button',
+            channelPublicId: '_ZeUTxl' // 카카오톡 채널 홈 URL에 명시된 id로 설정합니다.
+        });
+
+        Kakao.API.request({
+            url: '/v1/api/talk/channels',
+        })
+            .then(function(response) {
+                console.log(response);
+            })
+            .catch(function(error) {
+                console.log(error);
+            });
+    </script>
 </head>
 
 <body>
@@ -105,7 +123,7 @@
         </header>
 
         <div class="page-heading">
-
+            <button type="button" id="kakao-add-channel-button">채팅</button>
             <footer>
                 <div class="footer clearfix mb-0 text-muted">
                     <div class="float-start">
