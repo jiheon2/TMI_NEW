@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- JAVA와 연결할 Mapper 파일 설정 -->
+<mapper namespace="kopo.poly.persistance.mapper.ICustomerMapper">
+    <select id="getUserIdExists" parameterType="CustomerDTO" resultType="CustomerDTO">
+        SELECT DECODE(COUNT(1), 0, 'N', 'Y') AS EXISTS_YN
+        FROM BUYER
+        WHERE BID = #{id}
+    </select>
+    <insert id="insertCustomer" parameterType="CustomerDTO">
+        INSERT INTO BUYER
+            (BID, BPW, BNAME, BAGE, BPN, BTYPE)
+        VALUES (
+                   #{id}, #{pw}, #{name}, #{age}, #{pn}, #{type}
+               )
+    </insert>
+    <select id="getLogin" parameterType="CustomerDTO" resultType="CustomerDTO">
+        SELECT BID, USER_NAME, EMAIL
+        FROM USER_INFO
+        WHERE BID = #{id}
+          AND BPW = #{pw}
+    </select>
+
+</mapper>

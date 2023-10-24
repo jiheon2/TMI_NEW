@@ -6,25 +6,69 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>aranoz</title>
-    <link rel="icon" href="../../static/assets/images/favicon.png">
+    <link rel="icon" href="/assets/images/favicon.png">
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="../../static/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
     <!-- animate CSS -->
-    <link rel="stylesheet" href="../../static/assets/css/animate.css">
+    <link rel="stylesheet" href="/assets/css/animate.css">
     <!-- owl carousel CSS -->
-    <link rel="stylesheet" href="../../static/assets/css/owl.carousel.min.css">
+    <link rel="stylesheet" href="/assets/css/owl.carousel.min.css">
     <!-- font awesome CSS -->
-    <link rel="stylesheet" href="../../static/assets/css/all.css">
+    <link rel="stylesheet" href="/assets/css/all.css">
     <!-- flaticon CSS -->
-    <link rel="stylesheet" href="../../static/assets/css/flaticon.css">
-    <link rel="stylesheet" href="../../static/assets/css/themify-icons.css">
+    <link rel="stylesheet" href="/assets/css/flaticon.css">
+    <link rel="stylesheet" href="/assets/css/themify-icons.css">
     <!-- font awesome CSS -->
-    <link rel="stylesheet" href="../../static/assets/css/magnific-popup.css">
+    <link rel="stylesheet" href="/assets/css/magnific-popup.css">
     <!-- swiper CSS -->
-    <link rel="stylesheet" href="../../static/assets/css/slick.css">
+    <link rel="stylesheet" href="/assets/css/slick.css">
     <!-- style CSS -->
-    <link rel="stylesheet" href="../../static/assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/style.css">
     <script src="https://kit.fontawesome.com/cb71939295.js" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+
+            $("#btnLogin").on("click", function () {
+                let f = document.getElementById("f"); // form 태그
+
+                if (f.id.value === "") {
+                    alert("아이디를 입력하세요.");
+                    f.id.focus();
+                    return;
+                }
+
+                if (f.pw.value === "") {
+                    alert("비밀번호를 입력하세요.");
+                    f.pw.focus();
+                    return;
+                }
+
+                // Ajax 호출해서 로그인하기
+                $.ajax({
+                        url: "/customer/loginProc",
+                        type: "post", // 전송방식은 Post
+                        dataType: "JSON", // 전송 결과는 JSON으로 받기
+                        data: $("#f").serialize(), // form 태그 내 input 등 객체를 자동으로 전송할 형태로 변경하기
+                        success: function (json) { // /notice/noticeUpdate 호출이 성공했다면..
+
+                            if (json.result === 1) { // 로그인 성공
+                                alert(json.msg); // 메시지 띄우기
+                                location.href = "/customer/userIndex"; // 로그인 성공 페이지 이동
+
+                            } else { // 로그인 실패
+                                alert(json.msg); // 메시지 띄우기
+                                f.id.focus(); // 아이디 입력 항목에 마우스 커서 이동
+                            }
+
+                        }
+                    }
+                )
+
+            })
+        })
+
+    </script>
 </head>
 
 <body>
@@ -34,7 +78,7 @@
             <div class="row align-items-center">
                 <div class="col-lg-12">
                     <nav class="navbar navbar-expand-lg navbar-light">
-                        <a class="navbar-brand" href="index.html"> <img src="../../static/assets/images/logo.png" alt="logo"> </a>
+                        <a class="navbar-brand" href="userIndex.html"> <img src="/assets/images/logo.png" alt="logo"> </a>
 
                         <div class="collapse navbar-collapse main-menu-item" id="navbarSupportedContent" style="height: 100px">
                         </div>
@@ -100,24 +144,20 @@
                     <div class="login_part_form">
                         <div class="login_part_form_iner">
                             <h3>로그인</h3>
-                            <form class="row contact_form" action="#" method="post" novalidate="novalidate">
+                            <form class="row contact_form" id="f" novalidate="novalidate">
                                 <div class="col-md-12 form-group p_star">
-                                    <input type="text" class="form-control" id="name" name="name" value=""
+                                    <input type="text" class="form-control" id="id" name="id" value=""
                                         placeholder="아이디">
                                 </div>
                                 <div class="col-md-12 form-group p_star">
-                                    <input type="password" class="form-control" id="password" name="password" value=""
+                                    <input type="password" class="form-control" id="pw" name="pw" value=""
                                         placeholder="비밀번호">
                                 </div>
                                 <div class="col-md-12 form-group" style="height: 50%">
-                                    <div class="creat_account d-flex align-items-center">
-                                        <input type="checkbox" id="f-option" name="selector">
-                                        <label for="f-option">로그인 유지</label>
-                                    </div>
-                                    <button type="submit" value="submit" class="btn_3">
+                                    <button id="btnLogin" type="button" value="submit" class="btn_3">
                                         로그인
                                     </button>
-                                    <a class="register" href="#" style="float: left; color: #333">회원가입</a>
+                                    <a class="register" href="userSignUp" style="float: left; color: #333">회원가입</a>
                                     <a class="lost_id" href="#" style="float: right; color: #333">아이디 찾기</a>
                                     <br>
                                     <a class="lost_pass" href="#" style="color: #333">비밀번호 찾기</a>
@@ -134,33 +174,33 @@
    
     <!-- jquery plugins here-->
     <!-- jquery -->
-    <script src="../../static/assets/js/jquery-1.12.1.min.js"></script>
+    <script src="/assets/js/jquery-1.12.1.min.js"></script>
     <!-- popper js -->
-    <script src="../../static/assets/js/popper.min.js"></script>
+    <script src="/assets/js/popper.min.js"></script>
     <!-- bootstrap js -->
-    <script src="../../static/assets/js/bootstrap.min.js"></script>
+    <script src="/assets/js/bootstrap.min.js"></script>
     <!-- easing js -->
-    <script src="../../static/assets/js/jquery.magnific-popup.js"></script>
+    <script src="/assets/js/jquery.magnific-popup.js"></script>
     <!-- swiper js -->
-    <script src="../../static/assets/js/swiper.min.js"></script>
+    <script src="/assets/swiper.min.js"></script>
     <!-- swiper js -->
-    <script src="../../static/assets/js/masonry.pkgd.js"></script>
+    <script src="/assets/js/masonry.pkgd.js"></script>
     <!-- particles js -->
-    <script src="../../static/assets/js/owl.carousel.min.js"></script>
-    <script src="../../static/assets/js/jquery.nice-select.min.js"></script>
+    <script src="/assets/js/owl.carousel.min.js"></script>
+    <script src="/assets/js/jquery.nice-select.min.js"></script>
     <!-- slick js -->
-    <script src="../../static/assets/js/slick.min.js"></script>
-    <script src="../../static/assets/js/jquery.counterup.min.js"></script>
-    <script src="../../static/assets/js/waypoints.min.js"></script>
-    <script src="../../static/assets/js/contact.js"></script>
-    <script src="../../static/assets/js/jquery.ajaxchimp.min.js"></script>
-    <script src="../../static/assets/js/jquery.form.js"></script>
-    <script src="../../static/assets/js/jquery.validate.min.js"></script>
-    <script src="../../static/assets/js/mail-script.js"></script>
-    <script src="../../static/assets/js/stellar.js"></script>
-    <script src="../../static/assets/js/price_rangs.js"></script>
+    <script src="/assets/slick.min.js"></script>
+    <script src="/assets/js/jquery.counterup.min.js"></script>
+    <script src="/assets/js/waypoints.min.js"></script>
+    <script src="/assets/js/contact.js"></script>
+    <script src="/assets/js/jquery.ajaxchimp.min.js"></script>
+    <script src="/assets/js/jquery.form.js"></script>
+    <script src="/assets/js/jquery.validate.min.js"></script>
+    <script src="/assets/js/mail-script.js"></script>
+    <script src="/assets/stellar.js"></script>
+    <script src="/assets/js/price_rangs.js"></script>
     <!-- custom js -->
-    <script src="../../static/assets/js/custom.js"></script>
+    <script src="/assets/js/custom.js"></script>
 </body>
 
 </html>
