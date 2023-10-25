@@ -27,13 +27,6 @@ public class CustomerController {
     @GetMapping(value = "/login")
     public String login(HttpSession session) {
 
-        log.info(this.getClass().getName() + ".customerLogin");
-
-        String type = (String) session.getAttribute("SS_TYPE");
-
-        if(!type.equals("Customer")) {
-            session.invalidate();
-        }
 
         return "/customer/login";
     }
@@ -227,6 +220,21 @@ public class CustomerController {
     public String chat() {
         log.info("start!");
         return "/customer/chat";
+    }
+
+    @GetMapping(value = "/CustomerInfo")
+    public String getCustomerInfo(HttpSession session) {
+        log.info(this.getClass().getName() + ".customerLogin");
+
+        String type = (String) session.getAttribute("SS_TYPE");
+
+        String url = "/customer/CustomerInfo";
+        if(!type.equals("Customer")) {
+            session.invalidate();
+            url = "/customer/login";
+        }
+        return url;
+
     }
 
     @GetMapping(value = "/single-product")
