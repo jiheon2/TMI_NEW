@@ -15,7 +15,8 @@
     <link rel="stylesheet" href="/assets/vendors/perfect-scrollbar/perfect-scrollbar.css">
     <link rel="stylesheet" href="/assets/vendors/bootstrap-icons/bootstrap-icons.css">
     <link rel="stylesheet" href="/assets/css/app.css">
-    <link rel="shortcut icon" href="../static/assets/images/favicon.svg" type="image/x-icon">
+    <link rel="shortcut icon" href="/assets/images/favicon.svg" type="image/x-icon">
+
 </head>
 
 <body>
@@ -25,7 +26,7 @@
                 <div class="sidebar-header">
                     <div class="d-flex justify-content-between">
                         <div class="logo">
-                            <a href="traderIndex.html"><img src="/assets/images/logo/aengmusae.jpeg" style="width: 200px; height: 200px" alt="Logo" srcset=""></a>
+                            <a href="traderIndex"><img src="/assets/images/logo/aengmusae.jpeg" style="width: 200px; height: 200px" alt="Logo" srcset=""></a>
                         </div>
                         <div class="toggler">
                             <a href="#" class="sidebar-hide d-xl-none d-block"><i class="bi bi-x bi-middle"></i></a>
@@ -86,7 +87,7 @@
                         </li>
 
                         <li class="sidebar-item  ">
-                            <a id="btnChannel" class='sidebar-link'>
+                            <a href="#" class='sidebar-link'>
                                 <i class="bi bi-file-earmark-medical-fill"></i>
                                 <span>채팅</span>
                             </a>
@@ -254,29 +255,11 @@
     </div>
     <script src="/assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
     <script src="/assets/js/bootstrap.bundle.min.js"></script>
-    <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.4.0/kakao.min.js"
-            integrity="sha384-mXVrIX2T/Kszp6Z0aEWaA8Nm7J6/ZeWXbL8UpGRjKwWe56Srd/iyNmWMBhcItAjH" crossorigin="anonymous"></script>
-    <script>
-        Kakao.init('fc6476b35f170899394cfb682f1205de'); // 사용하려는 앱의 JavaScript 키 입력
-    </script>
+
     <script src="/assets/vendors/apexcharts/apexcharts.js"></script>
     <script src="/assets/js/pages/dashboard.js"></script>
-    <script type="text/javascript" src="/assets/js/jquery-3.6.0.min.js"></script>
+
     <script src="/assets/js/main.js"></script>
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $("#btnChannel").on("click", function () {
-                addChannel();
-            })
-
-            function addChannel() {
-                Kakao.Channel.addChannel({
-                    channelPublicId: '_ZEMxbG'
-                });
-            }
-        })
-
-    </script>
 </body>
 
 </html>

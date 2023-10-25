@@ -8,7 +8,7 @@
 
     <!-- Font Icon -->
     <link rel="stylesheet" href="/assets/fonts/material-icon/css/material-design-iconic-font.min.css">
-    
+
     <!-- Main css -->
     <link rel="stylesheet" href="/assets/rcss/style.css">
     <link rel="icon" href="/assets/images/favicon.png">
@@ -31,6 +31,199 @@
     <link rel="stylesheet" href="/assets/css/style.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
     <script src="https://kit.fontawesome.com/cb71939295.js" crossorigin="anonymous"></script>
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
+    <script type="text/javascript">
+        let businessResult;
+        let idCheck = "Y";
+        let businessCheck = "N";
+        let businessNumCheck = "Y";
+        let bn;
+        $(document).ready(function () {
+            let f = document.getElementById("register-form");
+
+            $("#btnId").on("click", function () {
+                idExists(f)
+            })
+            $("#btnBusinessNum").on("click", function () {
+                if (f.businessNum.value === "") {
+                    alert("사업자 번호를 입력하세요");
+                    f.businessNum.focus();
+                    return
+                }if (f.start_dt.value === "") {
+                    alert("시작일을 입력하세요");
+                    f.start_dt.focus();
+                    return
+                }if (f.p_nm.value === "") {
+                    alert("대표자명 입력하세요");
+                    f.p_nm.focus();
+                    return
+                }if (businessNumCheck === "Y") {
+                    alert("사업자 번호를 중복 확인하세요");
+                    f.businessNum.focus();
+                    return
+                }
+                var data = {
+                    "b_no": [f.businessNum.value], // 사업자번호 "xxxxxxx" 로 조회 시,
+                    "start_dt": [f.start_dt.value],
+                    "p_nm" : [f.p_nm.value]
+                };
+
+                $.ajax({
+                    url: "https://api.odcloud.kr/api/nts-businessman/v1/status?serviceKey=j9l6mJPCNZ2Z3v509Wi48a4phMMfLZzdCju3Fe8jk71bpKBLdV9JOFTm9tu%2BAyyAUyV%2BE8gLI69WYq%2FXVS%2BTcw%3D%3D",  // serviceKey 값을 xxxxxx에 입력
+                    type: "POST",
+                    data: JSON.stringify(data), // json 을 string으로 변환하여 전송
+                    dataType: "JSON",
+                    contentType: "application/json",
+                    accept: "application/json",
+                    success: function(result) {
+                        console.log(result);
+                        businessResult = result;
+                        if (businessResult.data[0].tax_type == "국세청에 등록되지 않은 사업자등록번호입니다." ) {
+                            alert("국세청에 등록되지 않은 사업자등록번호입니다.")
+                            return;
+                        }
+                        businessNumCheck = "Y";
+                        bn = f.businessNum.value
+                        alert("인증 되었습니다")
+                    },
+                    error: function(result) {
+                        console.log(result.responseText); //responseText의 에러메세지 확인
+                    }
+                });
+            })
+            $("#btnBnExists").on("click", function () {
+                bnExists(f)
+            })
+            $("#btnSend").on("click", function () {
+                doSubmit(f)
+            })
+        })
+
+        function idExists(f) {
+            if (f.id.value === "") {
+                alert("아이디를 입력하세요");
+                f.id.focus();
+                return
+            }
+            $.ajax({
+                url: "/trader/getUserIdExists",
+                type: "post",
+                data: $("#register-form").serialize(),
+                success: function (json) {
+                    if (json.existsYn === "Y") {
+                        alert("이미 가입된 아이디가 존재합니다");
+                        f.id.focus();
+                    } else {
+                        alert("가입 가능한 아이디입니다");
+                        idCheck = "N";
+                    }
+                }
+            })
+        }
+        function bnExists(f) {
+            if (f.businessNum.value === "") {
+                alert("사업자 번호를 입력하세요");
+                f.id.focus();
+                return
+            }
+            $.ajax({
+                url: "/trader/getBusinessNumExists",
+                type: "post",
+                data: $("#register-form").serialize(),
+                success: function (json) {
+                    if (json.existsYn === "Y") {
+                        alert("이미 가입된 사업자 번호가 존재합니다");
+                        f.id.focus();
+                    } else {
+                        alert("가입 가능한 사업자 번호입니다");
+                        businessNumCheck = "N";
+                    }
+                }
+            })
+        }
+
+        function doSubmit(f) {
+            if (f.id.value === "") {
+                alert("아이디를 입력하세요");
+                f.id.focus();
+                return
+            }
+
+            if (idCheck !== "N") {
+                alert("아이디 중복 확인을하세요")
+                return
+            }
+            if (businessNumCheck !== "Y") {
+                alert("사업자 등록번호를 확인하세요")
+                return
+            }
+            if (f.pw.value === "") {
+                alert("비밀번호를 입력하세요");
+                f.pw.focus();
+                return
+            }
+            if (f.re_pw.value != f.pw.value) {
+                alert("비밀번호가 일치하지 않습니다");
+                f.pw.focus();
+                return
+            }
+            if (f.name.value === "") {
+                alert("이름을 입력하세요");
+                f.name.focus();
+                return
+            }
+            if (f.shopCode.value === "") {
+                alert("소속을 입력하세요");
+                f.pn.focus();
+                return
+            }
+            if (f.pn.value === "") {
+                alert("핸들폰 번호를 입력하세요");
+                f.type.focus();
+                return
+            }
+            if (f.businessNum.value === "") {
+                alert("사업자 번호를 입력하세요");
+                f.businessNum.focus();
+                return
+            }if (f.start_dt.value === "") {
+                alert("시작일을 입력하세요");
+                f.start_dt.focus();
+                return
+            }if (f.p_nm.value === "") {
+                alert("대표자명 입력하세요");
+                f.p_nm.focus();
+                return
+            }if (businessNumCheck === "N") {
+                alert("사업자 번호를 중복 확인하세요");
+                f.businessNum.focus();
+                return
+            }if (businessCheck === "Y") {
+                alert("사업자 번호를 인증하세요");
+                f.businessNum.focus();
+                return
+            }
+            $.ajax({
+                    url: "/trader/insertTrader",
+                    type: "post", // 전송방식은 Post
+                    dataType: "JSON", // 전송 결과는 JSON으로 받기
+                    data: $("#register-form").serialize(), // form 태그 내 input 등 객체를 자동으로 전송할 형태로 변경하기
+                    success: function (json) { // /notice/noticeUpdate 호출이 성공했다면..
+
+                        if (json.result === 1) { // 회원가입 성공
+                            alert(json.msg); // 메시지 띄우기
+                            location.href = "/trader/login"; // 로그인 페이지 이동
+
+                        } else { // 회원가입 실패
+                            alert(json.msg); // 메시지 띄우기
+                        }
+
+                    }
+                }
+            )
+        }
+
+    </script>
 </head>
 
 <body>
@@ -39,7 +232,7 @@
             <div class="row align-items-center">
                 <div class="col-lg-12">
                     <nav class="navbar navbar-expand-lg navbar-light">
-                        <a class="navbar-brand" href="index.html"> <img src="/assets/images/logo.png" alt="logo"> </a>
+                        <a class="navbar-brand" href="/customer/userIndex"> <img src="/assets/images/logo.png" alt="logo"> </a>
 
                         <div class="collapse navbar-collapse main-menu-item" id="navbarSupportedContent" style="height: 100px">
                         </div>
@@ -69,7 +262,7 @@
 
     </header>
     <!-- breadcrumb start-->
-    <section class="breadcrumb breadcrumb_bg" style="background-image: url(img/%EC%83%89.png)">
+    <section class="breadcrumb breadcrumb_bg" style="background-image: url(/static/assets/images/b1.jpg)">
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-lg-8">
@@ -99,35 +292,41 @@
                                 <input type="text" name="id" id="id" placeholder="아이디" />
                             </div>
                             <div class="form-group">
-                                <label for="pass"><i class="zmdi zmdi-lock"></i></label>
-                                <input type="password" name="pass" id="pass" placeholder="비밀번호" />
+                                <label for="pw"><i class="zmdi zmdi-lock"></i></label>
+                                <input type="password" name="pw" id="pw" placeholder="비밀번호" />
                             </div>
                             <div class="form-group">
-                                <label for="re-pass"><i class="zmdi zmdi-lock-outline"></i></label>
-                                <input type="password" name="re_pass" id="re_pass" placeholder="비밀번호 재입력" />
+                                <label for="re_pw"><i class="zmdi zmdi-lock-outline"></i></label>
+                                <input type="password" name="re_pw" id="re_pw" placeholder="비밀번호 재입력" />
                             </div>
                             <div class="form-group">
                                 <label for="name"><i class="zmdi zmdi-account material-icons-name"></i></label>
                                 <input type="text" name="name" id="name" placeholder="이름" />
                             </div>
-                            <div class="form-group" style="display: flex; align-items: center">
-                                <label for="businessNumber"><i class="zmdi zmdi-money"></i></label>
-                                <input type="text" name="businessNumber" id="businessNumber" placeholder="사업자등록번호" style="width: 80%" />&nbsp;&nbsp;<button type="button" class="btn btn-primary">인증</button>
-                            </div>
                             <div class="form-group">
                                 <label for="pn"><i class="zmdi zmdi-phone"></i></label>
-                                <input type="tel" name="phone" id="phone" placeholder="전화번호" />
+                                <input type="tel" name="pn" id="pn" placeholder="전화번호" />
                             </div>
                               <div class="form-group">
-                                <label for="pn"><i class="zmdi zmdi-group"></i></label>
-                                <input type="text" name="group" id="group" placeholder="소속"/>
+                                <label for="shopCode"><i class="zmdi zmdi-group"></i></label>
+                                <input type="text" name="shopCode" id="shopCode" placeholder="소속"/>
                             </div>
-                            <div class="form-group">
-                                <input type="checkbox" name="agree-term" id="agree-term" class="agree-term" />
-                                <label for="agree-term" class="label-agree-term"><span><span></span></span>개인정보 제공에 동의합니다<a href="#" class="term-service"></a></label>
+                            <hr/>
+                            <div class="form-group" style="display: flex; align-items: center">
+                                <label for="businessNum"><i class="zmdi zmdi-money"></i></label>
+                                <input type="text" name="businessNum" id="businessNum" placeholder="사업자등록번호" style="width: 80%" />&nbsp;&nbsp;<button type="button" id="btnBnExists" class="btn btn-primary">사업자 등록번호 중복 확인</button>
+                            </div>
+                            <div class="form-group" style="display: flex; align-items: center">
+                                <label for="start_dt"><i class="zmdi zmdi-money"></i></label>
+                                <input type="text" name="start_dt" id="start_dt" placeholder="시작일" style="width: 80%" />&nbsp;&nbsp;
+                            </div>
+                            <div class="form-group" style="display: flex; align-items: center">
+                                <label for="p_nm"><i class="zmdi zmdi-money"></i></label>
+                                <input type="text" name="p_nm" id="p_nm" placeholder="대표자명" style="width: 80%" />&nbsp;&nbsp;<button type="button" id="btnBusinessNum" class="btn btn-primary">인증</button>
                             </div>
                             <div class="form-group form-button">
-                                <input type="submit" name="signup" id="signup" class="form-submit" value="가입" />
+                                <input type="button" name="btnId" id="btnId" class="form-submit" value="아이디 확인"/>
+                                <input type="button" name="btnSend" id="btnSend" class="form-submit" value="회원가입"/>
                             </div>
                         </form>
                     </div>
