@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TMI - 상인 정보 수정</title>
+    <title>TMI - 상인 정보</title>
     <link rel="stylesheet" href="/assets/css/font.css">
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
@@ -13,7 +13,57 @@
     <link rel="stylesheet" href="/assets/vendors/perfect-scrollbar/perfect-scrollbar.css">
     <link rel="stylesheet" href="/assets/vendors/bootstrap-icons/bootstrap-icons.css">
     <link rel="stylesheet" href="/assets/css/app.css">
-    <link rel="shortcut icon" href="../static/assets/images/favicon.svg" type="image/x-icon">
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
+    <link rel="shortcut icon" href="/assets/images/favicon.svg" type="image/x-icon">
+    <script type="text/javascript">
+        $(document).ready(function () {
+            let f = document.getElementById("f");
+            $("#btnChange").on("click", function () {
+                change(f)
+            })
+
+            function change(f) {
+                if (f.name.value === "") {
+                    alert("이름을 입력하세요");
+                    f.name.focus();
+                    return
+                }
+                if (f.shopCode.value === "") {
+                    alert("소속을 입력하세요");
+                    f.shopCode.focus();
+                    return
+                }
+                if (f.pn.value === "") {
+                    alert("핸em폰 번호를 입력하세요");
+                    f.pn.focus();
+                    return
+                }
+                $.ajax({
+                        url: "/trader/changeTrader",
+                        type: "post", // 전송방식은 Post
+                        dataType: "JSON", // 전송 결과는 JSON으로 받기
+                        data: $("#f").serialize(), // form 태그 내 input 등 객체를 자동으로 전송할 형태로 변경하기
+                        success: function (json) { // 호출이 성공했다면..
+
+                            if (json.result === 1) { // 수정 성공
+                                alert(json.msg); // 메시지 띄우기
+                                location.href = "/trader/traderInfo"; // 로그인 페이지 이동
+
+                            } else { // 수정 실패
+                                alert(json.msg); // 메시지 띄우기
+                            }
+                        }
+                    }
+                )
+                $("#cancel").on("click", function () {
+                    cancel()
+                })
+                function cancel() {
+                    location.href = "/trader/traderInfo";
+                }
+            }
+        })
+    </script>
 </head>
 
 <body>
@@ -23,7 +73,7 @@
                 <div class="sidebar-header">
                     <div class="d-flex justify-content-between">
                         <div class="logo">
-                            <a href="traderIndex.html"><img src="/assets/images/logo/logo.png" alt="Logo" srcset=""></a>
+                            <a href="traderIndex"><img src="/assets/images/logo/logo.png" alt="Logo" srcset=""></a>
                         </div>
                         <div class="toggler">
                             <a href="#" class="sidebar-hide d-xl-none d-block"><i class="bi bi-x bi-middle"></i></a>
@@ -71,13 +121,12 @@
                             </ul>
                         </li>
 
-                       <li class="sidebar-item  has-sub">
+                        <li class="sidebar-item  has-sub">
                             <a href="reservMng.html" class='sidebar-link'>
                                 <i class="bi bi-grid-1x2-fill"></i>
                                 <span>예약관리</span>
                             </a>
                         </li>
-
                         <li class="sidebar-item  ">
                             <a href="chat.html" class='sidebar-link'>
                                 <i class="bi bi-file-earmark-medical-fill"></i>
@@ -108,7 +157,7 @@
                 <div class="page-title">
                     <div class="row">
                         <div class="col-12 col-md-6 order-md-1 order-last mx-auto text-center">
-                            <h3>마이페이지</h3>
+                            <h3>비밀번호 변경</h3>
                             <br>
                         </div>
                     </div>
@@ -118,41 +167,31 @@
                         <div class="card mx-auto">
                             <div class="card-content">
                                 <div class="card-body">
-                                    <form class="form form-horizontal">
+                                    <form id="f" class="form form-horizontal">
                                         <div class="form-body">
                                             <div class="row" style="text-align: center">
                                                 <div class="col-md-4">
                                                     <label>이름</label>
                                                 </div>
                                                 <div class="col-md-8 form-group">
-                                                   <input class="form-control" placeholder="이름">
+                                                        <input type="text" class="form-control" id="name" name="name" th:value="${rDTO.name}" />
                                                 </div>
                                                 <div class="col-md-4">
                                                     <label>전화번호</label>
                                                 </div>
                                                 <div class="col-md-8 form-group">
-                                                     <input class="form-control" placeholder="전화번호">
+                                                        <input type="tel"  class="form-control" name="pn" id="pn" th:value="${rDTO.pn}" />
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <label>사업자 등록번호</label>
+                                                    <label>지역</label>
                                                 </div>
-                                                <div class="col-md-8 form-group" style="display: flex ;">    
-                                                    <input class="form-control" placeholder="사업자등록번호">
-                                                    &nbsp;
-                                                    &nbsp;
-                                                    <button type="button" style="width: 20%;" class="btn btn-primary me-1 mb-1">인증</button>
+                                                <div class="col-md-8 form-group">
+                                                    <input type="text" class="form-control" id="shopCode" name="shopCode" th:value="${rDTO.shopCode}" />
                                                 </div>
-                                                <div class="col-md-4">
-                                                    <label>소속</label>
-                                                </div>
-                                                <div class="col-md-8 form-group">    
-                                                    <input class="form-control" placeholder="소속">
-                                                </div>        
-        
                                                 <br>
                                                 <div class="col-sm-12 d-flex justify-content-end">
-                                                    <a href="traderInfo.html"><button type="button" class="btn btn-primary me-1 mb-1">수정</button></a>
-                                                    <button type="reset" class="btn btn-light-secondary me-1 mb-1">취소</button>
+                                                   <button type="button" id="btnChange" class="btn btn-primary me-1 mb-1">수정</button>
+                                                    <button type="button" id="cancel" class="btn btn-light-secondary me-1 mb-1">취소</button>
                                                 </div>
                                             </div>
                                         </div>
