@@ -47,53 +47,73 @@
           href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/assets/css/notice/font-awesome.min.css">
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/assets/css/notice/all.min.css">
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
+
+<script type="text/javascript">
+
+
+</script>
 
     <script type="text/javascript">
 
-        //글자 길이 바이트 단위로 체크하기(바이트값 전달)
-        function calBytes(str) {
-            let tcount = 0;
-            let tmpStr = String(str);
-            let strCnt = tmpStr.length;
-            let onechar;
-            for (let i = 0; i < strCnt; i++) {
-                onechar = tmpStr.charAt(i);
-                if (escape(onechar).length > 4) {
-                    tcount += 2;
-                } else {
-                    tcount += 1;
+        $(document).ready(function () {
+            let f = document.getElementById("uploadForm"); // form 태그
+            $("#btnUpload").on("click", function () {
+                doSubmit(f)
+            })
+
+
+
+            //글자 길이 바이트 단위로 체크하기(바이트값 전달)
+            function calBytes(str) {
+                let tcount = 0;
+                let tmpStr = String(str);
+                let strCnt = tmpStr.length;
+                let onechar;
+                for (let i = 0; i < strCnt; i++) {
+                    onechar = tmpStr.charAt(i);
+                    if (escape(onechar).length > 4) {
+                        tcount += 2;
+                    } else {
+                        tcount += 1;
+                    }
                 }
+                return tcount;
             }
-            return tcount;
-        }
 
-        // 공지사항 저장하기
-        function doSubmit() {
 
-            let f = document.getElementById("f"); // form 태그
+            // 공지사항 저장하기
 
-            if (f.title.value === "") {
-                alert("제목을 입력하시기 바랍니다.");
-                f.title.focus();
-                return;
-            }
-            if (calBytes(f.title.value) > 200) {
-                alert("최대 200Bytes까지 입력 가능합니다.");
-                f.title.focus();
-                return;
-            }
-            if (calBytes(f.contents.value) > 4000) {
-                alert("최대 4000Bytes까지 입력 가능합니다.");
-                f.contents.focus();
-                return;
-            }
-            $.ajax({
+            function doSubmit(f) {
+
+                console.log("함수 시작")
+
+
+                if (f.title.value === "") {
+                    alert("제목을 입력하시기 바랍니다.");
+                    f.title.focus();
+                    return;
+                }
+                if (calBytes(f.title.value) > 200) {
+                    alert("최대 200Bytes까지 입력 가능합니다.");
+                    f.title.focus();
+                    return;
+                }
+                if (calBytes(f.contents.value) > 4000) {
+                    alert("최대 4000Bytes까지 입력 가능합니다.");
+                    f.contents.focus();
+                    return;
+                }
+
+                var formData = new FormData($("#uploadForm")[0]);
+                console.log("전송 시작")
+                $.ajax({
                     url: "/notice/noticeInsert",
-                    type: "post", // 전송방식은 Post
-                    dataType: "JSON", // 전송 결과는 JSON으로 받기
-                    data: $("#f").serialize(), // form 태그 내 input 등 객체를 자동으로 전송할 형태로 변경하기
-                    success: function (json) { // /notice/noticeUpdate 호출이 성공했다면..
-
+                    type: "POST",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (json) {
                         if (json.result === 1) { // 로그인 성공
                             alert(json.msg); // 메시지 띄우기
                             location.href = "/notice/noticeList"; // 로그인 성공 페이지 이동
@@ -101,13 +121,19 @@
                         } else { // 로그인 실패
                             alert(json.msg); // 메시지 띄우기
                         }
-
                     }
-                }
-            )
+                });
+            }
 
-        }
+
+
+        })
     </script>
+<!--    <script>-->
+<!--        function chk_form() {-->
+<!--            document.getElementById('uploadForm').submit();-->
+<!--        }-->
+<!--    </script>-->
 </head>
 <body>
 <!--::header part start::-->
@@ -166,7 +192,7 @@
     </div>
 </section>
 <!-- breadcrumb start-->
-<form name="f" id="f">
+<form name="uploadForm" id="uploadForm">
     <div class="board_wrap">
         <div class="board_write_wrap">
             <div class="board_write">
@@ -178,11 +204,16 @@
                 </div>
                 <div class="info">
                     <div class="cont">
+                        <input type="file" id="fileUpload" name="fileUpload"/>
+                    </div>
+                </div>
+                <div class="info">
+                    <div class="cont">
                         <textarea name="contents" placeholder="내용 입력"></textarea>
                     </div>
                 </div>
                 <div class="bt_wrap">
-                    <a id="btnSend" type="button" onclick="calBytes(title);doSubmit();" class="on">등록</a>
+                    <a href="#" type="button" name="btnUpload" id="btnUpload" class="on">등록</a>
                     <a href="/notice/noticeList">취소</a>
                 </div>
             </div>

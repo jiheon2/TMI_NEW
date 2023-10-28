@@ -2,22 +2,25 @@ package kopo.poly.controller;
 
 import kopo.poly.dto.MsgDTO;
 import kopo.poly.dto.NoticeDTO;
+import kopo.poly.service.IFileService;
 import kopo.poly.service.INoticeService;
 import kopo.poly.util.CmmUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import static jdk.internal.vm.vector.VectorSupport.convert;
+
 
 @Slf4j
 @RequestMapping(value = "/notice")
@@ -26,6 +29,7 @@ import java.util.Optional;
 @Controller
 public class NoticeController {
     private final INoticeService noticeService;
+    private final IFileService fileService;
 //GET 방식은 데이터 조회, POST 방식에서 새로운 데이터 추가.
     @GetMapping(value = "/noticeList")
     public String noticeList(ModelMap model)
@@ -50,7 +54,7 @@ public class NoticeController {
 
     @ResponseBody
     @PostMapping(value = "/noticeInsert")
-    public MsgDTO noticeInsert(HttpServletRequest request, ModelMap model, HttpSession session) {
+    public MsgDTO noticeInsert(HttpServletRequest request, HttpSession session, @RequestParam(value = "fileUpload") MultipartFile mf) {
         log.info(this.getClass().getName() + ".noticeInsert Start!");
         String msg = "";
         int res = 0;
@@ -59,11 +63,9 @@ public class NoticeController {
         try {
             String user_id = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
             String title = CmmUtil.nvl(request.getParameter("title"));
-//            String image = CmmUtil.nvl(request.getParameter("image"));
             String contents = CmmUtil.nvl(request.getParameter("contents"));
             String noticeYn = "N";
             log.info("session user_id : " + user_id);
-//            log.info("image : " + image);
             log.info("title : " + title);
             log.info("contents : " + contents);
 
@@ -76,11 +78,16 @@ public class NoticeController {
             pDTO.setTitle(title);
             pDTO.setContents(contents);
             pDTO.setNoticeYn(noticeYn);
-
+            if(!mf.isEmpty()) {
+                String image = mf.getOriginalFilename();
+                fileService.upload(image, pDTO, mf);
+            }
             noticeService.insertNoticeInfo(pDTO);
-
             msg = "등록되었습니다.";
             res = 1;
+
+
+
         } catch (Exception e) {
             msg = "실패하였습니다. : " + e.getMessage();
             log.info(e.toString());
@@ -89,6 +96,7 @@ public class NoticeController {
             dto = new MsgDTO();
             dto.setMsg(msg);
             dto.setResult(res);
+            log.info(dto.toString());
             log.info(this.getClass().getName() + ".noticeInsert End!");
         }
 
@@ -138,7 +146,7 @@ public class NoticeController {
 
     @ResponseBody
     @PostMapping(value = "/noticeUpdate")
-    public MsgDTO noticeUpdate(HttpSession session, ModelMap model, HttpServletRequest request) {
+    public MsgDTO noticeUpdate(HttpSession session, HttpServletRequest request) {
 
         log.info(this.getClass().getName() + ".noticeUpdate Start!");
 
