@@ -23,21 +23,6 @@
             })
 
             function change(f) {
-                if (f.name.value === "") {
-                    alert("이름을 입력하세요");
-                    f.name.focus();
-                    return
-                }
-                if (f.shopCode.value === "") {
-                    alert("소속을 입력하세요");
-                    f.shopCode.focus();
-                    return
-                }
-                if (f.pn.value === "") {
-                    alert("핸em폰 번호를 입력하세요");
-                    f.pn.focus();
-                    return
-                }
                 $.ajax({
                         url: "/trader/changeTrader",
                         type: "post", // 전송방식은 Post

@@ -8,10 +8,11 @@ import lombok.ToString;
 @Setter
 @ToString
 public class ProductDTO {
-    private String shopCode;
-    private String productCode;
-    private String productName;
-    private String productContent;
+    private String name;
     private String price;
+    private String des;
+    private String pid;
     private String image;
+    private String seq;
+    private String type;
 }

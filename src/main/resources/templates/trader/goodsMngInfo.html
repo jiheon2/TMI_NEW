@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TMI - 상품 관리</title>
+    <title>TMI - 상점 정보</title>
 
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
@@ -13,22 +13,17 @@
     <link rel="stylesheet" href="/assets/vendors/perfect-scrollbar/perfect-scrollbar.css">
     <link rel="stylesheet" href="/assets/vendors/bootstrap-icons/bootstrap-icons.css">
     <link rel="stylesheet" href="/assets/css/app.css">
-    <link rel="shortcut icon" href="/assets/images/favicon.svg" type="image/x-icon">
+    <link rel="shortcut icon" href="../static/assets/images/favicon.svg" type="image/x-icon">
+
     <script type="text/javascript">
 
         //상세보기 이동
-        function doDetail(element) {
+        function doEdit(element) {
             var seq = element.getAttribute("data-seq");
             var pid = element.getAttribute("data-pid");
-            location.href = "/trader/goodsMngInfo?nSeq=" + seq + "&nPid=" + pid;
+            location.href = "/trader/updateGoodsInfo?nCname=" + cname;
         }
 
-    </script>
-    <script>
-        document.getElementById("goToGoodsMngInsert").addEventListener("click", function() {
-            // goodsMngInsert 페이지로 이동
-            location.href = "/goodsMngInsert";
-        });
     </script>
 </head>
 
@@ -120,45 +115,41 @@
                 </a>
             </header>
 
-            <!-- Hoverable rows start -->
-            <section class="section" style="text-align: center">
-                <div class="row" id="table-hover-row">
-                    <div class="col-12 d-flex justify-content-center">
-                        <div class="card col-md">
-                            <div class="card-header">
-                                <h4 class="card-title">상품 정보</h4>
+            <div class="page-heading">
+                <div>
+                    <div class="page-title">
+                        <div class="row">
+                            <div class="col-12 col-md-6 order-md-1 order-last mx-auto text-center">
+                                <h3>상품 정보</h3>
                             </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-4 col-md-6 col-sm-12 mx-auto">
+                        <div class="card">
                             <div class="card-content">
-                                <!-- table hover -->
-                                <div class="table-responsive">
-                                    <table class="table table-hover mb-0">
-                                        <thead>
-                                            <tr>
-                                                <th>상품명</th>
-                                                <th>가격</th>
-                                                <th>상품유형</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                        <div th:each="dto:${rList}">
-                                            <tr>
-                                                <td th:attr="data-seq=${dto.seq}, data-pid=${dto.pid}" onclick="doDetail(this)">[[${dto.name}]]</td>
-                                                <td>[[${dto.price}]]</td>
-                                                <td class="text-bold-500">[[${dto.type}]]</td>
-                                            </tr>
+                                <div class="card-body">
+                                    <h4 class="card-title" style="text-align: center">[[${rDTO.name}]]</h4>
+                                </div>
+                                <div id="carouselExampleSlidesOnly" class="carousel slide" data-bs-ride="carousel">
+                                    <div class="carousel-inner">
+                                        <div class="carousel-item active" th:if="${not #strings.isEmpty(rDTO.image)}">
+                                            <img th:src="${rDTO.image}" class="d-block w-100" style="height:380px">
                                         </div>
-                                        </tbody>
-                                    </table>
+
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="card-text">
+                                        [[${rDTO.des}]]
+                                    </div>
+                                    <br>
+                                    <div class="buttons" style="float: right"><a th:attr="data-seq=${rDTO.seq}, data-pid=${rDTO.pid}" onclick="doEdit(this)" class="btn btn-primary">수정</a></div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </section>
-
-            <button id="goToGoodsMngInsert" class="btn btn-primary">등록</button>
-            <!-- Hoverable rows end -->
-
+            </div>
             <footer>
                 <div class="footer clearfix mb-0 text-muted">
                     <div class="float-start">
@@ -173,6 +164,7 @@
     </div>
     <!-- jQuery 라이브러리 추가 -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
     <script src="/assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
     <script src="/assets/js/bootstrap.bundle.min.js"></script>
 

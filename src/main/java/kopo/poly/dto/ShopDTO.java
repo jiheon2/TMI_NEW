@@ -8,12 +8,11 @@ import lombok.ToString;
 @Setter
 @ToString
 public class ShopDTO {
-    private String shopCode;
-    private String marketCode;
-    private String businessNum;
-    private String shopLocation;
-    private String shopName;
-    private String shopType;
-    private String shopContent;
+    private String cname;
+    private String type;
+    private String loc;
+    private String des;
+    private String name;
     private String image;
+    private String tid;
 }

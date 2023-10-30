@@ -41,11 +41,13 @@
     <link rel="stylesheet" href="/assets/css/notice/css.css">
 
     <!-- Load fonts style after rendering the layout styles -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;700;900&display=swap">
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;700;900&display=swap">
     <link rel="stylesheet" href="/assets/css/notice/fontawesome.min.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/assets/css/notice/font-awesome.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/assets/css/notice/all.min.css">
-
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/assets/css/notice/font-awesome.min.css">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/assets/css/notice/all.min.css">
 
 
     <script th:inline="javascript">
@@ -99,11 +101,13 @@
                 f.contents.focus();
                 return;
             }
+            var formData = new FormData($("#f")[0]);
             $.ajax({
                     url: "/notice/noticeUpdate",
-                    type: "post", // 전송방식은 Post
-                    dataType: "JSON", // 전송 결과는 JSON으로 받기
-                    data: $("#f").serialize(), // form 태그 내 input 등 객체를 자동으로 전송할 형태로 변경하기
+                type: "POST",
+                data: formData,
+                processData: false,
+                contentType: false,
                     success: function (json) { // /notice/noticeUpdate 호출이 성공했다면..
 
                         if (json.result === 1) { // 로그인 성공
@@ -130,7 +134,8 @@
                 <nav class="navbar navbar-expand-lg navbar-light">
                     <a class="navbar-brand" href="userIndex.html"> <img src="/assets/images/logo.png" alt="logo"> </a>
 
-                    <div class="collapse navbar-collapse main-menu-item" id="navbarSupportedContent" style="height: 100px">
+                    <div class="collapse navbar-collapse main-menu-item" id="navbarSupportedContent"
+                         style="height: 100px">
                     </div>
                     <div class="hearer_icon d-flex">
                         <div>
@@ -144,7 +149,8 @@
                         <a href=""><i class="fa-solid fa-heart" style="font-size:25px"></i></a>
 
                         <div class="dropdown cart">
-                            <a class="dropdown-toggle" href="#" id="navbarDropdown3" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <a class="dropdown-toggle" href="#" id="navbarDropdown3" role="button"
+                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="fas fa-cart-plus" style="font-size:25px"></i>
                             </a>
                         </div>
@@ -189,18 +195,24 @@
                         </dl>
                     </div>
                     <div class="info">
+                        <div class="cont" th:if="${not #strings.isEmpty(rDTO.image)}">
+                            <img th:src="${rDTO.image}" class="d-block w-100" style="height:380px">
+                        </div>
+                           <input type="file" id="fileUpload" name="fileUpload"/>
+                    </div>
+                    <div class="info">
                         <div class="cont">
                             <textarea name="contents" th:value="${rDTO.contents}" th:text="${rDTO.contents}"></textarea>
                         </div>
                     </div>
                 </div>
             </div>
-            </div>
-            <div class="bt_wrap">
-                <a id="btnSend" type="submit" onclick="calBytes(title);doSubmit();" class="on">수정</a>
-                <a href="/notice/noticeList">취소</a>
-            </div>
         </div>
+        <div class="bt_wrap">
+            <a id="btnSend" type="submit" onclick="calBytes(title);doSubmit();" class="on">수정</a>
+            <a href="/notice/noticeList">취소</a>
+        </div>
+    </div>
     </div>
 </form>
 
