@@ -16,7 +16,25 @@
         SELECT ID
         FROM BUYER
         WHERE ID = #{id}
-        ANd PW = #{pw}
+        AND PW = #{pw}
     </select>
+    <select id="getUserInfo" parameterType="CustomerDTO" resultType="CustomerDTO">
+        SELECT NAME, PN, AGE, TYPE
+        FROM BUYER
+        WHERE ID = #{id}
+    </select>
+    <update id="changeCustomer" parameterType="CustomerDTO">
+        UPDATE BUYER
+        SET NAME = #{name},
+            PN = #{pn},
+            AGE = #{age},
+            TYPE = #{type}
+        WHERE ID = #{id}
+    </update>
+    <update id="changePw" parameterType="CustomerDTO">
+        UPDATE BUYER
+        SET PW = #{pw}
+        WHERE ID = #{id}
+    </update>
 
 </mapper>

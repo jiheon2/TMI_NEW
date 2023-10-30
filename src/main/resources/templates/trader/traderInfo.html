@@ -13,7 +13,16 @@
     <link rel="stylesheet" href="/assets/vendors/perfect-scrollbar/perfect-scrollbar.css">
     <link rel="stylesheet" href="/assets/vendors/bootstrap-icons/bootstrap-icons.css">
     <link rel="stylesheet" href="/assets/css/app.css">
-    <link rel="shortcut icon" href="../static/assets/images/favicon.svg" type="image/x-icon">
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
+    <link rel="shortcut icon" href="/assets/images/favicon.svg" type="image/x-icon">
+    <script type="text/javascript">
+        function changePw() {
+            location.href = "/trader/changePw";
+            }
+        function infoChange() {
+            location.href = "/trader/traderInfoChange";
+        }
+    </script>
 </head>
 
 <body>
@@ -23,7 +32,7 @@
                 <div class="sidebar-header">
                     <div class="d-flex justify-content-between">
                         <div class="logo">
-                            <a href="traderIndex.html"><img src="/assets/images/logo/logo.png" alt="Logo" srcset=""></a>
+                            <a href="traderIndex"><img src="/assets/images/logo/logo.png" alt="Logo" srcset=""></a>
                         </div>
                         <div class="toggler">
                             <a href="#" class="sidebar-hide d-xl-none d-block"><i class="bi bi-x bi-middle"></i></a>
@@ -124,31 +133,30 @@
                                                     <label>이름</label>
                                                 </div>
                                                 <div class="col-md-8 form-group">
-                                                   <div class="form-control">이름</div>
+                                                   <div class="form-control">[[${rDTO.name}]]</div>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <label>전화번호</label>
                                                 </div>
                                                 <div class="col-md-8 form-group">
-                                                     <div class="form-control">전화번호</div>
+                                                     <div class="form-control">[[${rDTO.pn}]]</div>
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <label for="disabledInput">사업자 등록번호</label>
+                                                    <label>사업자 등록번호</label>
                                                 </div>
-                                                <div class="col-md-8 form-group">    
-                                                    <div class="form-control">사업자 등록번호</div>
-                                                </div>        
+                                                <div class="col-md-8 form-group">
+                                                    <div class="form-control">[[${rDTO.businessNum}]]</div>
+                                                </div>
                                                       <div class="col-md-4">
-                                                    <label for="disabledInput">소속</label>
+                                                    <label>소속</label>
                                                 </div>
                                                 <div class="col-md-8 form-group">    
-                                                    <div class="form-control">소속</div>
+                                                    <div class="form-control">[[${rDTO.shopCode}]]</div>
                                                 </div>
                                                 <br>
                                                 <div class="col-sm-12 d-flex justify-content-end">
-                                                   <button type="button" class="btn btn-primary me-1 mb-1">비밀번호 변경</button>
-                                                    <button type="button" class="btn btn-primary me-1 mb-1">수정</button>
-                                                    <button type="reset" class="btn btn-light-secondary me-1 mb-1">취소</button>
+                                                    <button type="button" onclick="changePw()" class="btn btn-primary me-1 mb-1">비밀번호 변경</button>
+                                                    <button type="button" onclick="infoChange()"  class="btn btn-primary me-1 mb-1">수정</button>
                                                 </div>
                                             </div>
                                         </div>
