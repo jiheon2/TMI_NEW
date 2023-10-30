@@ -17,11 +17,28 @@
         INSERT INTO TRADER (ID, PW, BUSINESS_NUM, NAME, PN, SHOP_CODE)
         VALUES (#{id}, #{pw}, #{businessNum}, #{name}, #{pn}, #{shopCode})
     </insert>
+    <update id="changeTrader" parameterType="TraderDTO">
+        UPDATE TRADER
+        SET NAME = #{name},
+            PN = #{pn},
+            SHOP_CODE = #{shopCode}
+        WHERE ID = #{id}
+    </update>
+    <update id="changePw" parameterType="TraderDTO">
+        UPDATE TRADER
+        SET PW = #{pw}
+        WHERE ID = #{id}
+    </update>
     <select id="getLogin" parameterType="TraderDTO" resultType="TraderDTO">
         SELECT ID
         FROM TRADER
         WHERE ID = #{id}
-        ANd PW = #{pw}
+        AND PW = #{pw}
+    </select>
+    <select id="getUserInfo" parameterType="TraderDTO" resultType="TraderDTO">
+        SELECT NAME, PN, BUSINESS_NUM, SHOP_CODE
+        FROM TRADER
+        WHERE ID = #{id}
     </select>
 
 </mapper>
