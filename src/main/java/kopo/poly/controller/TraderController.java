@@ -258,4 +258,11 @@ public class TraderController {
 
         return "/trader/updateTraderInfo";
     }
+
+    @GetMapping(value = "/customerService")
+    public String customerService() {
+        log.info("start!");
+
+        return "/trader/customerService";
+    }
 }
