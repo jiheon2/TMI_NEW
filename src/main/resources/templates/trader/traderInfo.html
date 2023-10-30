@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="/assets/vendors/bootstrap-icons/bootstrap-icons.css">
     <link rel="stylesheet" href="/assets/css/app.css">
     <link rel="shortcut icon" href="../static/assets/images/favicon.svg" type="image/x-icon">
+
 </head>
 
 <body>
@@ -23,7 +24,7 @@
                 <div class="sidebar-header">
                     <div class="d-flex justify-content-between">
                         <div class="logo">
-                            <a href="traderIndex.html"><img src="/assets/images/logo/logo.png" alt="Logo" srcset=""></a>
+                            <a href="traderIndex"><img src="/assets/images/logo/logo.png" alt="Logo" srcset=""></a>
                         </div>
                         <div class="toggler">
                             <a href="#" class="sidebar-hide d-xl-none d-block"><i class="bi bi-x bi-middle"></i></a>
@@ -35,7 +36,7 @@
                         <li class="sidebar-title">MENU</li>
 
                         <li class="sidebar-item active ">
-                            <a href="traderIndex.html" class='sidebar-link'>
+                            <a href="traderIndex" class='sidebar-link'>
                                 <i class="bi bi-grid-fill"></i>
                                 <span>한눈에 보기</span>
                             </a>
@@ -48,10 +49,10 @@
                             </a>
                             <ul class="submenu ">
                                 <li class="submenu-item ">
-                                    <a href="shopInfo.html">상점 정보</a>
+                                    <a href="shopInfo">상점 정보</a>
                                 </li>
                                 <li class="submenu-item ">
-                                    <a href="traderInfo.html">상인 정보</a>
+                                    <a href="traderInfo">상인 정보</a>
                                 </li>
                             </ul>
                         </li>
@@ -63,22 +64,22 @@
                             </a>
                             <ul class="submenu ">
                                 <li class="submenu-item ">
-                                    <a href="goodsMng.html">상품 관리</a>
+                                    <a href="goodsMng">상품 관리</a>
                                 </li>
                                 <li class="submenu-item ">
-                                    <a href="reviewMng.html">리뷰 관리</a>
+                                    <a href="reviewMng">리뷰 관리</a>
                                 </li>
                             </ul>
                         </li>
 
                         <li class="sidebar-item  has-sub">
-                            <a href="reservMng.html" class='sidebar-link'>
+                            <a href="reservMng" class='sidebar-link'>
                                 <i class="bi bi-grid-1x2-fill"></i>
                                 <span>예약관리</span>
                             </a>
                         </li>
                         <li class="sidebar-item  ">
-                            <a href="chat.html" class='sidebar-link'>
+                            <a href="chat" class='sidebar-link'>
                                 <i class="bi bi-file-earmark-medical-fill"></i>
                                 <span>채팅</span>
                             </a>
@@ -86,7 +87,7 @@
 
 
                         <li class="sidebar-item  ">
-                            <a href="customerService.html" class='sidebar-link'>
+                            <a href="customerService" class='sidebar-link'>
                                 <i class="bi bi-grid-1x2-fill"></i>
                                 <span>고객센터</span>
                             </a>
@@ -133,13 +134,13 @@
                                                      <div class="form-control">전화번호</div>
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <label for="disabledInput">사업자 등록번호</label>
+                                                    <label>사업자 등록번호</label>
                                                 </div>
                                                 <div class="col-md-8 form-group">    
                                                     <div class="form-control">사업자 등록번호</div>
                                                 </div>        
                                                       <div class="col-md-4">
-                                                    <label for="disabledInput">소속</label>
+                                                    <label>소속</label>
                                                 </div>
                                                 <div class="col-md-8 form-group">    
                                                     <div class="form-control">소속</div>
@@ -173,6 +174,47 @@
     </div>
     <script src="/assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
     <script src="/assets/js/bootstrap.bundle.min.js"></script>
-
+    <!-- jQuery 라이브러리 추가 -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="/assets/js/main.js"></script>
-</body></html>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#index").on("click", function () {
+                location.href = "/trader/traderIndex";
+            })
+
+            $("#traderIndex").on("click", function () {
+                location.href = "/trader/traderIndex";
+            })
+
+            $("#shopInfo").on("click", function () {
+                location.href = "/trader/shopInfo";
+            })
+
+            $("#traderInfo").on("click", function () {
+                location.href = "/trader/traderInfo";
+            })
+
+            $("#goodsMng").on("click", function () {
+                location.href = "/trader/goodsMng";
+            })
+
+            $("#reviewMng").on("click", function () {
+                location.href = "/trader/reviewMng";
+            })
+
+            $("#reservMng").on("click", function () {
+                location.href = "/trader/reservMng";
+            })
+
+            $("#chat").on("click", function () {
+                location.href = "/chat/intro";
+            })
+
+            $("#customerService").on("click", function () {
+                location.href = "/trader/customerService";
+            })
+        });
+    </script>
+</body>
+</html>

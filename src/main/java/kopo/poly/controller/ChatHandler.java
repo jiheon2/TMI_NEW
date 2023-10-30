@@ -126,6 +126,17 @@ public class ChatHandler extends TextWebSocketHandler {
 
         log.info("json : " + json);
 
+        clients.forEach(s -> {
+            if(roomNameHash.equals(s.getAttributes().get("roomNameHash"))) {
+                try {
+                    TextMessage chatMsg = new TextMessage(json);
+                    s.sendMessage(chatMsg);
+                } catch (IOException e) {
+                    log.info("Error : " + e);
+                }
+            }
+        });
 
+        log.info(this.getClass().getName() + ".handleTextMessage End!");
     }
 }
