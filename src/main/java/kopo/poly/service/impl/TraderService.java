@@ -17,11 +17,12 @@ import java.util.Optional;
 public class TraderService implements ITraderService {
     private final ITraderMapper traderMapper;
 
+
+
     @Override
     public TraderDTO getLogin(TraderDTO pDTO) throws Exception {
         log.info(this.getClass().getName() + ".getLogin Start!");
 
-        log.info(pDTO.toString());
 
         TraderDTO rDTO = Optional.ofNullable(traderMapper.getLogin(pDTO)).orElseGet(TraderDTO::new);
 
@@ -36,6 +37,16 @@ public class TraderService implements ITraderService {
         TraderDTO rDTO = traderMapper.getUserIdExists(pDTO);
 
         log.info(this.getClass().getName() + ".getUserIdExists End!");
+        return rDTO;
+    }
+    @Override
+    public TraderDTO getUserInfo(TraderDTO pDTO) throws Exception {
+        log.info(this.getClass().getName() + ".getUserInfo Start!");
+
+
+        TraderDTO rDTO = Optional.ofNullable(traderMapper.getUserInfo(pDTO)).orElseGet(TraderDTO::new);
+
+        log.info(this.getClass().getName() + ".getUserInfo Start!");
         return rDTO;
     }
     @Override
@@ -64,6 +75,43 @@ public class TraderService implements ITraderService {
         }
 
         log.info(this.getClass().getName() + ".insertTrader Start!");
+        return res;
+    }
+
+    @Override
+    public int changeTrader(TraderDTO pDTO) throws Exception {
+        log.info(this.getClass().getName() + ".changeTrader Start!");
+
+        //회원가입 성공시 1, 에러 0
+        int res = 0;
+
+        int success = traderMapper.changeTrader(pDTO);
+
+        if(success > 0) {
+            res = 1;
+        } else {
+            res = 0;
+        }
+
+        log.info(this.getClass().getName() + ".changeTrader Start!");
+        return res;
+    }
+    @Override
+    public int changePw(TraderDTO pDTO) throws Exception {
+        log.info(this.getClass().getName() + ".changeTrader Start!");
+
+        //회원가입 성공시 1, 에러 0
+        int res = 0;
+
+        int success = traderMapper.changePw(pDTO);
+
+        if(success > 0) {
+            res = 1;
+        } else {
+            res = 0;
+        }
+
+        log.info(this.getClass().getName() + ".changeTrader Start!");
         return res;
     }
 }

@@ -9,6 +9,7 @@ import kopo.poly.util.EncryptUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -74,9 +75,10 @@ public class TraderController {
                 res = 1;
 
                 msg = "로그인이 성공했습니다.";
+                log.info("1");
 
                 session.setAttribute("SS_ID", CmmUtil.nvl(rDTO.getId()));
-                session.setAttribute("SS_TYPE", "Trader");
+//                session.setAttribute("SS_TYPE", "Trader");
 
             } else {
                 msg = "아이디와 비밀번호가 올바르지 않습니다.";
@@ -219,9 +221,22 @@ public class TraderController {
     }
 
     @GetMapping(value = "/traderInfo")
-    public String traderInfo() {
-        log.info("start");
+    public String traderInfo(HttpSession session, ModelMap model) throws Exception{
+        log.info(this.getClass().getName() + ".traderInfo start!");
 
+        String id = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+
+        log.info(id);
+
+        TraderDTO pDTO = new TraderDTO();
+
+        pDTO.setId(id);
+
+        TraderDTO rDTO = Optional.ofNullable(traderService.getUserInfo(pDTO)).orElseGet(TraderDTO::new);
+
+        model.addAttribute("rDTO", rDTO);
+
+        log.info(this.getClass().getName() + ".traderInfo start!");
         return "/trader/traderInfo";
     }
 
@@ -252,10 +267,143 @@ public class TraderController {
         return "/trader/updateShopInfo";
     }
 
-    @GetMapping(value = "/updateTraderInfo")
-    public String updateTraderInfo() {
-        log.info("start");
 
-        return "/trader/updateTraderInfo";
+    @GetMapping(value = "/traderInfoChange")
+    public String traderInfoChange(HttpSession session, ModelMap model) throws Exception{
+        log.info(this.getClass().getName() + ".traderInfoChange start!");
+
+        String id = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+
+        log.info(id);
+
+        TraderDTO pDTO = new TraderDTO();
+
+        pDTO.setId(id);
+
+        TraderDTO rDTO = Optional.ofNullable(traderService.getUserInfo(pDTO)).orElseGet(TraderDTO::new);
+
+        model.addAttribute("rDTO", rDTO);
+
+        log.info(this.getClass().getName() + ".traderInfo start!");
+        return "/trader/traderInfoChange";
+    }
+
+    @GetMapping(value = "/changePw")
+    public String changePw(HttpSession session, ModelMap model) throws Exception{
+        log.info(this.getClass().getName() + ".changePw start!");
+
+        String id = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+
+        log.info(id);
+
+        TraderDTO pDTO = new TraderDTO();
+
+        pDTO.setId(id);
+
+        TraderDTO rDTO = Optional.ofNullable(traderService.getUserInfo(pDTO)).orElseGet(TraderDTO::new);
+
+        model.addAttribute("rDTO", rDTO);
+
+        log.info(this.getClass().getName() + ".traderInfo start!");
+        return "/trader/changePw";
+    }
+    @ResponseBody
+    @PostMapping(value = "changeTrader")
+    public MsgDTO changeTrader(HttpServletRequest request, HttpSession session) throws Exception {
+        log.info(this.getClass().getName() + ".changeTrader Start!");
+
+        // 성공이면 1, 실패면 0
+        int res = 0;
+        String msg = "";
+        MsgDTO dto = null;
+
+        TraderDTO pDTO = null;
+
+        try {
+            String id = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+            String shopCode = CmmUtil.nvl(request.getParameter("shopCode"));
+            String name = CmmUtil.nvl(request.getParameter("name"));
+            String pn = CmmUtil.nvl(request.getParameter("pn"));
+
+            log.info("id : " + id);
+            log.info("type : " + shopCode);
+            log.info("name : " + name);
+            log.info("pn : " + pn);
+
+            pDTO = new TraderDTO();
+
+            pDTO.setId(id);
+            pDTO.setPn(pn);
+            pDTO.setName(name);
+            pDTO.setShopCode(shopCode);
+
+            log.info(pDTO.toString());
+
+            res = traderService.changeTrader(pDTO);
+
+            log.info("res : " + res);
+
+            if (res == 1) {
+                msg = "수정되었습니다";
+            } else {
+                msg = "오류로 인해 회원가입에 실패하였습니다";
+            }
+        }catch (Exception e) {
+            msg = "실패하였습니다 : " + e;
+            log.info(e.toString());
+            e.printStackTrace();
+        }finally {
+            dto = new MsgDTO();
+            dto.setMsg(msg);
+            dto.setResult(res);
+            log.info(this.getClass().getName() + ".changeTrader End!");
+        }
+        return dto;
+    }
+    @ResponseBody
+    @PostMapping(value = "pwChange")
+    public MsgDTO pwChange(HttpServletRequest request, HttpSession session) throws Exception {
+        log.info(this.getClass().getName() + ".pwChange Start!");
+
+        // 성공이면 1, 실패면 0
+        int res = 0;
+        String msg = "";
+        MsgDTO dto = null;
+
+        TraderDTO pDTO = null;
+
+        try {
+            String id = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+            String pw = CmmUtil.nvl(request.getParameter("npw"));
+
+            log.info("id : " + id);
+            log.info("pw : " + pw);
+
+            pDTO = new TraderDTO();
+
+            pDTO.setId(id);
+            pDTO.setPw(EncryptUtil.encHashSHA256(pw));
+            log.info(pDTO.toString());
+
+            res = traderService.changePw(pDTO);
+
+            log.info("res : " + res);
+
+            if (res == 1) {
+                msg = "수정되었습니다";
+            } else {
+                msg = "오류로 인해 회원가입에 실패하였습니다";
+            }
+        }catch (Exception e) {
+            msg = "실패하였습니다 : " + e;
+            log.info(e.toString());
+            e.printStackTrace();
+        }finally {
+            dto = new MsgDTO();
+            dto.setMsg(msg);
+            dto.setResult(res);
+            log.info(this.getClass().getName() + ".pwChange End!");
+        }
+        return dto;
     }
 }
