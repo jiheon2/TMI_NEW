@@ -27,6 +27,11 @@
         WHERE SEQ = #{seq}
     </select>
 
+    <select id="getNoticeSeq" resultType="String">
+        SELECT IFNULL(MAX(A.SEQ),0)+1
+        FROM NOTICE A
+    </select>
+
     <update id="updateNoticeReadCnt" parameterType="NoticeDTO">
         UPDATE NOTICE SET
             READ_CNT = READ_CNT + 1

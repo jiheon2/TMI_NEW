@@ -8,7 +8,9 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.*;
 import kopo.poly.dto.NoticeDTO;
+import kopo.poly.persistance.mapper.INoticeMapper;
 import kopo.poly.service.IFileService;
+import kopo.poly.service.INoticeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -28,30 +30,32 @@ public class FileService implements IFileService {
     final String regionName = "kr-standard";
     final String accessKey = "xPknMh74eSfrm2DZSp5K";
     final String secretKey = "UtHgsaaWg7eCbFOXRgH2SVPY0mcumpTrriDQs7T6";
-    final String bucketName = "tmi.image";
+    final String bucketName = "tmi";
 
     // S3 client
     final AmazonS3 s3 = AmazonS3ClientBuilder.standard()
             .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(endPoint, regionName))
             .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(accessKey, secretKey)))
             .build();
+    private final INoticeMapper noticeMapper;
 
     @Override
-    public void upload(String fileName, NoticeDTO pDTO, MultipartFile mf) throws Exception {
+    public void upload(String fileName,String sender, MultipartFile mf) throws Exception {
 
-
-        // create folder
-        String folderName = pDTO.getSender() + "/";
+        String folderName = sender + "/" + noticeMapper.getNoticeSeq() + "/";
 
         ObjectMetadata objectMetadata = new ObjectMetadata();
         objectMetadata.setContentLength(0L);
         objectMetadata.setContentType("application/x-directory");
-        PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, folderName, new ByteArrayInputStream(new byte[0]), objectMetadata);
+//        PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, folderName, new ByteArrayInputStream(new byte[0]), objectMetadata)
+//                .withCannedAcl(CannedAccessControlList.PublicRead);  // ACL을 공개로 설정
+
 
         File uploadFile = convert(mf, folderName);
 
-        try {
-            s3.putObject(putObjectRequest);
+        try (InputStream inputStream = mf.getInputStream()){
+            s3.putObject(new PutObjectRequest(bucketName, folderName,  inputStream, objectMetadata)
+                    .withCannedAcl(CannedAccessControlList.PublicRead));
             System.out.format("Folder %s has been created.\n", folderName);
         } catch (AmazonS3Exception e) {
             e.printStackTrace();
@@ -60,12 +64,13 @@ public class FileService implements IFileService {
         }
 
         // upload local file
-        String objectName = fileName;
+        String objectName = folderName + fileName;
 
 
 
         try {
-            s3.putObject(bucketName, objectName, uploadFile);
+            s3.putObject(new PutObjectRequest(bucketName, objectName, uploadFile)
+                    .withCannedAcl(CannedAccessControlList.PublicRead));
             System.out.format("Object %s has been created.\n", objectName);
         } catch (AmazonS3Exception e) {
             e.printStackTrace();
@@ -74,13 +79,15 @@ public class FileService implements IFileService {
         }
     }
     @Override
-    public URL getFileURL(String fileName) throws Exception {
-        URL url = null;
-        int res = 0;
+    public String getFileURL(String sender, String fileName) throws Exception {
+        String url = null;
         try {
-            url = s3.getUrl(bucketName, fileName);
-            res = 1;
+            String folderName = sender + "/" + noticeMapper.getNoticeSeq() + "/";
+//            URL transform =  s3.getUrl("tmi", folderName + fileName);
 
+//            url = ""+ transform;
+
+            url = "https://kr.object.ncloudstorage.com/tmi/" + folderName + fileName;
         } catch (AmazonS3Exception e) {
             e.printStackTrace();
         } catch (SdkClientException e) {

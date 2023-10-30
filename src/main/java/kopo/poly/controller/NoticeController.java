@@ -64,6 +64,7 @@ public class NoticeController {
             String user_id = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
             String title = CmmUtil.nvl(request.getParameter("title"));
             String contents = CmmUtil.nvl(request.getParameter("contents"));
+            String type = "Notice";
             String noticeYn = "N";
             log.info("session user_id : " + user_id);
             log.info("title : " + title);
@@ -80,7 +81,10 @@ public class NoticeController {
             pDTO.setNoticeYn(noticeYn);
             if(!mf.isEmpty()) {
                 String image = mf.getOriginalFilename();
-                fileService.upload(image, pDTO, mf);
+                String fileName = image;
+                fileService.upload(fileName,type + "/" + pDTO.getSender(), mf);
+                pDTO.setImage(fileService.getFileURL("Notice" + "/" + pDTO.getSender(), fileName));
+                log.info(pDTO.getImage());
             }
             noticeService.insertNoticeInfo(pDTO);
             msg = "등록되었습니다.";

@@ -7,6 +7,6 @@ import java.io.File;
 import java.net.URL;
 
 public interface IFileService {
-    void upload(String image, NoticeDTO pDTO, MultipartFile mf) throws Exception;
-    URL getFileURL(String fileName) throws Exception;
+    void upload(String image, String folderName, MultipartFile mf) throws Exception;
+    String getFileURL(String sender, String fileName) throws Exception;
 }
