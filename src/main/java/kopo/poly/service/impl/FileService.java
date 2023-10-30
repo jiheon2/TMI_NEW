@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
+import java.net.URL;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -22,10 +23,12 @@ import java.io.*;
 public class FileService implements IFileService {
 
 
+
     final String endPoint = "https://kr.object.ncloudstorage.com";
     final String regionName = "kr-standard";
     final String accessKey = "xPknMh74eSfrm2DZSp5K";
     final String secretKey = "UtHgsaaWg7eCbFOXRgH2SVPY0mcumpTrriDQs7T6";
+    final String bucketName = "tmi.image";
 
     // S3 client
     final AmazonS3 s3 = AmazonS3ClientBuilder.standard()
@@ -34,9 +37,8 @@ public class FileService implements IFileService {
             .build();
 
     @Override
-    public void upload(String image, NoticeDTO pDTO, MultipartFile mf) throws Exception {
+    public void upload(String fileName, NoticeDTO pDTO, MultipartFile mf) throws Exception {
 
-        String bucketName = "tmi.image";
 
         // create folder
         String folderName = pDTO.getSender() + "/";
@@ -46,7 +48,7 @@ public class FileService implements IFileService {
         objectMetadata.setContentType("application/x-directory");
         PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, folderName, new ByteArrayInputStream(new byte[0]), objectMetadata);
 
-         File uploadFile = convert(mf, folderName);
+        File uploadFile = convert(mf, folderName);
 
         try {
             s3.putObject(putObjectRequest);
@@ -58,7 +60,7 @@ public class FileService implements IFileService {
         }
 
         // upload local file
-        String objectName = folderName + image;
+        String objectName = fileName;
 
 
 
@@ -70,6 +72,22 @@ public class FileService implements IFileService {
         } catch (SdkClientException e) {
             e.printStackTrace();
         }
+    }
+    @Override
+    public URL getFileURL(String fileName) throws Exception {
+        URL url = null;
+        int res = 0;
+        try {
+            url = s3.getUrl(bucketName, fileName);
+            res = 1;
+
+        } catch (AmazonS3Exception e) {
+            e.printStackTrace();
+        } catch (SdkClientException e) {
+            e.printStackTrace();
+        }
+
+        return url;
     }
     private File convert(MultipartFile file, String folderName) throws IOException {
         File convertFile = new File(System.getProperty(folderName) + file.getOriginalFilename());

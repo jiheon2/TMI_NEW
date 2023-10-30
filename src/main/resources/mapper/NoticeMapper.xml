@@ -13,16 +13,16 @@
     <insert id="insertNoticeInfo" parameterType="NoticeDTO">
         INSERT INTO NOTICE
         (SEQ, TITLE, NOTICE_YN, CONTENTS, SENDER, READ_CNT,
-          REG_DT)
+          REG_DT, IMAGE)
         VALUES (
                (SELECT IFNULL(MAX(A.SEQ),0)+1 FROM NOTICE A),
-               #{title}, #{noticeYn}, #{contents}, #{sender}, 0, NOW()
+               #{title}, #{noticeYn}, #{contents}, #{sender}, 0, NOW(), #{image}
             )
     </insert>
 
     <select id="getNoticeInfo" resultType="NoticeDTO">
         SELECT SEQ, TITLE, NOTICE_YN, READ_CNT, SENDER,
-               CONTENTS,  DATE_FORMAT(REG_DT, '%Y/%m/%d %H:%i:%s') AS REG_DT
+               CONTENTS, IMAGE, DATE_FORMAT(REG_DT, '%Y/%m/%d %H:%i:%s') AS REG_DT
         FROM NOTICE
         WHERE SEQ = #{seq}
     </select>
