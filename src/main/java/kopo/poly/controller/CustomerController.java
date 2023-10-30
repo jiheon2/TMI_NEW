@@ -8,6 +8,7 @@ import kopo.poly.util.EncryptUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,13 +28,6 @@ public class CustomerController {
     @GetMapping(value = "/login")
     public String login(HttpSession session) {
 
-        log.info(this.getClass().getName() + ".customerLogin");
-
-        String type = (String) session.getAttribute("SS_TYPE");
-
-        if(!type.equals("Customer")) {
-            session.invalidate();
-        }
 
         return "/customer/login";
     }
@@ -45,7 +39,7 @@ public class CustomerController {
 
         int res = 0; //로그인 성공 1, 아이디 비밀번호 불일치 0, 에러 2
         String msg = ""; //결과 메시지
-        MsgDTO dto = null; 
+        MsgDTO dto = null;
 
         //웹(회원정보 입력화면)에서 받는 정보를 저장할 변수
         CustomerDTO pDTO = null;
@@ -227,6 +221,167 @@ public class CustomerController {
     public String chat() {
         log.info("start!");
         return "/customer/chat";
+    }
+
+    @GetMapping(value = "/customerInfo")
+    public String getCustomerInfo(HttpSession session, ModelMap model) throws Exception{
+        log.info(this.getClass().getName() + ".customerLogin");
+
+        String type = (String) session.getAttribute("SS_TYPE");
+        String id = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+
+        String url = "/customer/customerInfo";
+        if(!type.equals("Customer")) {
+            session.invalidate();
+            url = "/customer/login";
+        }
+        CustomerDTO pDTO = new CustomerDTO();
+        pDTO.setId(id);
+        CustomerDTO rDTO = Optional.ofNullable(customerService.getUserInfo(pDTO)).orElseGet(CustomerDTO::new);
+        model.addAttribute("rDTO", rDTO);
+        return url;
+
+    }
+    @GetMapping(value = "/customerInfoChange")
+    public String customerInfoChange(HttpSession session, ModelMap model) throws Exception{
+        log.info(this.getClass().getName() + ".customerInfoChange start!");
+
+        String id = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+
+        log.info(id);
+
+        CustomerDTO pDTO = new CustomerDTO();
+
+        pDTO.setId(id);
+
+        CustomerDTO rDTO = Optional.ofNullable(customerService.getUserInfo(pDTO)).orElseGet(CustomerDTO::new);
+
+        model.addAttribute("rDTO", rDTO);
+
+        log.info(this.getClass().getName() + ".customerInfo start!");
+        return "/customer/customerInfoChange";
+    }
+
+    @GetMapping(value = "/changePw")
+    public String changePw(HttpSession session, ModelMap model) throws Exception{
+        log.info(this.getClass().getName() + ".changePw start!");
+
+        String id = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+
+        log.info(id);
+
+        CustomerDTO pDTO = new CustomerDTO();
+
+        pDTO.setId(id);
+
+        CustomerDTO rDTO = Optional.ofNullable(customerService.getUserInfo(pDTO)).orElseGet(CustomerDTO::new);
+
+        model.addAttribute("rDTO", rDTO);
+
+        log.info(this.getClass().getName() + ".customerInfo start!");
+        return "/customer/changePw";
+    }
+    @ResponseBody
+    @PostMapping(value = "changeCustomer")
+    public MsgDTO changeCustomer(HttpServletRequest request, HttpSession session) throws Exception {
+        log.info(this.getClass().getName() + ".changeCustomer Start!");
+
+        // 성공이면 1, 실패면 0
+        int res = 0;
+        String msg = "";
+        MsgDTO dto = null;
+
+        CustomerDTO pDTO = null;
+
+        try {
+            String id = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+            String age = CmmUtil.nvl(request.getParameter("age"));
+            String type = CmmUtil.nvl(request.getParameter("type"));
+            String pn = CmmUtil.nvl(request.getParameter("pn"));
+            String name = CmmUtil.nvl(request.getParameter("name"));
+
+
+            log.info("id : " + id);
+            log.info("age : " + age);
+            log.info("type : " + type);
+            log.info("pn : " + pn);
+
+            pDTO = new CustomerDTO();
+
+            pDTO.setId(id);
+            pDTO.setPn(pn);
+            pDTO.setName(name);
+            pDTO.setType(type);
+            pDTO.setAge(age);
+
+            log.info(pDTO.toString());
+
+            res = customerService.changeCustomer(pDTO);
+
+            log.info("res : " + res);
+
+            if (res == 1) {
+                msg = "수정되었습니다";
+            } else {
+                msg = "오류로 인해 회원가입에 실패하였습니다";
+            }
+        }catch (Exception e) {
+            msg = "실패하였습니다 : " + e;
+            log.info(e.toString());
+            e.printStackTrace();
+        }finally {
+            dto = new MsgDTO();
+            dto.setMsg(msg);
+            dto.setResult(res);
+            log.info(this.getClass().getName() + ".changeCustomer End!");
+        }
+        return dto;
+    }
+    @ResponseBody
+    @PostMapping(value = "pwChange")
+    public MsgDTO pwChange(HttpServletRequest request, HttpSession session) throws Exception {
+        log.info(this.getClass().getName() + ".pwChange Start!");
+
+        // 성공이면 1, 실패면 0
+        int res = 0;
+        String msg = "";
+        MsgDTO dto = null;
+
+        CustomerDTO pDTO = null;
+
+        try {
+            String id = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+            String pw = CmmUtil.nvl(request.getParameter("npw"));
+
+            log.info("id : " + id);
+            log.info("pw : " + pw);
+
+            pDTO = new CustomerDTO();
+
+            pDTO.setId(id);
+            pDTO.setPw(EncryptUtil.encHashSHA256(pw));
+            log.info(pDTO.toString());
+
+            res = customerService.changePw(pDTO);
+
+            log.info("res : " + res);
+
+            if (res == 1) {
+                msg = "수정되었습니다";
+            } else {
+                msg = "오류로 인해 회원가입에 실패하였습니다";
+            }
+        }catch (Exception e) {
+            msg = "실패하였습니다 : " + e;
+            log.info(e.toString());
+            e.printStackTrace();
+        }finally {
+            dto = new MsgDTO();
+            dto.setMsg(msg);
+            dto.setResult(res);
+            log.info(this.getClass().getName() + ".pwChange End!");
+        }
+        return dto;
     }
 
     @GetMapping(value = "/single-product")
