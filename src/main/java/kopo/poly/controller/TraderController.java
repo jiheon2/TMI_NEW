@@ -78,7 +78,7 @@ public class TraderController {
                 log.info("1");
 
                 session.setAttribute("SS_ID", CmmUtil.nvl(rDTO.getId()));
-//                session.setAttribute("SS_TYPE", "Trader");
+                session.setAttribute("SS_TYPE", "Trader");
 
             } else {
                 msg = "아이디와 비밀번호가 올바르지 않습니다.";
@@ -213,12 +213,6 @@ public class TraderController {
         return "/trader/traderIndex";
     }
 
-    @GetMapping(value = "/shopInfo")
-    public String shopInfo() {
-        log.info("start");
-
-        return "/trader/shopInfo";
-    }
 
     @GetMapping(value = "/traderInfo")
     public String traderInfo(HttpSession session, ModelMap model) throws Exception{
@@ -240,25 +234,12 @@ public class TraderController {
         return "/trader/traderInfo";
     }
 
-    @GetMapping(value = "/goodsMng")
-    public String goodsMng() {
-        log.info("start");
-
-        return "/trader/goodsMng";
-    }
 
     @GetMapping(value = "/reservMng")
     public String reservMng() {
         log.info("start");
 
         return "/trader/reservMng";
-    }
-
-    @GetMapping(value = "/updateShopInfo")
-    public String updateShopInfo() {
-        log.info("start");
-
-        return "/trader/updateShopInfo";
     }
 
 

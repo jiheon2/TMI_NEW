@@ -4,50 +4,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TMI - 상인 정보 수정</title>
-    <link rel="stylesheet" href="/assets/css/font.css">
+    <title>TMI - 상점 정보</title>
+
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/bootstrap.css">
-    <link rel="stylesheet" href="/assets/vendors/choices.js/choices.min.css" />
+    <link rel="stylesheet" href="/assets/css/font.css">
     <link rel="stylesheet" href="/assets/vendors/perfect-scrollbar/perfect-scrollbar.css">
     <link rel="stylesheet" href="/assets/vendors/bootstrap-icons/bootstrap-icons.css">
     <link rel="stylesheet" href="/assets/css/app.css">
-    <script src="http://code.jquery.com/jquery-latest.js"></script>
     <link rel="shortcut icon" href="/assets/images/favicon.svg" type="image/x-icon">
+
     <script type="text/javascript">
-        $(document).ready(function () {
-            let f = document.getElementById("f");
-            $("#btnChange").on("click", function () {
-                change(f)
-            })
 
-            function change(f) {
-                $.ajax({
-                        url: "/trader/changeTrader",
-                        type: "post", // 전송방식은 Post
-                        dataType: "JSON", // 전송 결과는 JSON으로 받기
-                        data: $("#f").serialize(), // form 태그 내 input 등 객체를 자동으로 전송할 형태로 변경하기
-                        success: function (json) { // 호출이 성공했다면..
+        //상세보기 이동
+        function doEdit(element) {
+            var seq = element.getAttribute("data-seq");
+            location.href = "/trader/goodsMngInsert?nSeq=" + seq;
+        }
+        //삭제하기
+        function doDelete(element) {
+            var seq = element.getAttribute("data-seq");
+            console.log(seq);
 
-                            if (json.result === 1) { // 수정 성공
-                                alert(json.msg); // 메시지 띄우기
-                                location.href = "/trader/traderInfo"; // 로그인 페이지 이동
+                if (confirm("작성한 상품을 삭제하시겠습니까?")) {
+                    $.ajax({
+                            url: "/trader/goodsMsgDelete",
+                            type: "post", // 전송방식은 Post
+                            dataType: "JSON", // 전송 결과는 JSON으로 받기
+                            data: {"seq": seq}, // form 태그 내 input 등 객체를 자동으로 전송할 형태로 변경하기
+                            success: function (json) { // /notice/noticeUpdate 호출이 성공했다면..
 
-                            } else { // 수정 실패
-                                alert(json.msg); // 메시지 띄우기
+                                if (json.result === 1) { // 로그인 성공
+                                    alert(json.msg); // 메시지 띄우기
+                                    location.href = "/trader/goodsMng"; // 로그인 성공 페이지 이동
+
+                                } else { // 로그인 실패
+                                    alert(json.msg); // 메시지 띄우기
+                                }
+
                             }
                         }
-                    }
-                )
-                $("#cancel").on("click", function () {
-                    cancel()
-                })
-                function cancel() {
-                    location.href = "/trader/traderInfo";
+                    )
                 }
-            }
-        })
+        }
+
     </script>
 </head>
 
@@ -140,53 +141,47 @@
             </header>
 
             <div class="page-heading">
-                <div class="page-title">
-                    <div class="row">
-                        <div class="col-12 col-md-6 order-md-1 order-last mx-auto text-center">
-                            <h3>비밀번호 변경</h3>
-                            <br>
+                <div>
+                    <div class="page-title">
+                        <div class="row">
+                            <div class="col-12 col-md-6 order-md-1 order-last mx-auto text-center">
+                                <h3>상품 정보</h3>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <section class="bootstrap-select">
-                    <section class="section">
-                        <div class="card mx-auto">
+                    <div class="col-xl-4 col-md-6 col-sm-12 mx-auto">
+                        <div class="card">
                             <div class="card-content">
                                 <div class="card-body">
-                                    <form id="f" class="form form-horizontal">
-                                        <div class="form-body">
-                                            <div class="row" style="text-align: center">
-                                                <div class="col-md-4">
-                                                    <label>이름</label>
-                                                </div>
-                                                <div class="col-md-8 form-group">
-                                                        <input type="text" class="form-control" id="name" name="name" th:value="${rDTO.name}" />
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <label>전화번호</label>
-                                                </div>
-                                                <div class="col-md-8 form-group">
-                                                        <input type="tel"  class="form-control" name="pn" id="pn" th:value="${rDTO.pn}" />
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <label>지역</label>
-                                                </div>
-                                                <div class="col-md-8 form-group">
-                                                    <input type="text" class="form-control" id="shopCode" name="shopCode" th:value="${rDTO.shopCode}" />
-                                                </div>
-                                                <br>
-                                                <div class="col-sm-12 d-flex justify-content-end">
-                                                   <button type="button" id="btnChange" class="btn btn-primary me-1 mb-1">수정</button>
-                                                    <button type="button" id="cancel" class="btn btn-light-secondary me-1 mb-1">취소</button>
-                                                </div>
-                                            </div>
+                                    <h4 class="card-title" style="text-align: center">[[${rDTO.name}]]</h4>
+                                </div>
+                                <div id="carouselExampleSlidesOnly" class="carousel slide" data-bs-ride="carousel">
+                                    <div class="carousel-inner">
+                                        <div class="carousel-item active" th:if="${not #strings.isEmpty(rDTO.image)}">
+                                            <img th:src="${rDTO.image}" class="d-block w-100" style="height:380px">
                                         </div>
-                                    </form>
+
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="card-text">
+                                        [[${rDTO.price}]]
+                                    </div>
+                                    <div class="card-text">
+                                        [[${rDTO.type}]]
+                                    </div>
+                                    <div class="card-text">
+                                        [[${rDTO.des}]]
+                                    </div>
+                                    <br>
+                                    <div class="buttons" style="float: right"><a th:attr="data-seq=${rDTO.seq}" onclick="doDelete(this)" class="btn btn-primary">삭제</a></div>
+                                    <div class="buttons" style="float: right"><a th:attr="data-seq=${rDTO.seq}" onclick="doEdit(this)" class="btn btn-primary">수정</a></div>
+                                    <div class="buttons" style="float: right"><a href="goodsMng" class="btn btn-primary">취소</a></div>
                                 </div>
                             </div>
                         </div>
-                    </section>
-                </section>
+                    </div>
+                </div>
             </div>
             <footer>
                 <div class="footer clearfix mb-0 text-muted">
@@ -200,10 +195,12 @@
             </footer>
         </div>
     </div>
-    <script src="/assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
-    <script src="/assets/js/bootstrap.bundle.min.js"></script>
     <!-- jQuery 라이브러리 추가 -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script src="/assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+    <script src="/assets/js/bootstrap.bundle.min.js"></script>
+
     <script src="/assets/js/main.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
@@ -244,4 +241,6 @@
             })
         });
     </script>
-</body></html>
+</body>
+
+</html>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- JAVA와 연결할 Mapper 파일 설정 -->
+<mapper namespace="kopo.poly.persistance.mapper.IShopMapper">
+
+    <select id="getGoodsList" parameterType="ProductDTO" resultType="ProductDTO">
+        SELECT NAME, PRICE, TYPE, PID, SEQ
+        FROM PRODUCT
+        WHERE PID = #{pid}
+        ORDER BY SEQ DESC
+    </select>
+
+    <select id="getGoodsInfo"  parameterType="ProductDTO" resultType="ProductDTO">
+        SELECT NAME, PRICE, TYPE, DES, IMAGE, SEQ, PID
+        FROM PRODUCT
+        WHERE PID = #{pid}
+        AND SEQ = #{seq}
+    </select>
+    <update id="changeGoods" parameterType="ProductDTO">
+        UPDATE PRODUCT
+        SET NAME = #{name},
+            PRICE = #{price},
+            DES = #{des},
+            TYPE = #{type},
+            IMAGE = #{image}
+        WHERE PID = #{pid}
+          AND SEQ = #{seq}
+    </update>
+    <insert id="insertGoods" parameterType="ProductDTO">
+        INSERT INTO PRODUCT (PID, NAME, TYPE, PRICE, DES, SEQ, IMAGE)
+        VALUES (#{pid}, #{name}, #{type}, #{price}, #{des}, (SELECT IFNULL(MAX(A.SEQ),0)+1 FROM PRODUCT A), #{image})
+    </insert>
+
+    <select id="getShopInfo" parameterType="ShopDTO" resultType="ShopDTO">
+        SELECT CNAME, LOC, DES, NAME, IMAGE
+        FROM SHOP
+        WHERE TID = #{tid}
+    </select>
+    <update id="changeShop" parameterType="ShopDTO">
+        UPDATE SHOP
+        SET CNAME = #{cname},
+            LOC = #{loc},
+            NAME = #{name},
+            TYPE = #{type},
+            DES = #{des},
+            IMAGE = #{image}
+        WHERE TID = #{tid}
+    </update>
+    <insert id="insertShop" parameterType="ShopDTO">
+        INSERT INTO SHOP (TID, CNAME, TYPE, LOC, DES, NAME, IMAGE)
+        VALUES (#{tid}, #{cname}, #{type}, #{loc}, #{des}, #{name}, #{image})
+    </insert>
+    <delete id="goodsMsgDelete" parameterType="ProductDTO">
+        DELETE FROM PRODUCT
+        WHERE SEQ = #{seq}
+        AND PID = #{pid}
+    </delete>
+
+</mapper>

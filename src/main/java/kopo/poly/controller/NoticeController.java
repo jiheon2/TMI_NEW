@@ -81,8 +81,8 @@ public class NoticeController {
             if(!mf.isEmpty()) {
                 String image = mf.getOriginalFilename();
                 String fileName = image;
-                fileService.upload(fileName,type + "/" + pDTO.getSender(), mf);
-                pDTO.setImage(fileService.getFileURL("Notice" + "/" + pDTO.getSender(), fileName));
+                fileService.upload(fileName,type + "/" + pDTO.getSeq() + "/", mf);
+                pDTO.setImage(fileService.getFileURL("Notice" + "/" + pDTO.getSeq(), fileName));
                 log.info(pDTO.getImage());
             }
             noticeService.insertNoticeInfo(pDTO);
@@ -149,7 +149,7 @@ public class NoticeController {
 
     @ResponseBody
     @PostMapping(value = "/noticeUpdate")
-    public MsgDTO noticeUpdate(HttpSession session, HttpServletRequest request) {
+    public MsgDTO noticeUpdate(HttpSession session, HttpServletRequest request, @RequestParam(value = "fileUpload") MultipartFile mf) {
 
         log.info(this.getClass().getName() + ".noticeUpdate Start!");
 
@@ -176,6 +176,15 @@ public class NoticeController {
             pDTO.setTitle(title);
             pDTO.setNoticeYn(notice_yn);
             pDTO.setContents(contents);
+            pDTO.setImage("");
+            if(!mf.isEmpty()) {
+                String image = mf.getOriginalFilename();
+                String fileName = image;
+                String folderName = "Notice" + "/" + pDTO.getSeq() + "/";
+                fileService.upload(fileName, folderName, mf);
+                pDTO.setImage(fileService.getFileURL(folderName, fileName));
+                log.info(pDTO.getImage());
+            }
 
             noticeService.updateNoticeInfo(pDTO);
 

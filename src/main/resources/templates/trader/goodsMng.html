@@ -13,8 +13,23 @@
     <link rel="stylesheet" href="/assets/vendors/perfect-scrollbar/perfect-scrollbar.css">
     <link rel="stylesheet" href="/assets/vendors/bootstrap-icons/bootstrap-icons.css">
     <link rel="stylesheet" href="/assets/css/app.css">
-    <link rel="shortcut icon" href="../static/assets/images/favicon.svg" type="image/x-icon">
+    <link rel="shortcut icon" href="/assets/images/favicon.svg" type="image/x-icon">
+    <script type="text/javascript">
 
+        //상세보기 이동
+        function doDetail(element) {
+            var seq = element.getAttribute("data-seq");
+            var pid = element.getAttribute("data-pid");
+            location.href = "/trader/goodsMngInfo?nSeq=" + seq + "&nPid=" + pid;
+        }
+
+    </script>
+    <script>
+        function insert(){
+            // goodsMngInsert 페이지로 이동
+            location.href = "/trader/goodsMngInsert";
+        };
+    </script>
 </head>
 
 <body>
@@ -122,75 +137,16 @@
                                                 <th>상품명</th>
                                                 <th>가격</th>
                                                 <th>상품유형</th>
-                                                <th>설명</th>
                                             </tr>
                                         </thead>
                                         <tbody>
+                                        <div th:each="dto:${rList}">
                                             <tr>
-                                                <td class="text-bold-500">사과</td>
-                                                <td>1500</td>
-                                                <td class="text-bold-500">과일</td>
-                                                <td>aaa</td>
+                                                <td th:attr="data-seq=${dto.seq}, data-pid=${dto.pid}" onclick="doDetail(this)">[[${dto.name}]]</td>
+                                                <td>[[${dto.price}]]</td>
+                                                <td class="text-bold-500">[[${dto.type}]]</td>
                                             </tr>
-                                            <tr>
-                                                <td class="text-bold-500">포도</td>
-                                                <td>9900</td>
-                                                <td class="text-bold-500">과일</td>
-                                                <td>1kg</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="text-bold-500">수박</td>
-                                                <td>20000</td>
-                                                <td class="text-bold-500">과일</td>
-                                                <td>달아</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="text-bold-500">Ashley Boul</td>
-                                                <td>$15/hr</td>
-                                                <td class="text-bold-500">Animation</td>
-                                                <td>Remote</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="text-bold-500">Mikkey Mice</td>
-                                                <td>$15/hr</td>
-                                                <td class="text-bold-500">Animation</td>
-                                                <td>Remote</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="text-bold-500">Mikkey Mice</td>
-                                                <td>$15/hr</td>
-                                                <td class="text-bold-500">Animation</td>
-                                                <td>Remote</td>
-                                            </tr>
-
-                                            <tr>
-                                                <td class="text-bold-500">Mikkey Mice</td>
-                                                <td>$15/hr</td>
-                                                <td class="text-bold-500">Animation</td>
-                                                <td>Remote</td>
-                                            </tr>
-
-                                            <tr>
-                                                <td class="text-bold-500">Mikkey Mice</td>
-                                                <td>$15/hr</td>
-                                                <td class="text-bold-500">Animation</td>
-                                                <td>Remote</td>
-                                            </tr>
-
-                                            <tr>
-                                                <td class="text-bold-500">Mikkey Mice</td>
-                                                <td>$15/hr</td>
-                                                <td class="text-bold-500">Animation</td>
-                                                <td>Remote</td>
-                                            </tr>
-
-                                            <tr>
-                                                <td class="text-bold-500">Mikkey Mice</td>
-                                                <td>$15/hr</td>
-                                                <td class="text-bold-500">Animation</td>
-                                                <td>Remote</td>
-                                            </tr>
-
+                                        </div>
                                         </tbody>
                                     </table>
                                 </div>
@@ -200,7 +156,7 @@
                 </div>
             </section>
 
-            <button class="btn btn-primary">등록 및 수정</button>
+            <button onclick="insert()" class="btn btn-primary">등록</button>
             <!-- Hoverable rows end -->
 
             <footer>

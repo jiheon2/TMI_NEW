@@ -201,7 +201,7 @@ public class CustomerController {
     }
     @GetMapping(value = "/shop")
     public String shop() {
-        log.info("start!");
+        log.info(this.getClass().getName() + ".shop Start!");
         return "/customer/shop";
     }
 
