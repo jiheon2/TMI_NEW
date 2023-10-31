@@ -40,5 +40,4 @@
         FROM TRADER
         WHERE ID = #{id}
     </select>
-
 </mapper>

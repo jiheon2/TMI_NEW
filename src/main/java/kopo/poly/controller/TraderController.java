@@ -241,12 +241,6 @@ public class TraderController {
 
         return "/trader/reservMng";
     }
-    @GetMapping(value = "/reviewMng")
-    public String reviewMng() {
-        log.info("start");
-
-        return "/trader/reviewMng";
-    }
 
 
     @GetMapping(value = "/traderInfoChange")
