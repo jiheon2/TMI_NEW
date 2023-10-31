@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- JAVA와 연결할 Mapper 파일 설정 -->
+<mapper namespace="kopo.poly.persistance.mapper.IReviewMapper">
+    <select id="getReviewList" parameterType="ReviewDTO" resultType="ReviewDTO">
+        SELECT R.CONTENTS, R.NAME, R.PRODUCT, R.REG_DT, R.SEQ, R.RATING, R.TRADER_ID
+        FROM REVIEW R, TRADER T
+        WHERE #{traderId} = T.ID
+        ORDER BY R.SEQ ASC
+    </select>
+    <delete id="deleteReview" parameterType="ReviewDTO">
+        DELETE FROM REVIEW
+        WHERE SEQ = #{seq}
+    </delete>
+</mapper>
