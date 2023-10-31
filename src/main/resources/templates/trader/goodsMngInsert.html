@@ -20,7 +20,9 @@
 
     <link rel="shortcut icon" href="/assets/images/favicon.svg" type="image/x-icon">
 
+
     <script th:inline="javascript">
+        const seq = /*[[${rDTO.seq}]]*/'';
         // HTML로딩이 완료되고, 실행됨
         $(document).ready(function () {
             // 버튼 클릭했을때, 발생되는 이벤트 생성함(onclick 이벤트와 동일함)
@@ -224,7 +226,7 @@
                                 </div>
                                 <div class="buttons" style="float: right"><a id="btnSend" type="submit"
                                                                              class="btn btn-primary">수정</a></div>
-                                <div class="buttons" style="float: right"><a href="shopInfo"
+                                <div class="buttons" style="float: right"><a href="goodsMng"
                                                                              class="btn btn-primary">취소</a></div>
                             </div>
                         </div>

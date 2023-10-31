@@ -17,6 +17,20 @@
         WHERE PID = #{pid}
         AND SEQ = #{seq}
     </select>
+    <update id="changeGoods" parameterType="ProductDTO">
+        UPDATE PRODUCT
+        SET NAME = #{name},
+            PRICE = #{price},
+            DES = #{des},
+            TYPE = #{type},
+            IMAGE = #{image}
+        WHERE PID = #{pid}
+          AND SEQ = #{seq}
+    </update>
+    <insert id="insertGoods" parameterType="ProductDTO">
+        INSERT INTO PRODUCT (PID, NAME, TYPE, PRICE, DES, SEQ, IMAGE)
+        VALUES (#{pid}, #{name}, #{type}, #{price}, #{des}, (SELECT IFNULL(MAX(A.SEQ),0)+1 FROM PRODUCT A), #{image})
+    </insert>
 
     <select id="getShopInfo" parameterType="ShopDTO" resultType="ShopDTO">
         SELECT CNAME, LOC, DES, NAME, IMAGE
@@ -37,5 +51,10 @@
         INSERT INTO SHOP (TID, CNAME, TYPE, LOC, DES, NAME, IMAGE)
         VALUES (#{tid}, #{cname}, #{type}, #{loc}, #{des}, #{name}, #{image})
     </insert>
+    <delete id="goodsMsgDelete" parameterType="ProductDTO">
+        DELETE FROM PRODUCT
+        WHERE SEQ = #{seq}
+        AND PID = #{pid}
+    </delete>
 
 </mapper>

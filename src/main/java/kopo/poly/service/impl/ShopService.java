@@ -37,6 +37,27 @@ public class ShopService implements IShopService {
         return rDTO;
     }
     @Override
+    public int changeGoods(ProductDTO pDTO) throws Exception {
+        int result = 0;
+        int res = 0;
+        log.info("수정 시작");
+        result = shopMapper.changeGoods(pDTO);
+        if(result == 0) {
+            log.info("인설트 시작");
+            result = shopMapper.insertGoods(pDTO);
+        }
+
+        if (result > 0) {
+            res = 1;
+        }
+        return res;
+    }
+    @Override
+    public void goodsMsgDelete(ProductDTO pDTO) throws Exception {
+        log.info(this.getClass().getName() + ".goodsMsgDelete start!");
+        shopMapper.goodsMsgDelete(pDTO);
+    }
+    @Override
     public ShopDTO getShopInfo(ShopDTO pDTO) throws Exception {
         log.info(this.getClass().getName() + ".getShopInfo Start!");
 
@@ -64,4 +85,5 @@ public class ShopService implements IShopService {
         }
         return res;
     }
+
 }

@@ -25,10 +25,10 @@
 
     </script>
     <script>
-        document.getElementById("goToGoodsMngInsert").addEventListener("click", function() {
+        function insert(){
             // goodsMngInsert 페이지로 이동
-            location.href = "/goodsMngInsert";
-        });
+            location.href = "/trader/goodsMngInsert";
+        };
     </script>
 </head>
 
@@ -156,7 +156,7 @@
                 </div>
             </section>
 
-            <button id="goToGoodsMngInsert" class="btn btn-primary">등록</button>
+            <button onclick="insert()" class="btn btn-primary">등록</button>
             <!-- Hoverable rows end -->
 
             <footer>

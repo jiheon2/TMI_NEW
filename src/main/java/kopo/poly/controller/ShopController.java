@@ -10,6 +10,7 @@ import kopo.poly.service.IShopService;
 import kopo.poly.util.CmmUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
@@ -111,7 +112,7 @@ public class ShopController {
             if(!mf.isEmpty()) {
                 String image = mf.getOriginalFilename();
                 String fileName = image;
-                String folderName = "Trader" + "/" + pDTO.getTid() + "/" + "Shop";
+                String folderName = "Trader" + "/" + pDTO.getTid() + "/" + "Shop" + "/";
                 fileService.upload(fileName, folderName , mf);
                 pDTO.setImage(fileService.getFileURL(folderName, fileName));
                 log.info(pDTO.getImage());
@@ -183,17 +184,27 @@ public class ShopController {
 
         return url;
     }
-    @GetMapping(value = "/trader/goodsMngUpdate")
-    public String goodsMngUpdate() {
-        log.info("start");
-
-        return "goodsMngIn";
-    }
     @GetMapping(value = "/trader/goodsMngInsert")
-    public String goodsMngInsert() {
-        log.info("start");
+    public String goodsMngInsert(HttpSession session, ModelMap model, HttpServletRequest request) throws Exception {
+        log.info(this.getClass().getName() + ".goodsMngInsert start!");
 
-        return "goodsMngUpdate";
+        String id = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+        String seq = CmmUtil.nvl(request.getParameter("nSeq"));
+        log.info(id);
+
+        ProductDTO pDTO = new ProductDTO();
+
+        pDTO.setPid(id);
+        pDTO.setSeq(seq);
+
+        log.info(pDTO.toString());
+        ProductDTO rDTO = Optional.ofNullable(shopService.getGoodsInfo(pDTO)).orElseGet(ProductDTO::new);
+
+        log.info(rDTO.toString());
+        model.addAttribute("rDTO", rDTO);
+
+        log.info(this.getClass().getName() + ".goodsMngInsert start!");
+        return "/trader/goodsMngInsert";
     }
     @ResponseBody
     @PostMapping(value = "/trader/changeGoods")
@@ -205,31 +216,30 @@ public class ShopController {
         String msg = "";
         MsgDTO dto = null;
 
-        ShopDTO pDTO = null;
+        ProductDTO pDTO = null;
 
         try {
             String id = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
-            String cname = CmmUtil.nvl(request.getParameter("cname"));
-            String name = CmmUtil.nvl(request.getParameter("came"));
-            String type = CmmUtil.nvl(request.getParameter("type"));
-            String loc = CmmUtil.nvl(request.getParameter("loc"));
+            String name = CmmUtil.nvl(request.getParameter("name"));
+            String price = CmmUtil.nvl(request.getParameter("price"));
             String des = CmmUtil.nvl(request.getParameter("des"));
+            String type = CmmUtil.nvl(request.getParameter("type"));
+            String seq = CmmUtil.nvl(request.getParameter("seq"));
 
-            log.info("name:" + name);
-            log.info("cname:" + cname);
+            log.info("price:" + price);
+            log.info("des:" + des);
+            log.info("name : " + name);
             log.info("type : " + type);
-            log.info("loc : " + loc);
-            log.info("des : " + des);
+            log.info("seq : " + seq);
 
+            pDTO = new ProductDTO();
 
-            pDTO = new ShopDTO();
-
-            pDTO.setTid(id);
-            pDTO.setCname(cname);
-            pDTO.setType(type);
-            pDTO.setLoc(loc);
+            pDTO.setPrice(price);
             pDTO.setDes(des);
+            pDTO.setType(type);
+            pDTO.setPid(id);
             pDTO.setName(name);
+            pDTO.setSeq(seq);
             pDTO.setImage("");
 
 
@@ -237,14 +247,14 @@ public class ShopController {
             if(!mf.isEmpty()) {
                 String image = mf.getOriginalFilename();
                 String fileName = image;
-                String folderName = "Trader" + "/" + pDTO.getTid() + "/" + "Goods";
+                String folderName = "Trader" + "/" + pDTO.getPid() + "/" + "Goods" + "/";
                 fileService.upload(fileName, folderName , mf);
                 pDTO.setImage(fileService.getFileURL(folderName, fileName));
                 log.info(pDTO.getImage());
             }
             log.info(pDTO.toString());
 
-            res = shopService.changeShop(pDTO);
+            res = shopService.changeGoods(pDTO);
 
             log.info("res : " + res);
 
@@ -263,6 +273,43 @@ public class ShopController {
             dto.setResult(res);
             log.info(this.getClass().getName() + ".changeGoods End!");
         }
+        return dto;
+    }
+    @ResponseBody
+    @PostMapping(value = "/trader/goodsMsgDelete")
+    public MsgDTO goodsMsgDelete(HttpSession session, HttpServletRequest request) {
+
+        log.info(this.getClass().getName() + ".goodsMsgDelete Start!");
+
+        String msg = "";
+        int res = 0;
+        MsgDTO dto = null;
+
+        try {
+            String user_id = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+            String nSeq = CmmUtil.nvl(request.getParameter("seq"));
+
+            log.info("user_id : " + user_id);
+            log.info("nSeq : " + nSeq);
+
+            ProductDTO pDTO = new ProductDTO();
+            pDTO.setPid(user_id);
+            pDTO.setSeq(nSeq);
+            shopService.goodsMsgDelete(pDTO);
+
+            msg = "삭제되었습니다.";
+            res = 1;
+        } catch (Exception e) {
+            msg = "실패하였습니다. : " + e.getMessage();
+            log.info(e.toString());
+            e.printStackTrace();
+        } finally {
+            dto = new MsgDTO();
+            dto.setResult(res);
+            dto.setMsg(msg);
+            log.info(this.getClass().getName() + ".goodsMsgDelete End!");
+        }
+
         return dto;
     }
 

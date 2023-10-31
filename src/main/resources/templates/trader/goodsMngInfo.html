@@ -13,15 +13,40 @@
     <link rel="stylesheet" href="/assets/vendors/perfect-scrollbar/perfect-scrollbar.css">
     <link rel="stylesheet" href="/assets/vendors/bootstrap-icons/bootstrap-icons.css">
     <link rel="stylesheet" href="/assets/css/app.css">
-    <link rel="shortcut icon" href="../static/assets/images/favicon.svg" type="image/x-icon">
+    <link rel="shortcut icon" href="/assets/images/favicon.svg" type="image/x-icon">
 
     <script type="text/javascript">
 
         //상세보기 이동
         function doEdit(element) {
             var seq = element.getAttribute("data-seq");
-            var pid = element.getAttribute("data-pid");
-            location.href = "/trader/updateGoodsInfo?nCname=" + cname;
+            location.href = "/trader/goodsMngInsert?nSeq=" + seq;
+        }
+        //삭제하기
+        function doDelete(element) {
+            var seq = element.getAttribute("data-seq");
+            console.log(seq);
+
+                if (confirm("작성한 상품을 삭제하시겠습니까?")) {
+                    $.ajax({
+                            url: "/trader/goodsMsgDelete",
+                            type: "post", // 전송방식은 Post
+                            dataType: "JSON", // 전송 결과는 JSON으로 받기
+                            data: {"seq": seq}, // form 태그 내 input 등 객체를 자동으로 전송할 형태로 변경하기
+                            success: function (json) { // /notice/noticeUpdate 호출이 성공했다면..
+
+                                if (json.result === 1) { // 로그인 성공
+                                    alert(json.msg); // 메시지 띄우기
+                                    location.href = "/trader/goodsMng"; // 로그인 성공 페이지 이동
+
+                                } else { // 로그인 실패
+                                    alert(json.msg); // 메시지 띄우기
+                                }
+
+                            }
+                        }
+                    )
+                }
         }
 
     </script>
@@ -140,10 +165,18 @@
                                 </div>
                                 <div class="card-body">
                                     <div class="card-text">
+                                        [[${rDTO.price}]]
+                                    </div>
+                                    <div class="card-text">
+                                        [[${rDTO.type}]]
+                                    </div>
+                                    <div class="card-text">
                                         [[${rDTO.des}]]
                                     </div>
                                     <br>
-                                    <div class="buttons" style="float: right"><a th:attr="data-seq=${rDTO.seq}, data-pid=${rDTO.pid}" onclick="doEdit(this)" class="btn btn-primary">수정</a></div>
+                                    <div class="buttons" style="float: right"><a th:attr="data-seq=${rDTO.seq}" onclick="doDelete(this)" class="btn btn-primary">삭제</a></div>
+                                    <div class="buttons" style="float: right"><a th:attr="data-seq=${rDTO.seq}" onclick="doEdit(this)" class="btn btn-primary">수정</a></div>
+                                    <div class="buttons" style="float: right"><a href="goodsMng" class="btn btn-primary">취소</a></div>
                                 </div>
                             </div>
                         </div>
