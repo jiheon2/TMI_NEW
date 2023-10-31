@@ -13,4 +13,5 @@ public interface INoticeMapper {
     void updateNoticeReadCnt(NoticeDTO pDTO) throws Exception;
     void updateNoticeInfo(NoticeDTO pDTO) throws Exception;
     void deleteNoticeInfo(NoticeDTO pDTO) throws Exception;
+    String getNoticeSeq() throws Exception;
 }

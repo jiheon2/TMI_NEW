@@ -20,7 +20,9 @@
 
     <link rel="shortcut icon" href="/assets/images/favicon.svg" type="image/x-icon">
 
+
     <script th:inline="javascript">
+        const seq = /*[[${rDTO.seq}]]*/'';
         // HTML로딩이 완료되고, 실행됨
         $(document).ready(function () {
             // 버튼 클릭했을때, 발생되는 이벤트 생성함(onclick 이벤트와 동일함)
@@ -58,18 +60,18 @@
             }
             var formData = new FormData($("#f")[0]);
             $.ajax({
-                    url: "/trader/changeShop",
+                    url: "/trader/changeGoods",
                 type: "POST",
                 data: formData,
                 processData: false,
                 contentType: false,
-                    success: function (json) { // /notice/noticeUpdate 호출이 성공했다면..
+                    success: function (json) {
 
-                        if (json.result === 1) { // 로그인 성공
+                        if (json.result === 1) {
                             alert(json.msg); // 메시지 띄우기
-                            location.href = "/trader/shopInfo"; // 로그인 성공 페이지 이동
+                            location.href = "/trader/goodsMng";
 
-                        } else { // 로그인 실패
+                        } else {
                             alert(json.msg); // 메시지 띄우기
                         }
 
@@ -172,31 +174,14 @@
         <div class="page-heading">
             <div>
                 <form id="f">
-                <div class="page-title">
-                    <div class="row">
-                        <div class="col-12 col-md-6 order-md-1 order-last mx-auto text-center">
-                            <h3>상점 정보</h3>
-                            <input type="text" class="text-subtitle text-muted" id="loc" name="loc" placeholder="시장명"
-                                   th:value="${rDTO.loc}">
-                        </div>
-                    </div>
-                </div>
                     <div class="col-xl-4 col-md-6 col-sm-12 mx-auto">
                         <div class="card">
                             <div class="card-content">
                                 <div class="card-body">
                                     <div class="col-md-6 mx-auto">
                                         <div class="form-group">
-                                            <input type="text" class="form-control" id="cname" name="cname" placeholder="상호명"
-                                                   th:value="${rDTO.cname}">
-                                        </div>
-                                        <div class="form-group">
-                                        <input type="text" class="form-control" id="name" name="name" placeholder="상인명"
-                                               th:value="${rDTO.name}">
-                                    </div>
-                                        <div class="form-group">
-                                            <input type="text" class="form-control" id="type" name="type" placeholder="가게 유형"
-                                                   th:value="${rDTO.type}">
+                                            <input type="text" class="form-control" id="name" name="name" placeholder="품명"
+                                                   th:value="${rDTO.name}">
                                         </div>
                                     </div>
                                 </div>
@@ -225,15 +210,23 @@
                                         </div>
                                     </fieldset>
                                 </div>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" id="price" name="price" placeholder="가격"
+                                           th:value="${rDTO.price}">
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" id="type" name="type" placeholder="가게 유형"
+                                           th:value="${rDTO.type}">
+                                </div>
                                 <div class="card-body">
                                     <div class="form-floating">
-                                        <textarea class="form-control" placeholder="상점 설명을 써주세요" id="des"
+                                        <textarea class="form-control" placeholder="상품 설명을 써주세요" id="des"
                                                   style="height: 250px" th:field="*{rDTO.des}" th:text="${rDTO.des}"></textarea>
                                     </div>
                                 </div>
                                 <div class="buttons" style="float: right"><a id="btnSend" type="submit"
                                                                              class="btn btn-primary">수정</a></div>
-                                <div class="buttons" style="float: right"><a href="shopInfo"
+                                <div class="buttons" style="float: right"><a href="goodsMng"
                                                                              class="btn btn-primary">취소</a></div>
                             </div>
                         </div>

@@ -14,6 +14,15 @@
     <link rel="stylesheet" href="/assets/vendors/bootstrap-icons/bootstrap-icons.css">
     <link rel="stylesheet" href="/assets/css/app.css">
     <link rel="shortcut icon" href="../static/assets/images/favicon.svg" type="image/x-icon">
+
+    <script type="text/javascript">
+
+        //상세보기 이동
+        function doEdit(cname) {
+            location.href = "/trader/updateShopInfo?nCname=" + cname;
+        }
+
+    </script>
 </head>
 
 <body>
@@ -23,7 +32,7 @@
                 <div class="sidebar-header">
                     <div class="d-flex justify-content-between">
                         <div class="logo">
-                            <a href="traderIndex.html"><img src="/assets/images/logo/logo.png" alt="Logo" srcset=""></a>
+                            <a href="traderIndex"><img src="/assets/images/logo/logo.png" alt="Logo" srcset=""></a>
                         </div>
                         <div class="toggler">
                             <a href="#" class="sidebar-hide d-xl-none d-block"><i class="bi bi-x bi-middle"></i></a>
@@ -35,7 +44,7 @@
                         <li class="sidebar-title">MENU</li>
 
                         <li class="sidebar-item active ">
-                            <a href="traderIndex.html" class='sidebar-link'>
+                            <a id="traderIndex" class='sidebar-link'>
                                 <i class="bi bi-grid-fill"></i>
                                 <span>한눈에 보기</span>
                             </a>
@@ -48,10 +57,10 @@
                             </a>
                             <ul class="submenu ">
                                 <li class="submenu-item ">
-                                    <a href="shopInfo.html">상점 정보</a>
+                                    <a id="shopInfo">상점 정보</a>
                                 </li>
                                 <li class="submenu-item ">
-                                    <a href="traderInfo.html">상인 정보</a>
+                                    <a id="traderInfo">상인 정보</a>
                                 </li>
                             </ul>
                         </li>
@@ -63,23 +72,23 @@
                             </a>
                             <ul class="submenu ">
                                 <li class="submenu-item ">
-                                    <a href="goodsMng.html">상품 관리</a>
+                                    <a id="goodsMng">상품 관리</a>
                                 </li>
                                 <li class="submenu-item ">
-                                    <a href="reviewMng.html">리뷰 관리</a>
+                                    <a id="reviewMng">리뷰 관리</a>
                                 </li>
                             </ul>
                         </li>
 
-                      <li class="sidebar-item  has-sub">
-                            <a href="reservMng.html" class='sidebar-link'>
+                        <li class="sidebar-item">
+                            <a id="reservMng" class='sidebar-link'>
                                 <i class="bi bi-grid-1x2-fill"></i>
                                 <span>예약관리</span>
                             </a>
                         </li>
 
                         <li class="sidebar-item  ">
-                            <a href="chat.html" class='sidebar-link'>
+                            <a  id="chat" class='sidebar-link'>
                                 <i class="bi bi-file-earmark-medical-fill"></i>
                                 <span>채팅</span>
                             </a>
@@ -87,7 +96,7 @@
 
 
                         <li class="sidebar-item  ">
-                            <a href="customerService.html" class='sidebar-link'>
+                            <a id="customerService" class='sidebar-link'>
                                 <i class="bi bi-grid-1x2-fill"></i>
                                 <span>고객센터</span>
                             </a>
@@ -110,7 +119,7 @@
                         <div class="row">
                             <div class="col-12 col-md-6 order-md-1 order-last mx-auto text-center">
                                 <h3>상점 정보</h3>
-                                <p class="text-subtitle text-muted">시장 이름</p>
+                                <p class="text-subtitle text-muted">[[${rDTO.loc}]]</p>
                             </div>
                         </div>
                     </div>
@@ -118,50 +127,23 @@
                         <div class="card">
                             <div class="card-content">
                                 <div class="card-body">
-                                    <h4 class="card-title" style="text-align: center">길동이네 과일집</h4>
-                                    <h6 class="card-subtitle" style="text-align: center">상인 홍길동</h6>
+                                    <h4 class="card-title" style="text-align: center">[[${rDTO.cname}]]</h4>
+                                    <h6 class="card-subtitle" style="text-align: center">[[${rDTO.name}]]</h6>
                                 </div>
                                 <div id="carouselExampleSlidesOnly" class="carousel slide" data-bs-ride="carousel">
                                     <div class="carousel-inner">
-                                        <div class="carousel-item active">
-                                            <img src="/assets/images/samples/광장1.jpg" class="d-block w-100" alt="이미지를 새로 등록해주세요" style="height:380px">
+                                        <div class="carousel-item active" th:if="${not #strings.isEmpty(rDTO.image)}">
+                                            <img th:src="${rDTO.image}" class="d-block w-100" style="height:380px">
                                         </div>
-                                        <div class="carousel-item">
-                                            <img src="/assets/images/samples/광장2.jpg" class="d-block w-100" alt="이미지를 새로 등록해주세요" style="height:380px">
-                                        </div>
-                                        <div class="carousel-item">
-                                            <img src="/assets/images/samples/광장3.jpg" class="d-block w-100" alt="이미지를 새로 등록해주세요" style="height:380px">
-                                        </div>
+
                                     </div>
-                                    <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-bs-slide="prev">
-                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                        <span class="visually-hidden">Previous</span>
-                                    </a>
-                                    <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-bs-slide="next">
-                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                        <span class="visually-hidden">Next</span>
-                                    </a>
                                 </div>
                                 <div class="card-body">
                                     <div class="card-text">
-                                        광장시장에서 가장 맛있는 과일가게!
+                                        [[${rDTO.des}]]
                                     </div>
                                     <br>
-                                    <div class="card-text">
-                                        리뷰이벤트 진행중!
-                                        맛있는 사과를 5개 사시면 1개가 공짜!
-                                        <br>
-                                        광장시장에서 가장 맛있는 과일집인 길동이네 과일가게
-                                        <br>
-                                        많이 찾아주세요!
-                                        <br>
-                                        <br>
-                                        ★ 10만원 이상 구매시 서비스 드립니다.
-                                        <br>
-                                        ★ 예약문의는 채팅 시스템 이용 부탁드립니다.
-                                    </div>
-                                    <br>
-                                    <div class="buttons" style="float: right"><a href="updateShopInfo.html" class="btn btn-primary">수정</a></div>
+                                    <div class="buttons" style="float: right"><a th:attr="onclick='doEdit(\'' + ${rDTO.cname} + '\')'" class="btn btn-primary">수정</a></div>
                                 </div>
                             </div>
                         </div>
@@ -180,11 +162,52 @@
             </footer>
         </div>
     </div>
+    <!-- jQuery 라이브러리 추가 -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script src="/assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
     <script src="/assets/js/bootstrap.bundle.min.js"></script>
 
     <script src="/assets/js/main.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#index").on("click", function () {
+                location.href = "/trader/traderIndex";
+            })
+
+            $("#traderIndex").on("click", function () {
+                location.href = "/trader/traderIndex";
+            })
+
+            $("#shopInfo").on("click", function () {
+                location.href = "/trader/shopInfo";
+            })
+
+            $("#traderInfo").on("click", function () {
+                location.href = "/trader/traderInfo";
+            })
+
+            $("#goodsMng").on("click", function () {
+                location.href = "/trader/goodsMng";
+            })
+
+            $("#reviewMng").on("click", function () {
+                location.href = "/trader/reviewMng";
+            })
+
+            $("#reservMng").on("click", function () {
+                location.href = "/trader/reservMng";
+            })
+
+            $("#chat").on("click", function () {
+                location.href = "/chat/intro";
+            })
+
+            $("#customerService").on("click", function () {
+                location.href = "/trader/customerService";
+            })
+        });
+    </script>
 </body>
 
 </html>

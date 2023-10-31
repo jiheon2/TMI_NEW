@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TMI - 채팅</title>
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/bootstrap.css">
+    <link rel="stylesheet" href="/assets/css/font.css">
+    <link rel="stylesheet" href="/assets/vendors/iconly/bold.css">
+
+    <link rel="stylesheet" href="/assets/vendors/perfect-scrollbar/perfect-scrollbar.css">
+    <link rel="stylesheet" href="/assets/vendors/bootstrap-icons/bootstrap-icons.css">
+    <link rel="stylesheet" href="/assets/css/app.css">
+    <link rel="shortcut icon" href="../static/assets/images/favicon.svg" type="image/x-icon">
+</head>
+
+<body>
+<div id="app">
+
+    <div id="main">
+        <div class="page-heading">
+            <div class="page-title">
+                <div class="row">
+                    <div class="col-12 col-md-6 order-md-1 order-last">
+                        <div class="page-heading">
+                            <h3>채팅리스트</h3>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6 order-md-2 order-first">
+                        <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="index">Dashboard</a></li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <section class="section">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="divTableHeading">
+                                    <div class="divTableRow">
+                                        <div class="divTableHead">대화가능한 채팅방들</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="divTableBody">
+                                <div class="divTableRow">
+                                    <div class="divTableCell" id="room_list"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!--
+        <div class="page-heading">
+            <h3>채팅리스트</h3>
+        </div>
+        <div class="page-content">
+            <h1>채팅방 전체 리스트</h1>
+            <div class="divTable minimalistBlack">
+                <div class="divTableHeading">
+                    <div class="divTableRow">
+                        <div class="divTableHead">대화가능한 채팅방들</div>
+                    </div>
+                </div>
+                <div class="divTableBody">
+                    <div class="divTableRow">
+                        <div class="divTableCell" id="room_list"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+-->
+
+        <footer>
+            <div class="footer clearfix mb-0 text-muted">
+                <div class="float-start">
+                    <p>2021 &copy; Mazer</p>
+                </div>
+                <div class="float-end">
+                    <p>Crafted with <span class="text-danger"><i class="bi bi-heart"></i></span> by <a href="http://ahmadsaugi.com">A. Saugi</a></p>
+                </div>
+            </div>
+        </footer>
+    </div>
+</div>
+<!-- JS -->
+<script src="/assets/jquery/jquery.min.js"></script>
+<script src="/assets/rjs/main.js"></script>
+<!-- Bootstrap core JS-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Core theme JS-->
+<script src="/assets/js/scripts.js"></script>
+<!-- jquery plugins here-->
+<!-- jquery -->
+<script src="/assets/js/jquery-1.12.1.min.js"></script>
+<!-- popper js -->
+<script src="/assets/js/popper.min.js"></script>
+<!-- bootstrap js -->
+<script src="/assets/js/bootstrap.min.js"></script>
+<!-- easing js -->
+<script src="/assets/js/jquery.magnific-popup.js"></script>
+<!-- swiper js -->
+<script src="/assets/js/swiper.min.js"></script>
+<!-- swiper js -->
+<script src="/assets/js/masonry.pkgd.js"></script>
+<!-- particles js -->
+<script src="/assets/js/owl.carousel.min.js"></script>
+<script src="/assets/js/jquery.nice-select.min.js"></script>
+<!-- slick js -->
+<script src="/assets/js/slick.min.js"></script>
+<script src="/assets/js/jquery.counterup.min.js"></script>
+<script src="/assets/js/waypoints.min.js"></script>
+<script src="/assets/js/contact.js"></script>
+<script src="/assets/js/jquery.ajaxchimp.min.js"></script>
+<script src="/assets/js/jquery.form.js"></script>
+<script src="/assets/js/jquery.validate.min.js"></script>
+<script src="/assets/js/mail-script.js"></script>
+<script src="/assets/js/stellar.js"></script>
+<script src="/assets/js/price_rangs.js"></script>
+<!-- custom js -->
+<script src="/assets/js/custom.js"></script>
+<script src="/assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+<script src="/assets/js/bootstrap.bundle.min.js"></script>
+
+<script src="/assets/vendors/apexcharts/apexcharts.js"></script>
+<script src="/assets/js/pages/dashboard.js"></script>
+
+<script src="/assets/js/main.js"></script>
+<script type="text/javascript">
+
+    // HTML로딩이 완료되고, 실행됨
+    $(document).ready(function () {
+
+        //화면 로딩이 완료되면 첫번째로 실행함
+        getRoomList(); //전체 채팅방 리스트 가져오기
+
+        //2번쨰부터 채팅방 전체리스트를 5초마다 로딩함
+        setInterval("getRoomList()", 5000);
+
+    })
+
+    //전체 채팅방 리스트 가져오기
+    function getRoomList() {
+
+        //Ajax 호출
+        $.ajax({
+            url: "/chat/roomList", // 채팅방 정보 가져올 URL
+            type: "post", // 전송방식
+            dataType: "JSON", // 전달받을 데이터 타입
+            success: function (json) {
+
+                // 기존 데이터 삭제하기
+                $("#room_list").empty();
+
+                for (let i = 0; i < json.length; i++) {
+                    $("#room_list").append(json[i] + "<br/>"); // 채팅방마다 한줄씩 추가
+
+                }
+            }
+        })
+
+    }
+</script>
+</body>
+</html>

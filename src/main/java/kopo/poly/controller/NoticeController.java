@@ -64,6 +64,7 @@ public class NoticeController {
             String user_id = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
             String title = CmmUtil.nvl(request.getParameter("title"));
             String contents = CmmUtil.nvl(request.getParameter("contents"));
+            String type = "Notice";
             String noticeYn = "N";
             log.info("session user_id : " + user_id);
             log.info("title : " + title);
@@ -80,7 +81,10 @@ public class NoticeController {
             pDTO.setNoticeYn(noticeYn);
             if(!mf.isEmpty()) {
                 String image = mf.getOriginalFilename();
-                fileService.upload(image, pDTO, mf);
+                String fileName = image;
+                fileService.upload(fileName,type + "/" + pDTO.getSeq() + "/", mf);
+                pDTO.setImage(fileService.getFileURL("Notice" + "/" + pDTO.getSeq(), fileName));
+                log.info(pDTO.getImage());
             }
             noticeService.insertNoticeInfo(pDTO);
             msg = "등록되었습니다.";
@@ -146,7 +150,7 @@ public class NoticeController {
 
     @ResponseBody
     @PostMapping(value = "/noticeUpdate")
-    public MsgDTO noticeUpdate(HttpSession session, HttpServletRequest request) {
+    public MsgDTO noticeUpdate(HttpSession session, HttpServletRequest request, @RequestParam(value = "fileUpload") MultipartFile mf) {
 
         log.info(this.getClass().getName() + ".noticeUpdate Start!");
 
@@ -173,6 +177,15 @@ public class NoticeController {
             pDTO.setTitle(title);
             pDTO.setNoticeYn(notice_yn);
             pDTO.setContents(contents);
+            pDTO.setImage("");
+            if(!mf.isEmpty()) {
+                String image = mf.getOriginalFilename();
+                String fileName = image;
+                String folderName = "Notice" + "/" + pDTO.getSeq() + "/";
+                fileService.upload(fileName, folderName, mf);
+                pDTO.setImage(fileService.getFileURL(folderName, fileName));
+                log.info(pDTO.getImage());
+            }
 
             noticeService.updateNoticeInfo(pDTO);
 
