@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TMI - 상점 정보 수정</title>
+    <title>TMI - 상품 등록</title>
 
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
@@ -90,7 +90,7 @@
             <div class="sidebar-header">
                 <div class="d-flex justify-content-between">
                     <div class="logo">
-                        <a id="index"><img src="/assets/images/logo/aengmusae.jpeg" style="width: 200px; height: 200px" alt="Logo" srcset=""></a>
+                        <a id="index"><img src="/assets/images/bird/logo2.png" style="width: 200px; height: 130px" alt="Logo" srcset=""></a>
                     </div>
                     <div class="toggler">
                         <a class="sidebar-hide d-xl-none d-block"><i class="bi bi-x bi-middle"></i></a>
@@ -176,7 +176,7 @@
                 <form id="f">
                     <div class="col-xl-4 col-md-6 col-sm-12 mx-auto">
                         <div class="card">
-                            <div class="card-content">
+                            <div class="card-content" style="padding: 10px">
                                 <div class="card-body">
                                     <div class="col-md-6 mx-auto">
                                         <div class="form-group">
@@ -200,9 +200,11 @@
                                         </div>
                                     </fieldset>
                                 </div>
+                                <br>
                                 <div class="form-group">
                                     <input type="text" class="form-control" id="price" name="price" placeholder="가격" th:value="${rDTO.price}">
                                 </div>
+                                <br>
                                 <div class="form-group">
                                     <input type="text" class="form-control" id="type" name="type" placeholder="가게 유형" th:value="${rDTO.type}">
                                 </div>
