@@ -40,16 +40,12 @@ public class FileService implements IFileService {
     private final INoticeMapper noticeMapper;
 
     @Override
-    public void upload(String fileName,String sender, MultipartFile mf) throws Exception {
+    public void upload(String fileName,String folderName, MultipartFile mf) throws Exception {
 
-        String folderName = sender + "/" + noticeMapper.getNoticeSeq() + "/";
 
         ObjectMetadata objectMetadata = new ObjectMetadata();
         objectMetadata.setContentLength(0L);
         objectMetadata.setContentType("application/x-directory");
-//        PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, folderName, new ByteArrayInputStream(new byte[0]), objectMetadata)
-//                .withCannedAcl(CannedAccessControlList.PublicRead);  // ACL을 공개로 설정
-
 
         File uploadFile = convert(mf, folderName);
 
@@ -79,13 +75,9 @@ public class FileService implements IFileService {
         }
     }
     @Override
-    public String getFileURL(String sender, String fileName) throws Exception {
+    public String getFileURL(String folderName, String fileName) throws Exception {
         String url = null;
         try {
-            String folderName = sender + "/" + noticeMapper.getNoticeSeq() + "/";
-//            URL transform =  s3.getUrl("tmi", folderName + fileName);
-
-//            url = ""+ transform;
 
             url = "https://kr.object.ncloudstorage.com/tmi/" + folderName + fileName;
         } catch (AmazonS3Exception e) {

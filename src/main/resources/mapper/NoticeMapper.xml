@@ -43,7 +43,8 @@
                           TITLE = #{title},
                           NOTICE_YN = #{noticeYn},
                           CONTENTS = #{contents},
-                          REG_DT = NOW()
+                          REG_DT = NOW(),
+                          IMAGE = #{image}
         WHERE
             SEQ = #{seq}
     </update>

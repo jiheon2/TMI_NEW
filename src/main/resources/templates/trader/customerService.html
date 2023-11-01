@@ -14,19 +14,21 @@
     <link rel="stylesheet" href="/assets/vendors/bootstrap-icons/bootstrap-icons.css">
     <link rel="stylesheet" href="/assets/css/app.css">
     <link rel="shortcut icon" href="../static/assets/images/favicon.svg" type="image/x-icon">
+
 </head>
 
 <body>
 <div id="app">
+    <!-- 왼쪽 navigation var 코드 -->
     <div id="sidebar" class="active">
         <div class="sidebar-wrapper active">
             <div class="sidebar-header">
                 <div class="d-flex justify-content-between">
                     <div class="logo">
-                        <a href="traderIndex.html"><img src="/assets/images/logo/logo.png" alt="Logo" srcset=""></a>
+                        <a id="index"><img src="/assets/images/bird/logo2.png" style="width: 200px; height: 130px" alt="Logo" srcset=""></a>
                     </div>
                     <div class="toggler">
-                        <a href="#" class="sidebar-hide d-xl-none d-block"><i class="bi bi-x bi-middle"></i></a>
+                        <a class="sidebar-hide d-xl-none d-block"><i class="bi bi-x bi-middle"></i></a>
                     </div>
                 </div>
             </div>
@@ -35,7 +37,7 @@
                     <li class="sidebar-title">MENU</li>
 
                     <li class="sidebar-item active ">
-                        <a href="traderIndex.html" class='sidebar-link'>
+                        <a id="traderIndex" class='sidebar-link'>
                             <i class="bi bi-grid-fill"></i>
                             <span>한눈에 보기</span>
                         </a>
@@ -48,10 +50,10 @@
                         </a>
                         <ul class="submenu ">
                             <li class="submenu-item ">
-                                <a href="shopInfo.html">상점 정보</a>
+                                <a id="shopInfo">상점 정보</a>
                             </li>
                             <li class="submenu-item ">
-                                <a href="traderInfo.html">상인 정보</a>
+                                <a id="traderInfo">상인 정보</a>
                             </li>
                         </ul>
                     </li>
@@ -63,23 +65,23 @@
                         </a>
                         <ul class="submenu ">
                             <li class="submenu-item ">
-                                <a href="goodsMng.html">상품 관리</a>
+                                <a id="goodsMng">상품 관리</a>
                             </li>
                             <li class="submenu-item ">
-                                <a href="reviewMng.html">리뷰 관리</a>
+                                <a id="reviewMng">리뷰 관리</a>
                             </li>
                         </ul>
                     </li>
 
-                    <li class="sidebar-item  has-sub">
-                        <a href="reservMng.html" class='sidebar-link'>
+                    <li class="sidebar-item">
+                        <a id="reservMng" class='sidebar-link'>
                             <i class="bi bi-grid-1x2-fill"></i>
                             <span>예약관리</span>
                         </a>
                     </li>
 
                     <li class="sidebar-item  ">
-                        <a href="chat.html" class='sidebar-link'>
+                        <a id="chat" class='sidebar-link'>
                             <i class="bi bi-file-earmark-medical-fill"></i>
                             <span>채팅</span>
                         </a>
@@ -87,7 +89,7 @@
 
 
                     <li class="sidebar-item  ">
-                        <a href="customerService.html" class='sidebar-link'>
+                        <a id="customerService" class='sidebar-link'>
                             <i class="bi bi-grid-1x2-fill"></i>
                             <span>고객센터</span>
                         </a>
@@ -97,6 +99,7 @@
             <button class="sidebar-toggler btn x"><i data-feather="x"></i></button>
         </div>
     </div>
+    <!------------------------------------------>
     <div id="main">
         <header class="mb-3">
             <a href="#" class="burger-btn d-block d-xl-none">
@@ -105,6 +108,107 @@
         </header>
 
         <div class="page-heading">
+            <div class="page-title">
+                <div class="row">
+                    <div class="col-12 col-md-6 order-md-1 order-last">
+                        <h3>고객센터</h3>
+                    </div>
+                    <div class="col-12 col-md-6 order-md-2 order-first">
+                        <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="traderIndex">메인</a></li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Basic Tables start -->
+            <section class="section">
+                <div class="row" id="basic-table">
+                    <div class="col-12 col-md-6">
+                        <div>
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4 class="card-title">TMI 카카오톡 채널</h4>
+                                </div>
+                                <div class="card-content">
+                                    <div class="card-body">
+                                        <p class="card-text">채널에 방문해서 1:1 채팅으로 궁금한 점을 물어보세요!
+                                        </p>
+                                        <!-- Table with outer spacing -->
+                                        <div class="table-responsive">
+                                            <table class="table table-lg">
+                                                <thead>
+                                                <tr>
+                                                    <th>TMI</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr>
+                                                    <td class="text-bold-500"><button type="button" id="channel">채널</button></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-bold-500">채널 이미지 넣기</td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <div>
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4 class="card-title">자주 묻는 질문</h4>
+                                </div>
+                                <div class="card-content">
+                                    <div class="card-body">
+                                        <p class="card-text">더 빠르게 해결해보세요!
+                                        </p>
+                                        <!-- Table with outer spacing -->
+                                        <div class="table-responsive">
+                                            <table class="table table-lg">
+                                                <thead>
+                                                <tr>
+                                                    <th>질문</th>
+                                                    <th>답변</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr>
+                                                    <td class="text-bold-500">별의 알렉산더는 최준상인가요?</td>
+                                                    <td>네. 맞습니다.</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-bold-500">서류쓰기 귀찮아요</td>
+                                                    <td>토달지말고 쓰세요</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-bold-500">최준상 오언 짝발 나이스!</td>
+                                                    <td>ㅋㅋ ㄱㅇㄷ</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-bold-500">퀘스천</td>
+                                                    <td>앤썰</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-bold-500">질문</td>
+                                                    <td>답</td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
             <footer>
                 <div class="footer clearfix mb-0 text-muted">
@@ -122,8 +226,59 @@
 </div>
 <script src="/assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
 <script src="/assets/js/bootstrap.bundle.min.js"></script>
-
 <script src="/assets/js/main.js"></script>
+<script src="/assets/js/jquery-3.6.0.min.js"></script>
+<script src="https://t1.kakaocdn.net/kakao_js_sdk/2.4.0/kakao.min.js"
+        integrity="sha384-mXVrIX2T/Kszp6Z0aEWaA8Nm7J6/ZeWXbL8UpGRjKwWe56Srd/iyNmWMBhcItAjH" crossorigin="anonymous"></script>
+<script>Kakao.init('fc6476b35f170899394cfb682f1205de');</script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#channel").on("click", function () {
+            if (!Kakao.isInitialized()) {
+                Kakao.init('fc6476b35f170899394cfb682f1205de');
+            }
+            Kakao.Channel.addChannel({
+                channelPublicId: '_ZEMxbG' // 카카오톡 채널 홈 URL에 명시된 id로 설정합니다.
+            });
+        });
+
+        $("#index").on("click", function () {
+            location.href = "/trader/traderIndex";
+        })
+
+        $("#traderIndex").on("click", function () {
+            location.href = "/trader/traderIndex";
+        })
+
+        $("#shopInfo").on("click", function () {
+            location.href = "/trader/shopInfo";
+        })
+
+        $("#traderInfo").on("click", function () {
+            location.href = "/trader/traderInfo";
+        })
+
+        $("#goodsMng").on("click", function () {
+            location.href = "/trader/goodsMng";
+        })
+
+        $("#reviewMng").on("click", function () {
+            location.href = "/trader/reviewMng";
+        })
+
+        $("#reservMng").on("click", function () {
+            location.href = "/trader/reservMng";
+        })
+
+        $("#chat").on("click", function () {
+            location.href = "/chat/intro";
+        })
+
+        $("#customerService").on("click", function () {
+            location.href = "/trader/customerService";
+        })
+    });
+</script>
 </body>
 
 </html>

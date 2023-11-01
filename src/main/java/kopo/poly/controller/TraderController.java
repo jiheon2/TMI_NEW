@@ -78,7 +78,7 @@ public class TraderController {
                 log.info("1");
 
                 session.setAttribute("SS_ID", CmmUtil.nvl(rDTO.getId()));
-//                session.setAttribute("SS_TYPE", "Trader");
+                session.setAttribute("SS_TYPE", "Trader");
 
             } else {
                 msg = "아이디와 비밀번호가 올바르지 않습니다.";
@@ -207,18 +207,16 @@ public class TraderController {
     }
 
     @GetMapping(value = "/traderIndex")
-    public String traderIndex() {
-        log.info("start");
+    public String traderIndex(HttpSession session, ModelMap model) {
+        log.info(this.getClass().getName() + ".traderIndex Start!");
 
+
+
+        log.info(this.getClass().getName() + ".traderIndex End!");
+        // trader id,
         return "/trader/traderIndex";
     }
 
-    @GetMapping(value = "/shopInfo")
-    public String shopInfo() {
-        log.info("start");
-
-        return "/trader/shopInfo";
-    }
 
     @GetMapping(value = "/traderInfo")
     public String traderInfo(HttpSession session, ModelMap model) throws Exception{
@@ -240,31 +238,12 @@ public class TraderController {
         return "/trader/traderInfo";
     }
 
-    @GetMapping(value = "/goodsMng")
-    public String goodsMng() {
-        log.info("start");
-
-        return "/trader/goodsMng";
-    }
 
     @GetMapping(value = "/reservMng")
     public String reservMng() {
         log.info("start");
 
         return "/trader/reservMng";
-    }
-    @GetMapping(value = "/reviewMng")
-    public String reviewMng() {
-        log.info("start");
-
-        return "/trader/reviewMng";
-    }
-
-    @GetMapping(value = "/updateShopInfo")
-    public String updateShopInfo() {
-        log.info("start");
-
-        return "/trader/updateShopInfo";
     }
 
 
@@ -405,5 +384,12 @@ public class TraderController {
             log.info(this.getClass().getName() + ".pwChange End!");
         }
         return dto;
+    }
+
+    @GetMapping(value = "/customerService")
+    public String customerService() {
+        log.info("start!");
+
+        return "/trader/customerService";
     }
 }
