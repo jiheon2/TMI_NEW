@@ -207,9 +207,13 @@ public class TraderController {
     }
 
     @GetMapping(value = "/traderIndex")
-    public String traderIndex() {
-        log.info("start");
+    public String traderIndex(HttpSession session, ModelMap model) {
+        log.info(this.getClass().getName() + ".traderIndex Start!");
 
+
+
+        log.info(this.getClass().getName() + ".traderIndex End!");
+        // trader id,
         return "/trader/traderIndex";
     }
 

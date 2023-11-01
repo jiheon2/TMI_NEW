@@ -22,6 +22,10 @@
             var seq = element.getAttribute("data-seq");
             location.href = "/trader/goodsMngInsert?nSeq=" + seq;
         }
+        function review(element) {
+            var seq = element.getAttribute("data-seq");
+            location.href = "/trader/reviewMng?nSeq=" + seq;
+        }
         //삭제하기
         function doDelete(element) {
             var seq = element.getAttribute("data-seq");
@@ -177,6 +181,7 @@
                                     [[${rDTO.des}]]
                                 </div>
                                 <br>
+                                <div class="buttons" style="float: left"><a th:attr="data-seq=${rDTO.seq}" onclick="review(this)" class="btn btn-primary">수정</a></div>
                                 <div class="buttons" style="float: right"><a th:attr="data-seq=${rDTO.seq}" onclick="doDelete(this)" class="btn btn-light-secondary me-1 mb-1">삭제</a></div>
                                 <div class="buttons" style="float: right"><a th:attr="data-seq=${rDTO.seq}" onclick="doEdit(this)" class="btn btn-primary">수정</a></div>
                             </div>
