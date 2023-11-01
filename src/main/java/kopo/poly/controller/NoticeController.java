@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.File;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -81,8 +82,9 @@ public class NoticeController {
             if(!mf.isEmpty()) {
                 String image = mf.getOriginalFilename();
                 String fileName = image;
-                fileService.upload(fileName,type + "/" + pDTO.getSeq() + "/", mf);
-                pDTO.setImage(fileService.getFileURL("Notice" + "/" + pDTO.getSeq(), fileName));
+                String folderName = type + "/" + LocalDate.now() + "/";
+                fileService.upload(fileName,folderName, mf);
+                pDTO.setImage(fileService.getFileURL(folderName, fileName));
                 log.info(pDTO.getImage());
             }
             noticeService.insertNoticeInfo(pDTO);
