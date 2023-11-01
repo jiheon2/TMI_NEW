@@ -83,15 +83,16 @@
 
 <body>
 <div id="app">
+    <!-- 왼쪽 navigation var 코드 -->
     <div id="sidebar" class="active">
         <div class="sidebar-wrapper active">
             <div class="sidebar-header">
                 <div class="d-flex justify-content-between">
                     <div class="logo">
-                        <a href="traderIndex"><img src="/assets/images/logo/logo.png" alt="Logo" srcset=""></a>
+                        <a id="index"><img src="/assets/images/logo/aengmusae.jpeg" style="width: 200px; height: 200px" alt="Logo" srcset=""></a>
                     </div>
                     <div class="toggler">
-                        <a href="#" class="sidebar-hide d-xl-none d-block"><i class="bi bi-x bi-middle"></i></a>
+                        <a class="sidebar-hide d-xl-none d-block"><i class="bi bi-x bi-middle"></i></a>
                     </div>
                 </div>
             </div>
@@ -162,6 +163,7 @@
             <button class="sidebar-toggler btn x"><i data-feather="x"></i></button>
         </div>
     </div>
+    <!------------------------------------------>
     <div id="main">
         <header class="mb-3">
             <a href="#" class="burger-btn d-block d-xl-none">
@@ -172,15 +174,15 @@
         <div class="page-heading">
             <div>
                 <form id="f">
-                <div class="page-title">
-                    <div class="row">
-                        <div class="col-12 col-md-6 order-md-1 order-last mx-auto text-center">
-                            <h3>상점 정보</h3>
-                            <input type="text" class="text-subtitle text-muted" id="loc" name="loc" placeholder="시장명"
-                                   th:value="${rDTO.loc}">
+                    <div class="page-title">
+                        <div class="row">
+                            <div class="col-12 col-md-6 order-md-1 order-last mx-auto text-center">
+                                <h3>상점 정보</h3>
+                                <input type="text" class="text-subtitle text-muted" id="loc" name="loc" placeholder="시장명"
+                                       th:value="${rDTO.loc}">
+                            </div>
                         </div>
                     </div>
-                </div>
                     <div class="col-xl-4 col-md-6 col-sm-12 mx-auto">
                         <div class="card">
                             <div class="card-content">
@@ -191,9 +193,9 @@
                                                    th:value="${rDTO.cname}">
                                         </div>
                                         <div class="form-group">
-                                        <input type="text" class="form-control" id="name" name="name" placeholder="상인명"
-                                               th:value="${rDTO.name}">
-                                    </div>
+                                            <input type="text" class="form-control" id="name" name="name" placeholder="상인명"
+                                                   th:value="${rDTO.name}">
+                                        </div>
                                         <div class="form-group">
                                             <input type="text" class="form-control" id="type" name="type" placeholder="가게 유형"
                                                    th:value="${rDTO.type}">
@@ -207,14 +209,6 @@
                                             <img th:src="${rDTO.image}" class="d-block w-100" style="height:380px">
                                         </div>
                                     </div>
-                                    <!--                                    <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-bs-slide="prev">-->
-                                    <!--                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>-->
-                                    <!--                                        <span class="visually-hidden">Previous</span>-->
-                                    <!--                                    </a>-->
-                                    <!--                                    <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-bs-slide="next">-->
-                                    <!--                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>-->
-                                    <!--                                        <span class="visually-hidden">Next</span>-->
-                                    <!--                                    </a>-->
                                 </div>
                                 <div class="col-md-6 mb-1 mx-auto" style="width: 80%">
                                     <fieldset>
@@ -255,8 +249,6 @@
         </div>
     </footer>
 </div>
-</div>
-
 <script src="/assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
 <script src="/assets/js/bootstrap.bundle.min.js"></script>
 <!-- jQuery 라이브러리 추가 -->
