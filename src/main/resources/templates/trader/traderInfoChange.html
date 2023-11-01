@@ -52,154 +52,156 @@
 </head>
 
 <body>
-    <div id="app">
-        <div id="sidebar" class="active">
-            <div class="sidebar-wrapper active">
-                <div class="sidebar-header">
-                    <div class="d-flex justify-content-between">
-                        <div class="logo">
-                            <a href="traderIndex"><img src="/assets/images/logo/logo.png" alt="Logo" srcset=""></a>
-                        </div>
-                        <div class="toggler">
-                            <a href="#" class="sidebar-hide d-xl-none d-block"><i class="bi bi-x bi-middle"></i></a>
-                        </div>
+<div id="app">
+    <!-- 왼쪽 navigation var 코드 -->
+    <div id="sidebar" class="active">
+        <div class="sidebar-wrapper active">
+            <div class="sidebar-header">
+                <div class="d-flex justify-content-between">
+                    <div class="logo">
+                        <a id="index"><img src="/assets/images/logo/aengmusae.jpeg" style="width: 200px; height: 200px" alt="Logo" srcset=""></a>
+                    </div>
+                    <div class="toggler">
+                        <a class="sidebar-hide d-xl-none d-block"><i class="bi bi-x bi-middle"></i></a>
                     </div>
                 </div>
-                <div class="sidebar-menu">
-                    <ul class="menu">
-                        <li class="sidebar-title">MENU</li>
-
-                        <li class="sidebar-item active ">
-                            <a id="traderIndex" class='sidebar-link'>
-                                <i class="bi bi-grid-fill"></i>
-                                <span>한눈에 보기</span>
-                            </a>
-                        </li>
-
-                        <li class="sidebar-item  has-sub">
-                            <a href="#" class='sidebar-link'>
-                                <i class="bi bi-stack"></i>
-                                <span>내 상점</span>
-                            </a>
-                            <ul class="submenu ">
-                                <li class="submenu-item ">
-                                    <a id="shopInfo">상점 정보</a>
-                                </li>
-                                <li class="submenu-item ">
-                                    <a id="traderInfo">상인 정보</a>
-                                </li>
-                            </ul>
-                        </li>
-
-                        <li class="sidebar-item  has-sub">
-                            <a href="#" class='sidebar-link'>
-                                <i class="bi bi-collection-fill"></i>
-                                <span>상품관리</span>
-                            </a>
-                            <ul class="submenu ">
-                                <li class="submenu-item ">
-                                    <a id="goodsMng">상품 관리</a>
-                                </li>
-                                <li class="submenu-item ">
-                                    <a id="reviewMng">리뷰 관리</a>
-                                </li>
-                            </ul>
-                        </li>
-
-                        <li class="sidebar-item">
-                            <a id="reservMng" class='sidebar-link'>
-                                <i class="bi bi-grid-1x2-fill"></i>
-                                <span>예약관리</span>
-                            </a>
-                        </li>
-
-                        <li class="sidebar-item  ">
-                            <a  id="chat" class='sidebar-link'>
-                                <i class="bi bi-file-earmark-medical-fill"></i>
-                                <span>채팅</span>
-                            </a>
-                        </li>
-
-
-                        <li class="sidebar-item  ">
-                            <a id="customerService" class='sidebar-link'>
-                                <i class="bi bi-grid-1x2-fill"></i>
-                                <span>고객센터</span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-                <button class="sidebar-toggler btn x"><i data-feather="x"></i></button>
             </div>
-        </div>
-        <div id="main">
-            <header class="mb-3">
-                <a href="#" class="burger-btn d-block d-xl-none">
-                    <i class="bi bi-justify fs-3"></i>
-                </a>
-            </header>
+            <div class="sidebar-menu">
+                <ul class="menu">
+                    <li class="sidebar-title">MENU</li>
 
-            <div class="page-heading">
-                <div class="page-title">
-                    <div class="row">
-                        <div class="col-12 col-md-6 order-md-1 order-last mx-auto text-center">
-                            <h3>비밀번호 변경</h3>
-                            <br>
-                        </div>
-                    </div>
-                </div>
-                <section class="bootstrap-select">
-                    <section class="section">
-                        <div class="card mx-auto">
-                            <div class="card-content">
-                                <div class="card-body">
-                                    <form id="f" class="form form-horizontal">
-                                        <div class="form-body">
-                                            <div class="row" style="text-align: center">
-                                                <div class="col-md-4">
-                                                    <label>이름</label>
-                                                </div>
-                                                <div class="col-md-8 form-group">
-                                                        <input type="text" class="form-control" id="name" name="name" th:value="${rDTO.name}" />
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <label>전화번호</label>
-                                                </div>
-                                                <div class="col-md-8 form-group">
-                                                        <input type="tel"  class="form-control" name="pn" id="pn" th:value="${rDTO.pn}" />
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <label>지역</label>
-                                                </div>
-                                                <div class="col-md-8 form-group">
-                                                    <input type="text" class="form-control" id="shopCode" name="shopCode" th:value="${rDTO.shopCode}" />
-                                                </div>
-                                                <br>
-                                                <div class="col-sm-12 d-flex justify-content-end">
-                                                   <button type="button" id="btnChange" class="btn btn-primary me-1 mb-1">수정</button>
-                                                    <button type="button" id="cancel" class="btn btn-light-secondary me-1 mb-1">취소</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-                </section>
+                    <li class="sidebar-item active ">
+                        <a id="traderIndex" class='sidebar-link'>
+                            <i class="bi bi-grid-fill"></i>
+                            <span>한눈에 보기</span>
+                        </a>
+                    </li>
+
+                    <li class="sidebar-item  has-sub">
+                        <a href="#" class='sidebar-link'>
+                            <i class="bi bi-stack"></i>
+                            <span>내 상점</span>
+                        </a>
+                        <ul class="submenu ">
+                            <li class="submenu-item ">
+                                <a id="shopInfo">상점 정보</a>
+                            </li>
+                            <li class="submenu-item ">
+                                <a id="traderInfo">상인 정보</a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li class="sidebar-item  has-sub">
+                        <a href="#" class='sidebar-link'>
+                            <i class="bi bi-collection-fill"></i>
+                            <span>상품관리</span>
+                        </a>
+                        <ul class="submenu ">
+                            <li class="submenu-item ">
+                                <a id="goodsMng">상품 관리</a>
+                            </li>
+                            <li class="submenu-item ">
+                                <a id="reviewMng">리뷰 관리</a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li class="sidebar-item">
+                        <a id="reservMng" class='sidebar-link'>
+                            <i class="bi bi-grid-1x2-fill"></i>
+                            <span>예약관리</span>
+                        </a>
+                    </li>
+
+                    <li class="sidebar-item  ">
+                        <a id="chat" class='sidebar-link'>
+                            <i class="bi bi-file-earmark-medical-fill"></i>
+                            <span>채팅</span>
+                        </a>
+                    </li>
+
+
+                    <li class="sidebar-item  ">
+                        <a id="customerService" class='sidebar-link'>
+                            <i class="bi bi-grid-1x2-fill"></i>
+                            <span>고객센터</span>
+                        </a>
+                    </li>
+                </ul>
             </div>
-            <footer>
-                <div class="footer clearfix mb-0 text-muted">
-                    <div class="float-start">
-                        <p>2021 &copy; Mazer</p>
-                    </div>
-                    <div class="float-end">
-                        <p>Crafted with <span class="text-danger"><i class="bi bi-heart"></i></span> by <a href="http://ahmadsaugi.com">A. Saugi</a></p>
-                    </div>
-                </div>
-            </footer>
+            <button class="sidebar-toggler btn x"><i data-feather="x"></i></button>
         </div>
     </div>
+    <!------------------------------------------>
+    <div id="main">
+        <header class="mb-3">
+            <a href="#" class="burger-btn d-block d-xl-none">
+                <i class="bi bi-justify fs-3"></i>
+            </a>
+        </header>
+
+        <div class="page-heading">
+            <div class="page-title">
+                <div class="row">
+                    <div class="col-12 col-md-6 order-md-1 order-last mx-auto text-center">
+                        <h3>비밀번호 변경</h3>
+                        <br>
+                    </div>
+                </div>
+            </div>
+            <section class="bootstrap-select">
+                <section class="section">
+                    <div class="card mx-auto">
+                        <div class="card-content">
+                            <div class="card-body">
+                                <form id="f" class="form form-horizontal">
+                                    <div class="form-body">
+                                        <div class="row" style="text-align: center">
+                                            <div class="col-md-4">
+                                                <label>이름</label>
+                                            </div>
+                                            <div class="col-md-8 form-group">
+                                                <input type="text" class="form-control" id="name" name="name" th:value="${rDTO.name}" />
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label>전화번호</label>
+                                            </div>
+                                            <div class="col-md-8 form-group">
+                                                <input type="tel"  class="form-control" name="pn" id="pn" th:value="${rDTO.pn}" />
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label>지역</label>
+                                            </div>
+                                            <div class="col-md-8 form-group">
+                                                <input type="text" class="form-control" id="shopCode" name="shopCode" th:value="${rDTO.shopCode}" />
+                                            </div>
+                                            <br>
+                                            <div class="col-sm-12 d-flex justify-content-end">
+                                                <button type="button" id="btnChange" class="btn btn-primary me-1 mb-1">수정</button>
+                                                <button type="button" id="cancel" class="btn btn-light-secondary me-1 mb-1">취소</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </section>
+        </div>
+        <footer>
+            <div class="footer clearfix mb-0 text-muted">
+                <div class="float-start">
+                    <p>2021 &copy; Mazer</p>
+                </div>
+                <div class="float-end">
+                    <p>Crafted with <span class="text-danger"><i class="bi bi-heart"></i></span> by <a href="http://ahmadsaugi.com">A. Saugi</a></p>
+                </div>
+            </div>
+        </footer>
+    </div>
+</div>
     <script src="/assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
     <script src="/assets/js/bootstrap.bundle.min.js"></script>
     <!-- jQuery 라이브러리 추가 -->
