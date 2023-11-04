@@ -12,19 +12,17 @@
     <link rel="stylesheet" href="/assets/css/font.css">
     <link rel="stylesheet" href="/assets/vendors/quill/quill.bubble.css">
     <link rel="stylesheet" href="/assets/vendors/quill/quill.snow.css">
-
     <link rel="stylesheet" href="/assets/vendors/perfect-scrollbar/perfect-scrollbar.css">
     <link rel="stylesheet" href="/assets/vendors/bootstrap-icons/bootstrap-icons.css">
     <link rel="stylesheet" href="/assets/css/app.css">
     <script src="/assets/js/jquery-3.6.0.min.js"></script>
-
     <link rel="shortcut icon" href="/assets/images/favicon.svg" type="image/x-icon">
-
+    <script src="/assets/js/move.js"></script>
     <script th:inline="javascript">
         // HTML로딩이 완료되고, 실행됨
-        $(document).ready(function () {
+        $(document).ready(function() {
             // 버튼 클릭했을때, 발생되는 이벤트 생성함(onclick 이벤트와 동일함)
-            $("#btnSend").on("click", function () {
+            $("#btnSend").on("click", function() {
                 calBytes();
                 doSubmit(); // 공지사항 수정하기 실행
             })
@@ -58,248 +56,113 @@
             }
             var formData = new FormData($("#f")[0]);
             $.ajax({
-                    url: "/trader/changeShop",
+                url: "/trader/changeShop",
                 type: "POST",
                 data: formData,
                 processData: false,
                 contentType: false,
-                    success: function (json) { // /notice/noticeUpdate 호출이 성공했다면..
+                success: function(json) { // /notice/noticeUpdate 호출이 성공했다면..
 
-                        if (json.result === 1) { // 로그인 성공
-                            alert(json.msg); // 메시지 띄우기
-                            location.href = "/trader/shopInfo"; // 로그인 성공 페이지 이동
+                    if (json.result === 1) { // 로그인 성공
+                        alert(json.msg); // 메시지 띄우기
+                        location.href = "/trader/shopInfo"; // 로그인 성공 페이지 이동
 
-                        } else { // 로그인 실패
-                            alert(json.msg); // 메시지 띄우기
-                        }
-
+                    } else { // 로그인 실패
+                        alert(json.msg); // 메시지 띄우기
                     }
+
                 }
-            )
+            })
 
         }
     </script>
 </head>
 
 <body>
-<div id="app">
-    <div id="sidebar" class="active">
-        <div class="sidebar-wrapper active">
-            <div class="sidebar-header">
-                <div class="d-flex justify-content-between">
-                    <div class="logo">
-                        <a href="traderIndex"><img src="/assets/images/logo/logo.png" alt="Logo" srcset=""></a>
-                    </div>
-                    <div class="toggler">
-                        <a href="#" class="sidebar-hide d-xl-none d-block"><i class="bi bi-x bi-middle"></i></a>
-                    </div>
-                </div>
-            </div>
-            <div class="sidebar-menu">
-                <ul class="menu">
-                    <li class="sidebar-title">MENU</li>
+    <div id="app">
+        <div th:replace="sidebar.html"></div>
+        <div id="main">
+            <header class="mb-3">
+                <a href="#" class="burger-btn d-block d-xl-none">
+                    <i class="bi bi-justify fs-3"></i>
+                </a>
+            </header>
 
-                    <li class="sidebar-item active ">
-                        <a id="traderIndex" class='sidebar-link'>
-                            <i class="bi bi-grid-fill"></i>
-                            <span>한눈에 보기</span>
-                        </a>
-                    </li>
-
-                    <li class="sidebar-item  has-sub">
-                        <a href="#" class='sidebar-link'>
-                            <i class="bi bi-stack"></i>
-                            <span>내 상점</span>
-                        </a>
-                        <ul class="submenu ">
-                            <li class="submenu-item ">
-                                <a id="shopInfo">상점 정보</a>
-                            </li>
-                            <li class="submenu-item ">
-                                <a id="traderInfo">상인 정보</a>
-                            </li>
-                        </ul>
-                    </li>
-
-                    <li class="sidebar-item  has-sub">
-                        <a href="#" class='sidebar-link'>
-                            <i class="bi bi-collection-fill"></i>
-                            <span>상품관리</span>
-                        </a>
-                        <ul class="submenu ">
-                            <li class="submenu-item ">
-                                <a id="goodsMng">상품 관리</a>
-                            </li>
-                            <li class="submenu-item ">
-                                <a id="reviewMng">리뷰 관리</a>
-                            </li>
-                        </ul>
-                    </li>
-
-                    <li class="sidebar-item">
-                        <a id="reservMng" class='sidebar-link'>
-                            <i class="bi bi-grid-1x2-fill"></i>
-                            <span>예약관리</span>
-                        </a>
-                    </li>
-
-                    <li class="sidebar-item  ">
-                        <a id="chat" class='sidebar-link'>
-                            <i class="bi bi-file-earmark-medical-fill"></i>
-                            <span>채팅</span>
-                        </a>
-                    </li>
-
-
-                    <li class="sidebar-item  ">
-                        <a id="customerService" class='sidebar-link'>
-                            <i class="bi bi-grid-1x2-fill"></i>
-                            <span>고객센터</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-            <button class="sidebar-toggler btn x"><i data-feather="x"></i></button>
-        </div>
-    </div>
-    <div id="main">
-        <header class="mb-3">
-            <a href="#" class="burger-btn d-block d-xl-none">
-                <i class="bi bi-justify fs-3"></i>
-            </a>
-        </header>
-
-        <div class="page-heading">
-            <div>
-                <form id="f">
-                <div class="page-title">
-                    <div class="row">
-                        <div class="col-12 col-md-6 order-md-1 order-last mx-auto text-center">
-                            <h3>상점 정보</h3>
-                            <input type="text" class="text-subtitle text-muted" id="loc" name="loc" placeholder="시장명"
-                                   th:value="${rDTO.loc}">
-                        </div>
-                    </div>
-                </div>
-                    <div class="col-xl-4 col-md-6 col-sm-12 mx-auto">
-                        <div class="card">
-                            <div class="card-content">
-                                <div class="card-body">
-                                    <div class="col-md-6 mx-auto">
-                                        <div class="form-group">
-                                            <input type="text" class="form-control" id="cname" name="cname" placeholder="상호명"
-                                                   th:value="${rDTO.cname}">
-                                        </div>
-                                        <div class="form-group">
-                                        <input type="text" class="form-control" id="name" name="name" placeholder="상인명"
-                                               th:value="${rDTO.name}">
-                                    </div>
-                                        <div class="form-group">
-                                            <input type="text" class="form-control" id="type" name="type" placeholder="가게 유형"
-                                                   th:value="${rDTO.type}">
-                                        </div>
-                                    </div>
+            <div class="page-heading">
+                <div>
+                    <form id="f">
+                        <div class="page-title">
+                            <div class="row">
+                                <div class="col-12 col-md-6 order-md-1 order-last mx-auto text-center">
+                                    <h3>상점 정보</h3>
+                                    <input type="text" class="text-subtitle text-muted" id="loc" name="loc" placeholder="시장명" th:value="${rDTO.loc}">
                                 </div>
-
-                                <div id="carouselExampleSlidesOnly" class="carousel slide" data-bs-ride="carousel">
-                                    <div class="carousel-inner">
-                                        <div class="carousel-item active" th:if="${not #strings.isEmpty(rDTO.image)}">
-                                            <img th:src="${rDTO.image}" class="d-block w-100" style="height:380px">
-                                        </div>
-                                    </div>
-                                    <!--                                    <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-bs-slide="prev">-->
-                                    <!--                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>-->
-                                    <!--                                        <span class="visually-hidden">Previous</span>-->
-                                    <!--                                    </a>-->
-                                    <!--                                    <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-bs-slide="next">-->
-                                    <!--                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>-->
-                                    <!--                                        <span class="visually-hidden">Next</span>-->
-                                    <!--                                    </a>-->
-                                </div>
-                                <div class="col-md-6 mb-1 mx-auto" style="width: 80%">
-                                    <fieldset>
-                                        <br>
-                                        <div class="input-group">
-                                            <input type="file" name="fileUpload" class="form-control" id="fileUpload"
-                                                   aria-describedby="inputGroupFileAddon04" aria-label="Upload">
-                                        </div>
-                                    </fieldset>
-                                </div>
-                                <div class="card-body">
-                                    <div class="form-floating">
-                                        <textarea class="form-control" placeholder="상점 설명을 써주세요" id="des"
-                                                  style="height: 250px" th:field="*{rDTO.des}" th:text="${rDTO.des}"></textarea>
-                                    </div>
-                                </div>
-                                <div class="buttons" style="float: right"><a id="btnSend" type="submit"
-                                                                             class="btn btn-primary">수정</a></div>
-                                <div class="buttons" style="float: right"><a href="shopInfo"
-                                                                             class="btn btn-primary">취소</a></div>
                             </div>
                         </div>
-                    </div>
-                </form>
+                        <br>
+                        <div class="col-xl-4 col-md-6 col-sm-12 mx-auto">
+                            <div class="card">
+                                <div class="card-content" style="padding: 10px">
+                                    <div class="card-body">
+                                        <div class="col-md-6 mx-auto">
+                                            <div class="form-group">
+                                                <input type="text" class="form-control" id="cname" name="cname" placeholder="상호명" th:value="${rDTO.cname}">
+                                            </div>
+                                            <div class="form-group">
+                                                <input type="text" class="form-control" id="name" name="name" placeholder="상인명" th:value="${rDTO.name}">
+                                            </div>
+                                            <div class="form-group">
+                                                <input type="text" class="form-control" id="type" name="type" placeholder="가게 유형" th:value="${rDTO.type}">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div id="carouselExampleSlidesOnly" class="carousel slide" data-bs-ride="carousel">
+                                        <div class="carousel-inner">
+                                            <div class="carousel-item active" th:if="${not #strings.isEmpty(rDTO.image)}">
+                                                <img th:src="${rDTO.image}" class="d-block w-100" style="height:380px">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-1 mx-auto" style="width: 80%">
+                                        <fieldset>
+                                            <br>
+                                            <div class="input-group">
+                                                <input type="file" name="fileUpload" class="form-control" id="fileUpload" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="form-floating">
+                                            <textarea class="form-control" placeholder="상점 설명을 써주세요" id="des" style="height: 250px" th:field="*{rDTO.des}" th:text="${rDTO.des}"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="buttons" style="float: right"><a href="shopInfo" class="btn btn-light-secondary me-1 mb-1">취소</a></div>
+                                    <div class="buttons" style="float: right"><a id="btnSend" type="submit" class="btn btn-primary">수정</a></div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
+
+        <footer>
+            <div class="footer clearfix mb-0 text-muted">
+                <div class="float-start">
+                    <p>2021 &copy; Mazer</p>
+                </div>
+                <div class="float-end">
+                    <p>Crafted with <span class="text-danger"><i class="bi bi-heart"></i></span> by <a href="http://ahmadsaugi.com">A. Saugi</a></p>
+                </div>
+            </div>
+        </footer>
     </div>
-
-    <footer>
-        <div class="footer clearfix mb-0 text-muted">
-            <div class="float-start">
-                <p>2021 &copy; Mazer</p>
-            </div>
-            <div class="float-end">
-                <p>Crafted with <span class="text-danger"><i class="bi bi-heart"></i></span> by <a
-                        href="http://ahmadsaugi.com">A. Saugi</a></p>
-            </div>
-        </div>
-    </footer>
-</div>
-</div>
-
-<script src="/assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
-<script src="/assets/js/bootstrap.bundle.min.js"></script>
-<!-- jQuery 라이브러리 추가 -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="/assets/js/main.js"></script>
-<script type="text/javascript">
-    $(document).ready(function () {
-        $("#index").on("click", function () {
-            location.href = "/trader/traderIndex";
-        })
-
-        $("#traderIndex").on("click", function () {
-            location.href = "/trader/traderIndex";
-        })
-
-        $("#shopInfo").on("click", function () {
-            location.href = "/trader/shopInfo";
-        })
-
-        $("#traderInfo").on("click", function () {
-            location.href = "/trader/traderInfo";
-        })
-
-        $("#goodsMng").on("click", function () {
-            location.href = "/trader/goodsMng";
-        })
-
-        $("#reviewMng").on("click", function () {
-            location.href = "/trader/reviewMng";
-        })
-
-        $("#reservMng").on("click", function () {
-            location.href = "/trader/reservMng";
-        })
-
-        $("#chat").on("click", function () {
-            location.href = "/chat/intro";
-        })
-
-        $("#customerService").on("click", function () {
-            location.href = "/trader/customerService";
-        })
-    });
-</script>
+    <script src="/assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+    <script src="/assets/js/bootstrap.bundle.min.js"></script>
+    <!-- jQuery 라이브러리 추가 -->
+    <script src="/assets/js/main.js"></script>
 </body>
+
 </html>
