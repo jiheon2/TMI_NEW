@@ -1,9 +1,6 @@
 package kopo.poly.service.impl;
 
-import kopo.poly.dto.CustomerDTO;
-import kopo.poly.dto.NoticeDTO;
-import kopo.poly.dto.ProductDTO;
-import kopo.poly.dto.ShopDTO;
+import kopo.poly.dto.*;
 import kopo.poly.persistance.mapper.IShopMapper;
 import kopo.poly.service.IShopService;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +15,23 @@ import java.util.Optional;
 @Service
 public class ShopService implements IShopService {
     private final IShopMapper shopMapper;
+    @Override
+    public List<ReserveDTO> goodsBuyInfo(ReserveDTO pDTO) throws Exception {
+
+        log.info(this.getClass().getName() + ".goodsBuyInfo start!");
+
+        return shopMapper.goodsBuyInfo(pDTO);
+    }
+    @Override
+    public void deleteBuy(ReserveDTO pDTO) throws Exception {
+        log.info(this.getClass().getName() + ".deleteBuy start!");
+        shopMapper.deleteBuy(pDTO);
+    }
+    @Override
+    public void acceptBuy(ReserveDTO pDTO) throws Exception {
+        log.info(this.getClass().getName() + ".deleteBuy start!");
+        shopMapper.acceptBuy(pDTO);
+    }
     @Override
     public List<ProductDTO> getGoodsList(ProductDTO pDTO) throws Exception {
 

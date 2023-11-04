@@ -1,8 +1,8 @@
 package kopo.poly.controller;
 
-import kopo.poly.dto.CustomerDTO;
-import kopo.poly.dto.MsgDTO;
-import kopo.poly.dto.TraderDTO;
+import kopo.poly.dto.*;
+import kopo.poly.service.IReviewService;
+import kopo.poly.service.IShopService;
 import kopo.poly.service.ITraderService;
 import kopo.poly.util.CmmUtil;
 import kopo.poly.util.EncryptUtil;
@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -26,6 +28,8 @@ import java.util.Optional;
 public class TraderController {
 
     private final ITraderService traderService;
+    private final IShopService shopService;
+    private final IReviewService reviewService;
 
     @GetMapping(value = "/login")
     public String login() {
@@ -207,13 +211,37 @@ public class TraderController {
     }
 
     @GetMapping(value = "/traderIndex")
-    public String traderIndex(HttpSession session, ModelMap model) {
+    public String traderIndex(HttpSession session, ModelMap model) throws Exception{
         log.info(this.getClass().getName() + ".traderIndex Start!");
+
+        String id = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+
+        TraderDTO tDTO = new TraderDTO();
+        ReserveDTO pDTO2 = new ReserveDTO();
+        ReviewDTO pDTO3 = new ReviewDTO();
+
+        tDTO.setId(id);
+        pDTO2.setTid(id);
+        pDTO2.setState("1");
+        pDTO3.setTraderId(id);
+        List<ReserveDTO> rList1 = Optional.ofNullable(shopService.goodsBuyInfo(pDTO2)).orElseGet(ArrayList::new) ;
+        List<ReserveDTO> rList2 = Optional.ofNullable(shopService.goodsBuyInfo(pDTO2)).orElseGet(ArrayList::new) ;
+        List<ReserveDTO> rList3 = Optional.ofNullable(shopService.goodsBuyInfo(pDTO2)).orElseGet(ArrayList::new) ;
+        List<ReviewDTO> rList4 = Optional.ofNullable(reviewService.getReviewList(pDTO3)).orElseGet(ArrayList::new) ;
+        List<ReserveDTO> rList5 = Optional.ofNullable(shopService.goodsBuyInfo(pDTO2)).orElseGet(ArrayList::new) ;
+
+
+
+        model.addAttribute("tDTO", tDTO);
+        model.addAttribute("rList1", rList1);
+        model.addAttribute("rList2", rList2);
+        model.addAttribute("rList3", rList3);
+        model.addAttribute("rList4", rList4);
+        model.addAttribute("rList5", rList5);
 
 
 
         log.info(this.getClass().getName() + ".traderIndex End!");
-        // trader id,
         return "/trader/traderIndex";
     }
 

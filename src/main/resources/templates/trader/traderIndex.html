@@ -29,7 +29,7 @@
         </header>
 
         <div class="page-heading">
-            <h3>[[${rDTO.getName}]]님의 상점</h3>
+            <h3>[[${tDTO.name}]]님의 상점</h3>
         </div>
         <div class="page-content">
             <section class="row">
@@ -46,7 +46,9 @@
                                         </div>
                                         <div class="col-md-8">
                                             <h6 class="text-muted font-semibold">구매</h6>
-                                            <h6 class="font-extrabold mb-0">[[${rDTO.buy}]]</h6>
+                                            <div th:each="dto : ${rList1}">
+                                            <h6 class="font-extrabold mb-0">[[${dto.name}]]</h6>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -63,7 +65,10 @@
                                         </div>
                                         <div class="col-md-8">
                                             <h6 class="text-muted font-semibold">예약현황</h6>
-                                            <h6 class="font-extrabold mb-0">[[${rDTO.reserv}]]</h6>
+                                            <div th:each="dto : ${rList2}">
+                                            <h6 class="font-extrabold mb-0">[[${dto.date}]]</h6>
+                                            <h6 class="font-extrabold mb-0">[[${dto.name}]]</h6>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -80,7 +85,9 @@
                                         </div>
                                         <div class="col-md-8">
                                             <h6 class="text-muted font-semibold">신규예약</h6>
-                                            <h6 class="font-extrabold mb-0">[[${rDTO.newReserv}]]</h6>
+                                            <div th:each="dto : ${rList3}">
+                                            <h6 class="font-extrabold mb-0">[[${dto.bid}]]</h6>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -97,7 +104,9 @@
                                         </div>
                                         <div class="col-md-8">
                                             <h6 class="text-muted font-semibold">리뷰</h6>
-                                            <h6 class="font-extrabold mb-0">[[${rDTO.review}]]</h6>
+                                            <div th:each="dto : ${rList4}">
+                                            <h6 class="font-extrabold mb-0">[[${dto.contents}]]</h6>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -122,32 +131,15 @@
                         <div class="card-header">
                             <h4>최근 예약자</h4>
                         </div>
-                        <div class="card-content pb-4">
+                        <div class="card-content pb-4" th:each="dto : ${rList5}">
                             <div class="recent-message d-flex px-4 py-3">
                                 <div class="goodsMng goodsMng-lg">
                                     <img src="/assets/images/faces/4.jpg">
                                 </div>
                                 <div class="name ms-4">
-                                    <h5 class="mb-1">[[${rDTO.name}]]</h5>
-                                    <h6 class="text-muted mb-0">[[${rDTO.price}]]</h6>
-                                </div>
-                            </div>
-                            <div class="recent-message d-flex px-4 py-3">
-                                <div class="goodsMng goodsMng-lg">
-                                    <img src="/assets/images/faces/5.jpg">
-                                </div>
-                                <div class="name ms-4">
-                                    <h5 class="mb-1">[[${rDTO.name}]]</h5>
-                                    <h6 class="text-muted mb-0">[[${rDTO.price}]]</h6>
-                                </div>
-                            </div>
-                            <div class="recent-message d-flex px-4 py-3">
-                                <div class="goodsMng goodsMng-lg">
-                                    <img src="/assets/images/faces/1.jpg">
-                                </div>
-                                <div class="name ms-4">
-                                    <h5 class="mb-1">[[${rDTO.name}]]</h5>
-                                    <h6 class="text-muted mb-0">[[${rDTO.price}]]</h6>
+                                    <h5 class="mb-1">[[${dto.bid}]]</h5>
+                                    <h5 class="text-muted mb-0">[[${dto.name}]]</h5>
+                                    <h6 class="text-muted mb-0">[[${dto.price}]]</h6>
                                 </div>
                             </div>
                         </div>

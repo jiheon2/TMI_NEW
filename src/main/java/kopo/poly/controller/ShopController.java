@@ -1,10 +1,7 @@
 package kopo.poly.controller;
 
 
-import kopo.poly.dto.MsgDTO;
-import kopo.poly.dto.NoticeDTO;
-import kopo.poly.dto.ProductDTO;
-import kopo.poly.dto.ShopDTO;
+import kopo.poly.dto.*;
 import kopo.poly.service.IFileService;
 import kopo.poly.service.IShopService;
 import kopo.poly.util.CmmUtil;
@@ -18,8 +15,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Controller
@@ -308,6 +307,75 @@ public class ShopController {
             dto.setResult(res);
             dto.setMsg(msg);
             log.info(this.getClass().getName() + ".goodsMsgDelete End!");
+        }
+
+        return dto;
+    }
+    @GetMapping(value = "/trader/goodsBuyInfo")
+    public String goodsBuyInfo(ModelMap model, HttpSession session) throws Exception {
+
+        log.info(this.getClass().getName() + ".goodsBuyInfo Start!");
+
+        String id = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+
+        ReserveDTO pDTO = new ReserveDTO();
+        pDTO.setTid(id);
+        pDTO.setState("0");
+        List<ReserveDTO> rList = shopService.goodsBuyInfo(pDTO);
+        if (rList == null) rList = new ArrayList<>();
+
+        model.addAttribute("rList", rList);
+
+        log.info(this.getClass().getName() + ".goodsBuyInfo End!");
+
+        return "/trader/goodsBuyInfo";
+    }
+
+    @ResponseBody
+    @PostMapping(value = "/trader/acceptBuy")
+    public MsgDTO acceptBuy(HttpSession session,@RequestBody Map<String, Object> requestData) {
+        log.info(this.getClass().getName() + ".acceptBuy Start!");
+
+        String msg = "";
+        int res = 0;
+        MsgDTO dto = null;
+
+        try {
+            String id = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+            String want = (String) requestData.get("want");
+            List<String> checkboxes = (List<String>) requestData.get("selectedSeqs");
+            log.info(want);
+            log.info("id : " + id);
+            log.info("checkboxes : " + checkboxes);
+            ReserveDTO pDTO = new ReserveDTO();
+            if (want.equals("delete")) {
+                for (String seq : checkboxes) {
+                    pDTO.setSeq(seq);
+                    pDTO.setTid(id);
+
+                    shopService.deleteBuy(pDTO);
+                }
+                msg = "삭제되었습니다.";
+            } else {
+                for (String seq : checkboxes) {
+                    pDTO.setSeq(seq);
+                    pDTO.setTid(id);
+
+                    shopService.acceptBuy(pDTO);
+                }
+                msg = "수락하였습니다.";
+            }
+
+            res = 1;
+        } catch (Exception e) {
+            msg = "실패하였습니다. : " + e.getMessage();
+            log.info(e.toString());
+            e.printStackTrace();
+        } finally {
+            dto = new MsgDTO();
+            dto.setResult(res);
+            dto.setMsg(msg);
+            log.info(this.getClass().getName() + ".deleteBuy End!");
         }
 
         return dto;
