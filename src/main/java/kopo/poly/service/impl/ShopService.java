@@ -23,6 +23,34 @@ public class ShopService implements IShopService {
         return shopMapper.goodsBuyInfo(pDTO);
     }
     @Override
+    public ShopDTO getCount(ShopDTO pDTO) throws Exception {
+        log.info(this.getClass().getName() + ".getReviewCount Start!");
+
+        ShopDTO rDTO = new ShopDTO();
+
+        rDTO = Optional.ofNullable(shopMapper.getShopInfo(pDTO)).orElseGet(ShopDTO::new);
+        rDTO.setReviewCount(Optional.ofNullable(shopMapper.getReviewCount(pDTO)).orElseGet(String::new));
+        rDTO.setReserveCount(Optional.ofNullable(shopMapper.getReserveCount(pDTO)).orElseGet(String::new));
+        rDTO.setBuyCount(Optional.ofNullable(shopMapper.getBuyCount(pDTO)).orElseGet(String::new));
+        rDTO.setReserveStop(Optional.ofNullable(shopMapper.getReserveStop(pDTO)).orElseGet(String::new));
+
+        log.info(this.getClass().getName() + ".getReviewCount Start!");
+
+        return rDTO;
+    }
+
+    @Override
+    public ProductDTO getGoodsInfo(ProductDTO pDTO) throws Exception {
+        log.info(this.getClass().getName() + ".getGoodsInfo Start!");
+
+
+        ProductDTO rDTO = Optional.ofNullable(shopMapper.getGoodsInfo(pDTO)).orElseGet(ProductDTO::new);
+
+        log.info(this.getClass().getName() + ".getGoodsInfo Start!");
+
+        return rDTO;
+    }
+    @Override
     public void deleteBuy(ReserveDTO pDTO) throws Exception {
         log.info(this.getClass().getName() + ".deleteBuy start!");
         shopMapper.deleteBuy(pDTO);
@@ -39,17 +67,7 @@ public class ShopService implements IShopService {
 
         return shopMapper.getGoodsList(pDTO);
     }
-    @Override
-    public ProductDTO getGoodsInfo(ProductDTO pDTO) throws Exception {
-        log.info(this.getClass().getName() + ".getGoodsInfo Start!");
 
-
-        ProductDTO rDTO = Optional.ofNullable(shopMapper.getGoodsInfo(pDTO)).orElseGet(ProductDTO::new);
-
-        log.info(this.getClass().getName() + ".getGoodsInfo Start!");
-
-        return rDTO;
-    }
     @Override
     public int changeGoods(ProductDTO pDTO) throws Exception {
         int result = 0;

@@ -11,6 +11,31 @@
         AND state = #{state}
         ORDER BY SEQ DESC
     </select>
+    <select id="getReviewCount"  parameterType="ShopDTO" resultType="java.lang.String">
+        SELECT COUNT(*)
+        FROM REVIEW
+        WHERE Trader_ID = #{tid}
+    </select>
+    <select id="getReserveCount"  parameterType="ShopDTO" resultType="java.lang.String">
+        SELECT COUNT(*)
+        FROM RESERVATION
+        WHERE TID = #{tid}
+        AND DATE(DATE) = CURDATE()
+    </select>
+    <select id="getBuyCount"  parameterType="ShopDTO" resultType="java.lang.String">
+        SELECT COUNT(*)
+        FROM RESERVATION
+        WHERE TID = #{tid}
+          AND STATE = "1"
+          AND DATE(DATE) = CURDATE()
+    </select>
+    <select id="getReserveStop"  parameterType="ShopDTO" resultType="java.lang.String">
+        SELECT COUNT(*)
+        FROM RESERVATION
+        WHERE TID = #{tid}
+          AND STATE = "0"
+          AND DATE(DATE) = CURDATE()
+    </select>
     <delete id="deleteBuy" parameterType="ReserveDTO">
         DELETE FROM RESERVATION
         WHERE SEQ = #{seq}

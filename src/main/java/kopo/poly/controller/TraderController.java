@@ -29,7 +29,6 @@ public class TraderController {
 
     private final ITraderService traderService;
     private final IShopService shopService;
-    private final IReviewService reviewService;
 
     @GetMapping(value = "/login")
     public String login() {
@@ -216,30 +215,19 @@ public class TraderController {
 
         String id = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
 
-        TraderDTO tDTO = new TraderDTO();
-        ReserveDTO pDTO2 = new ReserveDTO();
-        ReviewDTO pDTO3 = new ReviewDTO();
+        ShopDTO pDTO1 = new ShopDTO();
 
-        tDTO.setId(id);
+        pDTO1.setTid(id);
+        ShopDTO rDTO = Optional.ofNullable(shopService.getCount(pDTO1)).orElseGet(ShopDTO::new);
+        rDTO.setTid(id);
+
+        ReserveDTO pDTO2 = new ReserveDTO();
         pDTO2.setTid(id);
         pDTO2.setState("1");
-        pDTO3.setTraderId(id);
-        List<ReserveDTO> rList1 = Optional.ofNullable(shopService.goodsBuyInfo(pDTO2)).orElseGet(ArrayList::new) ;
-        List<ReserveDTO> rList2 = Optional.ofNullable(shopService.goodsBuyInfo(pDTO2)).orElseGet(ArrayList::new) ;
-        List<ReserveDTO> rList3 = Optional.ofNullable(shopService.goodsBuyInfo(pDTO2)).orElseGet(ArrayList::new) ;
-        List<ReviewDTO> rList4 = Optional.ofNullable(reviewService.getReviewList(pDTO3)).orElseGet(ArrayList::new) ;
-        List<ReserveDTO> rList5 = Optional.ofNullable(shopService.goodsBuyInfo(pDTO2)).orElseGet(ArrayList::new) ;
+        List<ReserveDTO> rList = Optional.ofNullable(shopService.goodsBuyInfo(pDTO2)).orElseGet(ArrayList::new);
 
-
-
-        model.addAttribute("tDTO", tDTO);
-        model.addAttribute("rList1", rList1);
-        model.addAttribute("rList2", rList2);
-        model.addAttribute("rList3", rList3);
-        model.addAttribute("rList4", rList4);
-        model.addAttribute("rList5", rList5);
-
-
+        model.addAttribute("rDTO", rDTO);
+        model.addAttribute("rList", rList);
 
         log.info(this.getClass().getName() + ".traderIndex End!");
         return "/trader/traderIndex";

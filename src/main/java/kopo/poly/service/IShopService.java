@@ -21,4 +21,5 @@ public interface IShopService {
     void goodsMsgDelete(ProductDTO pDTO) throws Exception;
 
     int changeShop(ShopDTO pDTO) throws Exception;
+    ShopDTO getCount(ShopDTO pDTO) throws Exception;
 }

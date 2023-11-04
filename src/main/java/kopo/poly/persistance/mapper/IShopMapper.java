@@ -23,4 +23,9 @@ public interface IShopMapper {
     ShopDTO getShopInfo(ShopDTO pDTO) throws Exception;
     void goodsMsgDelete(ProductDTO pDTO) throws Exception;
     int changeShop(ShopDTO pDTO) throws Exception;
+    String getReviewCount(ShopDTO pDTO) throws Exception;
+    String getReserveCount(ShopDTO pDTO) throws Exception;
+
+    String getBuyCount(ShopDTO pDTO) throws Exception;
+    String getReserveStop(ShopDTO pDTO) throws Exception;
 }
