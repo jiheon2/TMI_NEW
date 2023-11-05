@@ -23,6 +23,13 @@ public class ShopService implements IShopService {
         return shopMapper.goodsBuyInfo(pDTO);
     }
     @Override
+    public List<ShopDTO> getCalender(ShopDTO pDTO) throws Exception {
+
+        log.info(this.getClass().getName() + ".getCalender start!");
+
+        return shopMapper.getDateCount(pDTO);
+    }
+    @Override
     public ShopDTO getCount(ShopDTO pDTO) throws Exception {
         log.info(this.getClass().getName() + ".getReviewCount Start!");
 

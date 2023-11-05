@@ -22,4 +22,5 @@ public interface IShopService {
 
     int changeShop(ShopDTO pDTO) throws Exception;
     ShopDTO getCount(ShopDTO pDTO) throws Exception;
+    List<ShopDTO> getCalender(ShopDTO pDTO) throws Exception;
 }
