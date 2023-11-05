@@ -136,7 +136,7 @@
                             modalTitle.textContent = info.dateStr + '일 예약된 일정';
                             modalBody.innerHTML = '<ul>';
                             for (var i = 0; i < data.length; i++) {
-                                modalBody.innerHTML += '<li>' + "상품명" + data[i].name + "  주문자" + data[i].bid + "  기격" + data[i].price + " 요청사함" + data[i].contents + '</li>';
+                                modalBody.innerHTML += '<li>' + data[i].name + data[i].bid + data[i].price + data[i].contents + '</li>';
                             }
                             modalBody.innerHTML += '</ul>';
 
