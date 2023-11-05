@@ -1,8 +1,8 @@
 package kopo.poly.controller;
 
-import kopo.poly.dto.CustomerDTO;
-import kopo.poly.dto.MsgDTO;
-import kopo.poly.dto.TraderDTO;
+import kopo.poly.dto.*;
+import kopo.poly.service.IReviewService;
+import kopo.poly.service.IShopService;
 import kopo.poly.service.ITraderService;
 import kopo.poly.util.CmmUtil;
 import kopo.poly.util.EncryptUtil;
@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -26,6 +28,7 @@ import java.util.Optional;
 public class TraderController {
 
     private final ITraderService traderService;
+    private final IShopService shopService;
 
     @GetMapping(value = "/login")
     public String login() {
@@ -207,13 +210,26 @@ public class TraderController {
     }
 
     @GetMapping(value = "/traderIndex")
-    public String traderIndex(HttpSession session, ModelMap model) {
+    public String traderIndex(HttpSession session, ModelMap model) throws Exception{
         log.info(this.getClass().getName() + ".traderIndex Start!");
 
+        String id = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
 
+        ShopDTO pDTO1 = new ShopDTO();
+
+        pDTO1.setTid(id);
+        ShopDTO rDTO = Optional.ofNullable(shopService.getCount(pDTO1)).orElseGet(ShopDTO::new);
+        rDTO.setTid(id);
+
+        ReserveDTO pDTO2 = new ReserveDTO();
+        pDTO2.setTid(id);
+        pDTO2.setState("1");
+        List<ReserveDTO> rList = Optional.ofNullable(shopService.goodsBuyInfo(pDTO2)).orElseGet(ArrayList::new);
+
+        model.addAttribute("rDTO", rDTO);
+        model.addAttribute("rList", rList);
 
         log.info(this.getClass().getName() + ".traderIndex End!");
-        // trader id,
         return "/trader/traderIndex";
     }
 

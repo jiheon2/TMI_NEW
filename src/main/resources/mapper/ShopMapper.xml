@@ -4,6 +4,60 @@
 <!-- JAVA와 연결할 Mapper 파일 설정 -->
 <mapper namespace="kopo.poly.persistance.mapper.IShopMapper">
 
+    <select id="goodsBuyInfo" parameterType="ReserveDTO" resultType="ReserveDTO">
+        SELECT BID, TID, DATE, NAME, SEQ, PRICE, STATE, contents
+        FROM RESERVATION
+        WHERE 1=1
+        <if test="date neq null and date neq ''">
+            AND DATE(DATE) = #{date}
+        </if>
+        AND TID = #{tid}
+        AND state = #{state}
+        ORDER BY SEQ DESC
+    </select>
+    <select id="getReviewCount"  parameterType="ShopDTO" resultType="java.lang.String">
+        SELECT COUNT(*)
+        FROM REVIEW
+        WHERE Trader_ID = #{tid}
+    </select>
+    <select id="getReserveCount"  parameterType="ShopDTO" resultType="java.lang.String">
+        SELECT COUNT(*)
+        FROM RESERVATION
+        WHERE TID = #{tid}
+        AND DATE(DATE) = CURDATE()
+    </select>
+    <select id="getBuyCount"  parameterType="ShopDTO" resultType="java.lang.String">
+        SELECT COUNT(*)
+        FROM RESERVATION
+        WHERE TID = #{tid}
+          AND STATE = "1"
+          AND DATE(DATE) = CURDATE()
+    </select>
+    <select id="getDateCount"  parameterType="ShopDTO" resultType="ShopDTO">
+        SELECT DATE(DATE) AS date, COUNT(*) AS dateCount
+        FROM RESERVATION
+        WHERE STATE = "1"
+        GROUP BY DATE
+    </select>
+    <select id="getReserveStop"  parameterType="ShopDTO" resultType="java.lang.String">
+        SELECT COUNT(*)
+        FROM RESERVATION
+        WHERE TID = #{tid}
+          AND STATE = "0"
+          AND DATE(DATE) = CURDATE()
+    </select>
+    <delete id="deleteBuy" parameterType="ReserveDTO">
+        DELETE FROM RESERVATION
+        WHERE SEQ = #{seq}
+          AND TID = #{tid}
+    </delete>
+    <update id="acceptBuy" parameterType="ReserveDTO">
+        UPDATE RESERVATION
+        SET state = 1
+        WHERE TID = #{tid}
+          AND SEQ = #{seq}
+    </update>
+
     <select id="getGoodsList" parameterType="ProductDTO" resultType="ProductDTO">
         SELECT NAME, PRICE, TYPE, PID, SEQ
         FROM PRODUCT

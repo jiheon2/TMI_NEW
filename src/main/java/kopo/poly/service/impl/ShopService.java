@@ -1,9 +1,6 @@
 package kopo.poly.service.impl;
 
-import kopo.poly.dto.CustomerDTO;
-import kopo.poly.dto.NoticeDTO;
-import kopo.poly.dto.ProductDTO;
-import kopo.poly.dto.ShopDTO;
+import kopo.poly.dto.*;
 import kopo.poly.persistance.mapper.IShopMapper;
 import kopo.poly.service.IShopService;
 import lombok.RequiredArgsConstructor;
@@ -19,12 +16,36 @@ import java.util.Optional;
 public class ShopService implements IShopService {
     private final IShopMapper shopMapper;
     @Override
-    public List<ProductDTO> getGoodsList(ProductDTO pDTO) throws Exception {
+    public List<ReserveDTO> goodsBuyInfo(ReserveDTO pDTO) throws Exception {
 
-        log.info(this.getClass().getName() + ".getGoodsList start!");
+        log.info(this.getClass().getName() + ".goodsBuyInfo start!");
 
-        return shopMapper.getGoodsList(pDTO);
+        return shopMapper.goodsBuyInfo(pDTO);
     }
+    @Override
+    public List<ShopDTO> getCalender(ShopDTO pDTO) throws Exception {
+
+        log.info(this.getClass().getName() + ".getCalender start!");
+
+        return shopMapper.getDateCount(pDTO);
+    }
+    @Override
+    public ShopDTO getCount(ShopDTO pDTO) throws Exception {
+        log.info(this.getClass().getName() + ".getReviewCount Start!");
+
+        ShopDTO rDTO = new ShopDTO();
+
+        rDTO = Optional.ofNullable(shopMapper.getShopInfo(pDTO)).orElseGet(ShopDTO::new);
+        rDTO.setReviewCount(Optional.ofNullable(shopMapper.getReviewCount(pDTO)).orElseGet(String::new));
+        rDTO.setReserveCount(Optional.ofNullable(shopMapper.getReserveCount(pDTO)).orElseGet(String::new));
+        rDTO.setBuyCount(Optional.ofNullable(shopMapper.getBuyCount(pDTO)).orElseGet(String::new));
+        rDTO.setReserveStop(Optional.ofNullable(shopMapper.getReserveStop(pDTO)).orElseGet(String::new));
+
+        log.info(this.getClass().getName() + ".getReviewCount Start!");
+
+        return rDTO;
+    }
+
     @Override
     public ProductDTO getGoodsInfo(ProductDTO pDTO) throws Exception {
         log.info(this.getClass().getName() + ".getGoodsInfo Start!");
@@ -36,6 +57,24 @@ public class ShopService implements IShopService {
 
         return rDTO;
     }
+    @Override
+    public void deleteBuy(ReserveDTO pDTO) throws Exception {
+        log.info(this.getClass().getName() + ".deleteBuy start!");
+        shopMapper.deleteBuy(pDTO);
+    }
+    @Override
+    public void acceptBuy(ReserveDTO pDTO) throws Exception {
+        log.info(this.getClass().getName() + ".deleteBuy start!");
+        shopMapper.acceptBuy(pDTO);
+    }
+    @Override
+    public List<ProductDTO> getGoodsList(ProductDTO pDTO) throws Exception {
+
+        log.info(this.getClass().getName() + ".getGoodsList start!");
+
+        return shopMapper.getGoodsList(pDTO);
+    }
+
     @Override
     public int changeGoods(ProductDTO pDTO) throws Exception {
         int result = 0;

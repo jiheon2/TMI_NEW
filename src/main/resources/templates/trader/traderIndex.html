@@ -20,87 +20,7 @@
 
 <body>
 <div id="app">
-    <!-- 왼쪽 navigation var 코드 -->
-    <div id="sidebar" class="active">
-        <div class="sidebar-wrapper active">
-            <div class="sidebar-header">
-                <div class="d-flex justify-content-between">
-                    <div class="logo">
-                        <a id="index"><img src="/assets/images/bird/logo2.png" style="width: 200px; height: 130px" alt="Logo" srcset=""></a>
-                    </div>
-                    <div class="toggler">
-                        <a class="sidebar-hide d-xl-none d-block"><i class="bi bi-x bi-middle"></i></a>
-                    </div>
-                </div>
-            </div>
-            <div class="sidebar-menu">
-                <ul class="menu">
-                    <li class="sidebar-title">MENU</li>
-
-                    <li class="sidebar-item active ">
-                        <a id="traderIndex" class='sidebar-link'>
-                            <i class="bi bi-grid-fill"></i>
-                            <span>한눈에 보기</span>
-                        </a>
-                    </li>
-
-                    <li class="sidebar-item  has-sub">
-                        <a href="#" class='sidebar-link'>
-                            <i class="bi bi-stack"></i>
-                            <span>내 상점</span>
-                        </a>
-                        <ul class="submenu ">
-                            <li class="submenu-item ">
-                                <a id="shopInfo">상점 정보</a>
-                            </li>
-                            <li class="submenu-item ">
-                                <a id="traderInfo">상인 정보</a>
-                            </li>
-                        </ul>
-                    </li>
-
-                    <li class="sidebar-item  has-sub">
-                        <a href="#" class='sidebar-link'>
-                            <i class="bi bi-collection-fill"></i>
-                            <span>상품관리</span>
-                        </a>
-                        <ul class="submenu ">
-                            <li class="submenu-item ">
-                                <a id="goodsMng">상품 관리</a>
-                            </li>
-                            <li class="submenu-item ">
-                                <a id="reviewMng">리뷰 관리</a>
-                            </li>
-                        </ul>
-                    </li>
-
-                    <li class="sidebar-item">
-                        <a id="reservMng" class='sidebar-link'>
-                            <i class="bi bi-grid-1x2-fill"></i>
-                            <span>예약관리</span>
-                        </a>
-                    </li>
-
-                    <li class="sidebar-item  ">
-                        <a id="chat" class='sidebar-link'>
-                            <i class="bi bi-file-earmark-medical-fill"></i>
-                            <span>채팅</span>
-                        </a>
-                    </li>
-
-
-                    <li class="sidebar-item  ">
-                        <a id="customerService" class='sidebar-link'>
-                            <i class="bi bi-grid-1x2-fill"></i>
-                            <span>고객센터</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-            <button class="sidebar-toggler btn x"><i data-feather="x"></i></button>
-        </div>
-    </div>
-    <!------------------------------------------>
+    <div th:replace="sidebar.html"></div>
     <div id="main">
         <header class="mb-3">
             <a href="#" class="burger-btn d-block d-xl-none">
@@ -109,7 +29,7 @@
         </header>
 
         <div class="page-heading">
-            <h3>[[${rDTO.getName}]]님의 상점</h3>
+            <h3>[[${rDTO.cname}]]님의 상점</h3>
         </div>
         <div class="page-content">
             <section class="row">
@@ -126,7 +46,7 @@
                                         </div>
                                         <div class="col-md-8">
                                             <h6 class="text-muted font-semibold">구매</h6>
-                                            <h6 class="font-extrabold mb-0">[[${rDTO.buy}]]</h6>
+                                            <h6 class="font-extrabold mb-0">[[${rDTO.buyCount}]]</h6>
                                         </div>
                                     </div>
                                 </div>
@@ -143,7 +63,7 @@
                                         </div>
                                         <div class="col-md-8">
                                             <h6 class="text-muted font-semibold">예약현황</h6>
-                                            <h6 class="font-extrabold mb-0">[[${rDTO.reserv}]]</h6>
+                                            <h6 class="font-extrabold mb-0">[[${rDTO.reserveCount}]]</h6>
                                         </div>
                                     </div>
                                 </div>
@@ -160,7 +80,7 @@
                                         </div>
                                         <div class="col-md-8">
                                             <h6 class="text-muted font-semibold">신규예약</h6>
-                                            <h6 class="font-extrabold mb-0">[[${rDTO.newReserv}]]</h6>
+                                            <h6 class="font-extrabold mb-0">[[${rDTO.reserveStop}]]</h6>
                                         </div>
                                     </div>
                                 </div>
@@ -177,7 +97,7 @@
                                         </div>
                                         <div class="col-md-8">
                                             <h6 class="text-muted font-semibold">리뷰</h6>
-                                            <h6 class="font-extrabold mb-0">[[${rDTO.review}]]</h6>
+                                            <h6 class="font-extrabold mb-0">[[${rDTO.reviewCount}]]</h6>
                                         </div>
                                     </div>
                                 </div>
@@ -202,32 +122,14 @@
                         <div class="card-header">
                             <h4>최근 예약자</h4>
                         </div>
-                        <div class="card-content pb-4">
+                        <div class="card-content pb-4" th:each="dto : ${rList}">
                             <div class="recent-message d-flex px-4 py-3">
                                 <div class="goodsMng goodsMng-lg">
                                     <img src="/assets/images/faces/4.jpg">
                                 </div>
                                 <div class="name ms-4">
-                                    <h5 class="mb-1">[[${rDTO.name}]]</h5>
-                                    <h6 class="text-muted mb-0">[[${rDTO.price}]]</h6>
-                                </div>
-                            </div>
-                            <div class="recent-message d-flex px-4 py-3">
-                                <div class="goodsMng goodsMng-lg">
-                                    <img src="/assets/images/faces/5.jpg">
-                                </div>
-                                <div class="name ms-4">
-                                    <h5 class="mb-1">[[${rDTO.name}]]</h5>
-                                    <h6 class="text-muted mb-0">[[${rDTO.price}]]</h6>
-                                </div>
-                            </div>
-                            <div class="recent-message d-flex px-4 py-3">
-                                <div class="goodsMng goodsMng-lg">
-                                    <img src="/assets/images/faces/1.jpg">
-                                </div>
-                                <div class="name ms-4">
-                                    <h5 class="mb-1">[[${rDTO.name}]]</h5>
-                                    <h6 class="text-muted mb-0">[[${rDTO.price}]]</h6>
+                                    <h5 class="mb-1">[[${dto.bid}]]</h5>
+                                    <h6 class="text-muted mb-0">[[${dto.price}]]</h6>
                                 </div>
                             </div>
                         </div>
@@ -257,45 +159,7 @@
     <!-- jQuery 라이브러리 추가 -->
     <script src="/assets/js/jquery-3.6.0.min.js"></script>
     <script src="/assets/js/main.js"></script>
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $("#index").on("click", function () {
-                location.href = "/trader/traderIndex";
-            })
-
-            $("#traderIndex").on("click", function () {
-                location.href = "/trader/traderIndex";
-            })
-
-            $("#shopInfo").on("click", function () {
-                location.href = "/trader/shopInfo";
-            })
-
-            $("#traderInfo").on("click", function () {
-                location.href = "/trader/traderInfo";
-            })
-
-            $("#goodsMng").on("click", function () {
-                location.href = "/trader/goodsMng";
-            })
-
-            $("#reviewMng").on("click", function () {
-                location.href = "/trader/reviewMng";
-            })
-
-            $("#reservMng").on("click", function () {
-                location.href = "/trader/reservMng";
-            })
-
-            $("#chat").on("click", function () {
-                location.href = "/chat/intro";
-            })
-
-            $("#customerService").on("click", function () {
-                location.href = "/trader/customerService";
-            })
-        });
-    </script>
+<script src="/assets/js/move.js"></script>
 </body>
 
 </html>
