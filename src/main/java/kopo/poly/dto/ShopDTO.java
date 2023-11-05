@@ -15,4 +15,9 @@ public class ShopDTO {
     private String name;
     private String image;
     private String tid;
+    private String count;
+    private String reviewCount;
+    private String reserveCount;
+    private String buyCount;
+    private String reserveStop;
 }

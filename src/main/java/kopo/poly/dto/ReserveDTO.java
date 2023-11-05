@@ -8,12 +8,12 @@ import lombok.ToString;
 @Setter
 @ToString
 public class ReserveDTO {
-    private String shopCode;
-    private String BusinessNum;
-    private String id;
-    private String productName;
-    private String amount;
-    private String price;
+    private String bid;
+    private String tid;
     private String date;
-    private String content;
+    private String name;
+    private String price;
+    private String seq;
+    private String state;
+    private String contents;
 }
