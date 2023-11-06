@@ -71,7 +71,6 @@
     <script src="https://kit.fontawesome.com/cb71939295.js" crossorigin="anonymous"></script>
     <script src="/assets/js/jquery-3.6.0.min.js"></script>
     <!-- jQuery 라이브러리 추가 -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script type="text/javascript">
         let businessResult;
         let idCheck = "Y";
@@ -270,6 +269,42 @@
             })
         }
     </script>
+    <script>
+        function fetchListData() {
+            var shopCode = document.getElementById("shopCode").value;
+            // AJAX를 사용하여 서버에서 데이터 가져오기
+            $.ajax({
+                url: '/market/list', // 서버 API 엔드포인트 URL
+                method: 'GET',
+                data: {
+                    shopCode: shopCode
+                },
+                success: function(response) {
+                    // 서버에서 받아온 데이터를 화면에 표시
+                    var list = document.getElementById('list');
+                    list.innerHTML = ''; // 리스트 초기화
+                    for (var i = 0; i < response.length; i++) {
+                        var listItem = document.createElement('li');
+                        listItem.textContent = response[i];
+                        list.appendChild(listItem);
+                    }
+                    list.style.display = 'block'; // 리스트를 표시
+                },
+                error: function(error) {
+                    console.error('데이터를 가져오는 중 오류가 발생했습니다: ', error);
+                }
+            });
+        }
+        // let app = document.getElementById('list');
+        let app = document.getElementsByTagName('li');
+
+        app.addEventListener("click", function(e) {
+            console.log("1");
+            if (e.target && e.target.nodeName == "LI") {
+                alert("clicked : " + e.target.innerHTML);
+            }
+        })
+    </script>
 </head>
 
 <body>
@@ -356,8 +391,10 @@
                             </div>
                             <div class="form-group">
                                 <label for="shopCode"><i class="zmdi zmdi-group"></i></label>
-                                <input type="text" name="shopCode" id="shopCode" placeholder="소속" />
+                                <input type="text" name="shopCode" id="shopCode" placeholder="소속 시장" />
+                                <button type="button" name="shopCheck" id="shopCheck" onclick="fetchListData()">검색</button>
                             </div>
+                            <ul id="list" style="display: none;"></ul>
                             <div class="form-group">
                                 <label for="email"><i class="zmdi zmdi-email"></i></label>
                                 <input type="email" name="email" id="email" placeholder="이메일" />
