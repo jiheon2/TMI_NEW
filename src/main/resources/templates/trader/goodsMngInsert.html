@@ -51,6 +51,7 @@
                 return;
             }
             var formData = new FormData($("#f")[0]);
+            formData.append("seq", seq);
             $.ajax({
                     url: "/trader/changeGoods",
                 type: "POST",
