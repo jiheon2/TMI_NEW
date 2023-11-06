@@ -87,23 +87,25 @@
                                     <div class="carousel-item active" th:if="${not #strings.isEmpty(rDTO.image)}">
                                         <img th:src="${rDTO.image}" class="d-block w-100" style="height:380px">
                                     </div>
-
                                 </div>
                             </div>
-                            <div class="card-body">
-                                <div class="card-text">
+                            <div class="form-body">
+                                <label>가격</label>
+                                <div class="form-control">
                                     [[${rDTO.price}]]
                                 </div>
-                                <div class="card-text">
+                                <label>상품유형</label>
+                                <div class="form-control">
                                     [[${rDTO.type}]]
                                 </div>
-                                <div class="card-text">
+                                <label>상품설명</label>
+                                <div class="form-control">
                                     [[${rDTO.des}]]
                                 </div>
                                 <br>
-                                <div class="buttons" style="float: left"><a th:attr="data-seq=${rDTO.seq}" onclick="review(this)" class="btn btn-primary">수정</a></div>
                                 <div class="buttons" style="float: right"><a th:attr="data-seq=${rDTO.seq}" onclick="doDelete(this)" class="btn btn-light-secondary me-1 mb-1">삭제</a></div>
                                 <div class="buttons" style="float: right"><a th:attr="data-seq=${rDTO.seq}" onclick="doEdit(this)" class="btn btn-primary">수정</a></div>
+                                <div class="buttons" style="float: right"><a th:attr="data-seq=${rDTO.seq}" onclick="review(this)" class="btn btn-primary">리뷰</a></div>
                             </div>
                         </div>
                     </div>

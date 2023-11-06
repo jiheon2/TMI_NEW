@@ -65,8 +65,8 @@
                                     <div th:each="dto:${rList}">
                                         <tr>
                                             <td th:attr="data-seq=${dto.seq}, data-pid=${dto.pid}" onclick="doDetail(this)">[[${dto.name}]]</td>
-                                            <td>[[${dto.price}]]</td>
-                                            <td class="text-bold-500">[[${dto.type}]]</td>
+                                            <td th:attr="data-seq=${dto.seq}, data-pid=${dto.pid}" onclick="doDetail(this)">[[${dto.price}]]</td>
+                                            <td th:attr="data-seq=${dto.seq}, data-pid=${dto.pid}" onclick="doDetail(this)">[[${dto.type}]]</td>
                                         </tr>
                                     </div>
                                     </tbody>
