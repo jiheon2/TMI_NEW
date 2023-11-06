@@ -79,16 +79,22 @@ public class ShopService implements IShopService {
     public int changeGoods(ProductDTO pDTO) throws Exception {
         int result = 0;
         int res = 0;
-        log.info("수정 시작");
-        result = shopMapper.changeGoods(pDTO);
-        if(result == 0) {
-            log.info("인설트 시작");
-            result = shopMapper.insertGoods(pDTO);
+        try {
+            log.info("수정 시작");
+            result = shopMapper.changeGoods(pDTO);
+
+        } catch (Exception e) {
+            if(result == 0) {
+                log.info("인설트 시작");
+                result = shopMapper.insertGoods(pDTO);
+            }
+
+        } finally {
+            if (result > 0) {
+                res = 1;
+            }
         }
 
-        if (result > 0) {
-            res = 1;
-        }
         return res;
     }
     @Override
