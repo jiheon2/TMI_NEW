@@ -258,7 +258,11 @@ public class ShopController {
             log.info("res : " + res);
 
             if (res == 1) {
-                msg = "수정하였습니다";
+                if (pDTO.getSeq().isEmpty()) {
+                    msg = "등록하였습니다";
+                } else {
+                    msg = "수정하였습니다";
+                }
             } else {
                 msg = "오류로 인해 수정 실패하였습니다";
             }

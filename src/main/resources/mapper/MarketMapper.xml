@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- JAVA와 연결할 Mapper 파일 설정 -->
+<mapper namespace="kopo.poly.persistance.mapper.IMarketMapper">
+
+    <insert id="insertMarket" parameterType="MarketDTO">
+        INSERT INTO MARKET (seq, addr, name)
+        VALUES ((SELECT IFNULL(MAX(A.SEQ),0)+1 FROM MARKET A), #{addr}, #{name})
+    </insert>
+    <delete id="deleteMarket">
+        DELETE FROM MARKET
+    </delete>
+    <select id="getList" resultType="MarketDTO" parameterType="java.lang.String">
+        SELECT SEQ, ADDR, NAME
+        FROM MARKET
+        WHERE NAME LIKE CONCAT('%',#{nm},'%')
+        ORDER BY SEQ DESC
+    </select>
+
+</mapper>
