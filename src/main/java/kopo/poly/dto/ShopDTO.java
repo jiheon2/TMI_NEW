@@ -18,6 +18,8 @@ public class ShopDTO {
     private String count;
     private String reviewCount;
     private String reserveCount;
+    private String dateCount;
+    private String date;
     private String buyCount;
     private String reserveStop;
 }

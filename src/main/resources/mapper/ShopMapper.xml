@@ -7,7 +7,11 @@
     <select id="goodsBuyInfo" parameterType="ReserveDTO" resultType="ReserveDTO">
         SELECT BID, TID, DATE, NAME, SEQ, PRICE, STATE, contents
         FROM RESERVATION
-        WHERE TID = #{tid}
+        WHERE 1=1
+        <if test="date neq null and date neq ''">
+            AND DATE(DATE) = #{date}
+        </if>
+        AND TID = #{tid}
         AND state = #{state}
         ORDER BY SEQ DESC
     </select>
@@ -28,6 +32,12 @@
         WHERE TID = #{tid}
           AND STATE = "1"
           AND DATE(DATE) = CURDATE()
+    </select>
+    <select id="getDateCount"  parameterType="ShopDTO" resultType="ShopDTO">
+        SELECT DATE(DATE) AS date, COUNT(*) AS dateCount
+        FROM RESERVATION
+        WHERE STATE = "1"
+        GROUP BY DATE
     </select>
     <select id="getReserveStop"  parameterType="ShopDTO" resultType="java.lang.String">
         SELECT COUNT(*)

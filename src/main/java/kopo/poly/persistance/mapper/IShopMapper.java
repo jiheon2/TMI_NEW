@@ -28,4 +28,5 @@ public interface IShopMapper {
 
     String getBuyCount(ShopDTO pDTO) throws Exception;
     String getReserveStop(ShopDTO pDTO) throws Exception;
+    List<ShopDTO> getDateCount(ShopDTO pDTO) throws  Exception;
 }
