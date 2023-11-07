@@ -338,7 +338,41 @@
                 }
             })
         });
+    <script>
+        function fetchListData() {
+            var shopCode = document.getElementById("shopCode").value;
+            // AJAX를 사용하여 서버에서 데이터 가져오기
+            $.ajax({
+                url: '/market/list', // 서버 API 엔드포인트 URL
+                method: 'GET',
+                data: {
+                    shopCode: shopCode
+                },
+                success: function(response) {
+                    // 서버에서 받아온 데이터를 화면에 표시
+                    var list = document.getElementById('list');
+                    list.innerHTML = ''; // 리스트 초기화
+                    for (var i = 0; i < response.length; i++) {
+                        var listItem = document.createElement('li');
+                        listItem.textContent = response[i];
+                        list.appendChild(listItem);
+                    }
+                    list.style.display = 'block'; // 리스트를 표시
+                },
+                error: function(error) {
+                    console.error('데이터를 가져오는 중 오류가 발생했습니다: ', error);
+                }
+            });
+        }
+        // let app = document.getElementById('list');
+        let app = document.getElementsByTagName('li');
 
+        app.addEventListener("click", function(e) {
+            console.log("1");
+            if (e.target && e.target.nodeName == "LI") {
+                alert("clicked : " + e.target.innerHTML);
+            }
+        })
     </script>
 </head>
 
@@ -399,7 +433,6 @@
 <!-- breadcrumb start-->
 
 <div class="main">
-
     <!-- Sign up form -->
     <section class="signup">
         <div class="container_1">
@@ -428,6 +461,66 @@
                         <div class="form-group">
                             <label for="pn"><i class="zmdi zmdi-phone"></i></label>
                             <input type="tel" name="pn" id="pn" placeholder="전화번호"/>
+        <!-- Sign up form -->
+        <section class="signup">
+            <div class="container_1">
+                <div class="signup-content">
+                    <div class="signup-form">
+                        <h2 class="form-title">회원가입</h2>
+                        <form method="POST" class="register-form" id="register-form">
+                            <div class="form-group" style="display: flex">
+                                <label for="id"><i class="zmdi zmdi-account material-icons-name"></i></label>
+                                <input type="text" name="id" id="id" placeholder="아이디" style="width: 77%" />&nbsp;&nbsp;
+                                <input type="button" name="btnId" id="btnId" class="btn btn-primary" value="인증" style="width: 20%" />
+                            </div>
+                            <div class="form-group">
+                                <label for="pw"><i class="zmdi zmdi-lock"></i></label>
+                                <input type="password" name="pw" id="pw" placeholder="비밀번호" />
+                            </div>
+                            <div class="form-group">
+                                <label for="re_pw"><i class="zmdi zmdi-lock-outline"></i></label>
+                                <input type="password" name="re_pw" id="re_pw" placeholder="비밀번호 재입력" />
+                            </div>
+                            <div class="form-group">
+                                <label for="name"><i class="zmdi zmdi-account material-icons-name"></i></label>
+                                <input type="text" name="name" id="name" placeholder="이름" />
+                            </div>
+                            <div class="form-group">
+                                <label for="pn"><i class="zmdi zmdi-phone"></i></label>
+                                <input type="tel" name="pn" id="pn" placeholder="전화번호" />
+                            </div>
+                            <div class="form-group">
+                                <label for="shopCode"><i class="zmdi zmdi-group"></i></label>
+                                <input type="text" name="shopCode" id="shopCode" placeholder="소속 시장" />
+                                <button type="button" name="shopCheck" id="shopCheck" onclick="fetchListData()">검색</button>
+                            </div>
+                            <ul id="list" style="display: none;"></ul>
+                            <div class="form-group">
+                                <label for="email"><i class="zmdi zmdi-email"></i></label>
+                                <input type="email" name="email" id="email" placeholder="이메일" />
+                            </div>
+                            <div class="form-group" style="display: flex; align-items: center">
+                                <label for="businessNum"><i class="zmdi zmdi-money"></i></label>
+                                <input type="text" name="businessNum" id="businessNum" placeholder="사업자등록번호" />
+                            </div>
+                            <div style="text-align: center">
+                                <button type="button" id="btnBnExists" class="btn btn-primary">사업자 등록번호 중복 확인</button>
+                            </div>
+                            <br>
+                            <div class="form-group" style="display: flex; align-items: center">
+                                <label for="start_dt"><i class="zmdi zmdi-money"></i></label>
+                                <input type="text" name="start_dt" id="start_dt" placeholder="시작일" style="width: 80%" />&nbsp;&nbsp;
+                            </div>
+                            <div class="form-group" style="display: flex; align-items: center">
+                                <label for="p_nm"><i class="zmdi zmdi-money"></i></label>
+                                <input type="text" name="p_nm" id="p_nm" placeholder="대표자명" style="width: 80%" />&nbsp;&nbsp;<button type="button" id="btnBusinessNum" class="btn btn-primary">인증</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="signup-image" style="text-align: center">
+                        <figure><img src="/assets/images/bird/bird2.png" alt="sing up image"></figure>
+                        <div class="form-group form-button">
+                            <input type="button" name="btnSend" id="btnSend" class="form-submit" value="회원가입" />
                         </div>
                         <div class="form-group">
                             <label for="shopCode"></label>
