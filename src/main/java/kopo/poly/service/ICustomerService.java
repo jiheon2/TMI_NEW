@@ -8,7 +8,7 @@ public interface ICustomerService {
     CustomerDTO getLogin(CustomerDTO pDTO) throws Exception;
     int insertCustomer(CustomerDTO pDTO) throws Exception;
 
-
+    CustomerDTO getEmailExists(CustomerDTO pDTO) throws Exception;
     CustomerDTO getUserInfo(CustomerDTO pDTO) throws Exception;
 
     int changeCustomer(CustomerDTO pDTO) throws Exception;

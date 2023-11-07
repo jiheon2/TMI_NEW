@@ -76,7 +76,11 @@
         let idCheck = "Y";
         let businessCheck = "N";
         let businessNumCheck = "Y";
+        let emailAuthNumber = "";
+        let shopCodeCheck = "";
         let bn;
+
+
         $(document).ready(function () {
             let f = document.getElementById("register-form");
 
@@ -139,135 +143,179 @@
             $("#btnSend").on("click", function () {
                 doSubmit(f)
             })
+            $("#btnEmailExists").on("click", function () {
+                emailExists(f)
+            })
+            function idExists(f) {
+                if (f.id.value === "") {
+                    alert("아이디를 입력하세요");
+                    f.id.focus();
+                    return
+                }
+                $.ajax({
+                    url: "/trader/getUserIdExists",
+                    type: "post",
+                    data: $("#register-form").serialize(),
+                    success: function (json) {
+                        if (json.existsYn === "Y") {
+                            alert("이미 가입된 아이디가 존재합니다");
+                            f.id.focus();
+                        } else {
+                            alert("가입 가능한 아이디입니다");
+                            idCheck = "N";
+                        }
+                    }
+                })
+            }
+
+            function bnExists(f) {
+                if (f.businessNum.value === "") {
+                    alert("사업자 번호를 입력하세요");
+                    f.id.focus();
+                    return
+                }
+                $.ajax({
+                    url: "/trader/getBusinessNumExists",
+                    type: "post",
+                    data: $("#register-form").serialize(),
+                    success: function (json) {
+                        if (json.existsYn === "Y") {
+                            alert("이미 가입된 사업자 번호가 존재합니다");
+                            f.id.focus();
+                        } else {
+                            alert("가입 가능한 사업자 번호입니다");
+                            businessNumCheck = "N";
+                        }
+                    }
+                })
+            }
+            function emailExists(f) {
+                if (f.email.value === "") {
+                    alert("이메일을 입력하세요.");
+                    f.email.focus();
+                    return;
+                }
+
+                // Ajax 호출해서 회원가입하기
+                $.ajax({
+                        url: "/trader/getEmailExists",
+                        type: "post", // 전송방식은 Post
+                        dataType: "JSON", // 전송 결과는 JSON으로 받기
+                        data: $("#register-form").serialize(), // form 태그 내 input 등 객체를 자동으로 전송할 형태로 변경하기
+                        success: function (json) { // 호출이 성공했다면..
+
+                            if (json.existsYn === "Y") {
+                                alert("이미 가입된 이메일 주소가 존재합니다.");
+                                f.email.focus();
+
+                            } else {
+                                alert("이메일로 인증번호가 발송되었습니다. \n받은 메일의 인증번호를 입력하기 바랍니다.");
+                                emailAuthNumber = json.authNumber;
+
+                            }
+
+                        }
+                    }
+                )
+            }
+
+            function doSubmit(f) {
+                if (f.id.value === "") {
+                    alert("아이디를 입력하세요");
+                    f.id.focus();
+                    return
+                }
+
+                if (idCheck !== "N") {
+                    alert("아이디 중복 확인을하세요")
+                    return
+                }
+                if (businessNumCheck !== "Y") {
+                    alert("사업자 등록번호를 확인하세요")
+                    return
+                }
+                if (f.pw.value === "") {
+                    alert("비밀번호를 입력하세요");
+                    f.pw.focus();
+                    return
+                }
+                if (f.email.value === "") {
+                    alert("이메일을 입력하세요");
+                    f.email.focus();
+                    return
+                }
+                if (f.re_pw.value != f.pw.value) {
+                    alert("비밀번호가 일치하지 않습니다");
+                    f.pw.focus();
+                    return
+                }
+
+                if (f.name.value === "") {
+                    alert("이름을 입력하세요");
+                    f.name.focus();
+                    return
+                }
+                if (f.shopCode.value === "") {
+                    alert("소속을 입력하세요");
+                    f.pn.focus();
+                    return
+                }
+                if (f.pn.value === "") {
+                    alert("핸들폰 번호를 입력하세요");
+                    f.type.focus();
+                    return
+                }
+                if (f.businessNum.value === "") {
+                    alert("사업자 번호를 입력하세요");
+                    f.businessNum.focus();
+                    return
+                }
+                if (f.start_dt.value === "") {
+                    alert("시작일을 입력하세요");
+                    f.start_dt.focus();
+                    return
+                }
+                if (f.p_nm.value === "") {
+                    alert("대표자명 입력하세요");
+                    f.p_nm.focus();
+                    return
+                }
+                if (f.shopCode.value ==="" || shopCodeCheck !== f.shopCode.value) {
+                    alert("시장명을 입력하세요");
+                    f.shopCode.focus();
+                    return
+                }
+                if (businessNumCheck === "N") {
+                    alert("사업자 번호를 중복 확인하세요");
+                    f.businessNum.focus();
+                    return
+                }
+                if (businessCheck === "Y") {
+                    alert("사업자 번호를 인증하세요");
+                    f.businessNum.focus();
+                    return
+                }
+                $.ajax({
+                    url: "/trader/insertTrader",
+                    type: "post", // 전송방식은 Post
+                    dataType: "JSON", // 전송 결과는 JSON으로 받기
+                    data: $("#register-form").serialize(), // form 태그 내 input 등 객체를 자동으로 전송할 형태로 변경하기
+                    success: function (json) { // /notice/noticeUpdate 호출이 성공했다면..
+
+                        if (json.result === 1) { // 회원가입 성공
+                            alert(json.msg); // 메시지 띄우기
+                            location.href = "/trader/login"; // 로그인 페이지 이동
+
+                        } else { // 회원가입 실패
+                            alert(json.msg); // 메시지 띄우기
+                        }
+
+                    }
+                })
+            }
         })
 
-        function idExists(f) {
-            if (f.id.value === "") {
-                alert("아이디를 입력하세요");
-                f.id.focus();
-                return
-            }
-            $.ajax({
-                url: "/trader/getUserIdExists",
-                type: "post",
-                data: $("#register-form").serialize(),
-                success: function (json) {
-                    if (json.existsYn === "Y") {
-                        alert("이미 가입된 아이디가 존재합니다");
-                        f.id.focus();
-                    } else {
-                        alert("가입 가능한 아이디입니다");
-                        idCheck = "N";
-                    }
-                }
-            })
-        }
 
-        function bnExists(f) {
-            if (f.businessNum.value === "") {
-                alert("사업자 번호를 입력하세요");
-                f.id.focus();
-                return
-            }
-            $.ajax({
-                url: "/trader/getBusinessNumExists",
-                type: "post",
-                data: $("#register-form").serialize(),
-                success: function (json) {
-                    if (json.existsYn === "Y") {
-                        alert("이미 가입된 사업자 번호가 존재합니다");
-                        f.id.focus();
-                    } else {
-                        alert("가입 가능한 사업자 번호입니다");
-                        businessNumCheck = "N";
-                    }
-                }
-            })
-        }
-
-        function doSubmit(f) {
-            if (f.id.value === "") {
-                alert("아이디를 입력하세요");
-                f.id.focus();
-                return
-            }
-
-            if (idCheck !== "N") {
-                alert("아이디 중복 확인을하세요")
-                return
-            }
-            if (businessNumCheck !== "Y") {
-                alert("사업자 등록번호를 확인하세요")
-                return
-            }
-            if (f.pw.value === "") {
-                alert("비밀번호를 입력하세요");
-                f.pw.focus();
-                return
-            }
-            if (f.re_pw.value != f.pw.value) {
-                alert("비밀번호가 일치하지 않습니다");
-                f.pw.focus();
-                return
-            }
-            if (f.name.value === "") {
-                alert("이름을 입력하세요");
-                f.name.focus();
-                return
-            }
-            if (f.shopCode.value === "") {
-                alert("소속을 입력하세요");
-                f.pn.focus();
-                return
-            }
-            if (f.pn.value === "") {
-                alert("핸들폰 번호를 입력하세요");
-                f.type.focus();
-                return
-            }
-            if (f.businessNum.value === "") {
-                alert("사업자 번호를 입력하세요");
-                f.businessNum.focus();
-                return
-            }
-            if (f.start_dt.value === "") {
-                alert("시작일을 입력하세요");
-                f.start_dt.focus();
-                return
-            }
-            if (f.p_nm.value === "") {
-                alert("대표자명 입력하세요");
-                f.p_nm.focus();
-                return
-            }
-            if (businessNumCheck === "N") {
-                alert("사업자 번호를 중복 확인하세요");
-                f.businessNum.focus();
-                return
-            }
-            if (businessCheck === "Y") {
-                alert("사업자 번호를 인증하세요");
-                f.businessNum.focus();
-                return
-            }
-            $.ajax({
-                url: "/trader/insertTrader",
-                type: "post", // 전송방식은 Post
-                dataType: "JSON", // 전송 결과는 JSON으로 받기
-                data: $("#register-form").serialize(), // form 태그 내 input 등 객체를 자동으로 전송할 형태로 변경하기
-                success: function (json) { // /notice/noticeUpdate 호출이 성공했다면..
-
-                    if (json.result === 1) { // 회원가입 성공
-                        alert(json.msg); // 메시지 띄우기
-                        location.href = "/trader/login"; // 로그인 페이지 이동
-
-                    } else { // 회원가입 실패
-                        alert(json.msg); // 메시지 띄우기
-                    }
-
-                }
-            })
-        }
     </script>
     <script>
 
@@ -303,6 +351,7 @@
                     listItem.onclick = function () {
                         var clickedValue = this.textContent;
                         document.getElementById('shopCode').value = clickedValue;
+                        shopCodeCheck = clickedValue;
                         modal.style.display = "none"; // 모달 닫기
                     };
                 }
@@ -332,7 +381,6 @@
             let app = document.getElementsByTagName('li');
 
             app.addEventListener("click", function (e) {
-                console.log("1");
                 if (e.target && e.target.nodeName == "LI") {
                     alert("clicked : " + e.target.innerHTML);
                 }
@@ -438,6 +486,8 @@
                         <div class="form-group">
                             <label for="email"><i class="zmdi zmdi-email"></i></label>
                             <input type="email" name="email" id="email" placeholder="이메일"/>
+                            <input type="text" name="authNumber" style="width:30%" placeholder="메일로 발송된 인증번호"/>
+                            <button id="btnEmailExists" type="button">이메일 중복체크</button>
                         </div>
                         <div class="form-group" style="display: flex; align-items: center">
                             <label for="businessNum"><i class="zmdi zmdi-money"></i></label>

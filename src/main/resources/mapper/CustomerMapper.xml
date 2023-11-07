@@ -36,5 +36,13 @@
         SET PW = #{pw}
         WHERE ID = #{id}
     </update>
+    <select id="getEmailExists" parameterType="TraderDTO" resultType="TraderDTO">
+        SELECT IF(COUNT(1) = 0, 'N', 'Y')  AS EXISTS_YN
+        FROM BUYER
+        WHERE EMAIL = #{email}
+        <if test="i neq null and id neq ''">
+            AND ID = #{id}
+        </if>
+    </select>
 
 </mapper>

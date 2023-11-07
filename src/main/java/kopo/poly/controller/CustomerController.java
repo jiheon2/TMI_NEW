@@ -122,7 +122,7 @@ public class CustomerController {
 
     @ResponseBody
     @PostMapping(value = "getUserIdExists")
-    public CustomerDTO getUserIdExists(HttpServletRequest request) throws Exception {
+    public CustomerDTO getUserIdExists(HttpServletRequest request, HttpSession session) throws Exception {
         log.info(this.getClass().getName() + ".getUserIdExists Start!");
 
         String id = CmmUtil.nvl(request.getParameter("id"));
@@ -134,6 +134,8 @@ public class CustomerController {
         pDTO.setId(id);
 
         CustomerDTO rDTO = Optional.ofNullable(customerService.getUserIdExists(pDTO)).orElseGet(CustomerDTO::new);
+
+        session.setAttribute("SS_ID", id);
         log.info(this.getClass().getName() + ".getUserIdExists End!");
         return rDTO;
     }

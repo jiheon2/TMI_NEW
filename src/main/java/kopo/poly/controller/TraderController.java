@@ -114,7 +114,7 @@ public class TraderController {
 
     @ResponseBody
     @PostMapping(value = "getUserIdExists")
-    public TraderDTO getUserIdExists(HttpServletRequest request) throws Exception {
+    public TraderDTO getUserIdExists(HttpServletRequest request, HttpSession session) throws Exception {
         log.info(this.getClass().getName() + ".getUserIdExists Start!");
 
         String id = CmmUtil.nvl(request.getParameter("id"));
@@ -126,6 +126,7 @@ public class TraderController {
         pDTO.setId(id);
 
         TraderDTO rDTO = Optional.ofNullable(traderService.getUserIdExists(pDTO)).orElseGet(TraderDTO::new);
+        session.setAttribute("SS_ID", id);
         log.info(this.getClass().getName() + ".getUserIdExists End!");
         return rDTO;
     }
@@ -166,13 +167,15 @@ public class TraderController {
             String shopCode = CmmUtil.nvl(request.getParameter("shopCode"));
             String name = CmmUtil.nvl(request.getParameter("name"));
             String pn = CmmUtil.nvl(request.getParameter("pn"));
+            String email = CmmUtil.nvl(request.getParameter("email"));
 
             log.info("id : " + id);
             log.info("pw : " + pw);
             log.info("age : " + businessNum);
-            log.info("type : " + shopCode);
+            log.info("shopCode : " + shopCode);
             log.info("name : " + name);
             log.info("pn : " + pn);
+            log.info("email : " + email);
 
             pDTO = new TraderDTO();
 
@@ -182,6 +185,7 @@ public class TraderController {
             pDTO.setName(name);
             pDTO.setBusinessNum(businessNum);
             pDTO.setShopCode(shopCode);
+            pDTO.setEmail(email);
 
             log.info(pDTO.toString());
 
@@ -233,6 +237,27 @@ public class TraderController {
         return "/trader/traderIndex";
     }
 
+
+    @ResponseBody
+    @PostMapping(value = "getEmailExists")
+    public TraderDTO getEmailExists(HttpServletRequest request) throws Exception {
+
+        log.info(this.getClass().getName() + ".getEmailExists Start!");
+
+        String email = CmmUtil.nvl(request.getParameter("email")); // 회원아이디
+
+        log.info("email : " + email);
+
+        TraderDTO pDTO = new TraderDTO();
+        pDTO.setEmail(EncryptUtil.encAES128CBC(email));
+
+        // 입력된 이메일이 중복된 이메일인지 조회
+        TraderDTO rDTO = Optional.ofNullable(traderService.getEmailExists(pDTO)).orElseGet(TraderDTO::new);
+
+        log.info(this.getClass().getName() + ".getEmailExists End!");
+
+        return rDTO;
+    }
 
     @GetMapping(value = "/traderInfo")
     public String traderInfo(HttpSession session, ModelMap model) throws Exception{
@@ -321,7 +346,7 @@ public class TraderController {
             String pn = CmmUtil.nvl(request.getParameter("pn"));
 
             log.info("id : " + id);
-            log.info("type : " + shopCode);
+            log.info("shopCode : " + shopCode);
             log.info("name : " + name);
             log.info("pn : " + pn);
 

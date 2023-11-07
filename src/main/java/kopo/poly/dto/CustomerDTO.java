@@ -13,5 +13,6 @@ public class CustomerDTO {
     private String age;
     private String type;
     private String email;
+    private int AuthNumber;
     private String existsYn; // 회원가입 시, 중복방지를 위한 변수(회원이 존재하면 Y)
 }

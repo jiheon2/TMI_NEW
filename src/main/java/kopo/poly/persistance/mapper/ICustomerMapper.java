@@ -12,7 +12,7 @@ public interface ICustomerMapper {
 
     CustomerDTO getUserIdExists(CustomerDTO pDTO) throws Exception;
 
-
+    CustomerDTO getEmailExists(CustomerDTO pDTO) throws Exception;
     CustomerDTO getUserInfo(CustomerDTO pDTO) throws Exception;
     int changeCustomer(CustomerDTO pDTO) throws Exception;
     int changePw(CustomerDTO pDTO) throws Exception;
