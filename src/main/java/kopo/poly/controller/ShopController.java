@@ -140,7 +140,7 @@ public class ShopController {
         return dto;
     }
     @GetMapping(value = "/trader/goodsMng")
-    public String goodsMng(ModelMap model, HttpSession session) throws Exception {
+    public String goodsMng(ModelMap model, HttpSession session, @RequestParam(defaultValue = "1") int page) throws Exception {
 
         log.info(this.getClass().getName() + ".goodsMng Start!");
 
@@ -151,8 +151,25 @@ public class ShopController {
         List<ProductDTO> rList = shopService.getGoodsList(pDTO);
         if (rList == null) rList = new ArrayList<>();
 
-        model.addAttribute("rList", rList);
+        // 페이지당 보여줄 아이템 개수 정의
+        int itemsPerPage = 3;
 
+        // 페이지네이션을 위해 전체 아이템 개수 구하기
+        int totalItems = rList.size();
+
+        // 전체 페이지 개수 계산
+        int totalPages = (int) Math.ceil((double) totalItems / itemsPerPage);
+
+        // 현재 페이지에 해당하는 아이템들만 선택하여 rList에 할당
+        int fromIndex = (page - 1) * itemsPerPage;
+        int toIndex = Math.min(fromIndex + itemsPerPage, totalItems);
+        rList = rList.subList(fromIndex, toIndex);
+
+        model.addAttribute("rList", rList);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
+
+        log.info(this.getClass().getName() + ".페이지 번호 : " + page);
         log.info(this.getClass().getName() + ".goodsMng End!");
 
         return "/trader/goodsMng";
@@ -258,7 +275,11 @@ public class ShopController {
             log.info("res : " + res);
 
             if (res == 1) {
-                msg = "수정하였습니다";
+                if (pDTO.getSeq().isEmpty()) {
+                    msg = "등록하였습니다";
+                } else {
+                    msg = "수정하였습니다";
+                }
             } else {
                 msg = "오류로 인해 수정 실패하였습니다";
             }

@@ -71,20 +71,19 @@
     <script src="https://kit.fontawesome.com/cb71939295.js" crossorigin="anonymous"></script>
     <script src="/assets/js/jquery-3.6.0.min.js"></script>
     <!-- jQuery 라이브러리 추가 -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script type="text/javascript">
         let businessResult;
         let idCheck = "Y";
         let businessCheck = "N";
         let businessNumCheck = "Y";
         let bn;
-        $(document).ready(function() {
+        $(document).ready(function () {
             let f = document.getElementById("register-form");
 
-            $("#btnId").on("click", function() {
+            $("#btnId").on("click", function () {
                 idExists(f)
             })
-            $("#btnBusinessNum").on("click", function() {
+            $("#btnBusinessNum").on("click", function () {
                 if (f.businessNum.value === "") {
                     alert("사업자 번호를 입력하세요");
                     f.businessNum.focus();
@@ -118,7 +117,7 @@
                     dataType: "JSON",
                     contentType: "application/json",
                     accept: "application/json",
-                    success: function(result) {
+                    success: function (result) {
                         console.log(result);
                         businessResult = result;
                         if (businessResult.data[0].tax_type == "국세청에 등록되지 않은 사업자등록번호입니다.") {
@@ -129,15 +128,15 @@
                         bn = f.businessNum.value
                         alert("인증 되었습니다")
                     },
-                    error: function(result) {
+                    error: function (result) {
                         console.log(result.responseText); //responseText의 에러메세지 확인
                     }
                 });
             })
-            $("#btnBnExists").on("click", function() {
+            $("#btnBnExists").on("click", function () {
                 bnExists(f)
             })
-            $("#btnSend").on("click", function() {
+            $("#btnSend").on("click", function () {
                 doSubmit(f)
             })
         })
@@ -152,7 +151,7 @@
                 url: "/trader/getUserIdExists",
                 type: "post",
                 data: $("#register-form").serialize(),
-                success: function(json) {
+                success: function (json) {
                     if (json.existsYn === "Y") {
                         alert("이미 가입된 아이디가 존재합니다");
                         f.id.focus();
@@ -174,7 +173,7 @@
                 url: "/trader/getBusinessNumExists",
                 type: "post",
                 data: $("#register-form").serialize(),
-                success: function(json) {
+                success: function (json) {
                     if (json.existsYn === "Y") {
                         alert("이미 가입된 사업자 번호가 존재합니다");
                         f.id.focus();
@@ -256,7 +255,7 @@
                 type: "post", // 전송방식은 Post
                 dataType: "JSON", // 전송 결과는 JSON으로 받기
                 data: $("#register-form").serialize(), // form 태그 내 input 등 객체를 자동으로 전송할 형태로 변경하기
-                success: function(json) { // /notice/noticeUpdate 호출이 성공했다면..
+                success: function (json) { // /notice/noticeUpdate 호출이 성공했다면..
 
                     if (json.result === 1) { // 회원가입 성공
                         alert(json.msg); // 메시지 띄우기
@@ -270,62 +269,198 @@
             })
         }
     </script>
+    <script>
+
+        document.addEventListener("DOMContentLoaded", function () {
+            var openModalBtn = document.getElementById("shopCheck");
+            var modal = document.getElementById("myModal");
+
+            openModalBtn.onclick = function () {
+                modal.style.display = "block";
+            };
+
+            var closeBtn = document.querySelector(".close");
+
+            closeBtn.onclick = function () {
+                modal.style.display = "none";
+            };
+
+            window.onclick = function (event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            };
+
+            function displayModalList(listData) {
+                var modalList = document.getElementById("modalList");
+                modalList.innerHTML = ''; // 리스트 초기화
+                for (var i = 0; i < listData.length; i++) {
+                    var listItem = document.createElement('li');
+                    listItem.textContent = listData[i];
+                    modalList.appendChild(listItem);
+
+                    // 리스트 항목 클릭 시 값을 shopCode 필드에 설정
+                    listItem.onclick = function () {
+                        var clickedValue = this.textContent;
+                        document.getElementById('shopCode').value = clickedValue;
+                        modal.style.display = "none"; // 모달 닫기
+                    };
+                }
+            }
+
+            openModalBtn.onclick = function () {
+                var shopCode = document.getElementById("shopCode").value;
+
+                // AJAX를 사용하여 서버에서 데이터 가져오기
+                $.ajax({
+                    url: '/market/list', // 서버 API 엔드포인트 URL
+                    method: 'GET',
+                    data: {
+                        shopCode: shopCode
+                    },
+                    success: function (response) {
+                        displayModalList(response);
+                        modal.style.setProperty('display', 'block', 'important');
+                        modal.style.display = "block"; // 모달 열기
+                    },
+                    error: function (error) {
+                        console.error('데이터를 가져오는 중 오류가 발생했습니다: ', error);
+                    }
+                });
+            }
+            // let app = document.getElementById('list');
+            let app = document.getElementsByTagName('li');
+
+            app.addEventListener("click", function (e) {
+                console.log("1");
+                if (e.target && e.target.nodeName == "LI") {
+                    alert("clicked : " + e.target.innerHTML);
+                }
+            })
+        });
+    <script>
+        function fetchListData() {
+            var shopCode = document.getElementById("shopCode").value;
+            // AJAX를 사용하여 서버에서 데이터 가져오기
+            $.ajax({
+                url: '/market/list', // 서버 API 엔드포인트 URL
+                method: 'GET',
+                data: {
+                    shopCode: shopCode
+                },
+                success: function(response) {
+                    // 서버에서 받아온 데이터를 화면에 표시
+                    var list = document.getElementById('list');
+                    list.innerHTML = ''; // 리스트 초기화
+                    for (var i = 0; i < response.length; i++) {
+                        var listItem = document.createElement('li');
+                        listItem.textContent = response[i];
+                        list.appendChild(listItem);
+                    }
+                    list.style.display = 'block'; // 리스트를 표시
+                },
+                error: function(error) {
+                    console.error('데이터를 가져오는 중 오류가 발생했습니다: ', error);
+                }
+            });
+        }
+        // let app = document.getElementById('list');
+        let app = document.getElementsByTagName('li');
+
+        app.addEventListener("click", function(e) {
+            console.log("1");
+            if (e.target && e.target.nodeName == "LI") {
+                alert("clicked : " + e.target.innerHTML);
+            }
+        })
+    </script>
 </head>
 
 <body>
-    <header class="main_menu home_menu">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-12">
-                    <nav class="navbar navbar-expand-lg navbar-light">
-                        <a class="navbar-brand" href="/customer/userIndex"><img src="/assets/images/bird/logo2.png" alt="logo" style="width: 100px" , height="50px"></a>
-                        <div class="collapse navbar-collapse main-menu-item" id="navbarSupportedContent" style="height: 100px">
-                        </div>
-                        <div class="hearer_icon d-flex">
-                            <div>
-                                <a><i class="fa-solid fa-map-location-dot" style="font-size:25px"></i>
-                                </a>
-                            </div>
-                            <div>
-                                <a><i class="fa-solid fa-comments" style="font-size:25px"></i>
-                                </a>
-                            </div>
-                            <a href=""><i class="fa-solid fa-heart" style="font-size:25px"></i></a>
-
-                            <div class="dropdown cart">
-                                <a class="dropdown-toggle" href="#" id="navbarDropdown3" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fas fa-cart-plus" style="font-size:25px"></i>
-                                </a>
-                            </div>
-                            <a><i class="fa-solid fa-user" style="font-size:25px"></i>
+<header class="main_menu home_menu">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-12">
+                <nav class="navbar navbar-expand-lg navbar-light">
+                    <a class="navbar-brand" href="/customer/userIndex"><img src="/assets/images/bird/logo2.png"
+                                                                            alt="logo" style="width: 100px" ,
+                                                                            height="50px"></a>
+                    <div class="collapse navbar-collapse main-menu-item" id="navbarSupportedContent"
+                         style="height: 100px">
+                    </div>
+                    <div class="hearer_icon d-flex">
+                        <div>
+                            <a><i class="fa-solid fa-map-location-dot" style="font-size:25px"></i>
                             </a>
                         </div>
-                    </nav>
-                </div>
+                        <div>
+                            <a><i class="fa-solid fa-comments" style="font-size:25px"></i>
+                            </a>
+                        </div>
+                        <a href=""><i class="fa-solid fa-heart" style="font-size:25px"></i></a>
+
+                        <div class="dropdown cart">
+                            <a class="dropdown-toggle" href="#" id="navbarDropdown3" role="button"
+                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-cart-plus" style="font-size:25px"></i>
+                            </a>
+                        </div>
+                        <a><i class="fa-solid fa-user" style="font-size:25px"></i>
+                        </a>
+                    </div>
+                </nav>
             </div>
         </div>
+    </div>
 
-    </header>
-    <!-- breadcrumb start-->
-    <section class="breadcrumb" style="background-color: azure">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-lg-8">
-                    <div class="breadcrumb_iner">
-                        <img src="/assets/images/bird/bird1.png" style="width: 400px">
-                        <div class="breadcrumb_iner_item">
-                            <h2>상인 가입</h2>
-                            <p>TMI에서 상점을 홍보하세요!</p>
-                        </div>
+</header>
+<!-- breadcrumb start-->
+<section class="breadcrumb" style="background-color: azure">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="breadcrumb_iner">
+                    <img src="/assets/images/bird/bird1.png" style="width: 400px">
+                    <div class="breadcrumb_iner_item">
+                        <h2>상인 가입</h2>
+                        <p>TMI에서 상점을 홍보하세요!</p>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
-    <!-- breadcrumb start-->
+    </div>
+</section>
+<!-- breadcrumb start-->
 
-    <div class="main">
-
+<div class="main">
+    <!-- Sign up form -->
+    <section class="signup">
+        <div class="container_1">
+            <div class="signup-content">
+                <div class="signup-form">
+                    <h2 class="form-title">회원가입</h2>
+                    <form method="POST" class="register-form" id="register-form">
+                        <div class="form-group" style="display: flex">
+                            <label for="id"><i class="zmdi zmdi-account material-icons-name"></i></label>
+                            <input type="text" name="id" id="id" placeholder="아이디" style="width: 77%"/>&nbsp;&nbsp;
+                            <input type="button" name="btnId" id="btnId" class="btn btn-primary" value="인증"
+                                   style="width: 20%"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="pw"><i class="zmdi zmdi-lock"></i></label>
+                            <input type="password" name="pw" id="pw" placeholder="비밀번호"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="re_pw"><i class="zmdi zmdi-lock-outline"></i></label>
+                            <input type="password" name="re_pw" id="re_pw" placeholder="비밀번호 재입력"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="name"><i class="zmdi zmdi-account material-icons-name"></i></label>
+                            <input type="text" name="name" id="name" placeholder="이름"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="pn"><i class="zmdi zmdi-phone"></i></label>
+                            <input type="tel" name="pn" id="pn" placeholder="전화번호"/>
         <!-- Sign up form -->
         <section class="signup">
             <div class="container_1">
@@ -356,8 +491,10 @@
                             </div>
                             <div class="form-group">
                                 <label for="shopCode"><i class="zmdi zmdi-group"></i></label>
-                                <input type="text" name="shopCode" id="shopCode" placeholder="소속" />
+                                <input type="text" name="shopCode" id="shopCode" placeholder="소속 시장" />
+                                <button type="button" name="shopCheck" id="shopCheck" onclick="fetchListData()">검색</button>
                             </div>
+                            <ul id="list" style="display: none;"></ul>
                             <div class="form-group">
                                 <label for="email"><i class="zmdi zmdi-email"></i></label>
                                 <input type="email" name="email" id="email" placeholder="이메일" />
@@ -385,12 +522,53 @@
                         <div class="form-group form-button">
                             <input type="button" name="btnSend" id="btnSend" class="form-submit" value="회원가입" />
                         </div>
+                        <div class="form-group">
+                            <label for="shopCode"></label>
+                            <input type="text" name="shopCode" id="shopCode" placeholder="소속 시장"/>
+                            <button type="button" name="shopCheck" id="shopCheck" onclick="fetchListData()">검색</button>
+                        </div>
+                        <ul id="list" style="display: none;"></ul>
+                        <div class="form-group">
+                            <label for="email"><i class="zmdi zmdi-email"></i></label>
+                            <input type="email" name="email" id="email" placeholder="이메일"/>
+                        </div>
+                        <div class="form-group" style="display: flex; align-items: center">
+                            <label for="businessNum"><i class="zmdi zmdi-money"></i></label>
+                            <input type="text" name="businessNum" id="businessNum" placeholder="사업자등록번호"/>
+                        </div>
+                        <div style="text-align: center">
+                            <button type="button" id="btnBnExists" class="btn btn-primary">사업자 등록번호 중복 확인</button>
+                        </div>
+                        <br>
+                        <div class="form-group" style="display: flex; align-items: center">
+                            <label for="start_dt"><i class="zmdi zmdi-money"></i></label>
+                            <input type="text" name="start_dt" id="start_dt" placeholder="시작일" style="width: 80%"/>&nbsp;&nbsp;
+                        </div>
+                        <div class="form-group" style="display: flex; align-items: center">
+                            <label for="p_nm"><i class="zmdi zmdi-money"></i></label>
+                            <input type="text" name="p_nm" id="p_nm" placeholder="대표자명" style="width: 80%"/>&nbsp;&nbsp;<button
+                                type="button" id="btnBusinessNum" class="btn btn-primary">인증
+                        </button>
+                        </div>
+                    </form>
+                </div>
+                <div class="signup-image" style="text-align: center">
+                    <figure><img src="/assets/images/bird/bird2.png" alt="sing up image"></figure>
+                    <div class="form-group form-button">
+                        <input type="button" name="btnSend" id="btnSend" class="form-submit" value="회원가입"/>
+                    </div>
 
+                </div>
+                <div id="myModal" class="modal">
+                    <div class="modal-content">
+                        <span class="close">&times;</span>
+                        <ul id="modalList"></ul>
                     </div>
                 </div>
             </div>
-        </section>
-    </div>
+        </div>
+    </section>
+</div>
 </body>
 
 </html>

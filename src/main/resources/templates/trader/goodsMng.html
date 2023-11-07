@@ -65,13 +65,37 @@
                                     <div th:each="dto:${rList}">
                                         <tr>
                                             <td th:attr="data-seq=${dto.seq}, data-pid=${dto.pid}" onclick="doDetail(this)">[[${dto.name}]]</td>
-                                            <td>[[${dto.price}]]</td>
-                                            <td class="text-bold-500">[[${dto.type}]]</td>
+                                            <td th:attr="data-seq=${dto.seq}, data-pid=${dto.pid}" onclick="doDetail(this)">[[${dto.price}]]</td>
+                                            <td th:attr="data-seq=${dto.seq}, data-pid=${dto.pid}" onclick="doDetail(this)">[[${dto.type}]]</td>
                                         </tr>
                                     </div>
                                     </tbody>
                                 </table>
                             </div>
+                        </div>
+                        <br/>
+                        <!-- 페이지네이션 영역-->
+                        <div class="mx-auto">
+                            <ul class="pagination pagination-primary" id="pagination">
+                                <li class="page-item">
+                                    <a class="page-link" th:href="@{/trader/goodsMng?page=1}">&laquo;</a>
+                                </li>
+                                <!-- 이전 페이지로 이동하는 링크 -->
+                                <li class="page-item" th:if="${currentPage > 1}">
+                                    <a class="page-link" th:href="@{/trader/goodsMng(page=${currentPage - 1})}">&lt;</a>
+                                </li>
+                                <!-- 현재 페이지 주변에 페이지 번호 링크 표시 -->
+                                <li class="page-item" th:each="pageNumber : ${#numbers.sequence(1, totalPages)}" th:class="${pageNumber == currentPage ? 'active' : ''}">
+                                    <a class="page-link" th:href="@{/trader/goodsMng(page=${pageNumber})}" th:text="${pageNumber}"></a>
+                                </li>
+                                <!-- 다음 페이지로 이동하는 링크 -->
+                                <li class="page-item" th:if="${currentPage < totalPages}">
+                                    <a class="page-link" th:href="@{/trader/goodsMng(page=${currentPage + 1})}">&gt;</a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" th:href="@{/trader/goodsMng(page=${totalPages})}">&raquo;</a>
+                                </li>
+                            </ul>
                         </div>
                     </div>
                 </div>

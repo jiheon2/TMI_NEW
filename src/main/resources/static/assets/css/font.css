@@ -10,27 +10,47 @@ body {
     font-size: 130%;
 }
 
+div  {
+    font-family: 'BMJUA';
+    font-size: 100%;
+}
+
 section  {
     font-family: 'BMJUA';    
-    font-size: 130%;
+    font-size: 100%;
 }
 
 h1  {
     font-family: 'BMJUA';    
-    font-size: 130%;
+    font-size: 100%;
 }
 
 h2  {
     font-family: 'BMJUA';    
-    font-size: 130%;
+    font-size: 100%;
 }
 
 h3  {
     font-family: 'BMJUA';    
-    font-size: 130%;
+    font-size: 100%;
 }
 
 h4  {
     font-family: 'BMJUA';    
-    font-size: 130%;
+    font-size: 100%;
+}
+
+ul  {
+    font-family: 'BMJUA';
+    font-size: 100%;
+}
+
+li  {
+    font-family: 'BMJUA';
+    font-size: 100%;
+}
+
+a  {
+    font-family: 'BMJUA';
+    font-size: 14px;
 }
