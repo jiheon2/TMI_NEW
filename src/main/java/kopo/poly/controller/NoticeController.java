@@ -61,21 +61,21 @@ public class NoticeController {
         MsgDTO dto = null;
 
         try {
-            String user_id = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+            String customer_id = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
             String title = CmmUtil.nvl(request.getParameter("title"));
             String contents = CmmUtil.nvl(request.getParameter("contents"));
             String type = "Notice";
             String noticeYn = "N";
-            log.info("session user_id : " + user_id);
+            log.info("session customer_id : " + customer_id);
             log.info("title : " + title);
             log.info("contents : " + contents);
 
-            if (user_id.equals("master")) {
+            if (customer_id.equals("master")) {
                 noticeYn = "Y";
             }
 
             NoticeDTO pDTO = new NoticeDTO();
-            pDTO.setSender(user_id);
+            pDTO.setSender(customer_id);
             pDTO.setTitle(title);
             pDTO.setContents(contents);
             pDTO.setNoticeYn(noticeYn);
@@ -160,20 +160,20 @@ public class NoticeController {
         MsgDTO dto = null;
 
         try {
-            String user_id = CmmUtil.nvl((String) session.getAttribute("SS_USER_ID"));
+            String customer_id = CmmUtil.nvl((String) session.getAttribute("SS_CUSTOMER_ID"));
             String nSeq = CmmUtil.nvl(request.getParameter("nSeq"));
             String title = CmmUtil.nvl(request.getParameter("title"));
             String notice_yn = CmmUtil.nvl(request.getParameter("notice_yn"));
             String contents = CmmUtil.nvl(request.getParameter("contents"));
 
-            log.info("user_id : " + user_id);
+            log.info("customer_id : " + customer_id);
             log.info("nSeq : " + nSeq);
             log.info("title : " + title);
             log.info("notice_yn" + notice_yn);
             log.info("contents : " + contents);
 
             NoticeDTO pDTO = new NoticeDTO();
-            pDTO.setSender(user_id);
+            pDTO.setSender(customer_id);
             pDTO.setSeq(nSeq);
             pDTO.setTitle(title);
             pDTO.setNoticeYn(notice_yn);
@@ -217,14 +217,14 @@ public class NoticeController {
         MsgDTO dto = null;
 
         try {
-            String user_id = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+            String customer_id = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
             String nSeq = CmmUtil.nvl(request.getParameter("seq"));
 
-            log.info("user_id : " + user_id);
+            log.info("customer_id : " + customer_id);
             log.info("nSeq : " + nSeq);
 
             NoticeDTO pDTO = new NoticeDTO();
-            pDTO.setSender(user_id);
+            pDTO.setSender(customer_id);
             pDTO.setSeq(nSeq);
             noticeService.deleteNoticeInfo(pDTO);
 

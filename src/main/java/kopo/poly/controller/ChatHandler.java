@@ -27,11 +27,11 @@ public class ChatHandler extends TextWebSocketHandler {
         log.info(this.getClass().getName() + ".afterConnectionEstablished Start!");
 
         String roomName = CmmUtil.nvl((String) session.getAttributes().get("roomName"));
-        String userName = CmmUtil.nvl((String) session.getAttributes().get("userName"));
+        String customerName = CmmUtil.nvl((String) session.getAttributes().get("customerName"));
         String roomNameHash = CmmUtil.nvl((String) session.getAttributes().get("roomNameHash"));
 
         log.info("roomName : " + roomName);
-        log.info("userName : " + userName);
+        log.info("customerName : " + customerName);
         log.info("roomNameHash : " + roomNameHash);
 
         clients.forEach(s -> {
@@ -39,7 +39,7 @@ public class ChatHandler extends TextWebSocketHandler {
                 try {
                     ChatDTO cDTO = new ChatDTO();
                     cDTO.setName("홍길동");
-                    cDTO.setMsg(userName + "님이 " + roomName + " 채팅방에 입장하셨습니다.");
+                    cDTO.setMsg(customerName + "님이 " + roomName + " 채팅방에 입장하셨습니다.");
                     cDTO.setDate(DateUtil.getDateTime("yyyyMMdd hh:mm:ss"));
 
                     String json = new ObjectMapper().writeValueAsString(cDTO);
@@ -70,11 +70,11 @@ public class ChatHandler extends TextWebSocketHandler {
         log.info(this.getClass().getName() + ".afterConnectionClosed Start!");
 
         String roomName = CmmUtil.nvl((String) session.getAttributes().get("roomName"));
-        String userName = CmmUtil.nvl((String) session.getAttributes().get("userName"));
+        String customerName = CmmUtil.nvl((String) session.getAttributes().get("customerName"));
         String roomNameHash = CmmUtil.nvl((String) session.getAttributes().get("roomNameHash"));
 
         log.info("roomName : " + roomName);
-        log.info("userName : " + userName);
+        log.info("customerName : " + customerName);
         log.info("roomNameHash : " + roomNameHash);
 
         clients.remove(session);
@@ -84,7 +84,7 @@ public class ChatHandler extends TextWebSocketHandler {
                 try {
                     ChatDTO cDTO = new ChatDTO();
                     cDTO.setName("관리자");
-                    cDTO.setMsg(userName + " 님이" + roomName + " 채팅방에 입장하셨습니다.");
+                    cDTO.setMsg(customerName + " 님이" + roomName + " 채팅방에 입장하셨습니다.");
                     cDTO.setDate(DateUtil.getDateTime("yyyy-MM-dd hh:mm:ss"));
 
                     String json = new ObjectMapper().writeValueAsString(cDTO);
@@ -108,11 +108,11 @@ public class ChatHandler extends TextWebSocketHandler {
         log.info(this.getClass().getName() + ".handleTextMessage Start!");
 
         String roomName = CmmUtil.nvl((String) session.getAttributes().get("roomName"));
-        String userName = CmmUtil.nvl((String) session.getAttributes().get("userName"));
+        String customerName = CmmUtil.nvl((String) session.getAttributes().get("customerName"));
         String roomNameHash = CmmUtil.nvl((String) session.getAttributes().get("roomNameHash"));
 
         log.info("roomName : " + roomName);
-        log.info("userName : " + userName);
+        log.info("customerName : " + customerName);
         log.info("roomNameHash : " + roomNameHash);
 
         String msg = CmmUtil.nvl(message.getPayload());

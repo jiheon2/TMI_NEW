@@ -101,11 +101,11 @@ public class CustomerController {
     }
 
 
-    @GetMapping(value = "/userIndex")
+    @GetMapping(value = "/customerIndex")
     public String customerIndex() {
         log.info("start!");
 
-        return "/customer/userIndex";
+        return "customerIndex";
     }
 
     @GetMapping(value = "/cart")
@@ -114,16 +114,16 @@ public class CustomerController {
         return "/customer/cart";
     }
 
-    @GetMapping(value = "/userSignUp")
-    public String userSignUp() {
-        log.info(this.getClass().getName() + "userSignUp");
-        return "/customer/userSignUp";
+    @GetMapping(value = "/customerSignUp")
+    public String customerSignUp() {
+        log.info(this.getClass().getName() + "customerSignUp");
+        return "customerSignUp";
     }
 
     @ResponseBody
-    @PostMapping(value = "getUserIdExists")
-    public CustomerDTO getUserIdExists(HttpServletRequest request) throws Exception {
-        log.info(this.getClass().getName() + ".getUserIdExists Start!");
+    @PostMapping(value = "getCustomerIdExists")
+    public CustomerDTO getCustomerIdExists(HttpServletRequest request) throws Exception {
+        log.info(this.getClass().getName() + ".getCustomerIdExists Start!");
 
         String id = CmmUtil.nvl(request.getParameter("id"));
 
@@ -133,8 +133,8 @@ public class CustomerController {
 
         pDTO.setId(id);
 
-        CustomerDTO rDTO = Optional.ofNullable(customerService.getUserIdExists(pDTO)).orElseGet(CustomerDTO::new);
-        log.info(this.getClass().getName() + ".getUserIdExists End!");
+        CustomerDTO rDTO = Optional.ofNullable(customerService.getCustomerIdExists(pDTO)).orElseGet(CustomerDTO::new);
+        log.info(this.getClass().getName() + ".getCustomerIdExists End!");
         return rDTO;
     }
 
@@ -237,7 +237,7 @@ public class CustomerController {
         }
         CustomerDTO pDTO = new CustomerDTO();
         pDTO.setId(id);
-        CustomerDTO rDTO = Optional.ofNullable(customerService.getUserInfo(pDTO)).orElseGet(CustomerDTO::new);
+        CustomerDTO rDTO = Optional.ofNullable(customerService.getCustomerInfo(pDTO)).orElseGet(CustomerDTO::new);
         model.addAttribute("rDTO", rDTO);
         return url;
 
@@ -254,7 +254,7 @@ public class CustomerController {
 
         pDTO.setId(id);
 
-        CustomerDTO rDTO = Optional.ofNullable(customerService.getUserInfo(pDTO)).orElseGet(CustomerDTO::new);
+        CustomerDTO rDTO = Optional.ofNullable(customerService.getCustomerInfo(pDTO)).orElseGet(CustomerDTO::new);
 
         model.addAttribute("rDTO", rDTO);
 
@@ -274,7 +274,7 @@ public class CustomerController {
 
         pDTO.setId(id);
 
-        CustomerDTO rDTO = Optional.ofNullable(customerService.getUserInfo(pDTO)).orElseGet(CustomerDTO::new);
+        CustomerDTO rDTO = Optional.ofNullable(customerService.getCustomerInfo(pDTO)).orElseGet(CustomerDTO::new);
 
         model.addAttribute("rDTO", rDTO);
 

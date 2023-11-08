@@ -16,9 +16,9 @@ public interface ITraderMapper {
 
     TraderDTO getLogin(TraderDTO pDTO) throws Exception;
 
-    TraderDTO getUserInfo(TraderDTO pDTO) throws Exception;
+    TraderDTO getTraderInfo(TraderDTO pDTO) throws Exception;
 
     TraderDTO getBusinessNumExists(TraderDTO pDTO) throws Exception;
 
-    TraderDTO getUserIdExists(TraderDTO pDTO) throws Exception;
+    TraderDTO getTraderIdExists(TraderDTO pDTO) throws Exception;
 }

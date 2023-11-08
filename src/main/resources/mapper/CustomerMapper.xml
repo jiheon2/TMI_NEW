@@ -3,7 +3,7 @@
 
 <!-- JAVA와 연결할 Mapper 파일 설정 -->
 <mapper namespace="kopo.poly.persistance.mapper.ICustomerMapper">
-    <select id="getUserIdExists" parameterType="CustomerDTO" resultType="CustomerDTO">
+    <select id="getCustomerIdExists" parameterType="CustomerDTO" resultType="CustomerDTO">
         SELECT IF(COUNT(1) = 0, 'N', 'Y') AS EXISTS_YN
         FROM BUYER
         WHERE ID = #{id}
@@ -18,7 +18,7 @@
         WHERE ID = #{id}
         AND PW = #{pw}
     </select>
-    <select id="getUserInfo" parameterType="CustomerDTO" resultType="CustomerDTO">
+    <select id="getCustomerInfo" parameterType="CustomerDTO" resultType="CustomerDTO">
         SELECT NAME, PN, AGE, TYPE
         FROM BUYER
         WHERE ID = #{id}
