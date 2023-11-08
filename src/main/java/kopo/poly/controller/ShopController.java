@@ -306,14 +306,14 @@ public class ShopController {
         MsgDTO dto = null;
 
         try {
-            String user_id = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+            String trader_id = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
             String nSeq = CmmUtil.nvl(request.getParameter("seq"));
 
-            log.info("user_id : " + user_id);
+            log.info("trader_id : " + trader_id);
             log.info("nSeq : " + nSeq);
 
             ProductDTO pDTO = new ProductDTO();
-            pDTO.setPid(user_id);
+            pDTO.setPid(trader_id);
             pDTO.setSeq(nSeq);
             shopService.goodsMsgDelete(pDTO);
 

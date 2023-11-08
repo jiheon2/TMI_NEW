@@ -107,15 +107,15 @@ public class TraderController {
         return dto;
     }
     @GetMapping(value = "/traderSignUp")
-    public String userSignUp() {
-        log.info(this.getClass().getName() + "userSignUp");
+    public String traderSignUp() {
+        log.info(this.getClass().getName() + "traderSignUp");
         return "/trader/traderSignUp";
     }
 
     @ResponseBody
-    @PostMapping(value = "getUserIdExists")
-    public TraderDTO getUserIdExists(HttpServletRequest request) throws Exception {
-        log.info(this.getClass().getName() + ".getUserIdExists Start!");
+    @PostMapping(value = "getTraderIdExists")
+    public TraderDTO getTraderIdExists(HttpServletRequest request) throws Exception {
+        log.info(this.getClass().getName() + ".getTraderIdExists Start!");
 
         String id = CmmUtil.nvl(request.getParameter("id"));
 
@@ -125,8 +125,8 @@ public class TraderController {
 
         pDTO.setId(id);
 
-        TraderDTO rDTO = Optional.ofNullable(traderService.getUserIdExists(pDTO)).orElseGet(TraderDTO::new);
-        log.info(this.getClass().getName() + ".getUserIdExists End!");
+        TraderDTO rDTO = Optional.ofNullable(traderService.getTraderIdExists(pDTO)).orElseGet(TraderDTO::new);
+        log.info(this.getClass().getName() + ".getTraderIdExists End!");
         return rDTO;
     }
     @ResponseBody
@@ -246,7 +246,7 @@ public class TraderController {
 
         pDTO.setId(id);
 
-        TraderDTO rDTO = Optional.ofNullable(traderService.getUserInfo(pDTO)).orElseGet(TraderDTO::new);
+        TraderDTO rDTO = Optional.ofNullable(traderService.getTraderInfo(pDTO)).orElseGet(TraderDTO::new);
 
         model.addAttribute("rDTO", rDTO);
 
@@ -275,7 +275,7 @@ public class TraderController {
 
         pDTO.setId(id);
 
-        TraderDTO rDTO = Optional.ofNullable(traderService.getUserInfo(pDTO)).orElseGet(TraderDTO::new);
+        TraderDTO rDTO = Optional.ofNullable(traderService.getTraderInfo(pDTO)).orElseGet(TraderDTO::new);
 
         model.addAttribute("rDTO", rDTO);
 
@@ -295,7 +295,7 @@ public class TraderController {
 
         pDTO.setId(id);
 
-        TraderDTO rDTO = Optional.ofNullable(traderService.getUserInfo(pDTO)).orElseGet(TraderDTO::new);
+        TraderDTO rDTO = Optional.ofNullable(traderService.getTraderInfo(pDTO)).orElseGet(TraderDTO::new);
 
         model.addAttribute("rDTO", rDTO);
 

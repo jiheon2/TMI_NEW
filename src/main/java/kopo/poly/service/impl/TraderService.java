@@ -33,22 +33,22 @@ public class TraderService implements ITraderService {
     }
 
     @Override
-    public TraderDTO getUserIdExists(TraderDTO pDTO) throws Exception {
-        log.info(this.getClass().getName() + ".getUserIdExists Start!");
+    public TraderDTO getTraderIdExists(TraderDTO pDTO) throws Exception {
+        log.info(this.getClass().getName() + ".getTraderIdExists Start!");
 
-        TraderDTO rDTO = traderMapper.getUserIdExists(pDTO);
+        TraderDTO rDTO = traderMapper.getTraderIdExists(pDTO);
 
-        log.info(this.getClass().getName() + ".getUserIdExists End!");
+        log.info(this.getClass().getName() + ".getTraderIdExists End!");
         return rDTO;
     }
     @Override
-    public TraderDTO getUserInfo(TraderDTO pDTO) throws Exception {
-        log.info(this.getClass().getName() + ".getUserInfo Start!");
+    public TraderDTO getTraderInfo(TraderDTO pDTO) throws Exception {
+        log.info(this.getClass().getName() + ".getTraderInfo Start!");
 
 
-        TraderDTO rDTO = Optional.ofNullable(traderMapper.getUserInfo(pDTO)).orElseGet(TraderDTO::new);
+        TraderDTO rDTO = Optional.ofNullable(traderMapper.getTraderInfo(pDTO)).orElseGet(TraderDTO::new);
 
-        log.info(this.getClass().getName() + ".getUserInfo Start!");
+        log.info(this.getClass().getName() + ".getTraderInfo Start!");
         return rDTO;
     }
     @Override
