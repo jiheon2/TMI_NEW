@@ -96,10 +96,10 @@ public class MailController {
             CustomerDTO pDTO = new CustomerDTO();
             pDTO.setEmail(email);
             pDTO.setId(id);
-            CustomerDTO rDTO = customerService.getEmailExists(pDTO);
-            if (!rDTO.getExistsYn().isEmpty()) {
+//            CustomerDTO rDTO = customerService.getEmailExists(pDTO);
+//            if (!rDTO.getExistsYn().isEmpty()) {
                 res = 1;
-            }
+//            }
         }
 
         MsgDTO dto = new MsgDTO();
@@ -109,19 +109,18 @@ public class MailController {
 
         return dto;
     }
-    @GetMapping(value = "/checkId")
-    public String checkId() {
 
-        log.info(this.getClass().getName() + ".checkId");
-
-        return "/mail/checkId";
-    }
     @GetMapping(value = "/sendEmail")
-    public String sendEmail(HttpServletRequest request, ModelMap model) {
+    public String sendEmail(HttpServletRequest request, ModelMap model, HttpSession session) {
 
         log.info(this.getClass().getName() + ".checkId");
+
+        session.setAttribute("SS_ID", request.getAttribute("nId"));
 
         model.addAttribute("type", request.getAttribute("type"));
+
+        log.info("id : " + session.getAttribute("SS_ID"));
+        log.info("type : " + model.getAttribute("type"));
 
         return "/mail/sendEmail";
     }

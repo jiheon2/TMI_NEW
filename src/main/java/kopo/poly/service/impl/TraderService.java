@@ -1,17 +1,22 @@
 package kopo.poly.service.impl;
 
-import kopo.poly.dto.CustomerDTO;
+import kopo.poly.dto.TraderDTO;
+import kopo.poly.dto.MailDTO;
 import kopo.poly.dto.ReviewDTO;
 import kopo.poly.dto.TraderDTO;
-import kopo.poly.persistance.mapper.ICustomerMapper;
 import kopo.poly.persistance.mapper.ITraderMapper;
+import kopo.poly.persistance.mapper.ITraderMapper;
+import kopo.poly.service.IMailService;
 import kopo.poly.service.ITraderService;
+import kopo.poly.util.CmmUtil;
+import kopo.poly.util.EncryptUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Slf4j
 @Service
@@ -19,6 +24,7 @@ import java.util.Optional;
 public class TraderService implements ITraderService {
     private final ITraderMapper traderMapper;
 
+    private final IMailService mailService;
 
 
     @Override
@@ -39,6 +45,92 @@ public class TraderService implements ITraderService {
         TraderDTO rDTO = traderMapper.getTraderIdExists(pDTO);
 
         log.info(this.getClass().getName() + ".getTraderIdExists End!");
+        return rDTO;
+    }
+    @Override
+    public TraderDTO getEmailExists(TraderDTO pDTO) throws Exception {
+        log.info(this.getClass().getName() + ".emailAuth Start!");
+
+        TraderDTO rDTO = traderMapper.getEmailExists(pDTO);
+
+        String existsYn = CmmUtil.nvl(rDTO.getExistsYn());
+
+        log.info("existsYn : " + existsYn);
+
+        if (existsYn.equals("N")) {
+            int authNumber = ThreadLocalRandom.current().nextInt(100000,1000000);
+
+            MailDTO dto = new MailDTO();
+
+            dto.setTitle("이메일 중복 확인 인증번호 발송 메일");
+            dto.setContents("인증번호는 " + authNumber + " 입니다.");
+            dto.setToMail(EncryptUtil.decAES128CBC(CmmUtil.nvl(pDTO.getEmail())));
+
+            mailService.doSendMail(dto);
+
+            dto = null;
+
+            rDTO.setAuthNumber(authNumber);
+
+            log.info("authNumber : " + authNumber);
+        }
+
+        log.info(this.getClass().getName() + ".emailAuth End!");
+
+        return rDTO;
+    }
+    @Override
+    public TraderDTO searchTraderIdProc(TraderDTO pDTO) throws Exception {
+        log.info(this.getClass().getName() + ".searchTraderIdProc Start!");
+
+        TraderDTO rDTO = traderMapper.getTraderId(pDTO);
+
+        log.info(this.getClass().getName() + ".searchTraderIdProc End!");
+
+        return rDTO;
+    }
+    @Override
+    public TraderDTO searchTraderIdOrPasswordProc(TraderDTO pDTO) throws Exception {
+        log.info(this.getClass().getName() + ".searchTraderIdOrPasswordProc Start!");
+
+        TraderDTO rDTO = traderMapper.getTraderId(pDTO);
+
+        log.info(this.getClass().getName() + ".searchTraderIdOrPasswordProc End!");
+
+        return rDTO;
+    }
+    @Override
+    public TraderDTO searchEmail(TraderDTO pDTO) throws Exception {
+        log.info(this.getClass().getName() + ".emailAuth Start!");
+
+        TraderDTO rDTO = traderMapper.getEmailExists(pDTO);
+
+        log.info("email : " + rDTO.getEmail());
+
+        String existsYn = CmmUtil.nvl(rDTO.getExistsYn());
+
+        log.info("existsYn : " + existsYn);
+
+        if (existsYn.equals("Y")) {
+            int authNumber = ThreadLocalRandom.current().nextInt(100000,1000000);
+
+            MailDTO dto = new MailDTO();
+
+            dto.setTitle("이메일 확인 인증번호 발송 메일");
+            dto.setContents("인증번호는 " + authNumber + " 입니다.");
+            dto.setToMail(CmmUtil.nvl(pDTO.getEmail()));
+
+            mailService.doSendMail(dto);
+
+            dto = null;
+
+            rDTO.setAuthNumber(authNumber);
+
+            log.info("authNumber : " + authNumber);
+        }
+
+        log.info(this.getClass().getName() + ".emailAuth End!");
+
         return rDTO;
     }
     @Override

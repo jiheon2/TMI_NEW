@@ -1,8 +1,11 @@
 package kopo.poly.controller;
 
 import kopo.poly.dto.CustomerDTO;
+import kopo.poly.dto.MailDTO;
 import kopo.poly.dto.MsgDTO;
+import kopo.poly.dto.CustomerDTO;
 import kopo.poly.service.ICustomerService;
+import kopo.poly.service.IMailService;
 import kopo.poly.util.CmmUtil;
 import kopo.poly.util.EncryptUtil;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +16,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.Optional;
@@ -25,6 +27,7 @@ import java.util.Optional;
 public class CustomerController {
 
     private final ICustomerService customerService;
+    private final IMailService mailService;
     @GetMapping(value = "/login")
     public String login(HttpSession session) {
 
@@ -105,7 +108,7 @@ public class CustomerController {
     public String customerIndex() {
         log.info("start!");
 
-        return "customerIndex";
+        return "/customer/customerIndex";
     }
 
     @GetMapping(value = "/cart")
@@ -117,7 +120,7 @@ public class CustomerController {
     @GetMapping(value = "/customerSignUp")
     public String customerSignUp() {
         log.info(this.getClass().getName() + "customerSignUp");
-        return "customerSignUp";
+        return "/customer/customerSignUp";
     }
 
     @ResponseBody
@@ -261,12 +264,113 @@ public class CustomerController {
         log.info(this.getClass().getName() + ".customerInfo start!");
         return "/customer/customerInfoChange";
     }
+    @GetMapping(value = "searchId")
+    public String searchCustomerId() {
+        log.info(this.getClass().getName() + ".customer/searchCustomerId Start!");
 
+        log.info(this.getClass().getName() + ".customer/searchCustomerId End!");
+
+        return "customer/searchId";
+
+    }
+    @GetMapping(value = "searchPw")
+    public String searchPassword(HttpSession session) {
+        log.info(this.getClass().getName() + ".customer/searchPassword Start!");
+
+        // 강제 URL 입력 등 오는 경우가 있어 세션 삭제
+        // 비밀번호 재생성하는 화면은 보안을 위해 생성한 NEW_PASSWORD 세션 삭제
+        session.setAttribute("NEW_PASSWORD", "");
+        session.removeAttribute("NEW_PASSWORD");
+
+        log.info(this.getClass().getName() + ".customer/searchPassword End!");
+
+        return "customer/searchPw";
+
+    }
+ 
+
+    @PostMapping(value = "searchCustomerIdProc")
+    public String searchCustomerIdProc(HttpServletRequest request, ModelMap model) throws Exception {
+        log.info(this.getClass().getName() + ".Customer/searchCustomerIdProc Start!");
+
+        String CustomerName = CmmUtil.nvl(request.getParameter("userName")); // 이름
+        String email = CmmUtil.nvl(request.getParameter("email")); // 이메일
+
+
+        log.info("CustomerName : " + CustomerName);
+        log.info("email : " + email);
+
+
+        CustomerDTO pDTO = new CustomerDTO();
+        pDTO.setName(CustomerName);
+        pDTO.setEmail(email);
+
+        CustomerDTO rDTO = Optional.ofNullable(customerService.searchCustomerIdOrPasswordProc(pDTO))
+                .orElseGet(CustomerDTO::new);
+
+        model.addAttribute("rDTO", rDTO);
+
+        log.info(this.getClass().getName() + ".Customer/searchCustomerIdProc End!");
+
+        return "customer/showId";
+
+    }
+    @PostMapping(value = "searchPasswordProc")
+    public String searchPasswordProc(HttpServletRequest request, ModelMap model, HttpSession session) throws Exception {
+        log.info(this.getClass().getName() + ".Customer/searchPasswordProc Start!");
+
+        String CustomerId = CmmUtil.nvl(request.getParameter("id")); // 아이디
+        String CustomerName = CmmUtil.nvl(request.getParameter("name")); // 이름
+        String email = CmmUtil.nvl(request.getParameter("email")); // 이메일
+
+        log.info("CustomerId : " + CustomerId);
+        log.info("CustomerName : " + CustomerName);
+        log.info("email : " + email);
+
+        CustomerDTO pDTO = new CustomerDTO();
+        pDTO.setId(CustomerId);
+        pDTO.setName(CustomerName);
+        pDTO.setEmail(EncryptUtil.encAES128CBC(email));
+
+        // 비밀번호 찾기 가능한지 확인하기
+        CustomerDTO rDTO = Optional.ofNullable(customerService.searchCustomerIdOrPasswordProc(pDTO)).orElseGet(CustomerDTO::new);
+
+        model.addAttribute("rDTO", rDTO);
+
+        // 비밀번호 재생성하는 화면은 보안을 위해 반드시 NEW_PASSWORD 세션이 존재해야 접속 가능하도록 구현
+        // CustomerId 값을 넣은 이유는 비밀번호 재설정하는 newPasswordProc 함수에서 사용하기 위함
+        session.setAttribute("NEW_PASSWORD", CustomerId);
+
+        log.info(this.getClass().getName() + ".Customer/searchPasswordProc End!");
+
+        return "customer/changePw";
+
+    }
+    @ResponseBody
+    @PostMapping(value = "searchEmail")
+    public CustomerDTO searchEmail(HttpServletRequest request) throws Exception {
+
+        log.info(this.getClass().getName() + ".searchEmail Start!");
+
+        String email = CmmUtil.nvl(request.getParameter("email")); // 회원아이디
+
+        log.info("email : " + email);
+
+        CustomerDTO pDTO = new CustomerDTO();
+        pDTO.setEmail(email);
+
+        // 입력된 이메일이 중복된 이메일인지 조회
+        CustomerDTO rDTO = Optional.ofNullable(customerService.searchEmail(pDTO)).orElseGet(CustomerDTO::new);
+
+        log.info(this.getClass().getName() + ".searchEmail End!");
+
+        return rDTO;
+    }
     @GetMapping(value = "/changePw")
     public String changePw(HttpSession session, ModelMap model) throws Exception{
         log.info(this.getClass().getName() + ".changePw start!");
 
-        String id = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+        String id = CmmUtil.nvl((String) session.getAttribute("NEW_PASSWORD"));
 
         log.info(id);
 
@@ -350,7 +454,7 @@ public class CustomerController {
         CustomerDTO pDTO = null;
 
         try {
-            String id = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+            String id = CmmUtil.nvl((String) session.getAttribute("NEW_PASSWORD"));
             String pw = CmmUtil.nvl(request.getParameter("npw"));
 
             log.info("id : " + id);
@@ -389,4 +493,44 @@ public class CustomerController {
         log.info("start!");
         return "/customer/single-product";
     }
+    @ResponseBody
+    @PostMapping(value = "sendMail")
+    public MsgDTO sendMail(HttpServletRequest request) throws Exception {
+        log.info(this.getClass().getName() + ".sendMail Start!");
+
+        String msg = "";
+
+        String toMail = CmmUtil.nvl(request.getParameter("toMail"));
+        String title = CmmUtil.nvl(request.getParameter("title"));
+        String contents = CmmUtil.nvl(request.getParameter("contents"));
+
+        log.info("toMail : " + toMail);
+        log.info("title : " + title);
+        log.info("contents : " + contents);
+
+        MailDTO pDTO = new MailDTO();
+
+        pDTO.setToMail(toMail);
+        pDTO.setTitle(title);
+        pDTO.setContents(contents);
+
+        int res = mailService.doSendMail(pDTO);
+
+        if(res == 1) {
+            msg = "메일 발송하였습니다";
+        }else {
+            msg = "메일 발송 실패하였습니다";
+        }
+
+        log.info(msg);
+
+        MsgDTO dto = new MsgDTO();
+        dto.setMsg(msg);
+
+        log.info(this.getClass().getName() + ".sendMail End!");
+
+        return dto;
+    }
+
+
 }

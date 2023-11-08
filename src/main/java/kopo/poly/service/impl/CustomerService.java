@@ -2,7 +2,7 @@ package kopo.poly.service.impl;
 
 import kopo.poly.dto.CustomerDTO;
 import kopo.poly.dto.MailDTO;
-import kopo.poly.dto.TraderDTO;
+import kopo.poly.dto.CustomerDTO;
 import kopo.poly.persistance.mapper.ICustomerMapper;
 import kopo.poly.service.ICustomerService;
 import kopo.poly.service.IMailService;
@@ -41,6 +41,51 @@ public class CustomerService implements ICustomerService {
         CustomerDTO rDTO = customerMapper.getCustomerIdExists(pDTO);
 
         log.info(this.getClass().getName() + ".getCustomerIdExists End!");
+        return rDTO;
+    }
+
+    @Override
+    public CustomerDTO searchEmail(CustomerDTO pDTO) throws Exception {
+        log.info(this.getClass().getName() + ".emailAuth Start!");
+
+        CustomerDTO rDTO = customerMapper.getEmailExists(pDTO);
+
+
+        String existsYn = CmmUtil.nvl(rDTO.getExistsYn());
+
+        log.info("existsYn : " + existsYn);
+
+        if (existsYn.equals("Y")) {
+            int authNumber = ThreadLocalRandom.current().nextInt(100000,1000000);
+
+            MailDTO dto = new MailDTO();
+
+            dto.setTitle("이메일 확인 인증번호 발송 메일");
+            dto.setContents("인증번호는 " + authNumber + " 입니다.");
+            dto.setToMail(CmmUtil.nvl(pDTO.getEmail()));
+
+            mailService.doSendMail(dto);
+
+            dto = null;
+
+            rDTO.setAuthNumber(authNumber);
+
+            log.info("authNumber : " + authNumber);
+        }
+
+        log.info(this.getClass().getName() + ".emailAuth End!");
+
+        return rDTO;
+    }
+
+    @Override
+    public CustomerDTO searchCustomerIdOrPasswordProc(CustomerDTO pDTO) throws Exception {
+        log.info(this.getClass().getName() + ".searchCustomerIdOrPasswordProc Start!");
+
+        CustomerDTO rDTO = customerMapper.getCustomerId(pDTO);
+
+        log.info(this.getClass().getName() + ".searchCustomerIdOrPasswordProc End!");
+
         return rDTO;
     }
 
