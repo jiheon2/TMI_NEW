@@ -14,7 +14,7 @@ public class WebDriverUtil {
          
             private WebDriver driver;
             public static String WEB_DRIVER_ID = "webdriver.chrome.driver"; // Properties 설정
-            public static String WEB_DRIVER_PATH = "chromedriver.exe"; // WebDriver 경로
+            public static String WEB_DRIVER_PATH = "c:\\TMI_NEW\\src\\main\\resources\\static\\chromedriver-win32\\chromedriver.exe"; // WebDriver 경로
          
             public WebDriverUtil() {
                 chrome();
@@ -32,11 +32,11 @@ public class WebDriverUtil {
                 options.addArguments("--disable-dev-shm-usage");
                 options.addArguments("--disable-gpu");
                 options.setCapability("ignoreProtectedModeSettings", true);
-                options.setExperimentalOption("debuggerAddress", "localhost:9222"); // DevTools 프로토콜 활성화
+                options.setExperimentalOption("debuggerAddress", "localhost:11002"); // DevTools 프로토콜 활성화
+
+
                 WebDriver driver = new ChromeDriver(options);
 
-                // weDriver 생성.
-                driver = new ChromeDriver(options);
                 driver.manage().timeouts().pageLoadTimeout(30, TimeUnit.SECONDS);
             }
          
