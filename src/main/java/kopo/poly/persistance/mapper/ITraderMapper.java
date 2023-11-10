@@ -21,4 +21,7 @@ public interface ITraderMapper {
     TraderDTO getBusinessNumExists(TraderDTO pDTO) throws Exception;
 
     TraderDTO getTraderIdExists(TraderDTO pDTO) throws Exception;
+    TraderDTO getEmailExists(TraderDTO pDTO) throws Exception;
+    TraderDTO getTraderId(TraderDTO pDTO) throws Exception;
+
 }

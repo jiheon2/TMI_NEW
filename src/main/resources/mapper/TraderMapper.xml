@@ -14,9 +14,15 @@
         WHERE BUSINESS_NUM = #{businessNum}
     </select>
     <insert id="insertTrader" parameterType="TraderDTO">
-        INSERT INTO TRADER (ID, PW, BUSINESS_NUM, NAME, PN, SHOP_CODE)
-        VALUES (#{id}, #{pw}, #{businessNum}, #{name}, #{pn}, #{shopCode})
+        INSERT INTO TRADER (ID, PW, BUSINESS_NUM, NAME, PN, SHOP_CODE, email)
+        VALUES (#{id}, #{pw}, #{businessNum}, #{name}, #{pn}, #{shopCode}, #{email})
     </insert>
+    <select id="getTraderId" parameterType="TraderDTO" resultType="TraderDTO">
+        SELECT ID
+        FROM TRADER
+        WHERE  EMAIL = #{email}
+        AND    NAME = #{name}
+    </select>
     <update id="changeTrader" parameterType="TraderDTO">
         UPDATE TRADER
         SET NAME = #{name},
@@ -40,4 +46,10 @@
         FROM TRADER
         WHERE ID = #{id}
     </select>
+    <select id="getEmailExists" parameterType="TraderDTO" resultType="TraderDTO">
+        SELECT IF(COUNT(1) = 0, 'N', 'Y')  AS EXISTS_YN, EMAIL
+        FROM TRADER
+        WHERE EMAIL = #{email}
+    </select>
+
 </mapper>

@@ -11,7 +11,9 @@ public interface ICustomerMapper {
     CustomerDTO getLogin(CustomerDTO pDTO) throws Exception;
 
     CustomerDTO getCustomerIdExists(CustomerDTO pDTO) throws Exception;
+    CustomerDTO getCustomerId(CustomerDTO pDTO) throws Exception;
 
+    CustomerDTO getEmailExists(CustomerDTO pDTO) throws Exception;
     CustomerDTO getCustomerInfo(CustomerDTO pDTO) throws Exception;
     int changeCustomer(CustomerDTO pDTO) throws Exception;
     int changePw(CustomerDTO pDTO) throws Exception;

@@ -9,6 +9,10 @@ public interface ITraderService {
     TraderDTO getTraderIdExists(TraderDTO pDTO) throws Exception;
     TraderDTO getBusinessNumExists(TraderDTO pDTO) throws Exception;
     TraderDTO getLogin(TraderDTO pDTO) throws Exception;
+    TraderDTO getEmailExists(TraderDTO pDTO) throws Exception;
+    TraderDTO searchEmail(TraderDTO pDTO) throws Exception;
+    TraderDTO searchTraderIdProc(TraderDTO pDTO) throws Exception;
+    TraderDTO searchTraderIdOrPasswordProc(TraderDTO pDTO) throws Exception;
     TraderDTO getTraderInfo(TraderDTO pDTO) throws Exception;
     int insertTrader(TraderDTO pDTO) throws Exception;
     int changeTrader(TraderDTO pDTO) throws Exception;

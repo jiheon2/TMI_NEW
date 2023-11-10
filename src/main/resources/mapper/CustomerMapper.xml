@@ -31,10 +31,20 @@
             TYPE = #{type}
         WHERE ID = #{id}
     </update>
+    <select id="getCustomerId" parameterType="CustomerDTO" resultType="CustomerDTO">
+        SELECT ID
+        FROM BUYER
+        WHERE  EMAIL = #{email}
+    </select>
     <update id="changePw" parameterType="CustomerDTO">
         UPDATE BUYER
         SET PW = #{pw}
         WHERE ID = #{id}
     </update>
+    <select id="getEmailExists" parameterType="CustomerDTO" resultType="CustomerDTO">
+        SELECT IF(COUNT(1) = 0, 'N', 'Y')  AS EXISTS_YN
+        FROM BUYER
+        WHERE EMAIL = #{email}
+    </select>
 
 </mapper>
