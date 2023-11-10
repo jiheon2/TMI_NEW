@@ -1,7 +1,6 @@
 package kopo.poly.service.impl;
 
 import kopo.poly.dto.CustomerDTO;
-import kopo.poly.dto.TraderDTO;
 import kopo.poly.persistance.mapper.ICustomerMapper;
 import kopo.poly.service.ICustomerService;
 import lombok.RequiredArgsConstructor;
@@ -67,13 +66,13 @@ public class CustomerService implements ICustomerService {
         return rDTO;
     }
     @Override
-    public int changeCustomer(CustomerDTO pDTO) throws Exception {
-        log.info(this.getClass().getName() + ".changeCustomer Start!");
+    public int updateCustomerInfo(CustomerDTO pDTO) throws Exception {
+        log.info(this.getClass().getName() + ".updateCustomerInfo Start!");
 
         //회원가입 성공시 1, 에러 0
         int res = 0;
 
-        int success = customerMapper.changeCustomer(pDTO);
+        int success = customerMapper.updateCustomerInfo(pDTO);
 
         if(success > 0) {
             res = 1;
@@ -81,17 +80,17 @@ public class CustomerService implements ICustomerService {
             res = 0;
         }
 
-        log.info(this.getClass().getName() + ".changeCustomer Start!");
+        log.info(this.getClass().getName() + ".updateCustomerInfo Start!");
         return res;
     }
     @Override
-    public int changePw(CustomerDTO pDTO) throws Exception {
-        log.info(this.getClass().getName() + ".changeCustomer Start!");
+    public int updateCustomerPw(CustomerDTO pDTO) throws Exception {
+        log.info(this.getClass().getName() + ".updateCustomerPw Start!");
 
         //회원가입 성공시 1, 에러 0
         int res = 0;
 
-        int success = customerMapper.changePw(pDTO);
+        int success = customerMapper.updateCustomerPw(pDTO);
 
         if(success > 0) {
             res = 1;
@@ -99,7 +98,7 @@ public class CustomerService implements ICustomerService {
             res = 0;
         }
 
-        log.info(this.getClass().getName() + ".changeCustomer Start!");
+        log.info(this.getClass().getName() + ".updateCustomerPw Start!");
         return res;
     }
 }

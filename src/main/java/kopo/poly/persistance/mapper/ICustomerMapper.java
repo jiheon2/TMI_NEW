@@ -1,18 +1,17 @@
 package kopo.poly.persistance.mapper;
 
 import kopo.poly.dto.CustomerDTO;
-import kopo.poly.dto.TraderDTO;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface ICustomerMapper {
-    int insertCustomer(CustomerDTO pDTO) throws Exception;
+    int insertCustomer(CustomerDTO pDTO) throws Exception; // 소비자 회원가입
 
-    CustomerDTO getLogin(CustomerDTO pDTO) throws Exception;
+    CustomerDTO getLogin(CustomerDTO pDTO) throws Exception; // 로그인 정보 확인
 
-    CustomerDTO getCustomerIdExists(CustomerDTO pDTO) throws Exception;
+    CustomerDTO getCustomerIdExists(CustomerDTO pDTO) throws Exception; // 소비자 ID 중복확인
 
-    CustomerDTO getCustomerInfo(CustomerDTO pDTO) throws Exception;
-    int changeCustomer(CustomerDTO pDTO) throws Exception;
-    int changePw(CustomerDTO pDTO) throws Exception;
+    CustomerDTO getCustomerInfo(CustomerDTO pDTO) throws Exception; // 소비자 정보 조회
+    int updateCustomerInfo(CustomerDTO pDTO) throws Exception; // 소비자 정보 수정
+    int updateCustomerPw(CustomerDTO pDTO) throws Exception; // 소비자 비밀번호 변경
 }

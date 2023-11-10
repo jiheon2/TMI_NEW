@@ -53,19 +53,19 @@ public class TraderController {
 
         try {
 
-            String id = CmmUtil.nvl(request.getParameter("id")); //아이디
-            String pw = CmmUtil.nvl(request.getParameter("pw")); //비밀번호
+            String traderId = CmmUtil.nvl(request.getParameter("traderId")); //아이디
+            String traderPw = CmmUtil.nvl(request.getParameter("traderPw")); //비밀번호
 
-            log.info("id : " + id);
-            log.info("pw : " + pw);
+            log.info("traderId : " + traderId);
+            log.info("traderPw : " + traderPw);
 
             //웹(회원정보 입력화면)에서 받는 정보를 저장할 변수를 메모리에 올리기
             pDTO = new TraderDTO();
 
-            pDTO.setId(id);
+            pDTO.setTraderId(traderId);
 
             //비밀번호는 절대로 복호화되지 않도록 해시 알고리즘으로 암호화함
-            pDTO.setPw(EncryptUtil.encHashSHA256(pw));
+            pDTO.setTraderPw(EncryptUtil.encHashSHA256(traderPw));
 
             log.info(pDTO.toString());
 
@@ -73,14 +73,14 @@ public class TraderController {
             TraderDTO rDTO = traderService.getLogin(pDTO);
 
             log.info(rDTO.toString());
-            if (CmmUtil.nvl(rDTO.getId()).length() > 0) { //로그인 성공
+            if (CmmUtil.nvl(rDTO.getTraderId()).length() > 0) { //로그인 성공
 
                 res = 1;
 
                 msg = "로그인이 성공했습니다.";
                 log.info("1");
 
-                session.setAttribute("SS_ID", CmmUtil.nvl(rDTO.getId()));
+                session.setAttribute("SS_ID", CmmUtil.nvl(rDTO.getTraderId()));
                 session.setAttribute("SS_TYPE", "Trader");
 
             } else {
@@ -117,13 +117,13 @@ public class TraderController {
     public TraderDTO getTraderIdExists(HttpServletRequest request) throws Exception {
         log.info(this.getClass().getName() + ".getTraderIdExists Start!");
 
-        String id = CmmUtil.nvl(request.getParameter("id"));
+        String traderId = CmmUtil.nvl(request.getParameter("traderId"));
 
-        log.info("id : " + id);
+        log.info("traderId : " + traderId);
 
         TraderDTO pDTO = new TraderDTO();
 
-        pDTO.setId(id);
+        pDTO.setTraderId(traderId);
 
         TraderDTO rDTO = Optional.ofNullable(traderService.getTraderIdExists(pDTO)).orElseGet(TraderDTO::new);
         log.info(this.getClass().getName() + ".getTraderIdExists End!");
@@ -131,16 +131,16 @@ public class TraderController {
     }
     @ResponseBody
     @PostMapping(value = "getBusinessNumExists")
-    public TraderDTO getBusinessNumExists(HttpServletRequest request) throws Exception {
-        log.info(this.getClass().getName() + ".getBusinessNum Start!");
+    public TraderDTO getbusinessNumberExists(HttpServletRequest request) throws Exception {
+        log.info(this.getClass().getName() + ".getBusinessNumb Start!");
 
-        String businessNum = CmmUtil.nvl(request.getParameter("businessNum"));
+        String businessNumber = CmmUtil.nvl(request.getParameter("businessNumber"));
 
-        log.info("businessNum : " + businessNum);
+        log.info("businessNumber : " + businessNumber);
 
         TraderDTO pDTO = new TraderDTO();
 
-        pDTO.setBusinessNum(businessNum);
+        pDTO.setBusinessNumber(businessNumber);
 
         TraderDTO rDTO = Optional.ofNullable(traderService.getBusinessNumExists(pDTO)).orElseGet(TraderDTO::new);
         log.info(this.getClass().getName() + ".getBusinessNumExists End!");
@@ -160,28 +160,25 @@ public class TraderController {
         TraderDTO pDTO = null;
 
         try {
-            String id = CmmUtil.nvl(request.getParameter("id"));
-            String pw = CmmUtil.nvl(request.getParameter("pw"));
-            String businessNum = CmmUtil.nvl(request.getParameter("businessNum"));
-            String shopCode = CmmUtil.nvl(request.getParameter("shopCode"));
-            String name = CmmUtil.nvl(request.getParameter("name"));
-            String pn = CmmUtil.nvl(request.getParameter("pn"));
+            String traderId = CmmUtil.nvl(request.getParameter("traderId"));
+            String traderPw = CmmUtil.nvl(request.getParameter("traderPw"));
+            String businessNumber = CmmUtil.nvl(request.getParameter("businessNum"));
+            String traderName = CmmUtil.nvl(request.getParameter("traderName"));
+            String traderPn = CmmUtil.nvl(request.getParameter("traderPn"));
 
-            log.info("id : " + id);
-            log.info("pw : " + pw);
-            log.info("age : " + businessNum);
-            log.info("type : " + shopCode);
-            log.info("name : " + name);
-            log.info("pn : " + pn);
+            log.info("traderId : " + traderId);
+            log.info("traderPw : " + traderPw);
+            log.info("age : " + businessNumber);
+            log.info("traderName : " + traderName);
+            log.info("traderPn : " + traderPn);
 
             pDTO = new TraderDTO();
 
-            pDTO.setId(id);
-            pDTO.setPw(EncryptUtil.encHashSHA256(pw));
-            pDTO.setPn(pn);
-            pDTO.setName(name);
-            pDTO.setBusinessNum(businessNum);
-            pDTO.setShopCode(shopCode);
+            pDTO.setTraderId(traderId);
+            pDTO.setTraderPw(EncryptUtil.encHashSHA256(traderPw));
+            pDTO.setPhoneNumber(traderPn);
+            pDTO.setTraderName(traderName);
+            pDTO.setBusinessNumber(businessNumber);
 
             log.info(pDTO.toString());
 
@@ -213,21 +210,21 @@ public class TraderController {
     public String traderIndex(HttpSession session, ModelMap model) throws Exception{
         log.info(this.getClass().getName() + ".traderIndex Start!");
 
-        String id = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+        String traderId = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
 
         ShopDTO pDTO1 = new ShopDTO();
 
-        pDTO1.setTid(id);
-        ShopDTO rDTO = Optional.ofNullable(shopService.getCount(pDTO1)).orElseGet(ShopDTO::new);
-        rDTO.setTid(id);
-
-        ReserveDTO pDTO2 = new ReserveDTO();
-        pDTO2.setTid(id);
-        pDTO2.setState("1");
-        List<ReserveDTO> rList = Optional.ofNullable(shopService.goodsBuyInfo(pDTO2)).orElseGet(ArrayList::new);
-
-        model.addAttribute("rDTO", rDTO);
-        model.addAttribute("rList", rList);
+//        pDTO1.setTraderId(traderId);
+//        ShopDTO rDTO = Optional.ofNullable(shopService.getCount(pDTO1)).orElseGet(ShopDTO::new);
+//        rDTO.setTraderId(traderId);
+//
+//        ReserveDTO pDTO2 = new ReserveDTO();
+//        pDTO2.setTraderId(traderId);
+//        pDTO2.setState("1");
+//        List<ReserveDTO> rList = Optional.ofNullable(shopService.goodsBuyInfo(pDTO2)).orElseGet(ArrayList::new);
+//
+//        model.addAttribute("rDTO", rDTO);
+//        model.addAttribute("rList", rList);
 
         log.info(this.getClass().getName() + ".traderIndex End!");
         return "/trader/traderIndex";
@@ -238,13 +235,13 @@ public class TraderController {
     public String traderInfo(HttpSession session, ModelMap model) throws Exception{
         log.info(this.getClass().getName() + ".traderInfo start!");
 
-        String id = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+        String traderId = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
 
-        log.info(id);
+        log.info(traderId);
 
         TraderDTO pDTO = new TraderDTO();
 
-        pDTO.setId(id);
+        pDTO.setTraderId(traderId);
 
         TraderDTO rDTO = Optional.ofNullable(traderService.getTraderInfo(pDTO)).orElseGet(TraderDTO::new);
 
@@ -263,49 +260,49 @@ public class TraderController {
     }
 
 
-    @GetMapping(value = "/traderInfoChange")
-    public String traderInfoChange(HttpSession session, ModelMap model) throws Exception{
+    @GetMapping(value = "/updateTraderInfo")
+    public String updateTraderInfo(HttpSession session, ModelMap model) throws Exception{
         log.info(this.getClass().getName() + ".traderInfoChange start!");
 
-        String id = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+        String traderId = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
 
-        log.info(id);
+        log.info(traderId);
 
         TraderDTO pDTO = new TraderDTO();
 
-        pDTO.setId(id);
+        pDTO.setTraderId(traderId);
 
         TraderDTO rDTO = Optional.ofNullable(traderService.getTraderInfo(pDTO)).orElseGet(TraderDTO::new);
 
         model.addAttribute("rDTO", rDTO);
 
-        log.info(this.getClass().getName() + ".traderInfo start!");
-        return "/trader/traderInfoChange";
+        log.info(this.getClass().getName() + ".updateTraderInfo End!");
+        return "/trader/updateTraderInfo";
     }
 
-    @GetMapping(value = "/changePw")
-    public String changePw(HttpSession session, ModelMap model) throws Exception{
-        log.info(this.getClass().getName() + ".changePw start!");
+    @GetMapping(value = "/updateTraderPw")
+    public String updateTraderPw(HttpSession session, ModelMap model) throws Exception{
+        log.info(this.getClass().getName() + ".updateTraderPw start!");
 
-        String id = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+        String traderId = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
 
-        log.info(id);
+        log.info(traderId);
 
         TraderDTO pDTO = new TraderDTO();
 
-        pDTO.setId(id);
+        pDTO.setTraderId(traderId);
 
         TraderDTO rDTO = Optional.ofNullable(traderService.getTraderInfo(pDTO)).orElseGet(TraderDTO::new);
 
         model.addAttribute("rDTO", rDTO);
 
-        log.info(this.getClass().getName() + ".traderInfo start!");
-        return "/trader/changePw";
+        log.info(this.getClass().getName() + ".updateTraderPw End!");
+        return "/trader/updateTraderPw";
     }
     @ResponseBody
-    @PostMapping(value = "changeTrader")
-    public MsgDTO changeTrader(HttpServletRequest request, HttpSession session) throws Exception {
-        log.info(this.getClass().getName() + ".changeTrader Start!");
+    @PostMapping(value = "updateInfo")
+    public MsgDTO updateInfo(HttpServletRequest request, HttpSession session) throws Exception {
+        log.info(this.getClass().getName() + ".updateTraderInfo Start!");
 
         // 성공이면 1, 실패면 0
         int res = 0;
@@ -315,33 +312,30 @@ public class TraderController {
         TraderDTO pDTO = null;
 
         try {
-            String id = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
-            String shopCode = CmmUtil.nvl(request.getParameter("shopCode"));
-            String name = CmmUtil.nvl(request.getParameter("name"));
-            String pn = CmmUtil.nvl(request.getParameter("pn"));
+            String traderId = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+            String traderName = CmmUtil.nvl(request.getParameter("traderName"));
+            String traderPn = CmmUtil.nvl(request.getParameter("traderPn"));
 
-            log.info("id : " + id);
-            log.info("type : " + shopCode);
-            log.info("name : " + name);
-            log.info("pn : " + pn);
+            log.info("traderId : " + traderId);
+            log.info("traderName : " + traderName);
+            log.info("traderPn : " + traderPn);
 
             pDTO = new TraderDTO();
 
-            pDTO.setId(id);
-            pDTO.setPn(pn);
-            pDTO.setName(name);
-            pDTO.setShopCode(shopCode);
+            pDTO.setTraderId(traderId);
+            pDTO.setPhoneNumber(traderPn);
+            pDTO.setTraderName(traderName);
 
             log.info(pDTO.toString());
 
-            res = traderService.changeTrader(pDTO);
+            res = traderService.updateTraderInfo(pDTO);
 
             log.info("res : " + res);
 
             if (res == 1) {
                 msg = "수정되었습니다";
             } else {
-                msg = "오류로 인해 회원가입에 실패하였습니다";
+                msg = "오류로 인해 수정에 실패하였습니다";
             }
         }catch (Exception e) {
             msg = "실패하였습니다 : " + e;
@@ -351,14 +345,14 @@ public class TraderController {
             dto = new MsgDTO();
             dto.setMsg(msg);
             dto.setResult(res);
-            log.info(this.getClass().getName() + ".changeTrader End!");
+            log.info(this.getClass().getName() + ".updateTraderInfo End!");
         }
         return dto;
     }
     @ResponseBody
-    @PostMapping(value = "pwChange")
-    public MsgDTO pwChange(HttpServletRequest request, HttpSession session) throws Exception {
-        log.info(this.getClass().getName() + ".pwChange Start!");
+    @PostMapping(value = "updatePw")
+    public MsgDTO updatePw(HttpServletRequest request, HttpSession session) throws Exception {
+        log.info(this.getClass().getName() + ".updatePw Start!");
 
         // 성공이면 1, 실패면 0
         int res = 0;
@@ -368,26 +362,26 @@ public class TraderController {
         TraderDTO pDTO = null;
 
         try {
-            String id = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
-            String pw = CmmUtil.nvl(request.getParameter("npw"));
+            String traderId = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+            String traderPw = CmmUtil.nvl(request.getParameter("traderPw"));
 
-            log.info("id : " + id);
-            log.info("pw : " + pw);
+            log.info("traderId : " + traderId);
+            log.info("traderPw : " + traderPw);
 
             pDTO = new TraderDTO();
 
-            pDTO.setId(id);
-            pDTO.setPw(EncryptUtil.encHashSHA256(pw));
+            pDTO.setTraderId(traderId);
+            pDTO.setTraderPw(EncryptUtil.encHashSHA256(traderPw));
             log.info(pDTO.toString());
 
-            res = traderService.changePw(pDTO);
+            res = traderService.updateTraderPw(pDTO);
 
             log.info("res : " + res);
 
             if (res == 1) {
                 msg = "수정되었습니다";
             } else {
-                msg = "오류로 인해 회원가입에 실패하였습니다";
+                msg = "오류로 인해 수정에 실패하였습니다";
             }
         }catch (Exception e) {
             msg = "실패하였습니다 : " + e;
@@ -397,7 +391,7 @@ public class TraderController {
             dto = new MsgDTO();
             dto.setMsg(msg);
             dto.setResult(res);
-            log.info(this.getClass().getName() + ".pwChange End!");
+            log.info(this.getClass().getName() + ".updatePw End!");
         }
         return dto;
     }
