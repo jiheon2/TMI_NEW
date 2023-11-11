@@ -11,4 +11,5 @@ public interface IGoodsService {
     int updateGoods(GoodsDTO pDTO) throws Exception; // 상품 정보 수정
     int insertGoods(GoodsDTO pDTO) throws Exception; // 상품 정보 등록
     void goodsInfoDelete(GoodsDTO pDTO) throws Exception; // 등록 상품 삭제
+    List<GoodsDTO> getAllGoodsInfo() throws Exception; // 모든 상품 가져오기
 }

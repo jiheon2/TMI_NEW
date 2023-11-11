@@ -15,8 +15,8 @@ public class resetRewardScheduler {
 
     @Scheduled(cron = "0 0 0 * * ?") // 자정
 //    @Scheduled(cron = "0 * * * * *") // 1분(테스트)
-    public void resetReward() throws Exception {
+    public void resetRewardAndRotate() throws Exception {
         log.info("resetReward start!");
-        customerMapper.resetReward();
+        customerMapper.resetRewardAndRotate();
     }
 }

@@ -54,8 +54,8 @@
 
     <!-- 상품 등록 쿼리 -->
     <insert id="insertGoods" parameterType="GoodsDTO">
-        INSERT INTO GOODS (GOODS_NAME, GOODS_TYPE, PRICE, GOODS_DESCRIPTION, GOODS_NUMBER, GOODS_IMAGE, TRADER_ID)
-        VALUES (#{goodsName}, #{goodsType}, #{price}, #{goodsDescription}, (SELECT IFNULL(MAX(A.GOODS_NUMBER), 0) + 1 FROM GOODS A), #{goodsImage}, #{traderId})
+        INSERT INTO GOODS (GOODS_NAME, GOODS_TYPE, PRICE, GOODS_DESCRIPTION, GOODS_NUMBER, GOODS_IMAGE, TRADER_ID, SHOP_NUMBER)
+        VALUES (#{goodsName}, #{goodsType}, #{price}, #{goodsDescription}, (SELECT IFNULL(MAX(A.GOODS_NUMBER), 0) + 1 FROM GOODS A), #{goodsImage}, #{traderId}, #{shopNumber})
     </insert>
 
     <!-- 등록 상품 삭제 쿼리 -->
@@ -65,4 +65,10 @@
         WHERE GOODS_NUMBER = #{goodsNumber}
         AND TRADER_ID = #{traderId}
     </delete>
+
+    <select id="getAllGoodsInfo" resultType="GoodsDTO">
+        SELECT *
+        FROM GOODS
+        ORDER BY GOODS_NUMBER ASC
+    </select>
 </mapper>

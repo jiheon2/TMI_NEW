@@ -51,7 +51,6 @@
                 return;
             }
             var formData = new FormData($("#f")[0]);
-            formData.append("goodsNumber", goodsNumber);
             $.ajax({
                 url: "/goods/insertGoods",
                 type: "POST",
