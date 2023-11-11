@@ -1,6 +1,7 @@
 package kopo.poly.controller;
 
 import kopo.poly.dto.*;
+import kopo.poly.service.IMailService;
 import kopo.poly.service.IReviewService;
 import kopo.poly.service.IShopService;
 import kopo.poly.service.ITraderService;
@@ -29,6 +30,7 @@ public class TraderController {
 
     private final ITraderService traderService;
     private final IShopService shopService;
+    private final IMailService mailService;
 
     @GetMapping(value = "/login")
     public String login() {
@@ -107,15 +109,15 @@ public class TraderController {
         return dto;
     }
     @GetMapping(value = "/traderSignUp")
-    public String userSignUp() {
-        log.info(this.getClass().getName() + "userSignUp");
+    public String traderSignUp() {
+        log.info(this.getClass().getName() + "traderSignUp");
         return "/trader/traderSignUp";
     }
 
     @ResponseBody
-    @PostMapping(value = "getUserIdExists")
-    public TraderDTO getUserIdExists(HttpServletRequest request) throws Exception {
-        log.info(this.getClass().getName() + ".getUserIdExists Start!");
+    @PostMapping(value = "getTraderIdExists")
+    public TraderDTO getTraderIdExists(HttpServletRequest request) throws Exception {
+        log.info(this.getClass().getName() + ".getTraderIdExists Start!");
 
         String id = CmmUtil.nvl(request.getParameter("id"));
 
@@ -125,8 +127,8 @@ public class TraderController {
 
         pDTO.setId(id);
 
-        TraderDTO rDTO = Optional.ofNullable(traderService.getUserIdExists(pDTO)).orElseGet(TraderDTO::new);
-        log.info(this.getClass().getName() + ".getUserIdExists End!");
+        TraderDTO rDTO = Optional.ofNullable(traderService.getTraderIdExists(pDTO)).orElseGet(TraderDTO::new);
+        log.info(this.getClass().getName() + ".getTraderIdExists End!");
         return rDTO;
     }
     @ResponseBody
@@ -246,7 +248,7 @@ public class TraderController {
 
         pDTO.setId(id);
 
-        TraderDTO rDTO = Optional.ofNullable(traderService.getUserInfo(pDTO)).orElseGet(TraderDTO::new);
+        TraderDTO rDTO = Optional.ofNullable(traderService.getTraderInfo(pDTO)).orElseGet(TraderDTO::new);
 
         model.addAttribute("rDTO", rDTO);
 
@@ -254,6 +256,28 @@ public class TraderController {
         return "/trader/traderInfo";
     }
 
+    @PostMapping(value = "searchIdProc")
+    public String searchIdProc(HttpServletRequest request, ModelMap model) throws Exception {
+        log.info(this.getClass().getName() + ".trader/searchIdProc Start!");
+
+        String email = CmmUtil.nvl(request.getParameter("email")); // 이메일
+
+        log.info("email : " + email);
+
+        TraderDTO pDTO = new TraderDTO();
+
+        pDTO.setEmail(EncryptUtil.encAES128CBC(email));
+
+        TraderDTO rDTO = Optional.ofNullable(traderService.searchTraderIdProc(pDTO))
+                .orElseGet(TraderDTO::new);
+
+        model.addAttribute("rDTO", rDTO);
+
+        log.info(this.getClass().getName() + ".trader/searchIdProc End!");
+
+        return "trader/showId";
+
+    }
 
     @GetMapping(value = "/reservMng")
     public String reservMng() {
@@ -275,19 +299,121 @@ public class TraderController {
 
         pDTO.setId(id);
 
-        TraderDTO rDTO = Optional.ofNullable(traderService.getUserInfo(pDTO)).orElseGet(TraderDTO::new);
+        TraderDTO rDTO = Optional.ofNullable(traderService.getTraderInfo(pDTO)).orElseGet(TraderDTO::new);
 
         model.addAttribute("rDTO", rDTO);
 
         log.info(this.getClass().getName() + ".traderInfo start!");
         return "/trader/traderInfoChange";
     }
+    @GetMapping(value = "searchId")
+    public String searchTraderId() {
+        log.info(this.getClass().getName() + ".customer/searchTraderId Start!");
 
+        log.info(this.getClass().getName() + ".customer/searchTraderId End!");
+
+        return "trader/searchId";
+
+    }
+
+    @GetMapping(value = "searchPw")
+    public String searchPassword(HttpSession session) {
+        log.info(this.getClass().getName() + ".customer/searchPassword Start!");
+
+        // 강제 URL 입력 등 오는 경우가 있어 세션 삭제
+        // 비밀번호 재생성하는 화면은 보안을 위해 생성한 NEW_PASSWORD 세션 삭제
+        session.setAttribute("NEW_PASSWORD", "");
+        session.removeAttribute("NEW_PASSWORD");
+
+        log.info(this.getClass().getName() + ".customer/searchPassword End!");
+
+        return "trader/searchPw";
+
+    }
+    @PostMapping(value = "searchTraderIdProc")
+    public String searchTraderIdProc(HttpServletRequest request, ModelMap model) throws Exception {
+        log.info(this.getClass().getName() + ".trader/searchTraderIdProc Start!");
+
+        String TraderName = CmmUtil.nvl(request.getParameter("userName")); // 이름
+        String email = CmmUtil.nvl(request.getParameter("email")); // 이메일
+
+
+        log.info("TraderName : " + TraderName);
+        log.info("email : " + email);
+
+
+        TraderDTO pDTO = new TraderDTO();
+        pDTO.setName(TraderName);
+        pDTO.setEmail(email);
+
+        TraderDTO rDTO = Optional.ofNullable(traderService.searchTraderIdOrPasswordProc(pDTO))
+                .orElseGet(TraderDTO::new);
+
+        model.addAttribute("rDTO", rDTO);
+
+        log.info(this.getClass().getName() + ".trader/searchTraderIdProc End!");
+
+        return "trader/showId";
+
+    }
+    @PostMapping(value = "searchPasswordProc")
+    public String searchPasswordProc(HttpServletRequest request, ModelMap model, HttpSession session) throws Exception {
+        log.info(this.getClass().getName() + ".trader/searchPasswordProc Start!");
+
+        String TraderId = CmmUtil.nvl(request.getParameter("id")); // 아이디
+        String TraderName = CmmUtil.nvl(request.getParameter("name")); // 이름
+        String email = CmmUtil.nvl(request.getParameter("email")); // 이메일
+
+        log.info("TraderId : " + TraderId);
+        log.info("TraderName : " + TraderName);
+        log.info("email : " + email);
+
+        TraderDTO pDTO = new TraderDTO();
+        pDTO.setId(TraderId);
+        pDTO.setName(TraderName);
+        pDTO.setEmail(EncryptUtil.encAES128CBC(email));
+
+        // 비밀번호 찾기 가능한지 확인하기
+        TraderDTO rDTO = Optional.ofNullable(traderService.searchTraderIdOrPasswordProc(pDTO)).orElseGet(TraderDTO::new);
+
+        model.addAttribute("rDTO", rDTO);
+
+        // 비밀번호 재생성하는 화면은 보안을 위해 반드시 NEW_PASSWORD 세션이 존재해야 접속 가능하도록 구현
+        // TraderId 값을 넣은 이유는 비밀번호 재설정하는 newPasswordProc 함수에서 사용하기 위함
+        session.setAttribute("NEW_PASSWORD", TraderId);
+
+        log.info(this.getClass().getName() + ".trader/searchPasswordProc End!");
+
+        return "trader/changePw";
+
+    }
+
+
+    @ResponseBody
+    @PostMapping(value = "searchEmail")
+    public TraderDTO searchEmail(HttpServletRequest request) throws Exception {
+
+        log.info(this.getClass().getName() + ".searchEmail Start!");
+
+        String email = CmmUtil.nvl(request.getParameter("email")); // 회원아이디
+
+        log.info("email : " + email);
+
+        TraderDTO pDTO = new TraderDTO();
+        pDTO.setEmail(email);
+
+        // 입력된 이메일이 중복된 이메일인지 조회
+        TraderDTO rDTO = Optional.ofNullable(traderService.searchEmail(pDTO)).orElseGet(TraderDTO::new);
+
+        log.info(this.getClass().getName() + ".searchEmail End!");
+
+        return rDTO;
+    }
     @GetMapping(value = "/changePw")
     public String changePw(HttpSession session, ModelMap model) throws Exception{
         log.info(this.getClass().getName() + ".changePw start!");
 
-        String id = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+        String id = CmmUtil.nvl((String) session.getAttribute("NEW_PASSWORD"));
 
         log.info(id);
 
@@ -295,7 +421,7 @@ public class TraderController {
 
         pDTO.setId(id);
 
-        TraderDTO rDTO = Optional.ofNullable(traderService.getUserInfo(pDTO)).orElseGet(TraderDTO::new);
+        TraderDTO rDTO = Optional.ofNullable(traderService.getTraderInfo(pDTO)).orElseGet(TraderDTO::new);
 
         model.addAttribute("rDTO", rDTO);
 
@@ -368,7 +494,7 @@ public class TraderController {
         TraderDTO pDTO = null;
 
         try {
-            String id = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+            String id = CmmUtil.nvl((String) session.getAttribute("NEW_PASSWORD"));
             String pw = CmmUtil.nvl(request.getParameter("npw"));
 
             log.info("id : " + id);

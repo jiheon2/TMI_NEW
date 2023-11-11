@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
-    <title>공지사항 수정하기</title>
+    <title>TMI - 게시글 수정하기</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -41,20 +42,17 @@
     <link rel="stylesheet" href="/assets/css/notice/css.css">
 
     <!-- Load fonts style after rendering the layout styles -->
-    <link rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;700;900&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;700;900&display=swap">
     <link rel="stylesheet" href="/assets/css/notice/fontawesome.min.css">
-    <link rel="stylesheet"
-          href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/assets/css/notice/font-awesome.min.css">
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/assets/css/notice/all.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/assets/css/notice/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/assets/css/notice/all.min.css">
 
 
     <script th:inline="javascript">
         // HTML로딩이 완료되고, 실행됨
-        $(document).ready(function () {
+        $(document).ready(function() {
             // 버튼 클릭했을때, 발생되는 이벤트 생성함(onclick 이벤트와 동일함)
-            $("#btnSend").on("click", function () {
+            $("#btnSend").on("click", function() {
                 calBytes();
                 doSubmit(); // 공지사항 수정하기 실행
             })
@@ -103,28 +101,28 @@
             }
             var formData = new FormData($("#f")[0]);
             $.ajax({
-                    url: "/notice/noticeUpdate",
+                url: "/notice/noticeUpdate",
                 type: "POST",
                 data: formData,
                 processData: false,
                 contentType: false,
-                    success: function (json) { // /notice/noticeUpdate 호출이 성공했다면..
+                success: function(json) { // /notice/noticeUpdate 호출이 성공했다면..
 
-                        if (json.result === 1) { // 로그인 성공
-                            alert(json.msg); // 메시지 띄우기
-                            location.href = "/notice/noticeList"; // 로그인 성공 페이지 이동
+                    if (json.result === 1) { // 로그인 성공
+                        alert(json.msg); // 메시지 띄우기
+                        location.href = "/notice/noticeList"; // 로그인 성공 페이지 이동
 
-                        } else { // 로그인 실패
-                            alert(json.msg); // 메시지 띄우기
-                        }
-
+                    } else { // 로그인 실패
+                        alert(json.msg); // 메시지 띄우기
                     }
+
                 }
-            )
+            })
 
         }
     </script>
 </head>
+
 <body>
 <!--::header part start::-->
 <header class="main_menu home_menu">
@@ -132,58 +130,38 @@
         <div class="row align-items-center">
             <div class="col-lg-12">
                 <nav class="navbar navbar-expand-lg navbar-light">
-                    <a class="navbar-brand" href="userIndex.html"> <img src="/assets/images/logo.png" alt="logo"> </a>
-
-                    <div class="collapse navbar-collapse main-menu-item" id="navbarSupportedContent"
-                         style="height: 100px">
-                    </div>
-                    <div class="hearer_icon d-flex">
-                        <div>
-                            <a><i class="fa-solid fa-map-location-dot" style="font-size:25px"></i>
-                            </a>
-                        </div>
-                        <div>
-                            <a><i class="fa-solid fa-comments" style="font-size:25px"></i>
-                            </a>
-                        </div>
-                        <a href=""><i class="fa-solid fa-heart" style="font-size:25px"></i></a>
-
-                        <div class="dropdown cart">
-                            <a class="dropdown-toggle" href="#" id="navbarDropdown3" role="button"
-                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fas fa-cart-plus" style="font-size:25px"></i>
-                            </a>
-                        </div>
-                        <a><i class="fa-solid fa-user" style="font-size:25px"></i>
-                        </a>
-                    </div>
+                    <a class="navbar-brand" href="/customer/customerIndex"><img src="/assets/images/bird/logo2.png" alt="logo" style="width: 100px" , height="50px"></a>
                 </nav>
             </div>
         </div>
     </div>
-
 </header>
 <!-- Header part end-->
 
-
 <!-- breadcrumb start-->
-<section class="breadcrumb breadcrumb_bg">
+<section class="breadcrumb" style="background-color: azure">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-lg-8">
                 <div class="breadcrumb_iner">
+                    <img src="/assets/images/bird/bird1.png" style="width: 400px">
                     <div class="breadcrumb_iner_item">
-                        <h2>Tracking Order</h2>
-                        <p>Home <span>-</span> Tracking Order</p>
+                        <h2>게시판</h2>
+                        <p>새로운 컨텐츠를 작성하세요!</p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
-<!-- breadcrumb start-->
+<!-- breadcrumb end-->
+
+<!-- navigation -->
+<div th:replace="customerNav.html"></div>
+<!-- ---------- -->
+
 <form name="f" id="f">
-    <input type="hidden" name="nSeq" th:value="${rDTO.seq}"/>
+    <input type="hidden" name="nSeq" th:value="${rDTO.seq}" />
     <div class="board_wrap">
         <div class="board_write_wrap">
             <div class="board_write">
@@ -198,7 +176,7 @@
                         <div class="cont" th:if="${not #strings.isEmpty(rDTO.image)}">
                             <img th:src="${rDTO.image}" class="d-block w-100" style="height:380px">
                         </div>
-                           <input type="file" id="fileUpload" name="fileUpload"/>
+                        <input type="file" id="fileUpload" name="fileUpload" />
                     </div>
                     <div class="info">
                         <div class="cont">
@@ -212,7 +190,6 @@
             <a id="btnSend" type="submit" onclick="calBytes(title);doSubmit();" class="on">수정</a>
             <a href="/notice/noticeList">취소</a>
         </div>
-    </div>
     </div>
 </form>
 
@@ -251,10 +228,12 @@
 <script src="/assets/js/price_rangs.js"></script>
 <!-- custom js -->
 <script src="/assets/js/custom.js"></script>
-<script src="/assets/js/jquery-3.6.0.min.js"></script>
+<script src="/js/jquery-3.6.0.min.js"></script>
 <script>
     document.getElementById("title").value = [[${rDTO.title}]];
 </script>
 <!-- End Script -->
+<script src="/assets/js/jquery-3.6.0.min.js"></script>
 </body>
+
 </html>

@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
-    <title>게시판 글보기</title>
+    <title>TMI - 게시판 글보기</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- Required meta tags -->
@@ -53,22 +54,22 @@
         const id = /*[[${rDTO.sender}]]*/ '';
 
         // 현재 글번호, 자바에서 받을 변수들은 자바스크립트 변수로 저장하면 편함
-        const seq = /*[[${rDTO.seq}]]*/'';
+        const seq = /*[[${rDTO.seq}]]*/ '';
 
         // HTML로딩이 완료되고, 실행됨
-        $(document).ready(function () {
+        $(document).ready(function() {
             // 버튼 클릭했을때, 발생되는 이벤트 생성함(onclick 이벤트와 동일함)
-            $("#btnEdit").on("click", function () {
+            $("#btnEdit").on("click", function() {
                 doEdit(); // 공지사항 수정하기 실행
             })
 
             // 버튼 클릭했을때, 발생되는 이벤트 생성함(onclick 이벤트와 동일함)
-            $("#btnDelete").on("click", function () {
+            $("#btnDelete").on("click", function() {
                 doDelete(); // 공지사항 수정하기 실행
             })
 
             // 버튼 클릭했을때, 발생되는 이벤트 생성함(onclick 이벤트와 동일함)
-            $("#btnList").on("click", function () {
+            $("#btnList").on("click", function() {
                 location.href = "/notice/noticeList"; // 공지사항 리스트 이동
             })
         })
@@ -92,23 +93,24 @@
             if (ss_id === id) {
                 if (confirm("작성한 글을 삭제하시겠습니까?")) {
                     $.ajax({
-                            url: "/notice/noticeDelete",
-                            type: "post", // 전송방식은 Post
-                            dataType: "JSON", // 전송 결과는 JSON으로 받기
-                            data: {"seq": seq}, // form 태그 내 input 등 객체를 자동으로 전송할 형태로 변경하기
-                            success: function (json) { // /notice/noticeUpdate 호출이 성공했다면..
+                        url: "/notice/noticeDelete",
+                        type: "post", // 전송방식은 Post
+                        dataType: "JSON", // 전송 결과는 JSON으로 받기
+                        data: {
+                            "seq": seq
+                        }, // form 태그 내 input 등 객체를 자동으로 전송할 형태로 변경하기
+                        success: function(json) { // /notice/noticeUpdate 호출이 성공했다면..
 
-                                if (json.result === 1) { // 로그인 성공
-                                    alert(json.msg); // 메시지 띄우기
-                                    location.href = "/notice/noticeList"; // 로그인 성공 페이지 이동
+                            if (json.result === 1) { // 로그인 성공
+                                alert(json.msg); // 메시지 띄우기
+                                location.href = "/notice/noticeList"; // 로그인 성공 페이지 이동
 
-                                } else { // 로그인 실패
-                                    alert(json.msg); // 메시지 띄우기
-                                }
-
+                            } else { // 로그인 실패
+                                alert(json.msg); // 메시지 띄우기
                             }
+
                         }
-                    )
+                    })
                 }
 
             } else if (ss_id === "") {
@@ -120,6 +122,7 @@
         }
     </script>
 </head>
+
 <body>
 <!--::header part start::-->
 <header class="main_menu home_menu">
@@ -127,91 +130,72 @@
         <div class="row align-items-center">
             <div class="col-lg-12">
                 <nav class="navbar navbar-expand-lg navbar-light">
-                    <a class="navbar-brand" href="userIndex.html"> <img src="/assets/images/logo.png" alt="logo"> </a>
-
-                    <div class="collapse navbar-collapse main-menu-item" id="navbarSupportedContent" style="height: 100px">
-                    </div>
-                    <div class="hearer_icon d-flex">
-                        <div>
-                            <a><i class="fa-solid fa-map-location-dot" style="font-size:25px"></i>
-                            </a>
-                        </div>
-                        <div>
-                            <a><i class="fa-solid fa-comments" style="font-size:25px"></i>
-                            </a>
-                        </div>
-                        <a href=""><i class="fa-solid fa-heart" style="font-size:25px"></i></a>
-
-                        <div class="dropdown cart">
-                            <a class="dropdown-toggle" href="#" id="navbarDropdown3" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fas fa-cart-plus" style="font-size:25px"></i>
-                            </a>
-                        </div>
-                        <a><i class="fa-solid fa-user" style="font-size:25px"></i>
-                        </a>
-                    </div>
+                    <a class="navbar-brand" href="/customer/customerIndex"><img src="/assets/images/bird/logo2.png" alt="logo" style="width: 100px" , height="50px"></a>
                 </nav>
             </div>
         </div>
     </div>
-
 </header>
 <!-- Header part end-->
 
-
 <!-- breadcrumb start-->
-<section class="breadcrumb breadcrumb_bg">
+<section class="breadcrumb" style="background-color: azure">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-lg-8">
                 <div class="breadcrumb_iner">
+                    <img src="/assets/images/bird/bird1.png" style="width: 400px">
                     <div class="breadcrumb_iner_item">
-                        <h2>Tracking Order</h2>
-                        <p>Home <span>-</span> Tracking Order</p>
+                        <h2>게시판</h2>
+                        <p>새로운 컨텐츠를 작성하세요!</p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
-<!-- breadcrumb start-->
+<!-- breadcrumb end-->
+
+<!-- navigation -->
+<div th:replace="customerNav.html"></div>
+<!-- ---------- -->
 
 <!--Main-->
 <form name="f" id="f">
-<div class="board_wrap">
-    <div class="board_view_wrap">
-        <div class="board_view">
-            <div class="title">
-                [[${rDTO.title}]]
+    <div class="board_wrap">
+        <div class="board_view_wrap">
+            <div class="board_view">
+                <div class="title">
+                    [[${rDTO.title}]]
+                </div>
+                <div class="info">
+                    <dl>
+                        <dt>작성일</dt>
+                        <dd>[[${rDTO.regDt}]]</dd>
+                    </dl>
+                    <dl>
+                        <dt>조회</dt>
+                        <dd>[[${rDTO.readCnt}]]</dd>
+                    </dl>
+                    <dl>
+                        <dt>순번</dt>
+                        <dd name="seq">[[${rDTO.seq}]]</dd>
+                    </dl>
+                </div>
+                <div class="cont">
+                    <img th:src="@{${rDTO.image}}">
+                </div>
+                <div class="cont">
+                    [[${rDTO.contents}]]
+                </div>
             </div>
-            <div class="info">
-                <dl>
-                    <dt>작성일</dt>
-                    <dd>[[${rDTO.regDt}]]</dd>
-                </dl>
-                <dl>
-                    <dt>조회</dt>
-                    <dd>[[${rDTO.readCnt}]]</dd>
-                </dl>
-                <dl>
-                    <dt>순번</dt>
-                    <dd name="seq">[[${rDTO.seq}]]</dd>
-                </dl>
+            <div class="bt_wrap">
+                <a href="/notice/noticeList" class="on">목록</a>
+                <a id="btnEdit" onclick="doEdit()" type="button">수정</a>
+                <a id="btnDelete" onclick="doDelete()" type="button">삭제</a>
             </div>
-            <div class="cont">
-                <img th:src="@{${rDTO.image}}">
-            </div>
-            <div class="cont">
-                [[${rDTO.contents}]]
-            </div>
-        </div>
-        <div class="bt_wrap">
-            <a href="/notice/noticeList" class="on">목록</a>
-            <a id="btnEdit" onclick="doEdit()" type="button">수정</a>
-            <a id="btnDelete" onclick="doDelete()" type="button">삭제</a>
         </div>
     </div>
-</div>
 </form>
 
 
@@ -223,7 +207,7 @@
 <script src="/assets/js/notice/templatemo.js"></script>
 <script src="/assets/js/notice/custom.js"></script>
 <!-- jquery plugins here-->
-<script src="/assets/js/jquery-3.6.0.min.js"></script>
+<script src="/js/jquery-3.6.0.min.js"></script>
 <!-- popper js -->
 <script src="/assets/js/popper.min.js"></script>
 <!-- bootstrap js -->
@@ -252,5 +236,5 @@
 <script src="/assets/js/custom.js"></script>
 <!-- End Script -->
 </body>
-</html>
 
+</html>

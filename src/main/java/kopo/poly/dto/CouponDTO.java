@@ -9,7 +9,7 @@ import lombok.ToString;
 @ToString
 public class CouponDTO {
     private String couponCode;
-    private String user;
+    private String customer;
     private String couponName;
     private String useYn;
     private String discount;
