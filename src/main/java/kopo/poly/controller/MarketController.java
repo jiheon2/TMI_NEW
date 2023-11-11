@@ -43,4 +43,24 @@ public class MarketController {
         log.info(this.getClass().getName() + ".list End!");
         return list;
     }
+    @GetMapping(value = "/marker")
+    @ResponseBody
+    public List<String> marker(HttpServletRequest request)
+            throws Exception {
+        log.info(this.getClass().getName() + ".marker Start!");
+
+        String nm = request.getParameter("shopCode");
+        List<MarketDTO> rList = marketService.getList(nm);
+        if (rList == null) rList = new ArrayList<>();
+
+        List<String> list = new ArrayList<>();
+
+        for(MarketDTO dto : rList) {
+            String text = dto.getAddr();
+            list.add(text);
+        }
+
+        log.info(this.getClass().getName() + ".marker End!");
+        return list;
+    }
 }
