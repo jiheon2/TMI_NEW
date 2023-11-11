@@ -209,8 +209,9 @@ public class CustomerController {
     }
 
     @GetMapping(value = "/market")
-    public String market() {
+    public String market(HttpServletRequest request) {
         log.info("start!");
+
         return "/customer/market";
     }
 
@@ -225,13 +226,13 @@ public class CustomerController {
         log.info(this.getClass().getName() + ".customerLogin");
 
         String customerId = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+        String type = CmmUtil.nvl((String) session.getAttribute("Customer"));
 
         String url = "/customer/customerInfo";
-//        if(!type.equals("Customer")) {
-//            session.invalidate();
-//            url = "/customer/login";
-//        }
-        // type 없어졌음으로 다른걸로 해야함
+        if(!type.equals("Customer")) {
+            session.invalidate();
+            url = "/customer/login";
+        }
 
         CustomerDTO pDTO = new CustomerDTO();
         pDTO.setCustomerId(customerId);
