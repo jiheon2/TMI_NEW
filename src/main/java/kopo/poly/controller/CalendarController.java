@@ -19,13 +19,13 @@ import javax.servlet.http.HttpSession;
 import java.io.PrintWriter;
 import java.util.*;
 
-@Controller
-@Slf4j
-@RequiredArgsConstructor
-@RequestMapping("/calender")
+//@Controller
+//@Slf4j
+//@RequiredArgsConstructor
+//@RequestMapping("/calender")
 public class CalendarController {
 
-    private final IShopService shopService;
+//    private final IShopService shopService;
 
     @GetMapping("/get")
     @ResponseBody

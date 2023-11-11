@@ -104,7 +104,7 @@
                 var formData = new FormData($("#uploadForm")[0]);
                 console.log("전송 시작")
                 $.ajax({
-                    url: "/notice/noticeInsert",
+                    url: "/post/postInsert",
                     type: "POST",
                     data: formData,
                     processData: false,
@@ -112,7 +112,7 @@
                     success: function(json) {
                         if (json.result === 1) { // 로그인 성공
                             alert(json.msg); // 메시지 띄우기
-                            location.href = "/notice/noticeList"; // 로그인 성공 페이지 이동
+                            location.href = "/post/postList"; // 로그인 성공 페이지 이동
 
                         } else { // 로그인 실패
                             alert(json.msg); // 메시지 띄우기
@@ -186,7 +186,7 @@
                 </div>
                 <div class="bt_wrap">
                     <a href="#" type="button" name="btnUpload" id="btnUpload" class="on">등록</a>
-                    <a href="/notice/noticeList">취소</a>
+                    <a href="/post/postList">취소</a>
                 </div>
             </div>
         </div>

@@ -101,7 +101,7 @@
             }
             var formData = new FormData($("#f")[0]);
             $.ajax({
-                url: "/notice/noticeUpdate",
+                url: "/post/postUpdate",
                 type: "POST",
                 data: formData,
                 processData: false,
@@ -110,7 +110,7 @@
 
                     if (json.result === 1) { // 로그인 성공
                         alert(json.msg); // 메시지 띄우기
-                        location.href = "/notice/noticeList"; // 로그인 성공 페이지 이동
+                        location.href = "/post/postList"; // 로그인 성공 페이지 이동
 
                     } else { // 로그인 실패
                         alert(json.msg); // 메시지 띄우기
@@ -161,7 +161,7 @@
 <!-- ---------- -->
 
 <form name="f" id="f">
-    <input type="hidden" name="nSeq" th:value="${rDTO.seq}" />
+    <input type="hidden" name="postNumber" th:value="${rDTO.postNumber}" />
     <div class="board_wrap">
         <div class="board_write_wrap">
             <div class="board_write">
@@ -188,7 +188,7 @@
         </div>
         <div class="bt_wrap">
             <a id="btnSend" type="submit" onclick="calBytes(title);doSubmit();" class="on">수정</a>
-            <a href="/notice/noticeList">취소</a>
+            <a href="/post/postList">취소</a>
         </div>
     </div>
 </form>

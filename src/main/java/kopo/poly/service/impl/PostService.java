@@ -14,44 +14,44 @@ import java.util.List;
 @RequiredArgsConstructor
 @Service
 public class PostService implements IPostService {
-    private final IPostMapper noticeMapper;
+    private final IPostMapper postMapper;
     @Override
     public List<PostDTO> getPostList() throws Exception {
 
         log.info(this.getClass().getName() + ".getPostList start!");
 
-        return noticeMapper.getPostList();
+        return postMapper.getPostList();
     }
 
     @Transactional
     @Override
     public PostDTO getPostInfo(PostDTO pDTO) throws Exception {
-        log.info(this.getClass().getName() + ".getnoticeInfo start!");
+        log.info(this.getClass().getName() + ".getPostInfo start!");
 
             log.info("Update ReadCNT");
-            noticeMapper.updatePostReadCnt(pDTO);
+            postMapper.updatePostReadCnt(pDTO);
 
-        return noticeMapper.getPostInfo(pDTO);
+        return postMapper.getPostInfo(pDTO);
     }
 
     @Transactional
     @Override
     public void insertPostInfo(PostDTO pDTO) throws Exception {
         log.info(this.getClass().getName() + ".InsertPostInfo start!");
-        noticeMapper.insertPostInfo(pDTO);
+        postMapper.insertPostInfo(pDTO);
     }
 
     @Transactional
     @Override
     public void updatePostInfo(PostDTO pDTO) throws Exception {
         log.info(this.getClass().getName() + ".updatePostInfo start!");
-        noticeMapper.updatePostInfo(pDTO);
+        postMapper.updatePostInfo(pDTO);
     }
 
     @Override
     public void deletePostInfo(PostDTO pDTO) throws Exception {
         log.info(this.getClass().getName() + ".deletePostInfo start!");
-        noticeMapper.deletePostInfo(pDTO);
+        postMapper.deletePostInfo(pDTO);
     }
 
     @Override

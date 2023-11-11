@@ -19,12 +19,12 @@
         $(document).ready(function () {
             let f = document.getElementById("f");
             $("#btnChange").on("click", function () {
-                change(f)
+                updateTrader(f)
             })
 
-            function change(f) {
+            function updateTrader(f) {
                 $.ajax({
-                        url: "/trader/changeTrader",
+                        url: "/trader/updateInfo",
                         type: "post", // 전송방식은 Post
                         dataType: "JSON", // 전송 결과는 JSON으로 받기
                         data: $("#f").serialize(), // form 태그 내 input 등 객체를 자동으로 전송할 형태로 변경하기
@@ -82,19 +82,37 @@
                                                 <label>이름</label>
                                             </div>
                                             <div class="col-md-8 form-group">
-                                                <input type="text" class="form-control" id="name" name="name" th:value="${rDTO.name}" />
+                                                <input type="text" class="form-control" id="traderName" name="traderName" th:value="${rDTO.traderName}" />
                                             </div>
                                             <div class="col-md-4">
                                                 <label>전화번호</label>
                                             </div>
                                             <div class="col-md-8 form-group">
-                                                <input type="tel"  class="form-control" name="pn" id="pn" th:value="${rDTO.pn}" />
+                                                <input type="tel"  class="form-control" name="phoneNumber" id="phoneNumber" th:value="${rDTO.phoneNumber}" />
                                             </div>
                                             <div class="col-md-4">
                                                 <label>지역</label>
                                             </div>
                                             <div class="col-md-8 form-group">
                                                 <input type="text" class="form-control" id="shopCode" name="shopCode" th:value="${rDTO.shopCode}" />
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label>이메일</label>
+                                            </div>
+                                            <div class="col-md-8 form-group">
+                                                <input type="email"  class="form-control" name="email" id="email" th:value="${rDTO.email}" />
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label>계좌번호</label>
+                                            </div>
+                                            <div class="col-md-8 form-group">
+                                                <input type="text"  class="form-control" name="account" id="account" th:value="${rDTO.account}" />
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label>은행</label>
+                                            </div>
+                                            <div class="col-md-8 form-group">
+                                                <input type="text"  class="form-control" name="bank" id="bank" th:value="${rDTO.bank}" />
                                             </div>
                                             <br>
                                             <div class="col-sm-12 d-flex justify-content-end">

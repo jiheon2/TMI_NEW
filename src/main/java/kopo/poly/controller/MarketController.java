@@ -25,12 +25,12 @@ public class MarketController {
     private final IMarketService marketService;
     @GetMapping(value = "/list")
     @ResponseBody
-    public List<String> list(HttpServletRequest request)
+    public List<String> getMarketList(HttpServletRequest request)
             throws Exception {
         log.info(this.getClass().getName() + ".list Start!");
 
         String nm = request.getParameter("shopCode");
-        List<MarketDTO> rList = marketService.getList(nm);
+        List<MarketDTO> rList = marketService.getMarketList(nm);
         if (rList == null) rList = new ArrayList<>();
 
         List<String> list = new ArrayList<>();

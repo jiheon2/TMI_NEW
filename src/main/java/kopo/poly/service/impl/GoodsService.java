@@ -31,7 +31,6 @@ public class GoodsService implements IGoodsService {
     public GoodsDTO getGoodsInfo(GoodsDTO pDTO) throws Exception {
         log.info(this.getClass().getName() + ".getGoodsInfo Start!");
 
-
         GoodsDTO rDTO = Optional.ofNullable(goodsMapper.getGoodsInfo(pDTO)).orElseGet(GoodsDTO::new);
 
         log.info(this.getClass().getName() + ".getGoodsInfo Start!");
@@ -40,24 +39,23 @@ public class GoodsService implements IGoodsService {
     }
 
     @Override
-    public int updateAndInsertGoodsInfo(GoodsDTO pDTO) throws Exception {
-        int result = 0;
+    public int updateGoods(GoodsDTO pDTO) throws Exception {
+        log.info(this.getClass().getName() + ".updateGoods Start!");
+
         int res = 0;
-        try {
-            log.info("수정 시작");
-            result = goodsMapper.updateGoodsInfo(pDTO);
 
-        } catch (Exception e) {
-            if(result == 0) {
-                log.info("인설트 시작");
-                result = goodsMapper.insertGoodsInfo(pDTO);
-            }
+        res = goodsMapper.updateGoods(pDTO);
 
-        } finally {
-            if (result > 0) {
-                res = 1;
-            }
-        }
+        return res;
+    }
+
+    @Override
+    public int insertGoods(GoodsDTO pDTO) throws Exception {
+        log.info(this.getClass().getName() + ".insertGoods Start!");
+
+        int res = 0;
+
+        res = goodsMapper.insertGoods(pDTO);
 
         return res;
     }

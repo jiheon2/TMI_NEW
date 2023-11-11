@@ -48,8 +48,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/assets/css/notice/all.min.css">
     <script type="text/javascript">
         //상세보기 이동
-        function doDetail(seq) {
-            location.href = "/notice/noticeInfo?nSeq=" + seq;
+        function doDetail(postNumber) {
+            location.href = "/post/postInfo?postNumber=" + postNumber;
         }
     </script>
 </head>
@@ -101,10 +101,10 @@
                 <div class="count" style="width: 15%">조회</div>
             </div>
             <div th:each="dto:${rList}">
-                <div class="title" th:attr="onclick='doDetail(\'' + ${dto.seq} + '\')'" style="width: 50%">[[${dto.title}]]</div>
-                <div class="writer" style="width: 15%">[[${dto.sender}]]</div>
+                <div class="title" th:attr="onclick='doDetail(\'' + ${dto.postNumber} + '\')'" style="width: 50%">[[${dto.title}]]</div>
+                <div class="writer" style="width: 15%">[[${dto.customerId}]]</div>
                 <div class="date" style="width: 15%">[[${dto.regDt}]]</div>
-                <div class="count" style="width: 15%">[[${dto.readCnt}]]</div>
+                <div class="count" style="width: 15%">[[${dto.readCount}]]</div>
             </div>
         </div>
         <br />
@@ -113,28 +113,28 @@
             <div class="mx-auto">
                 <ul class="pagination pagination-primary" id="pagination">
                     <li class="page-item">
-                        <a class="page-link" th:href="@{/notice/noticeList?page=1}">&laquo;</a>
+                        <a class="page-link" th:href="@{/templates/post/postList?page=1}">&laquo;</a>
                     </li>
                     <!-- 이전 페이지로 이동하는 링크 -->
                     <li class="page-item" th:if="${currentPage > 1}">
-                        <a class="page-link" th:href="@{/notice/noticeList(page=${currentPage - 1})}">&lt;</a>
+                        <a class="page-link" th:href="@{/templates/post/postList(page=${currentPage - 1})}">&lt;</a>
                     </li>
                     <!-- 현재 페이지 주변에 페이지 번호 링크 표시 -->
                     <li class="page-item" th:each="pageNumber : ${#numbers.sequence(1, totalPages)}" th:class="${pageNumber == currentPage ? 'active' : ''}">
-                        <a class="page-link" th:href="@{/notice/noticeList(page=${pageNumber})}" th:text="${pageNumber}"></a>
+                        <a class="page-link" th:href="@{/templates/post/postList(page=${pageNumber})}" th:text="${pageNumber}"></a>
                     </li>
                     <!-- 다음 페이지로 이동하는 링크 -->
                     <li class="page-item" th:if="${currentPage < totalPages}">
-                        <a class="page-link" th:href="@{/notice/noticeList(page=${currentPage + 1})}">&gt;</a>
+                        <a class="page-link" th:href="@{/templates/post/postList(page=${currentPage + 1})}">&gt;</a>
                     </li>
                     <li class="page-item">
-                        <a class="page-link" th:href="@{/notice/noticeList(page=${totalPages})}">&raquo;</a>
+                        <a class="page-link" th:href="@{/templates/post/postList(page=${totalPages})}">&raquo;</a>
                     </li>
                 </ul>
             </div>
         </div>
         <div class="bt_wrap">
-            <a href="/notice/noticeReg" class="on">등록</a>
+            <a href="/post/postReg" class="on">등록</a>
         </div>
     </div>
 </div>
@@ -175,7 +175,7 @@
 <!-- custom js -->
 <script src="/assets/js/custom.js"></script>
 <!-- End Script -->
-<script src="/js/jquery-3.6.0.min.js"></script>
+<script src="/assets/js/jquery-3.6.0.min.js"></script>
 </body>
 
 </html>

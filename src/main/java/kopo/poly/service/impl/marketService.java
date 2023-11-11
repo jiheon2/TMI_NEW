@@ -89,11 +89,11 @@ public class marketService implements IMarketService {
     }
 
     @Override
-    public List<MarketDTO> getList(String nm) throws Exception {
+    public List<MarketDTO> getMarketList(String nm) throws Exception {
 
         log.info(this.getClass().getName() + ".getList Start!");
 
-        return marketMapper.getList(nm);
+        return marketMapper.getMarketList(nm);
     }
 }
 
