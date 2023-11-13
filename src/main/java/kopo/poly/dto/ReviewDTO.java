@@ -2,17 +2,16 @@ package kopo.poly.dto;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 @Getter
 @Setter
-@ToString
 public class ReviewDTO {
-    private String name;
-    private String rating;
+    private String reviewNumber;
+    private String goodsNumber;
+    private String customerNumber;
     private String regDt;
     private String contents;
-    private String product;
+    private String score;
+    private String customerId;
     private String traderId;
-    private String seq;
 }

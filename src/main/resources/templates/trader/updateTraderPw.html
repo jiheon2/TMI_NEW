@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="/assets/vendors/perfect-scrollbar/perfect-scrollbar.css">
     <link rel="stylesheet" href="/assets/vendors/bootstrap-icons/bootstrap-icons.css">
     <link rel="stylesheet" href="/assets/css/app.css">
-    <script src="/js/jquery-3.6.0.min.js"></script>
+    <script src="/assets/js/jquery-3.6.0.min.js"></script>
     <link rel="shortcut icon" href="/assets/images/favicon.svg" type="image/x-icon">
     <script type="text/javascript">
         $(document).ready(function () {
@@ -34,7 +34,7 @@
 
                             if (json.result === 1) { // 수정 성공
                                 alert(json.msg); // 메시지 띄우기
-                                location.href = "/trader/login"; // 로그인 페이지 이동
+                                location.href = "/trader/traderInfo"; // 로그인 페이지 이동
 
                             } else { // 수정 실패
                                 alert(json.msg); // 메시지 띄우기
@@ -52,6 +52,14 @@
 
 <body>
 <div id="app">
+    <div th:replace="sidebar.html"></div>
+    <div id="main">
+        <header class="mb-3">
+            <a href="#" class="burger-btn d-block d-xl-none">
+                <i class="bi bi-justify fs-3"></i>
+            </a>
+        </header>
+
         <div class="page-heading">
             <div class="page-title">
                 <div class="row">
