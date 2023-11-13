@@ -1,7 +1,7 @@
 package kopo.poly.service.impl;
 
 import kopo.poly.dto.NoticeDTO;
-import kopo.poly.persistance.mapper.INoticeMapper;
+import kopo.poly.persistance.mapper.IPostMapper;
 import kopo.poly.service.INoticeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Service
 public class NoticeService implements INoticeService {
-    private final INoticeMapper noticeMapper;
+    private final IPostMapper noticeMapper;
     @Override
     public List<NoticeDTO> getNoticeList() throws Exception {
 
