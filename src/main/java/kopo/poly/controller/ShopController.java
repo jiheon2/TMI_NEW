@@ -3,6 +3,7 @@ package kopo.poly.controller;
 
 import kopo.poly.dto.*;
 import kopo.poly.service.IFileService;
+import kopo.poly.service.IMarketService;
 import kopo.poly.service.IShopService;
 import kopo.poly.util.CmmUtil;
 import lombok.RequiredArgsConstructor;
@@ -25,22 +26,25 @@ import java.util.Optional;
 public class ShopController {
 
     private final IShopService shopService;
+    private final IMarketService marketService;
     private final IFileService fileService;
     @GetMapping(value = "/trader/shopInfo")
     public String shopInfo(HttpSession session, ModelMap model) throws Exception{
         log.info(this.getClass().getName() + ".shopInfo Start!");
 
-        String type = (String) session.getAttribute("SS_TYPE");
-        String id = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+        String traderId = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
 
         String url = "/trader/shopInfo";
-        if(!type.equals("Trader")) {
-            session.invalidate();
-            url = "/trader/login";
-        }
+
         ShopDTO pDTO = new ShopDTO();
-        pDTO.setTraderId(id);
+
+        pDTO.setTraderId(traderId);
+
         ShopDTO rDTO = Optional.ofNullable(shopService.getShopInfo(pDTO)).orElseGet(ShopDTO::new);
+        if (rDTO.getShopName() == null || rDTO.getShopName().isEmpty()) {
+            url = "/trader/insertShopInfo";
+        }
+
         model.addAttribute("rDTO", rDTO);
 
         log.info(this.getClass().getName() + ".shopInfo End!");
@@ -52,25 +56,43 @@ public class ShopController {
     public String updateShopInfo(HttpSession session, ModelMap model, HttpServletRequest request) throws Exception{
         log.info(this.getClass().getName() + ".updateShopInfo start!");
 
-        String id = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
-        log.info(id);
+        String traderId = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+        log.info(traderId);
 
         ShopDTO pDTO = new ShopDTO();
 
-        pDTO.setTraderId(id);
+        pDTO.setTraderId(traderId);
 
         log.info(pDTO.toString());
         ShopDTO rDTO = Optional.ofNullable(shopService.getShopInfo(pDTO)).orElseGet(ShopDTO::new);
 
         model.addAttribute("rDTO", rDTO);
 
-        log.info(this.getClass().getName() + ".updateShopInfo start!");
+        log.info(this.getClass().getName() + ".updateShopInfo End!");
         return "/trader/updateShopInfo";
     }
+
+    @GetMapping(value = "trader/insertShopInfo")
+    public String insertShopInfo(HttpSession session, ModelMap model, HttpServletRequest request) throws Exception {
+        log.info(this.getClass().getName() + ".insertShopInfo start!");
+
+        String url = "";
+
+        String traderId = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+        if (traderId.equals(null)) {
+            url = "/trader/login";
+        }
+
+        log.info(this.getClass().getName() + ".insertShopInfo End!");
+
+         return url;
+    }
+
+
     @ResponseBody
-    @PostMapping(value = "/trader/changeShop")
-    public MsgDTO insertOrUpdateShop(HttpServletRequest request,@RequestParam (value = "fileUpload") MultipartFile mf, HttpSession session) throws Exception {
-        log.info(this.getClass().getName() + ".updateShop Start!");
+    @PostMapping(value = "/trader/insertShop")
+    public MsgDTO insertShop(HttpServletRequest request,@RequestParam (value = "fileUpload") MultipartFile mf, HttpSession session) throws Exception {
+        log.info(this.getClass().getName() + ".insertShopInfo Start!");
 
         // 성공이면 1, 실패면 0
         int res = 0;
@@ -80,23 +102,26 @@ public class ShopController {
         ShopDTO pDTO = null;
 
         try {
-            String id = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
-            String cname = CmmUtil.nvl(request.getParameter("cname"));
-            String name = CmmUtil.nvl(request.getParameter("name"));
-            String des = CmmUtil.nvl(request.getParameter("des"));
+            String traderId = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+            String shopName = CmmUtil.nvl(request.getParameter("shopName"));
+            String traderName = CmmUtil.nvl(request.getParameter("traderName"));
+            String shopDescription = CmmUtil.nvl(request.getParameter("shopDescription"));
+            String marketName = CmmUtil.nvl(request.getParameter("marketName"));
 
-            log.info("id : " + id);
-            log.info("cname : " + cname);
-
+            log.info("traderId : " + traderId);
+            log.info("shopName : " + shopName);
+            log.info("traderName : " + traderName);
+            log.info("shopDescription : " + shopDescription);
+            log.info("marketName : " + marketName);
 
             pDTO = new ShopDTO();
 
-            pDTO.setTraderId(id);
-            pDTO.setTraderId(cname);
-            pDTO.setShopDescription(des);
-            pDTO.setShopName(name);
+            pDTO.setTraderId(traderId);
+            pDTO.setShopName(shopName);
+            pDTO.setShopDescription(shopDescription);
+            pDTO.setTraderName(traderName);
             pDTO.setImage("");
-
+            pDTO.setMarketName(marketName);
 
 
             if(!mf.isEmpty()) {
@@ -109,12 +134,79 @@ public class ShopController {
             }
             log.info(pDTO.toString());
 
-            res = shopService.insertOrUpdateShop(pDTO);
+            res = shopService.insertShopInfo(pDTO);
 
             log.info("res : " + res);
 
             if (res == 1) {
-                msg = "수정하였습니다";
+                msg = "등록되었습니다";
+            } else {
+                msg = "오류로 인해 등록 실패하였습니다";
+            }
+        }catch (Exception e) {
+            msg = "실패하였습니다 : " + e;
+            log.info(e.toString());
+            e.printStackTrace();
+        }finally {
+            dto = new MsgDTO();
+            dto.setMsg(msg);
+            dto.setResult(res);
+            log.info(this.getClass().getName() + ".insertShop End!");
+        }
+        return dto;
+    }
+
+    @ResponseBody
+    @PostMapping(value = "/trader/updateShop")
+    public MsgDTO updateShop(HttpServletRequest request,@RequestParam (value = "fileUpload") MultipartFile mf, HttpSession session) throws Exception {
+        log.info(this.getClass().getName() + ".updateShopInfo Start!");
+
+        // 성공이면 1, 실패면 0
+        int res = 0;
+        String msg = "";
+        MsgDTO dto = null;
+
+        ShopDTO pDTO = null;
+
+        try {
+            String traderId = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+            String shopName = CmmUtil.nvl(request.getParameter("shopName"));
+            String traderName = CmmUtil.nvl(request.getParameter("traderName"));
+            String shopDescription = CmmUtil.nvl(request.getParameter("shopDescription"));
+            String marketName = CmmUtil.nvl(request.getParameter("marketName"));
+
+            log.info("traderId : " + traderId);
+            log.info("shopName : " + shopName);
+            log.info("traderName : " + traderName);
+            log.info("shopDescription : " + shopDescription);
+            log.info("marketName : " + marketName);
+
+            pDTO = new ShopDTO();
+
+            pDTO.setTraderId(traderId);
+            pDTO.setShopName(shopName);
+            pDTO.setShopDescription(shopDescription);
+            pDTO.setTraderName(traderName);
+            pDTO.setImage("");
+            pDTO.setMarketName(marketName);
+
+
+            if(!mf.isEmpty()) {
+                String image = mf.getOriginalFilename();
+                String fileName = image;
+                String folderName = "Trader" + "/" + pDTO.getTraderId() + "/" + "Shop" + "/";
+                fileService.upload(fileName, folderName , mf);
+                pDTO.setImage(fileService.getFileURL(folderName, fileName));
+                log.info(pDTO.getImage());
+            }
+            log.info(pDTO.toString());
+
+            res = shopService.updateShopInfo(pDTO);
+
+            log.info("res : " + res);
+
+            if (res == 1) {
+                msg = "수정되었습니다";
             } else {
                 msg = "오류로 인해 수정 실패하였습니다";
             }

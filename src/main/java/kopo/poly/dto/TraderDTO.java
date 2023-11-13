@@ -13,4 +13,7 @@ public class TraderDTO {
     private String traderName;
     private String phoneNumber;
     private String email;
+    private String shopCode;
+    private String account;
+    private String bank;
 }

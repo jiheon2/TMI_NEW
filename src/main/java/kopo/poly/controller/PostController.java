@@ -31,15 +31,32 @@ public class PostController {
     private final IFileService fileService;
 //GET 방식은 데이터 조회, POST 방식에서 새로운 데이터 추가.
     @GetMapping(value = "/postList")
-    public String postList(ModelMap model)
+    public String postList(ModelMap model, @RequestParam(defaultValue = "1") int page)
             throws Exception {
         log.info(this.getClass().getName() + ".postList Start!");
 
         List<PostDTO> rList = postService.getPostList();
         if (rList == null) rList = new ArrayList<>();
 
-        model.addAttribute("rList", rList);
+        // 페이지당 보여줄 아이템 개수 정의
+        int itemsPerPage = 3;
 
+        // 페이지네이션을 위해 전체 아이템 개수 구하기
+        int totalItems = rList.size();
+
+        // 전체 페이지 개수 계산
+        int totalPages = (int) Math.ceil((double) totalItems / itemsPerPage);
+
+        // 현재 페이지에 해당하는 아이템들만 선택하여 rList에 할당
+        int fromIndex = (page - 1) * itemsPerPage;
+        int toIndex = Math.min(fromIndex + itemsPerPage, totalItems);
+        rList = rList.subList(fromIndex, toIndex);
+
+        model.addAttribute("rList", rList);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
+
+        log.info(this.getClass().getName() + ".페이지 번호 : " + page);
         log.info(this.getClass().getName() + ".postList End!");
         return "/post/postList";
     }
@@ -104,12 +121,12 @@ public class PostController {
     @GetMapping(value = "/postInfo")
     public String postInfo(HttpServletRequest request, ModelMap model) throws Exception {
         log.info(this.getClass().getName() + ".postInfo Start!");
-        String nSeq = CmmUtil.nvl(request.getParameter("nSeq"));
+        String postNumber = CmmUtil.nvl(request.getParameter("postNumber"));
 
-        log.info("nSeq : " + nSeq);
+        log.info("postNumber : " + postNumber);
 
         PostDTO pDTO = new PostDTO();
-        pDTO.setPostNumber(nSeq);
+        pDTO.setPostNumber(postNumber);
 
         PostDTO rDTO = Optional.ofNullable(postService.getPostInfo(pDTO))
                 .orElseGet(PostDTO::new);
@@ -125,12 +142,12 @@ public class PostController {
     public String postEditInfo(HttpServletRequest request, ModelMap model) throws Exception {
         log.info(this.getClass().getName() + ".postEditInfo Start!");
 
-        String nSeq = CmmUtil.nvl(request.getParameter("nSeq"));
+        String postNumber = CmmUtil.nvl(request.getParameter("postNumber"));
 
-        log.info("nSeq : " + nSeq);
+        log.info("postNumber : " + postNumber);
 
         PostDTO pDTO = new PostDTO();
-        pDTO.setPostNumber(nSeq);
+        pDTO.setPostNumber(postNumber);
 
         PostDTO rDTO = Optional.ofNullable(postService.getPostInfo(pDTO)).orElseGet(PostDTO::new);
 
@@ -154,20 +171,18 @@ public class PostController {
 
         try {
             String customer_id = CmmUtil.nvl((String) session.getAttribute("SS_CUSTOMER_ID"));
-            String nSeq = CmmUtil.nvl(request.getParameter("nSeq"));
+            String postNumber = CmmUtil.nvl(request.getParameter("postNumber"));
             String title = CmmUtil.nvl(request.getParameter("title"));
-            String post_yn = CmmUtil.nvl(request.getParameter("post_yn"));
             String contents = CmmUtil.nvl(request.getParameter("contents"));
 
             log.info("customer_id : " + customer_id);
-            log.info("nSeq : " + nSeq);
+            log.info("postNumber : " + postNumber);
             log.info("title : " + title);
-            log.info("post_yn" + post_yn);
             log.info("contents : " + contents);
 
             PostDTO pDTO = new PostDTO();
             pDTO.setCustomerId(customer_id);
-            pDTO.setPostNumber(nSeq);
+            pDTO.setPostNumber(postNumber);
             pDTO.setTitle(title);
             pDTO.setContents(contents);
             pDTO.setImage("");
@@ -210,14 +225,14 @@ public class PostController {
 
         try {
             String customer_id = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
-            String nSeq = CmmUtil.nvl(request.getParameter("seq"));
+            String postNumber = CmmUtil.nvl(request.getParameter("postNumber"));
 
             log.info("customer_id : " + customer_id);
-            log.info("nSeq : " + nSeq);
+            log.info("postNumber : " + postNumber);
 
             PostDTO pDTO = new PostDTO();
             pDTO.setCustomerId(customer_id);
-            pDTO.setPostNumber(nSeq);
+            pDTO.setPostNumber(postNumber);
             postService.deletePostInfo(pDTO);
 
             msg = "삭제되었습니다.";

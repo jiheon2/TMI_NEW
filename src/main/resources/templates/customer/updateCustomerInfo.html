@@ -52,28 +52,23 @@
             })
 
             function change(f) {
-                if (f.name.value === "") {
+                if (f.customerName.value === "") {
                     alert("이름을 입력하세요");
-                    f.name.focus();
+                    f.customerName.focus();
                     return
                 }
-                if (f.age.value === "") {
-                    alert("나이를 입력하세요");
-                    f.age.focus();
+                if (f.customerEmail.value === "") {
+                    alert("이메일를 입력하세요");
+                    f.customerEmail.focus();
                     return
                 }
-                if (f.type.value === "") {
-                    alert("관심사를 입력하세요");
-                    f.type.focus();
-                    return
-                }
-                if (f.pn.value === "") {
+                if (f.customerPn.value === "") {
                     alert("핸드폰 번호를 입력하세요");
-                    f.pn.focus();
+                    f.customerPn.focus();
                     return
                 }
                 $.ajax({
-                    url: "/customer/changeCustomer",
+                    url: "/customer/updateInfo",
                     type: "post", // 전송방식은 Post
                     dataType: "JSON", // 전송 결과는 JSON으로 받기
                     data: $("#f").serialize(), // form 태그 내 input 등 객체를 자동으로 전송할 형태로 변경하기
@@ -159,25 +154,19 @@
                                         <label>이름</label>
                                     </div>
                                     <div class="col-md-8 form-group">
-                                        <input type="text" class="form-control" id="name" name="name" th:value="${rDTO.name}" />
+                                        <input type="text" class="form-control" id="customerName" name="customerName" th:value="${rDTO.customerName}" />
                                     </div>
                                     <div class="col-md-4">
                                         <label>전화번호</label>
                                     </div>
                                     <div class="col-md-8 form-group">
-                                        <input type="tel" class="form-control" name="pn" id="pn" th:value="${rDTO.pn}" />
+                                        <input type="tel" class="form-control" name="customerPn" id="customerPn" th:value="${rDTO.customerPw}" />
                                     </div>
                                     <div class="col-md-4">
-                                        <label>나이</label>
+                                        <label>이메일</label>
                                     </div>
                                     <div class="col-md-8 form-group">
-                                        <input type="text" class="form-control" id="age" name="age" th:value="${rDTO.age}" />
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label>관심사</label>
-                                    </div>
-                                    <div class="col-md-8 form-group">
-                                        <input type="text" class="form-control" id="type" name="type" th:value="${rDTO.type}" />
+                                        <input type="email" class="form-control" id="customerEmail" name="customerEmail" th:value="${rDTO.customerEmail}" />
                                     </div>
                                     <br>
                                     <div class="col-sm-12 d-flex justify-content-end">

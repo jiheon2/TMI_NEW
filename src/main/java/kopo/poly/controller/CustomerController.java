@@ -105,7 +105,7 @@ public class CustomerController {
     public String customerIndex() {
         log.info("start!");
 
-        return "customerIndex";
+        return "/customer/customerIndex";
     }
 
     @GetMapping(value = "/cart")
@@ -117,13 +117,13 @@ public class CustomerController {
     @GetMapping(value = "/customerSignUp")
     public String customerSignUp() {
         log.info(this.getClass().getName() + "customerSignUp");
-        return "customerSignUp";
+        return "/customer/customerSignUp";
     }
 
     @ResponseBody
-    @PostMapping(value = "getCustomerCustomerIdExists")
-    public CustomerDTO getCustomerCustomerIdExists(HttpServletRequest request) throws Exception {
-        log.info(this.getClass().getName() + ".getCustomerCustomerIdExists Start!");
+    @PostMapping(value = "getCustomerIdExists")
+    public CustomerDTO getCustomerIdExists(HttpServletRequest request) throws Exception {
+        log.info(this.getClass().getName() + ".getCustomerIdExists Start!");
 
         String customerId = CmmUtil.nvl(request.getParameter("customerId"));
 
@@ -134,7 +134,9 @@ public class CustomerController {
         pDTO.setCustomerId(customerId);
 
         CustomerDTO rDTO = Optional.ofNullable(customerService.getCustomerIdExists(pDTO)).orElseGet(CustomerDTO::new);
-        log.info(this.getClass().getName() + ".getCustomerCustomerIdExists End!");
+
+        log.info(this.getClass().getName() + ".getCustomerIdExists End!");
+
         return rDTO;
     }
 
@@ -153,7 +155,7 @@ public class CustomerController {
         try {
             String customerId = CmmUtil.nvl(request.getParameter("customerId"));
             String customerPw = CmmUtil.nvl(request.getParameter("customerPw"));
-            String customerPn = CmmUtil.nvl(request.getParameter("customerPn"));
+            String customerPn = CmmUtil.nvl(request.getParameter("phoneNumber"));
             String customerName = CmmUtil.nvl(request.getParameter("customerName"));
             String customerEmail = CmmUtil.nvl(request.getParameter("customerEmail"));
             

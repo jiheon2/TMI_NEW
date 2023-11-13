@@ -13,11 +13,11 @@
     <!-- 게시글 등록 쿼리 -->
     <insert id="insertPostInfo" parameterType="PostDTO">
         INSERT INTO POST
-        (POST_NUMBER, TITLE, POST_YN, CONTENTS, CUSTOMER_ID, READ_COUNT,
-          REG_DT, IMAGE)
+        (POST_NUMBER, TITLE, CONTENTS, CUSTOMER_ID, READ_COUNT,
+          REG_DT, CHG_DT, IMAGE)
         VALUES (
                (SELECT IFNULL(MAX(A.POST_NUMBER),0)+1 FROM POST A),
-               #{title}, #{noticeYn}, #{contents}, #{sender}, 0, NOW(), #{image}
+               #{title}, #{contents}, #{customerId}, 0, NOW(), NOW(), #{image}
             )
     </insert>
 

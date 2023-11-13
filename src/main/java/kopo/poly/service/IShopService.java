@@ -5,7 +5,8 @@ import kopo.poly.dto.ShopDTO;
 import java.util.List;
 
 public interface IShopService {
-    int insertOrUpdateShop(ShopDTO pDTO) throws Exception; // 상점 정보 입력 & 수정
+    int insertShopInfo(ShopDTO pDTO) throws Exception; // 상점 정보 입력
+    int updateShopInfo(ShopDTO pDTO) throws Exception; // 상점 정보 수정
     ShopDTO getShopInfo(ShopDTO pDTO) throws Exception; // 상점 정보 조회
     String getReviewCount(ShopDTO pDTO) throws Exception; // 리뷰 개수 조회
     String getReserveCount(ShopDTO pDTO) throws Exception; // 예약 개수 조회

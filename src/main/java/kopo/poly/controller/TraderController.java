@@ -81,7 +81,6 @@ public class TraderController {
                 log.info("1");
 
                 session.setAttribute("SS_ID", CmmUtil.nvl(rDTO.getTraderId()));
-                session.setAttribute("SS_TYPE", "Trader");
 
             } else {
                 msg = "아이디와 비밀번호가 올바르지 않습니다.";
@@ -130,9 +129,9 @@ public class TraderController {
         return rDTO;
     }
     @ResponseBody
-    @PostMapping(value = "getBusinessNumExists")
-    public TraderDTO getbusinessNumberExists(HttpServletRequest request) throws Exception {
-        log.info(this.getClass().getName() + ".getBusinessNumb Start!");
+    @PostMapping(value = "getBusinessNumberExists")
+    public TraderDTO getBusinessNumberExists(HttpServletRequest request) throws Exception {
+        log.info(this.getClass().getName() + ".getBusinessNumber Start!");
 
         String businessNumber = CmmUtil.nvl(request.getParameter("businessNumber"));
 
@@ -142,8 +141,8 @@ public class TraderController {
 
         pDTO.setBusinessNumber(businessNumber);
 
-        TraderDTO rDTO = Optional.ofNullable(traderService.getBusinessNumExists(pDTO)).orElseGet(TraderDTO::new);
-        log.info(this.getClass().getName() + ".getBusinessNumExists End!");
+        TraderDTO rDTO = Optional.ofNullable(traderService.getBusinessNumberExists(pDTO)).orElseGet(TraderDTO::new);
+        log.info(this.getClass().getName() + ".getBusinessNumberExists End!");
         return rDTO;
     }
 
@@ -162,15 +161,23 @@ public class TraderController {
         try {
             String traderId = CmmUtil.nvl(request.getParameter("traderId"));
             String traderPw = CmmUtil.nvl(request.getParameter("traderPw"));
-            String businessNumber = CmmUtil.nvl(request.getParameter("businessNum"));
+            String businessNumber = CmmUtil.nvl(request.getParameter("businessNumber"));
             String traderName = CmmUtil.nvl(request.getParameter("traderName"));
-            String traderPn = CmmUtil.nvl(request.getParameter("traderPn"));
+            String traderPn = CmmUtil.nvl(request.getParameter("phoneNumber"));
+            String account = CmmUtil.nvl(request.getParameter("account"));
+            String bank = CmmUtil.nvl(request.getParameter("bank"));
+            String email = CmmUtil.nvl(request.getParameter("email"));
+            String shopCode = CmmUtil.nvl(request.getParameter("shopCode"));
 
             log.info("traderId : " + traderId);
             log.info("traderPw : " + traderPw);
-            log.info("age : " + businessNumber);
+            log.info("businessNumber : " + businessNumber);
             log.info("traderName : " + traderName);
             log.info("traderPn : " + traderPn);
+            log.info("account : " + account);
+            log.info("bank : " + bank);
+            log.info("email : " + email);
+            log.info("shopCode : " + shopCode);
 
             pDTO = new TraderDTO();
 
@@ -179,6 +186,10 @@ public class TraderController {
             pDTO.setPhoneNumber(traderPn);
             pDTO.setTraderName(traderName);
             pDTO.setBusinessNumber(businessNumber);
+            pDTO.setBank(bank);
+            pDTO.setAccount(account);
+            pDTO.setEmail(email);
+            pDTO.setShopCode(shopCode);
 
             log.info(pDTO.toString());
 
@@ -212,7 +223,10 @@ public class TraderController {
 
         String traderId = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
 
-        ShopDTO pDTO1 = new ShopDTO();
+        TraderDTO rDTO = new TraderDTO();
+        rDTO.setTraderId(traderId);
+
+//        ShopDTO pDTO1 = new ShopDTO();
 
 //        pDTO1.setTraderId(traderId);
 //        ShopDTO rDTO = Optional.ofNullable(shopService.getCount(pDTO1)).orElseGet(ShopDTO::new);
@@ -225,6 +239,8 @@ public class TraderController {
 //
 //        model.addAttribute("rDTO", rDTO);
 //        model.addAttribute("rList", rList);
+
+        model.addAttribute("rDTO", rDTO);
 
         log.info(this.getClass().getName() + ".traderIndex End!");
         return "/trader/traderIndex";
@@ -262,7 +278,7 @@ public class TraderController {
 
     @GetMapping(value = "/updateTraderInfo")
     public String updateTraderInfo(HttpSession session, ModelMap model) throws Exception{
-        log.info(this.getClass().getName() + ".traderInfoChange start!");
+        log.info(this.getClass().getName() + ".updateTraderInfo start!");
 
         String traderId = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
 
@@ -314,17 +330,29 @@ public class TraderController {
         try {
             String traderId = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
             String traderName = CmmUtil.nvl(request.getParameter("traderName"));
-            String traderPn = CmmUtil.nvl(request.getParameter("traderPn"));
+            String phoneNumber = CmmUtil.nvl(request.getParameter("phoneNumber"));
+            String account = CmmUtil.nvl(request.getParameter("account"));
+            String bank = CmmUtil.nvl(request.getParameter("bank"));
+            String shopCode = CmmUtil.nvl(request.getParameter("shopCode"));
+            String email = CmmUtil.nvl(request.getParameter("email"));
 
             log.info("traderId : " + traderId);
             log.info("traderName : " + traderName);
-            log.info("traderPn : " + traderPn);
+            log.info("phoneNumber : " + phoneNumber);
+            log.info("account : " + account);
+            log.info("bank : " + bank);
+            log.info("shopCode : " + shopCode);
+            log.info("email : " + email);
 
             pDTO = new TraderDTO();
 
             pDTO.setTraderId(traderId);
-            pDTO.setPhoneNumber(traderPn);
+            pDTO.setPhoneNumber(phoneNumber);
             pDTO.setTraderName(traderName);
+            pDTO.setBank(bank);
+            pDTO.setAccount(account);
+            pDTO.setShopCode(shopCode);
+            pDTO.setEmail(email);
 
             log.info(pDTO.toString());
 

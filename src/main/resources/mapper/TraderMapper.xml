@@ -11,16 +11,16 @@
     </select>
 
     <!-- 사업자 등록번호 중복 확인 쿼리 -->
-    <select id="getBusinessNumExists" parameterType="TraderDTO" resultType="TraderDTO">
+    <select id="getBusinessNumberExists" parameterType="TraderDTO" resultType="TraderDTO">
         SELECT IF(COUNT(1) = 0, 'N', 'Y') AS EXISTS_YN
         FROM TRADER
-        WHERE BUSINESS_NUM = #{businessNum}
+        WHERE BUSINESS_NUMBER = #{businessNumber}
     </select>
 
     <!-- 상인 회원가입 쿼리 -->
     <insert id="insertTrader" parameterType="TraderDTO">
-        INSERT INTO TRADER (TRADER_ID, TRADER_PW, BUSINESS_NUM, TRADER_NAME, PHONE_NUMBER, EMAIL)
-        VALUES (#{traderId}, #{traderPw}, #{businessNum}, #{traderName}, #{phoneNumber}, #{email})
+        INSERT INTO TRADER (TRADER_ID, TRADER_PW, BUSINESS_NUMBER, TRADER_NAME, PHONE_NUMBER, EMAIL, SHOP_CODE, ACCOUNT, BANK)
+        VALUES (#{traderId}, #{traderPw}, #{businessNumber}, #{traderName}, #{phoneNumber}, #{email}, #{shopCode}, #{account}, #{bank})
     </insert>
 
     <!-- 상인 정보 변경 쿼리 -->
@@ -28,7 +28,9 @@
         UPDATE TRADER
         SET TRADER_NAME = #{traderName},
             PHONE_NUMBER = #{phoneNumber},
-            EMAIL = #{email}
+            EMAIL = #{email},
+            ACCOUNT = #{account},
+            BANK = #{bank}
         WHERE TRADER_ID = #{traderId}
     </update>
 
@@ -49,7 +51,7 @@
 
     <!-- 상인정보 조회 쿼리 -->
     <select id="getTraderInfo" parameterType="TraderDTO" resultType="TraderDTO">
-        SELECT TRADER_NAME, PHONE_NUMBER, BUSINESS_NUM, EMAIL
+        SELECT TRADER_NAME, PHONE_NUMBER, BUSINESS_NUMBER, EMAIL, SHOP_CODE, ACCOUNT, BANK
         FROM TRADER
         WHERE TRADER_ID = #{traderId}
     </select>

@@ -65,15 +65,15 @@
             $("#btnLogin").on("click", function() {
                 let f = document.getElementById("f"); // form 태그
 
-                if (f.id.value === "") {
+                if (f.traderId.value === "") {
                     alert("아이디를 입력하세요.");
-                    f.id.focus();
+                    f.traderId.focus();
                     return;
                 }
 
-                if (f.pw.value === "") {
+                if (f.traderPw.value === "") {
                     alert("비밀번호를 입력하세요.");
-                    f.pw.focus();
+                    f.traderPw.focus();
                     return;
                 }
 
@@ -91,7 +91,7 @@
 
                         } else { // 로그인 실패
                             alert(json.msg); // 메시지 띄우기
-                            f.id.focus(); // 아이디 입력 항목에 마우스 커서 이동
+                            f.traderId.focus(); // 아이디 입력 항목에 마우스 커서 이동
                         }
 
                     }
@@ -156,10 +156,10 @@
                             <h3 style="text-align: center">로그인</h3>
                             <form class="row contact_form" id="f" novalidate="novalidate">
                                 <div class="col-md-12 form-group p_star">
-                                    <input type="text" class="form-control" id="id" name="id" value="" placeholder="아이디">
+                                    <input type="text" class="form-control" id="traderId" name="traderId" value="" placeholder="아이디">
                                 </div>
                                 <div class="col-md-12 form-group p_star">
-                                    <input type="password" class="form-control" id="pw" name="pw" value="" placeholder="비밀번호">
+                                    <input type="password" class="form-control" id="traderPw" name="traderPw" value="" placeholder="비밀번호">
                                 </div>
                                 <div class="col-md-12 form-group" style="height: 50%">
                                     <button id="btnLogin" type="button" value="submit" class="btn_3">

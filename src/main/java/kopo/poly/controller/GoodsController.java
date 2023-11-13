@@ -28,15 +28,18 @@ public class GoodsController {
     private final IGoodsService goodsService;
     private final IFileService fileService;
 
-    @GetMapping(value = "/trader/goodsMng")
+    @GetMapping(value = "/goods/goodsMng")
     public String goodsMng(ModelMap model, HttpSession session, @RequestParam(defaultValue = "1") int page) throws Exception {
 
         log.info(this.getClass().getName() + ".goodsMng Start!");
 
-        String shopNumber = CmmUtil.nvl((String) session.getAttribute("SS_SHOP_NUMBER"));
+        String traderId = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
 
         GoodsDTO pDTO = new GoodsDTO();
-        pDTO.setShopNumber(shopNumber);
+        pDTO.setTraderId(traderId);
+
+        log.info("traderId : " + traderId);
+
         List<GoodsDTO> rList = goodsService.getGoodsList(pDTO);
         if (rList == null) rList = new ArrayList<>();
 
@@ -61,26 +64,20 @@ public class GoodsController {
         log.info(this.getClass().getName() + ".페이지 번호 : " + page);
         log.info(this.getClass().getName() + ".goodsMng End!");
 
-        return "/trader/goodsMng";
+        return "/goods/goodsMng";
     }
-    @GetMapping(value = "/trader/goodsMngInfo")
+    @GetMapping(value = "/goods/goodsMngInfo")
     public String goodsMngInfo(HttpSession session, HttpServletRequest request, ModelMap model) throws Exception {
         log.info(this.getClass().getName() + ".goodsMngInfo Start!");
 
-        String type = (String) session.getAttribute("SS_TYPE");
-        String pid = CmmUtil.nvl(request.getParameter("nPid"));
-        String seq = CmmUtil.nvl(request.getParameter("nSeq"));
-        String url = "/trader/goodsMngInfo";
+        String traderId = (String) session.getAttribute("SS_ID");
+        String goodsNumber = (String) request.getParameter("goodsNumber");
 
-        log.info(pid + seq);
+        String url = "/goods/goodsMngInfo";
 
-        if(!type.equals("Trader")) {
-            session.invalidate();
-            url = "/trader/login";
-        }
         GoodsDTO pDTO = new GoodsDTO();
-        pDTO.setShopNumber(pid);
-//        pDTO.setSeq(seq);
+        pDTO.setTraderId(traderId);
+        pDTO.setGoodsNumber(goodsNumber);
         GoodsDTO rDTO = Optional.ofNullable(goodsService.getGoodsInfo(pDTO)).orElseGet(GoodsDTO::new);
         model.addAttribute("rDTO", rDTO);
         log.info(rDTO.toString());
@@ -89,7 +86,7 @@ public class GoodsController {
 
         return url;
     }
-    @GetMapping(value = "/trader/goodsMngInsert")
+    @GetMapping(value = "/goods/goodsMngInsert")
     public String goodsMngInsert(HttpSession session, ModelMap model, HttpServletRequest request) throws Exception {
         log.info(this.getClass().getName() + ".goodsMngInsert start!");
 
@@ -109,12 +106,36 @@ public class GoodsController {
         model.addAttribute("rDTO", rDTO);
 
         log.info(this.getClass().getName() + ".goodsMngInsert start!");
-        return "/trader/goodsMngInsert";
+        return "/goods/goodsMngInsert";
     }
+
+    @GetMapping(value = "/goods/goodsMngUpdate")
+    public String goodsMngUpdate(HttpSession session, ModelMap model, HttpServletRequest request) throws Exception {
+        log.info(this.getClass().getName() + ".goodsMngUpdate start!");
+
+        String traderId = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+        String goodsNumber = CmmUtil.nvl(request.getParameter("goodsNumber"));
+        log.info(traderId);
+
+        GoodsDTO pDTO = new GoodsDTO();
+
+        pDTO.setTraderId(traderId);
+        pDTO.setGoodsNumber(goodsNumber);
+
+        log.info(pDTO.toString());
+        GoodsDTO rDTO = Optional.ofNullable(goodsService.getGoodsInfo(pDTO)).orElseGet(GoodsDTO::new);
+
+        log.info(rDTO.toString());
+        model.addAttribute("rDTO", rDTO);
+
+        log.info(this.getClass().getName() + ".goodsMngUpdate start!");
+        return "/goods/goodsMngUpdate";
+    }
+
     @ResponseBody
-    @PostMapping(value = "/trader/changeGoods")
-    public MsgDTO changeGoods(HttpServletRequest request, @RequestParam (value = "fileUpload") MultipartFile mf, HttpSession session) throws Exception {
-        log.info(this.getClass().getName() + ".changeGoods Start!");
+    @PostMapping(value = "/goods/updateGoods")
+    public MsgDTO updateGoods(HttpServletRequest request, @RequestParam (value = "fileUpload") MultipartFile mf, HttpSession session) throws Exception {
+        log.info(this.getClass().getName() + ".updateGoods Start!");
 
         // 성공이면 1, 실패면 0
         int res = 0;
@@ -124,30 +145,28 @@ public class GoodsController {
         GoodsDTO pDTO = null;
 
         try {
-            String id = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
-            String name = CmmUtil.nvl(request.getParameter("name"));
+            String traderId = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+            String goodsName = CmmUtil.nvl(request.getParameter("goodsName"));
             String price = CmmUtil.nvl(request.getParameter("price"));
-            String des = CmmUtil.nvl(request.getParameter("des"));
-            String type = CmmUtil.nvl(request.getParameter("type"));
-            String seq = CmmUtil.nvl(request.getParameter("seq"));
+            String goodsDescription = CmmUtil.nvl(request.getParameter("goodsDescription"));
+            String goodsType = CmmUtil.nvl(request.getParameter("goodsType"));
+            String goodsNumber = CmmUtil.nvl(request.getParameter("goodsNumber"));
 
             log.info("price:" + price);
-            log.info("des:" + des);
-            log.info("name : " + name);
-            log.info("type : " + type);
-            log.info("seq : " + seq);
+            log.info("goodsDescription:" + goodsDescription);
+            log.info("goodsName : " + goodsName);
+            log.info("goodsType : " + goodsType);
+            log.info("goodsNumber : " + goodsNumber);
 
             pDTO = new GoodsDTO();
 
             pDTO.setPrice(price);
-            pDTO.setGoodsDescription(des);
-            pDTO.setGoodsType(type);
-            pDTO.setTraderId(id);
-            pDTO.setGoodsName(name);
-            pDTO.setGoodsNumber(seq);
+            pDTO.setGoodsDescription(goodsDescription);
+            pDTO.setGoodsType(goodsType);
+            pDTO.setTraderId(traderId);
+            pDTO.setGoodsName(goodsName);
+            pDTO.setGoodsNumber(goodsNumber);
             pDTO.setGoodsImage("");
-
-
 
             if(!mf.isEmpty()) {
                 String image = mf.getOriginalFilename();
@@ -159,33 +178,93 @@ public class GoodsController {
             }
             log.info(pDTO.toString());
 
-            res = goodsService.updateAndInsertGoodsInfo(pDTO);
+            res = goodsService.updateGoods(pDTO);
 
             log.info("res : " + res);
 
-            if (res == 1) {
-                if (pDTO.getGoodsNumber().isEmpty()) {
-                    msg = "등록하였습니다";
-                } else {
-                    msg = "수정하였습니다";
-                }
-            } else {
-                msg = "오류로 인해 수정 실패하였습니다";
-            }
+
+            msg = "수정하였습니다";
         }catch (Exception e) {
-            msg = "실패하였습니다 : " + e;
+            msg = "수정 실패하였습니다 : " + e;
             log.info(e.toString());
             e.printStackTrace();
         }finally {
             dto = new MsgDTO();
             dto.setMsg(msg);
             dto.setResult(res);
-            log.info(this.getClass().getName() + ".changeGoods End!");
+            log.info(this.getClass().getName() + ".updateGoods End!");
         }
         return dto;
     }
+
     @ResponseBody
-    @PostMapping(value = "/trader/goodsMngDelete")
+    @PostMapping(value = "/goods/insertGoods")
+    public MsgDTO insertGoods(HttpServletRequest request, @RequestParam (value = "fileUpload") MultipartFile mf, HttpSession session) throws Exception {
+        log.info(this.getClass().getName() + ".insertGoods Start!");
+
+        // 성공이면 1, 실패면 0
+        int res = 0;
+        String msg = "";
+        MsgDTO dto = null;
+
+        GoodsDTO pDTO = null;
+
+        try {
+            String traderId = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+            String goodsName = CmmUtil.nvl(request.getParameter("goodsName"));
+            String price = CmmUtil.nvl(request.getParameter("price"));
+            String goodsDescription = CmmUtil.nvl(request.getParameter("goodsDescription"));
+            String goodsType = CmmUtil.nvl(request.getParameter("goodsType"));
+            String goodsNumber = CmmUtil.nvl(request.getParameter("goodsNumber"));
+
+            log.info("price:" + price);
+            log.info("goodsDescription:" + goodsDescription);
+            log.info("goodsName : " + goodsName);
+            log.info("goodsType : " + goodsType);
+            log.info("goodsNumber : " + goodsNumber);
+
+            pDTO = new GoodsDTO();
+
+            pDTO.setPrice(price);
+            pDTO.setGoodsDescription(goodsDescription);
+            pDTO.setGoodsType(goodsType);
+            pDTO.setTraderId(traderId);
+            pDTO.setGoodsName(goodsName);
+            pDTO.setGoodsNumber(goodsNumber);
+            pDTO.setGoodsImage("");
+
+            if(!mf.isEmpty()) {
+                String image = mf.getOriginalFilename();
+                String fileName = image;
+                String folderName = "Trader" + "/" + pDTO.getTraderId() + "/" + "Goods" + "/";
+                fileService.upload(fileName, folderName , mf);
+                pDTO.setGoodsImage(fileService.getFileURL(folderName, fileName));
+                log.info(pDTO.getGoodsImage());
+            }
+            log.info(pDTO.toString());
+
+            res = goodsService.insertGoods(pDTO);
+
+            log.info("res : " + res);
+
+            msg = "등록하였습니다";
+
+        }catch (Exception e) {
+            msg = "등록 실패하였습니다 : " + e;
+            log.info(e.toString());
+            e.printStackTrace();
+        }finally {
+            dto = new MsgDTO();
+            dto.setMsg(msg);
+            dto.setResult(res);
+            log.info(this.getClass().getName() + ".insertGoods End!");
+        }
+        return dto;
+    }
+
+
+    @ResponseBody
+    @PostMapping(value = "/goods/goodsMngDelete")
     public MsgDTO goodsMngDelete(HttpSession session, HttpServletRequest request) {
 
         log.info(this.getClass().getName() + ".goodsMsgDelete Start!");

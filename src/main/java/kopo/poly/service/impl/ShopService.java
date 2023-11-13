@@ -73,20 +73,47 @@ public class ShopService implements IShopService {
         return rDTO;
     }
 
-    @Override
-    public int insertOrUpdateShop(ShopDTO pDTO) throws Exception {
-        int result = 0;
-        int res = 0;
-            log.info("수정 시작");
-            result = shopMapper.updateShop(pDTO);
-            if(result == 0) {
-                log.info("인설트 시작");
-                result = shopMapper.insertShop(pDTO);
-            }
+//    @Override
+//    public int insertOrUpdateShop(ShopDTO pDTO) throws Exception {
+//        int result = 0;
+//        int res = 0;
+//        try {
+//            log.info("수정 시작");
+//            result = shopMapper.updateShop(pDTO);
+//
+//        } catch (Exception e) {
+//            if(result == 0) {
+//                log.info("인설트 시작");
+//                result = shopMapper.insertShop(pDTO);
+//            }
+//
+//        } finally {
+//            if (result > 0) {
+//                res = 1;
+//            }
+//        }
+//        return res;
+//    }
 
-        if (result > 0) {
-            res = 1;
-        }
+
+    @Override
+    public int insertShopInfo(ShopDTO pDTO) throws Exception {
+        int res = 0;
+
+        log.info("인설트 시작");
+
+        res = shopMapper.insertShop(pDTO);
+
+        return res;
+    }
+
+    @Override
+    public int updateShopInfo(ShopDTO pDTO) throws Exception {
+        int res = 0;
+
+        log.info("수정 시작");
+        res = shopMapper.updateShop(pDTO);
+
         return res;
     }
 

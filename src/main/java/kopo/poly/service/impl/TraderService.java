@@ -52,10 +52,10 @@ public class TraderService implements ITraderService {
 
     /* 사업자 등록번호 중복 확인 코드 */
     @Override
-    public TraderDTO getBusinessNumExists(TraderDTO pDTO) throws Exception {
+    public TraderDTO getBusinessNumberExists(TraderDTO pDTO) throws Exception {
         log.info(this.getClass().getName() + ".getBusinessNumExists Start!");
 
-        TraderDTO rDTO = traderMapper.getBusinessNumExists(pDTO);
+        TraderDTO rDTO = traderMapper.getBusinessNumberExists(pDTO);
 
         log.info(this.getClass().getName() + ".getBusinessNumExists End!");
         return rDTO;

@@ -13,6 +13,5 @@ public class PostDTO {
     private String regDt;
     private String chgDt;
     private String customerId;
-    private String customerNumber;
     private String image;
 }

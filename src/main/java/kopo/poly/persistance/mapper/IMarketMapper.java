@@ -9,5 +9,5 @@ import java.util.List;
 public interface IMarketMapper {
     int insertMarket(MarketDTO pDTO) throws Exception; // 시장 정보 입력
     int deleteMarket() throws Exception; // 시장 정보 삭제
-    List<MarketDTO> getList(String nm) throws Exception; // 시장 목록 조회
+    List<MarketDTO> getMarketList(String nm) throws Exception; // 시장 목록 조회
 }

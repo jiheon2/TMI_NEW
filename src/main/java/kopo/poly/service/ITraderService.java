@@ -13,7 +13,7 @@ public interface ITraderService {
 
     TraderDTO getTraderInfo(TraderDTO pDTO) throws Exception; // 상인정보 조회
 
-    TraderDTO getBusinessNumExists(TraderDTO pDTO) throws Exception; // 사업자등록번호 중복확인
+    TraderDTO getBusinessNumberExists(TraderDTO pDTO) throws Exception; // 사업자등록번호 중복확인
 
     TraderDTO getTraderIdExists(TraderDTO pDTO) throws Exception; // ID 중복확인
 

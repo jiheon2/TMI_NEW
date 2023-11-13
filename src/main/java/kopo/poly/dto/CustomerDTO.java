@@ -1,10 +1,12 @@
 package kopo.poly.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
+@JsonInclude(JsonInclude.Include.NON_DEFAULT)
 public class CustomerDTO {
     private String customerNumber;
     private String customerName;
@@ -12,4 +14,5 @@ public class CustomerDTO {
     private String customerId;
     private String customerPw;
     private String customerEmail;
+    private String existsYn;
 }
