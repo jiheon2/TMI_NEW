@@ -1,12 +1,8 @@
 package kopo.poly.service;
 
-import kopo.poly.dto.NoticeDTO;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.net.URL;
-
 public interface IFileService {
-    void upload(String image, String folderName, MultipartFile mf) throws Exception;
-    String getFileURL(String sender, String fileName) throws Exception;
+    void upload(String image, String folderName, MultipartFile mf) throws Exception; // 파일 업로드
+    String getFileURL(String sender, String fileName) throws Exception; // url 정보 조회
 }

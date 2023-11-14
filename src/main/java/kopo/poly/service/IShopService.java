@@ -1,26 +1,16 @@
 package kopo.poly.service;
 
-import kopo.poly.dto.NoticeDTO;
-import kopo.poly.dto.ProductDTO;
-import kopo.poly.dto.ReserveDTO;
 import kopo.poly.dto.ShopDTO;
 
 import java.util.List;
 
 public interface IShopService {
-    List<ReserveDTO> goodsBuyInfo(ReserveDTO pDTO) throws Exception;
-    void deleteBuy(ReserveDTO pDTO) throws Exception;
-    void acceptBuy(ReserveDTO pDTO) throws Exception;
-    List<ProductDTO> getGoodsList(ProductDTO pDTO) throws Exception;
-
-    ProductDTO getGoodsInfo(ProductDTO pDTO) throws Exception;
-    int changeGoods(ProductDTO pDTO) throws Exception;
-
-
-    ShopDTO getShopInfo(ShopDTO pDTO) throws Exception;
-    void goodsMsgDelete(ProductDTO pDTO) throws Exception;
-
-    int changeShop(ShopDTO pDTO) throws Exception;
-    ShopDTO getCount(ShopDTO pDTO) throws Exception;
-    List<ShopDTO> getCalender(ShopDTO pDTO) throws Exception;
+    int insertShopInfo(ShopDTO pDTO) throws Exception; // 상점 정보 입력
+    int updateShopInfo(ShopDTO pDTO) throws Exception; // 상점 정보 수정
+    ShopDTO getShopInfo(ShopDTO pDTO) throws Exception; // 상점 정보 조회
+    String getReviewCount(ShopDTO pDTO) throws Exception; // 리뷰 개수 조회
+    String getReserveCount(ShopDTO pDTO) throws Exception; // 예약 개수 조회
+    String getBuyCount(ShopDTO pDTO) throws Exception; // 당일 구매 개수 조회
+    String getReserveStop(ShopDTO pDTO) throws Exception; // 예약 개수 조회
+//    ShopDTO getCount(ShopDTO pDTO) throws Exception; // 개수 조회(리뷰, 예약, 당일구매
 }

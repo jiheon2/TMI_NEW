@@ -17,15 +17,15 @@ $(document).ready(function() {
 })
 
     $("#goodsMng").on("click", function() {
-    location.href = "/trader/goodsMng";
+    location.href = "/goods/goodsMng";
 })
 
     $("#reviewMng").on("click", function() {
-    location.href = "/trader/reviewMng";
+    location.href = "/review/reviewMng";
 })
 
     $("#reservMng").on("click", function() {
-    location.href = "/trader/reservMng";
+    location.href = "/reservation/reservMng";
 })
 
     $("#chat").on("click", function() {
@@ -37,6 +37,6 @@ $(document).ready(function() {
 })
 
     $("#goodsBuyInfo").on("click", function() {
-    location.href = "/trader/goodsBuyInfo";
+    location.href = "/goods/goodsBuyInfo";
 })
 });

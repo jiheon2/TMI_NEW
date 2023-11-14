@@ -1,7 +1,6 @@
 package kopo.poly.controller;
 
 import kopo.poly.dto.MsgDTO;
-import kopo.poly.dto.ProductDTO;
 import kopo.poly.dto.ReviewDTO;
 import kopo.poly.service.IReviewService;
 import kopo.poly.service.IShopService;
@@ -12,7 +11,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.*;
 
@@ -21,9 +19,10 @@ import java.util.*;
 @Controller
 public class ReviewController {
     private final IReviewService reviewService;
-    private final IShopService shopService;
 
-    @GetMapping(value = "/trader/reviewMng")
+    // 리뷰페이지 이동 및 조회 코드
+    // 구현완료(11/06)
+    @GetMapping(value = "/review/reviewMng")
     public String getReviewList(HttpSession session, ModelMap model, @RequestParam(defaultValue = "1") int page) throws Exception {
         log.info(this.getClass().getName() + ".getReviewList start!");
 
@@ -58,11 +57,13 @@ public class ReviewController {
         log.info(this.getClass().getName() + ".페이지 번호 : " + page);
         log.info(this.getClass().getName() + ".getReviewList End!");
 
-        return "/trader/reviewMng";
+        return "/review/reviewMng";
     }
 
+    // 리뷰 삭제로직 코드
+    // 구현완료(11/10)
     @ResponseBody
-    @PostMapping(value = "/trader/deleteReview")
+    @PostMapping(value = "/review/deleteReview")
     public MsgDTO deleteReview(HttpSession session, @RequestBody List<String> checkboxes) {
         log.info(this.getClass().getName() + ".reviewDelete Start!");
 
@@ -71,16 +72,16 @@ public class ReviewController {
         MsgDTO dto = null;
 
         try {
-            String id = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+            String traderId = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
 //            ArrayList<String> checkboxes = CmmUtil.nvl(request.getParameter("checkboxes"));
 
-            log.info("id : " + id);
+            log.info("traderId : " + traderId);
             log.info("checkboxes : " + checkboxes);
 
             ReviewDTO pDTO = new ReviewDTO();
-            for(String seq : checkboxes) {
-                pDTO.setSeq(seq);
-                pDTO.setTraderId(id);
+            for (String reviewNumber : checkboxes) {
+                pDTO.setReviewNumber(reviewNumber);
+                pDTO.setTraderId(traderId);
                 reviewService.deleteReview(pDTO);
             }
 

@@ -14,6 +14,7 @@ import java.util.List;
 public class ReviewService implements IReviewService {
     private final IReviewMapper reviewMapper;
 
+    /* 리뷰 목록 조회 코드 */
     @Override
     public List<ReviewDTO> getReviewList(ReviewDTO pDTO) throws Exception {
 
@@ -24,6 +25,7 @@ public class ReviewService implements IReviewService {
         return reviewMapper.getReviewList(pDTO);
     }
 
+    /* 리뷰 삭제 코드 */
     @Override
     public void deleteReview(ReviewDTO pDTO) throws Exception {
 
