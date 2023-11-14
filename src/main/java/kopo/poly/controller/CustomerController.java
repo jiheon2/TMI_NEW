@@ -210,11 +210,11 @@ public class CustomerController {
     @GetMapping(value = "/shop")
     public String shop(HttpServletRequest request, ModelMap model) throws Exception{
         log.info(this.getClass().getName() + ".shop Start!");
-        String traderId = request.getParameter("TraderId");
+        String shopNumber = request.getParameter("shopNumber");
 
         GoodsDTO pDTO = new GoodsDTO();
 
-        pDTO.setTraderId(traderId);
+        pDTO.setShopNumber(shopNumber);
 
         List<GoodsDTO> rList = Optional.ofNullable(goodsService.getGoodsList(pDTO)).orElseGet(ArrayList::new);
 
@@ -418,19 +418,25 @@ public class CustomerController {
         log.info(this.getClass().getName() + ".goodsMngInfo Start!");
 
         String goodsNumber = request.getParameter("goodsNumber");
-        String traderId = request.getParameter("traderId");
+
+        log.info("goodsNumber : " + goodsNumber);
 
         GoodsDTO pDTO = new GoodsDTO();
-        pDTO.setTraderId(traderId);
         pDTO.setGoodsNumber(goodsNumber);
         GoodsDTO gDTO = Optional.ofNullable(goodsService.getGoodsInfo(pDTO)).orElseGet(GoodsDTO::new);
 
         ReviewDTO pDTO2 = new ReviewDTO();
-        List<ReviewDTO> rDTO = Optional.ofNullable(reviewService.getReviewList(pDTO2)).orElseGet(ArrayList::new);
+        pDTO2.setGoodsNumber(goodsNumber);
+        List<ReviewDTO> rDTO = Optional.ofNullable(reviewService.oneReviewList(pDTO2)).orElseGet(ArrayList::new);
+        List<ReviewDTO> cDTO = Optional.ofNullable(reviewService.getScore(pDTO2)).orElseGet(ArrayList::new);
 
+        log.info("gDTO : " + gDTO.toString());
+        log.info("rDTO : " + rDTO.toString());
+        log.info("cDTO : " + cDTO.toString());
+
+        model.addAttribute("cDTO", cDTO);
         model.addAttribute("rDTO", rDTO);
         model.addAttribute("gDTO", gDTO);
-        log.info(gDTO.toString());
 
         log.info(this.getClass().getName() + ".goodsMngInfo End!");
         return "/customer/single-product";

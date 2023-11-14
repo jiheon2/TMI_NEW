@@ -36,9 +36,9 @@
             //상세보기 이동
 
 
-            function goGoods(goodsNumber, traderId) {
+            function goGoods(goodsNumber) {
 
-                location.href = "/customer/single-product?goodsNumber=" + goodsNumber + "&traderId=" + traderId;
+                location.href = "/customer/single-product?goodsNumber=" + goodsNumber;
             }
         </script>
     </head>
@@ -118,7 +118,7 @@
                             </div>
                             <!-- Product actions-->
                             <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" th:attr="onclick='goGoods(\'' + ${dto.goodsNumber} + '\', \'' + ${dto.traderId} + '\')'">물건 보러가기</a></div>
+                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" th:attr="onclick='goGoods(\'' + ${dto.goodsNumber} + '\')'">물건 보러가기</a></div>
                             </div>
                         </div>
                     </div>
