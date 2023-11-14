@@ -19,4 +19,5 @@ public interface IShopMapper {
     String getBuyCount(ShopDTO pDTO) throws Exception; // 당일 구매 개수 조회
     String getReserveStop(ShopDTO pDTO) throws Exception; // 예약 개수 조회
     List<ShopDTO> getDateCount(ShopDTO pDTO) throws  Exception; // ?
+    List<ShopDTO> getShopList(ShopDTO pDTO) throws Exception; // 상점 리스트 조회
 }

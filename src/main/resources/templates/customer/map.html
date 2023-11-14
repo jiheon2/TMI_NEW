@@ -124,9 +124,7 @@
         });
     }
 
-
-    //
-    // // 서버에서 도로명 주소를 가져오고, 그 주소를 이용하여 좌표를 얻어내는 함수
+    // 서버에서 도로명 주소를 가져오고, 그 주소를 이용하여 좌표를 얻어내는 함수
     function fetchAddressFromServer() {
         // Ajax 요청
         $.ajax({
@@ -144,20 +142,9 @@
 
                     marker.setMap(map);
                     infoWindows.push(new naver.maps.InfoWindow({
-                        content:'<h3>' + location.marketName+ '</h3><p>' + location.marketLocation + '</p>'
+                        content: '<h3>' + location.marketName + '</h3><p>' + location.marketLocation + '</p></div>'
                     }));
-
-                    for(let i=0; i<markers.length; i++){
-                        naver.maps.Event.addListener(markers[i], "click", function(e) {
-                            if (infoWindows[i].getMap()) {
-                                infoWindows[i].close();
-                            } else {
-                                infoWindows[i].open(map, markers[i]);
-                            }
-                        });
-                    }
-
-
+                    attachInfoWindowEvent(i, data);
                 }
             },
             error: function (xhr, status, error) {
@@ -166,12 +153,44 @@
         });
     }
 
+    function attachInfoWindowEvent(i) {
+        naver.maps.Event.addListener(markers[i], "click", function (e) {
+            if (infoWindows[i].getMap()) {
+                infoWindows[i].close();
+            } else {
+                infoWindows[i].open(map, markers[i]);
+            }
+
+            // 각 마커를 클릭할 때 버튼 생성 및 이벤트 리스너 할당
+            let buttonId = 'customButton_' + i;
+            let buttonElement = document.getElementById(buttonId);
+
+            if (!buttonElement) {
+                // 버튼이 없을 경우, 생성하고 이벤트 리스너를 할당
+                let buttonHtml = '<button id="' + buttonId + '">상점 보기</button>';
+                infoWindows[i].setContent(infoWindows[i].getContent() + buttonHtml);
+
+                // 이제 버튼이 존재하므로 이벤트 리스너 할당
+                buttonElement = document.getElementById(buttonId);
+
+                if (buttonElement) {
+                    buttonElement.addEventListener('click', function () {
+                        // 각 버튼을 클릭할 때의 동작을 여기에 정의
+                        location.href = "/customer/market?marketNumber=" + i;
+                    });
+                }
+            }
+
+        else {
+            console.error("Button element not found: " + buttonId);
+        }
+    })}
+
     // 네이버 지도 API 로드가 완료된 후 initMap 함수를 실행합니다.
     naver.maps.onJSContentLoaded = initMap;
 </script>
 </body>
 </html>
-</script>
 
 
 <script src="/assets/js/jquery-3.6.0.min.js"></script>
