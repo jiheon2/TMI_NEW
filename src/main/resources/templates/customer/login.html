@@ -5,7 +5,7 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>aranoz</title>
+    <title>TMI - 소비자 로그인</title>
     <link rel="icon" href="/assets/images/favicon.png">
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="/assets/css/owl.carousel.min.css">
     <!-- font awesome CSS -->
     <link rel="stylesheet" href="/assets/css/all.css">
+    <link rel="stylesheet" href="/assets/css/font.css">
     <!-- flaticon CSS -->
     <link rel="stylesheet" href="/assets/css/flaticon.css">
     <link rel="stylesheet" href="/assets/css/themify-icons.css">
@@ -27,9 +28,9 @@
     <script src="https://kit.fontawesome.com/cb71939295.js" crossorigin="anonymous"></script>
     <script src="/assets/js/jquery-3.6.0.min.js"></script>
     <script type="text/javascript">
-        $(document).ready(function () {
+        $(document).ready(function() {
 
-            $("#btnLogin").on("click", function () {
+            $("#btnLogin").on("click", function() {
                 let f = document.getElementById("f"); // form 태그
 
                 if (f.id.value === "") {
@@ -46,161 +47,135 @@
 
                 // Ajax 호출해서 로그인하기
                 $.ajax({
-                        url: "/customer/loginProc",
-                        type: "post", // 전송방식은 Post
-                        dataType: "JSON", // 전송 결과는 JSON으로 받기
-                        data: $("#f").serialize(), // form 태그 내 input 등 객체를 자동으로 전송할 형태로 변경하기
-                        success: function (json) { // /notice/noticeUpdate 호출이 성공했다면..
+                    url: "/customer/loginProc",
+                    type: "post", // 전송방식은 Post
+                    dataType: "JSON", // 전송 결과는 JSON으로 받기
+                    data: $("#f").serialize(), // form 태그 내 input 등 객체를 자동으로 전송할 형태로 변경하기
+                    success: function(json) { // /notice/noticeUpdate 호출이 성공했다면..
 
-                            if (json.result === 1) { // 로그인 성공
-                                alert(json.msg); // 메시지 띄우기
-                                location.href = "/customer/userIndex"; // 로그인 성공 페이지 이동
+                        if (json.result === 1) { // 로그인 성공
+                            alert(json.msg); // 메시지 띄우기
+                            location.href = "/customer/customerIndex"; // 로그인 성공 페이지 이동
 
-                            } else { // 로그인 실패
-                                alert(json.msg); // 메시지 띄우기
-                                f.id.focus(); // 아이디 입력 항목에 마우스 커서 이동
-                            }
-
+                        } else { // 로그인 실패
+                            alert(json.msg); // 메시지 띄우기
+                            f.id.focus(); // 아이디 입력 항목에 마우스 커서 이동
                         }
+
                     }
-                )
+                })
 
             })
         })
-
     </script>
 </head>
 
 <body>
-    <!--::header part start::-->
-     <header class="main_menu home_menu">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-12">
-                    <nav class="navbar navbar-expand-lg navbar-light">
-                        <a class="navbar-brand" href="userIndex"> <img src="/assets/images/logo.png" alt="logo"> </a>
-
-                        <div class="collapse navbar-collapse main-menu-item" id="navbarSupportedContent" style="height: 100px">
-                        </div>
-                        <div class="hearer_icon d-flex">
-                            <div>
-                                <a><i class="fa-solid fa-map-location-dot" style="font-size:25px"></i>
-                                </a>
-                            </div>
-                            <div>
-                                <a><i class="fa-solid fa-comments" style="font-size:25px"></i>
-                                </a>
-                            </div>
-                            <a href=""><i class="fa-solid fa-heart" style="font-size:25px"></i></a>
-
-                            <div class="dropdown cart">
-                                <a class="dropdown-toggle" href="#" id="navbarDropdown3" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fas fa-cart-plus" style="font-size:25px"></i>
-                                </a>
-                            </div>
-                            <a><i class="fa-solid fa-user" style="font-size:25px"></i>
-                            </a>
-                        </div>
-                    </nav>
-                </div>
+<!--::header part start::-->
+<header class="main_menu home_menu">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-12">
+                <nav class="navbar navbar-expand-lg navbar-light">
+                    <a class="navbar-brand" href="customerIndex"> <img src="/assets/images/bird/logo2.png" alt="logo" style="width: 100px" , height="50px"></a>
+                </nav>
             </div>
         </div>
-       
-    </header>
-    <!-- Header part end-->
+    </div>
+</header>
+<!-- Header part end-->
 
 
-    <!-- breadcrumb start-->
-    <section class="breadcrumb breadcrumb_bg">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-lg-8">
-                    <div class="breadcrumb_iner">
-                        <div class="breadcrumb_iner_item">
-                            <h2>Tracking Order</h2>
-                            <p>Home <span>-</span> Tracking Order</p>
-                        </div>
+<!-- breadcrumb start-->
+<section class="breadcrumb" style="background-color: azure">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="breadcrumb_iner">
+                    <img src="/assets/images/bird/bird1.png" style="width: 400px">
+                    <div class="breadcrumb_iner_item">
+                        <h2>로그인</h2>
+                        <p>TMI<span>-</span>전통시장 홍보 플랫폼</p>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
-    <!-- breadcrumb start-->
+    </div>
+</section>
+<!-- breadcrumb start-->
 
-    <!--================login_part Area =================-->
-    <section class="login_part padding_top" style="margin-bottom: 10%">
-        <div class="container">
-            <div class="row align-items-center" style="background-color: cornsilk">
-                <div style="width: 48%">
-                    <div class="login_part_text text-center" style="width: 100%">
-                        <div class="login_part_text_iner">
-                            <h2>상인이신가요?</h2>
-                            <p>여기서 로그인하세요</p>
-                            <a href="#" class="btn_3">상인 로그인 하러 가기</a>
-                        </div>
+<!--================login_part Area =================-->
+<section class="login_part padding_top" style="margin-bottom: 10%">
+    <div class="container">
+        <div class="row align-items-center" style="background-color: cornsilk">
+            <div style="width: 48%">
+                <div class="login_part_text text-center" style="width: 100%">
+                    <div class="login_part_text_iner">
+                        <h2>상인이신가요?</h2>
+                        <p>여기서 로그인하세요</p>
+                        <a href="#" class="btn_3">상인 로그인 하러 가기</a>
                     </div>
                 </div>
-                <div class="col-lg-6 col-md-6">
-                    <div class="login_part_form">
-                        <div class="login_part_form_iner">
-                            <h3>로그인</h3>
-                            <form class="row contact_form" id="f" novalidate="novalidate">
-                                <div class="col-md-12 form-group p_star">
-                                    <input type="text" class="form-control" id="id" name="id" value=""
-                                        placeholder="아이디">
-                                </div>
-                                <div class="col-md-12 form-group p_star">
-                                    <input type="password" class="form-control" id="pw" name="pw" value=""
-                                        placeholder="비밀번호">
-                                </div>
-                                <div class="col-md-12 form-group" style="height: 50%">
-                                    <button id="btnLogin" type="button" value="submit" class="btn_3">
-                                        로그인
-                                    </button>
-                                    <a class="register" href="userSignUp" style="float: left; color: #333">회원가입</a>
-                                    <a class="lost_id" href="#" style="float: right; color: #333">아이디 찾기</a>
-                                    <br>
-                                    <a class="lost_pass" href="#" style="color: #333">비밀번호 찾기</a>
-                                </div>
-                            </form>
-                        </div>
+            </div>
+            <div class="col-lg-6 col-md-6">
+                <div class="login_part_form">
+                    <div class="login_part_form_iner">
+                        <h3>로그인</h3>
+                        <form class="row contact_form" id="f" novalidate="novalidate">
+                            <div class="col-md-12 form-group p_star">
+                                <input type="text" class="form-control" id="id" name="customerId" value="" placeholder="아이디">
+                            </div>
+                            <div class="col-md-12 form-group p_star">
+                                <input type="password" class="form-control" id="pw" name="customerPw" value="" placeholder="비밀번호">
+                            </div>
+                            <div class="col-md-12 form-group" style="height: 50%">
+                                <button id="btnLogin" type="button" value="submit" class="btn_3">
+                                    로그인
+                                </button>
+                                <a class="register" href="customerSignUp" style="float: left; color: #333">회원가입</a>
+                                <a class="lost_id" href="#" style="float: right; color: #333">아이디 찾기</a>
+                                <br>
+                                <a class="lost_pass" href="#" style="color: #333">비밀번호 찾기</a>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
-    <!--================login_part end =================-->
+    </div>
+</section>
+<!--================login_part end =================-->
 
-   
-    <!-- jquery plugins here-->
-    <!-- jquery -->
-    <script src="/assets/js/jquery-1.12.1.min.js"></script>
-    <!-- popper js -->
-    <script src="/assets/js/popper.min.js"></script>
-    <!-- bootstrap js -->
-    <script src="/assets/js/bootstrap.min.js"></script>
-    <!-- easing js -->
-    <script src="/assets/js/jquery.magnific-popup.js"></script>
-    <!-- swiper js -->
-    <script src="/assets/swiper.min.js"></script>
-    <!-- swiper js -->
-    <script src="/assets/js/masonry.pkgd.js"></script>
-    <!-- particles js -->
-    <script src="/assets/js/owl.carousel.min.js"></script>
-    <script src="/assets/js/jquery.nice-select.min.js"></script>
-    <!-- slick js -->
-    <script src="/assets/slick.min.js"></script>
-    <script src="/assets/js/jquery.counterup.min.js"></script>
-    <script src="/assets/js/waypoints.min.js"></script>
-    <script src="/assets/js/contact.js"></script>
-    <script src="/assets/js/jquery.ajaxchimp.min.js"></script>
-    <script src="/assets/js/jquery.form.js"></script>
-    <script src="/assets/js/jquery.validate.min.js"></script>
-    <script src="/assets/js/mail-script.js"></script>
-    <script src="/assets/stellar.js"></script>
-    <script src="/assets/js/price_rangs.js"></script>
-    <!-- custom js -->
-    <script src="/assets/js/custom.js"></script>
+
+<!-- jquery plugins here-->
+<!-- jquery -->
+<script src="/assets/js/jquery-1.12.1.min.js"></script>
+<!-- popper js -->
+<script src="/assets/js/popper.min.js"></script>
+<!-- bootstrap js -->
+<script src="/assets/js/bootstrap.min.js"></script>
+<!-- easing js -->
+<script src="/assets/js/jquery.magnific-popup.js"></script>
+<!-- swiper js -->
+<script src="/assets/swiper.min.js"></script>
+<!-- swiper js -->
+<script src="/assets/js/masonry.pkgd.js"></script>
+<!-- particles js -->
+<script src="/assets/js/owl.carousel.min.js"></script>
+<script src="/assets/js/jquery.nice-select.min.js"></script>
+<!-- slick js -->
+<script src="/assets/slick.min.js"></script>
+<script src="/assets/js/jquery.counterup.min.js"></script>
+<script src="/assets/js/waypoints.min.js"></script>
+<script src="/assets/js/contact.js"></script>
+<script src="/assets/js/jquery.ajaxchimp.min.js"></script>
+<script src="/assets/js/jquery.form.js"></script>
+<script src="/assets/js/jquery.validate.min.js"></script>
+<script src="/assets/js/mail-script.js"></script>
+<script src="/assets/stellar.js"></script>
+<script src="/assets/js/price_rangs.js"></script>
+<!-- custom js -->
+<script src="/assets/js/custom.js"></script>
 </body>
 
 </html>

@@ -3,13 +3,13 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TMI - 상인 정보</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>TMI - 내 정보</title>
     <link rel="stylesheet" href="/assets/css/font.css">
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/bootstrap.css">
-    <link rel="stylesheet" href="/assets/vendors/choices.js/choices.min.css"/>
+    <link rel="stylesheet" href="/assets/vendors/choices.js/choices.min.css" />
     <link rel="stylesheet" href="/assets/vendors/perfect-scrollbar/perfect-scrollbar.css">
     <link rel="stylesheet" href="/assets/vendors/bootstrap-icons/bootstrap-icons.css">
     <link rel="stylesheet" href="/assets/css/app.css">
@@ -24,6 +24,7 @@
     <link rel="stylesheet" href="/assets/css/owl.carousel.min.css">
     <!-- font awesome CSS -->
     <link rel="stylesheet" href="/assets/css/all.css">
+    <link rel="stylesheet" href="/assets/css/font.css">
     <!-- flaticon CSS -->
     <link rel="stylesheet" href="/assets/css/flaticon.css">
     <link rel="stylesheet" href="/assets/css/themify-icons.css">
@@ -35,11 +36,12 @@
     <link rel="stylesheet" href="/assets/css/style.css">
     <script src="https://kit.fontawesome.com/cb71939295.js" crossorigin="anonymous"></script>
     <script type="text/javascript">
-        function changePw() {
-            location.href = "/customer/changePw";
+        function updateCustomerPw() {
+            location.href = "/customer/updateCustomerPw";
         }
-        function infoChange() {
-            location.href = "/customer/customerInfoChange";
+
+        function updateCustomerInfo() {
+            location.href = "/customer/updateCustomerInfo";
         }
     </script>
 </head>
@@ -51,105 +53,36 @@
         <div class="row align-items-center">
             <div class="col-lg-12">
                 <nav class="navbar navbar-expand-lg navbar-light">
-                    <a class="navbar-brand" href="index.html"> <img src="/assets/images/logo.png" alt="logo"> </a>
-
-                    <div class="collapse navbar-collapse main-menu-item" id="navbarSupportedContent"
-                         style="height: 100px">
-                    </div>
-                    <div class="hearer_icon d-flex">
-                        <div>
-                            <a><i class="fa-solid fa-map-location-dot" style="font-size:25px"></i>
-                            </a>
-                        </div>
-                        <div>
-                            <a><i class="fa-solid fa-comments" style="font-size:25px"></i>
-                            </a>
-                        </div>
-                        <a href=""><i class="fa-solid fa-heart" style="font-size:25px"></i></a>
-
-                        <div class="dropdown cart">
-                            <a class="dropdown-toggle" href="#" id="navbarDropdown3" role="button"
-                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fas fa-cart-plus" style="font-size:25px"></i>
-                            </a>
-                        </div>
-                        <a><i class="fa-solid fa-user" style="font-size:25px"></i>
-                        </a>
-                    </div>
+                    <a class="navbar-brand" href="/customer/customerIndex"><img src="/assets/images/bird/logo2.png" alt="logo" style="width: 100px" , height="50px"></a>
                 </nav>
             </div>
         </div>
     </div>
-
 </header>
 <!-- Header part end-->
 
-<!-- banner part start-->
-<section class="banner_part">
+<!-- breadcrumb start-->
+<section class="breadcrumb" style="background-color: azure">
     <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-12">
-                <div class="banner_slider owl-carousel">
-                    <div class="single_banner_slider">
-                        <div class="row">
-                            <div class="col-lg-5 col-md-8">
-                                <div class="banner_text">
-                                    <div class="banner_text_iner">
-                                        <h1>Wood & Cloth
-                                            Sofa</h1>
-                                        <p>Incididunt ut labore et dolore magna aliqua quis ipsum
-                                            suspendisse ultrices gravida. Risus commodo viverra</p>
-                                        <a href="#" class="btn_2">buy now</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="banner_img d-none d-lg-block">
-                                <img src="/assets/images/banner_img.png" alt="">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="single_banner_slider">
-                        <div class="row">
-                            <div class="col-lg-5 col-md-8">
-                                <div class="banner_text">
-                                    <div class="banner_text_iner">
-                                        <h1>Cloth & Wood
-                                            Sofa</h1>
-                                        <p>Incididunt ut labore et dolore magna aliqua quis ipsum
-                                            suspendisse ultrices gravida. Risus commodo viverra</p>
-                                        <a href="#" class="btn_2">buy now</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="banner_img d-none d-lg-block">
-                                <img src="/assets/images/banner_img.png" alt="">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="single_banner_slider">
-                        <div class="row">
-                            <div class="col-lg-5 col-md-8">
-                                <div class="banner_text">
-                                    <div class="banner_text_iner">
-                                        <h1>Wood & Cloth
-                                            Sofa</h1>
-                                        <p>Incididunt ut labore et dolore magna aliqua quis ipsum
-                                            suspendisse ultrices gravida. Risus commodo viverra</p>
-                                        <a href="#" class="btn_2">buy now</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="banner_img d-none d-lg-block">
-                                <img src="/assets/images/banner_img.png" alt="">
-                            </div>
-                        </div>
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="breadcrumb_iner">
+                    <img src="/assets/images/bird/bird1.png" style="width: 400px">
+                    <div class="breadcrumb_iner_item">
+                        <h2>마이페이지</h2>
+                        <p>TMI를 이용해주셔서 감사합니다!</p>
                     </div>
                 </div>
-                <div class="slider-counter"></div>
             </div>
         </div>
     </div>
 </section>
+<!-- breadcrumb end-->
+
+<!-- navigation -->
+<div th:replace="customerNav.html" ></div>
+<!-- ---------- -->
+<br />
 <div class="page-heading">
     <div class="page-title">
         <div class="row">
@@ -171,32 +104,23 @@
                                         <label>이름</label>
                                     </div>
                                     <div class="col-md-8 form-group">
-                                        <div class="form-control">[[${rDTO.name}]]</div>
+                                        <div class="form-control">[[${rDTO.customerName}]]</div>
                                     </div>
                                     <div class="col-md-4">
                                         <label>전화번호</label>
                                     </div>
                                     <div class="col-md-8 form-group">
-                                        <div class="form-control">[[${rDTO.pn}]]</div>
+                                        <div class="form-control">[[${rDTO.phoneNumber}]]</div>
                                     </div>
                                     <div class="col-md-4">
-                                        <label>나이</label>
+                                        <label>이메일</label>
                                     </div>
                                     <div class="col-md-8 form-group">
-                                        <div class="form-control">[[${rDTO.age}]]</div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label>관심사</label>
-                                    </div>
-                                    <div class="col-md-8 form-group">
-                                        <div class="form-control">[[${rDTO.type}]]</div>
+                                        <div class="form-control">[[${rDTO.customerEmail}]]</div>
                                     </div>
                                     <br>
                                     <div class="col-sm-12 d-flex justify-content-end">
-                                        <button type="button" onclick="changePw()" class="btn btn-primary me-1 mb-1">
-                                            비밀번호 변경
-                                        </button>
-                                        <button type="button" onclick="infoChange()" class="btn btn-primary me-1 mb-1">
+                                        <button type="button" onclick="updateCustomerInfo()" class="btn btn-primary me-1 mb-1">
                                             수정
                                         </button>
                                     </div>
@@ -215,13 +139,10 @@
             <p>2021 &copy; Mazer</p>
         </div>
         <div class="float-end">
-            <p>Crafted with <span class="text-danger"><i class="bi bi-heart"></i></span> by <a
-                    href="http://ahmadsaugi.com">A. Saugi</a></p>
+            <p>Crafted with <span class="text-danger"><i class="bi bi-heart"></i></span> by <a href="http://ahmadsaugi.com">A. Saugi</a></p>
         </div>
     </div>
 </footer>
-</div>
-</div>
 <script src="/assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
 <script src="/assets/js/bootstrap.bundle.min.js"></script>
 
@@ -253,4 +174,5 @@
 <!-- custom js -->
 <script src="/assets/js/custom.js"></script>
 </body>
+
 </html>

@@ -3,41 +3,56 @@
 
 <!-- JAVA와 연결할 Mapper 파일 설정 -->
 <mapper namespace="kopo.poly.persistance.mapper.ITraderMapper">
-    <select id="getUserIdExists" parameterType="TraderDTO" resultType="TraderDTO">
+    <!-- ID 중복 확인 쿼리 -->
+    <select id="getTraderIdExists" parameterType="TraderDTO" resultType="TraderDTO">
         SELECT IF(COUNT(1) = 0, 'N', 'Y') AS EXISTS_YN
         FROM TRADER
-        WHERE ID = #{id}
+        WHERE TRADER_ID = #{traderId}
     </select>
-    <select id="getBusinessNumExists" parameterType="TraderDTO" resultType="TraderDTO">
+
+    <!-- 사업자 등록번호 중복 확인 쿼리 -->
+    <select id="getBusinessNumberExists" parameterType="TraderDTO" resultType="TraderDTO">
         SELECT IF(COUNT(1) = 0, 'N', 'Y') AS EXISTS_YN
         FROM TRADER
-        WHERE BUSINESS_NUM = #{businessNum}
+        WHERE BUSINESS_NUMBER = #{businessNumber}
     </select>
+
+    <!-- 상인 회원가입 쿼리 -->
     <insert id="insertTrader" parameterType="TraderDTO">
-        INSERT INTO TRADER (ID, PW, BUSINESS_NUM, NAME, PN, SHOP_CODE)
-        VALUES (#{id}, #{pw}, #{businessNum}, #{name}, #{pn}, #{shopCode})
+        INSERT INTO TRADER (TRADER_ID, TRADER_PW, BUSINESS_NUMBER, TRADER_NAME, PHONE_NUMBER, EMAIL, SHOP_CODE, ACCOUNT, BANK)
+        VALUES (#{traderId}, #{traderPw}, #{businessNumber}, #{traderName}, #{phoneNumber}, #{email}, #{shopCode}, #{account}, #{bank})
     </insert>
-    <update id="changeTrader" parameterType="TraderDTO">
+
+    <!-- 상인 정보 변경 쿼리 -->
+    <update id="updateTraderInfo" parameterType="TraderDTO">
         UPDATE TRADER
-        SET NAME = #{name},
-            PN = #{pn},
-            SHOP_CODE = #{shopCode}
-        WHERE ID = #{id}
+        SET TRADER_NAME = #{traderName},
+            PHONE_NUMBER = #{phoneNumber},
+            EMAIL = #{email},
+            ACCOUNT = #{account},
+            BANK = #{bank}
+        WHERE TRADER_ID = #{traderId}
     </update>
-    <update id="changePw" parameterType="TraderDTO">
+
+    <!-- 비밀번호 변경 쿼리 -->
+    <update id="updateTraderPw" parameterType="TraderDTO">
         UPDATE TRADER
-        SET PW = #{pw}
-        WHERE ID = #{id}
+        SET TRADER_PW = #{traderPw}
+        WHERE TRADER_ID = #{traderId}
     </update>
+
+    <!-- 로그인 정보 확인 쿼리 -->
     <select id="getLogin" parameterType="TraderDTO" resultType="TraderDTO">
-        SELECT ID
+        SELECT TRADER_ID
         FROM TRADER
-        WHERE ID = #{id}
-        AND PW = #{pw}
+        WHERE TRADER_ID = #{traderId}
+        AND TRADER_PW = #{traderPw}
     </select>
-    <select id="getUserInfo" parameterType="TraderDTO" resultType="TraderDTO">
-        SELECT NAME, PN, BUSINESS_NUM, SHOP_CODE
+
+    <!-- 상인정보 조회 쿼리 -->
+    <select id="getTraderInfo" parameterType="TraderDTO" resultType="TraderDTO">
+        SELECT TRADER_NAME, PHONE_NUMBER, BUSINESS_NUMBER, EMAIL, SHOP_CODE, ACCOUNT, BANK
         FROM TRADER
-        WHERE ID = #{id}
+        WHERE TRADER_ID = #{traderId}
     </select>
 </mapper>

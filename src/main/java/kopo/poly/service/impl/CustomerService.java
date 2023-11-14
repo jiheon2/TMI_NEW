@@ -1,7 +1,6 @@
 package kopo.poly.service.impl;
 
 import kopo.poly.dto.CustomerDTO;
-import kopo.poly.dto.TraderDTO;
 import kopo.poly.persistance.mapper.ICustomerMapper;
 import kopo.poly.service.ICustomerService;
 import lombok.RequiredArgsConstructor;
@@ -29,12 +28,12 @@ public class CustomerService implements ICustomerService {
     }
 
     @Override
-    public CustomerDTO getUserIdExists(CustomerDTO pDTO) throws Exception {
-        log.info(this.getClass().getName() + ".getUserIdExists Start!");
+    public CustomerDTO getCustomerIdExists(CustomerDTO pDTO) throws Exception {
+        log.info(this.getClass().getName() + ".getCustomerIdExists Start!");
 
-        CustomerDTO rDTO = customerMapper.getUserIdExists(pDTO);
+        CustomerDTO rDTO = customerMapper.getCustomerIdExists(pDTO);
 
-        log.info(this.getClass().getName() + ".getUserIdExists End!");
+        log.info(this.getClass().getName() + ".getCustomerIdExists End!");
         return rDTO;
     }
 
@@ -57,23 +56,23 @@ public class CustomerService implements ICustomerService {
         return res;
     }
     @Override
-    public CustomerDTO getUserInfo(CustomerDTO pDTO) throws Exception {
-        log.info(this.getClass().getName() + ".getUserInfo Start!");
+    public CustomerDTO getCustomerInfo(CustomerDTO pDTO) throws Exception {
+        log.info(this.getClass().getName() + ".getCustomerInfo Start!");
 
 
-        CustomerDTO rDTO = Optional.ofNullable(customerMapper.getUserInfo(pDTO)).orElseGet(CustomerDTO::new);
+        CustomerDTO rDTO = Optional.ofNullable(customerMapper.getCustomerInfo(pDTO)).orElseGet(CustomerDTO::new);
 
-        log.info(this.getClass().getName() + ".getUserInfo Start!");
+        log.info(this.getClass().getName() + ".getCustomerInfo Start!");
         return rDTO;
     }
     @Override
-    public int changeCustomer(CustomerDTO pDTO) throws Exception {
-        log.info(this.getClass().getName() + ".changeCustomer Start!");
+    public int updateCustomerInfo(CustomerDTO pDTO) throws Exception {
+        log.info(this.getClass().getName() + ".updateCustomerInfo Start!");
 
         //회원가입 성공시 1, 에러 0
         int res = 0;
 
-        int success = customerMapper.changeCustomer(pDTO);
+        int success = customerMapper.updateCustomerInfo(pDTO);
 
         if(success > 0) {
             res = 1;
@@ -81,17 +80,17 @@ public class CustomerService implements ICustomerService {
             res = 0;
         }
 
-        log.info(this.getClass().getName() + ".changeCustomer Start!");
+        log.info(this.getClass().getName() + ".updateCustomerInfo Start!");
         return res;
     }
     @Override
-    public int changePw(CustomerDTO pDTO) throws Exception {
-        log.info(this.getClass().getName() + ".changeCustomer Start!");
+    public int updateCustomerPw(CustomerDTO pDTO) throws Exception {
+        log.info(this.getClass().getName() + ".updateCustomerPw Start!");
 
         //회원가입 성공시 1, 에러 0
         int res = 0;
 
-        int success = customerMapper.changePw(pDTO);
+        int success = customerMapper.updateCustomerPw(pDTO);
 
         if(success > 0) {
             res = 1;
@@ -99,7 +98,7 @@ public class CustomerService implements ICustomerService {
             res = 0;
         }
 
-        log.info(this.getClass().getName() + ".changeCustomer Start!");
+        log.info(this.getClass().getName() + ".updateCustomerPw Start!");
         return res;
     }
 }

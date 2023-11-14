@@ -7,17 +7,14 @@ import com.amazonaws.client.builder.AwsClientBuilder;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.*;
-import kopo.poly.dto.NoticeDTO;
-import kopo.poly.persistance.mapper.INoticeMapper;
+import kopo.poly.persistance.mapper.IPostMapper;
 import kopo.poly.service.IFileService;
-import kopo.poly.service.INoticeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
-import java.net.URL;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -37,7 +34,7 @@ public class FileService implements IFileService {
             .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(endPoint, regionName))
             .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(accessKey, secretKey)))
             .build();
-    private final INoticeMapper noticeMapper;
+    private final IPostMapper noticeMapper;
 
     @Override
     public void upload(String fileName,String folderName, MultipartFile mf) throws Exception {

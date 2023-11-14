@@ -1,7 +1,6 @@
 package kopo.poly.controller;
 
 import kopo.poly.dto.MsgDTO;
-import kopo.poly.dto.ProductDTO;
 import kopo.poly.dto.ReviewDTO;
 import kopo.poly.service.IReviewService;
 import kopo.poly.service.IShopService;
@@ -12,7 +11,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.*;
 
@@ -71,16 +69,16 @@ public class ReviewController {
         MsgDTO dto = null;
 
         try {
-            String id = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+            String traderId = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
 //            ArrayList<String> checkboxes = CmmUtil.nvl(request.getParameter("checkboxes"));
 
-            log.info("id : " + id);
+            log.info("traderId : " + traderId);
             log.info("checkboxes : " + checkboxes);
 
             ReviewDTO pDTO = new ReviewDTO();
-            for(String seq : checkboxes) {
-                pDTO.setSeq(seq);
-                pDTO.setTraderId(id);
+            for(String reviewNumber : checkboxes) {
+                pDTO.setReviewNumber(reviewNumber);
+                pDTO.setTraderId(traderId);
                 reviewService.deleteReview(pDTO);
             }
 

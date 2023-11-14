@@ -1,16 +1,12 @@
 package kopo.poly.service.impl;
 
-import kopo.poly.dto.CustomerDTO;
-import kopo.poly.dto.ReviewDTO;
 import kopo.poly.dto.TraderDTO;
-import kopo.poly.persistance.mapper.ICustomerMapper;
 import kopo.poly.persistance.mapper.ITraderMapper;
 import kopo.poly.service.ITraderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -19,8 +15,7 @@ import java.util.Optional;
 public class TraderService implements ITraderService {
     private final ITraderMapper traderMapper;
 
-
-
+    /* 상인 회원가입 코드 */
     @Override
     public TraderDTO getLogin(TraderDTO pDTO) throws Exception {
         log.info(this.getClass().getName() + ".getLogin Start!");
@@ -32,35 +27,41 @@ public class TraderService implements ITraderService {
         return rDTO;
     }
 
+    /* ID 중복확인 코드 */
     @Override
-    public TraderDTO getUserIdExists(TraderDTO pDTO) throws Exception {
-        log.info(this.getClass().getName() + ".getUserIdExists Start!");
+    public TraderDTO getTraderIdExists(TraderDTO pDTO) throws Exception {
+        log.info(this.getClass().getName() + ".getTraderIdExists Start!");
 
-        TraderDTO rDTO = traderMapper.getUserIdExists(pDTO);
+        TraderDTO rDTO = traderMapper.getTraderIdExists(pDTO);
 
-        log.info(this.getClass().getName() + ".getUserIdExists End!");
+        log.info(this.getClass().getName() + ".getTraderIdExists End!");
         return rDTO;
     }
+
+    /* 상인 정보 조회 코드 */
     @Override
-    public TraderDTO getUserInfo(TraderDTO pDTO) throws Exception {
-        log.info(this.getClass().getName() + ".getUserInfo Start!");
+    public TraderDTO getTraderInfo(TraderDTO pDTO) throws Exception {
+        log.info(this.getClass().getName() + ".getTraderInfo Start!");
 
 
-        TraderDTO rDTO = Optional.ofNullable(traderMapper.getUserInfo(pDTO)).orElseGet(TraderDTO::new);
+        TraderDTO rDTO = Optional.ofNullable(traderMapper.getTraderInfo(pDTO)).orElseGet(TraderDTO::new);
 
-        log.info(this.getClass().getName() + ".getUserInfo Start!");
+        log.info(this.getClass().getName() + ".getTraderInfo Start!");
         return rDTO;
     }
+
+    /* 사업자 등록번호 중복 확인 코드 */
     @Override
-    public TraderDTO getBusinessNumExists(TraderDTO pDTO) throws Exception {
+    public TraderDTO getBusinessNumberExists(TraderDTO pDTO) throws Exception {
         log.info(this.getClass().getName() + ".getBusinessNumExists Start!");
 
-        TraderDTO rDTO = traderMapper.getBusinessNumExists(pDTO);
+        TraderDTO rDTO = traderMapper.getBusinessNumberExists(pDTO);
 
         log.info(this.getClass().getName() + ".getBusinessNumExists End!");
         return rDTO;
     }
 
+    /* 상인 회원가입 */
     @Override
     public int insertTrader(TraderDTO pDTO) throws Exception {
         log.info(this.getClass().getName() + ".insertTrader Start!");
@@ -80,14 +81,15 @@ public class TraderService implements ITraderService {
         return res;
     }
 
+    /* 상인 정보 변경 */
     @Override
-    public int changeTrader(TraderDTO pDTO) throws Exception {
-        log.info(this.getClass().getName() + ".changeTrader Start!");
+    public int updateTraderInfo(TraderDTO pDTO) throws Exception {
+        log.info(this.getClass().getName() + ".updateTraderInfo Start!");
 
         //회원가입 성공시 1, 에러 0
         int res = 0;
 
-        int success = traderMapper.changeTrader(pDTO);
+        int success = traderMapper.updateTraderInfo(pDTO);
 
         if(success > 0) {
             res = 1;
@@ -95,17 +97,19 @@ public class TraderService implements ITraderService {
             res = 0;
         }
 
-        log.info(this.getClass().getName() + ".changeTrader Start!");
+        log.info(this.getClass().getName() + ".updateTraderInfo Start!");
         return res;
     }
+
+    /* 비밀번호 변경 */
     @Override
-    public int changePw(TraderDTO pDTO) throws Exception {
-        log.info(this.getClass().getName() + ".changeTrader Start!");
+    public int updateTraderPw(TraderDTO pDTO) throws Exception {
+        log.info(this.getClass().getName() + ".updateTraderPw Start!");
 
         //회원가입 성공시 1, 에러 0
         int res = 0;
 
-        int success = traderMapper.changePw(pDTO);
+        int success = traderMapper.updateTraderPw(pDTO);
 
         if(success > 0) {
             res = 1;
@@ -113,7 +117,7 @@ public class TraderService implements ITraderService {
             res = 0;
         }
 
-        log.info(this.getClass().getName() + ".changeTrader Start!");
+        log.info(this.getClass().getName() + ".updateTraderPw Start!");
         return res;
     }
 }
