@@ -2,47 +2,83 @@
 <html lang="zxx">
 
 <head>
-  <!-- Required meta tags -->
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>TMI - 장바구니</title>
-  <link rel="icon" href="/assets/images/favicon.png">
-  <!-- Bootstrap CSS -->
-  <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
-  <!-- animate CSS -->
-  <link rel="stylesheet" href="/assets/css/animate.css">
-  <!-- owl carousel CSS -->
-  <link rel="stylesheet" href="/assets/css/owl.carousel.min.css">
-  <!-- nice select CSS -->
-  <link rel="stylesheet" href="/assets/css/nice-select.css">
-  <!-- font awesome CSS -->
-  <link rel="stylesheet" href="/assets/css/all.css">
-  <!-- flaticon CSS -->
-  <link rel="stylesheet" href="/assets/css/flaticon.css">
-  <link rel="stylesheet" href="/assets/css/themify-icons.css">
-  <!-- font awesome CSS -->
-  <link rel="stylesheet" href="/assets/css/magnific-popup.css">
-  <!-- swiper CSS -->
-  <link rel="stylesheet" href="/assets/css/slick.css">
-  <link rel="stylesheet" href="/assets/css/price_rangs.css">
-  <!-- style CSS -->
-  <link rel="stylesheet" href="/assets/css/style.css">
-  <script src="https://kit.fontawesome.com/cb71939295.js" crossorigin="anonymous"></script>
-  <script src="/js/jquery-3.6.0.min.js"></script>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>TMI - 장바구니</title>
+    <link rel="icon" href="/assets/images/favicon.png">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+    <!-- animate CSS -->
+    <link rel="stylesheet" href="/assets/css/animate.css">
+    <!-- owl carousel CSS -->
+    <link rel="stylesheet" href="/assets/css/owl.carousel.min.css">
+    <!-- nice select CSS -->
+    <link rel="stylesheet" href="/assets/css/nice-select.css">
+    <!-- font awesome CSS -->
+    <link rel="stylesheet" href="/assets/css/all.css">
+    <!-- flaticon CSS -->
+    <link rel="stylesheet" href="/assets/css/flaticon.css">
+    <link rel="stylesheet" href="/assets/css/themify-icons.css">
+    <!-- font awesome CSS -->
+    <link rel="stylesheet" href="/assets/css/magnific-popup.css">
+    <!-- swiper CSS -->
+    <link rel="stylesheet" href="/assets/css/slick.css">
+    <link rel="stylesheet" href="/assets/css/price_rangs.css">
+    <!-- style CSS -->
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <script src="https://kit.fontawesome.com/cb71939295.js" crossorigin="anonymous"></script>
+    <script src="/assets/js/jquery-3.6.0.min.js"></script>
+    <!-- PortOne SDK -->
+    <script src="https://cdn.iamport.kr/v1/iamport.js"></script>
+    <script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.1.5.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#btnPayment").on("click", function () {
+                requestPay();
+            })
+
+            var IMP = window.IMP;
+            IMP.init("imp05623571");
+
+            function requestPay() {
+                IMP.request_pay(
+                    {
+                        pg: "html5_inicis.INIBillTst",
+                        pay_method: "card",
+                        merchant_uid: "57008833-33004",
+                        name: "당근 10kg",
+                        amount: 1004,
+                        buyer_email: "Iamport@chai.finance",
+                        buyer_name: "포트원 기술지원팀",
+                        buyer_tel: "010-1234-5678",
+                        buyer_addr: "서울특별시 강남구 삼성동",
+                        buyer_postcode: "123-456",
+                    },
+                    function (rsp) {
+                        // callback
+                        //rsp.imp_uid 값으로 결제 단건조회 API를 호출하여 결제결과를 판단합니다.
+                    }
+                );
+            }
+          })
+    </script>
 </head>
 
 <body>
 <!--::header part start::-->
 <header class="main_menu home_menu">
-  <div class="container">
-    <div class="row align-items-center">
-      <div class="col-lg-12">
-        <nav class="navbar navbar-expand-lg navbar-light">
-          <a class="navbar-brand" href="/customer/customerIndex"><img src="/assets/images/bird/logo2.png" alt="logo" style="width: 100px" , height="50px"></a>
-        </nav>
-      </div>
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-12">
+                <nav class="navbar navbar-expand-lg navbar-light">
+                    <a class="navbar-brand" href="/customer/customerIndex"><img src="/assets/images/bird/logo2.png"
+                                                                                alt="logo" style="width: 100px" ,
+                                                                                height="50px"></a>
+                </nav>
+            </div>
+        </div>
     </div>
-  </div>
 </header>
 <!-- Header part end-->
 
@@ -50,19 +86,19 @@
 <!--================Home Banner Area =================-->
 <!-- breadcrumb start-->
 <section class="breadcrumb" style="background-color: azure">
-  <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-lg-8">
-        <div class="breadcrumb_iner">
-          <img src="/assets/images/bird/birdShop.png" style="width: 400px">
-          <div class="breadcrumb_iner_item">
-            <h2>장바구니</h2>
-            <p>고르신 상품을 알려드립니다</p>
-          </div>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="breadcrumb_iner">
+                    <img src="/assets/images/bird/birdShop.png" style="width: 400px">
+                    <div class="breadcrumb_iner_item">
+                        <h2>장바구니</h2>
+                        <p>고르신 상품을 알려드립니다</p>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
 </section>
 <!-- breadcrumb start-->
 
@@ -72,56 +108,56 @@
 
 <!--================Cart Area =================-->
 <section class="cart_area padding_top">
-  <div class="container">
-    <div class="cart_inner">
-      <div class="table-responsive">
-        <table class="table">
-          <thead>
-          <tr>
-            <th scope="col">상품명</th>
-            <th scope="col">가격</th>
-            <th scope="col">수량</th>
-            <th scope="col">합계</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr>
-            <td>
-              <div class="media">
-                <div class="d-flex">
-                  <img src="/assets/images/product/single-product/cart-1.jpg" alt="" />
+    <div class="container">
+        <div class="cart_inner">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th scope="col">상품명</th>
+                        <th scope="col">가격</th>
+                        <th scope="col">수량</th>
+                        <th scope="col">합계</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>
+                            <div class="media">
+                                <div class="d-flex">
+                                    <img src="/assets/images/product/single-product/cart-1.jpg" alt=""/>
+                                </div>
+                                <div class="media-body">
+                                    <p>Minimalistic shop for multipurpose use</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <h5>$360.00</h5>
+                        </td>
+                        <td>
+                            <div class="product_count">
+                                <span class="input-number-decrement"> <i class="ti-angle-down"></i></span>
+                                <input class="input-number" type="text" value="1" min="0" max="10">
+                                <span class="input-number-increment"> <i class="ti-angle-up"></i></span>
+                            </div>
+                        </td>
+                        <td>
+                            <h5>$720.00</h5>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div style="float: right"><i class="fa-solid fa-coins"> 결제 금액 : </i> 자바스크립트로 금액 계산한 값</div>
+                <br/>
+                <br/>
+                <div style="float: right">
+                    <button class="btn btn-primary" id="btnPayment">결제</button>
+                    <button class="btn btn-light-secondary me-1 mb-1">취소</button>
                 </div>
-                <div class="media-body">
-                  <p>Minimalistic shop for multipurpose use</p>
-                </div>
-              </div>
-            </td>
-            <td>
-              <h5>$360.00</h5>
-            </td>
-            <td>
-              <div class="product_count">
-                <span class="input-number-decrement"> <i class="ti-angle-down"></i></span>
-                <input class="input-number" type="text" value="1" min="0" max="10">
-                <span class="input-number-increment"> <i class="ti-angle-up"></i></span>
-              </div>
-            </td>
-            <td>
-              <h5>$720.00</h5>
-            </td>
-          </tr>
-          </tbody>
-        </table>
-        <div style="float: right"><i class="fa-solid fa-coins" > 결제 금액 : </i> 자바스크립트로 금액 계산한 값</div>
-        <br/>
-        <br/>
-        <div style="float: right">
-          <button class="btn btn-primary">결제</button>
-          <button class="btn btn-light-secondary me-1 mb-1">취소</button>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
 </section>
 <!--================End Cart Area =================-->
 

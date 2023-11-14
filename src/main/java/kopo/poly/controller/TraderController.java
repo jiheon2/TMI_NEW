@@ -1,8 +1,6 @@
 package kopo.poly.controller;
 
 import kopo.poly.dto.*;
-import kopo.poly.service.IReviewService;
-import kopo.poly.service.IShopService;
 import kopo.poly.service.ITraderService;
 import kopo.poly.util.CmmUtil;
 import kopo.poly.util.EncryptUtil;
@@ -17,8 +15,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -288,16 +284,6 @@ public class TraderController {
         log.info(this.getClass().getName() + ".traderInfo start!");
         return "/trader/traderInfo";
     }
-
-    // 예약 페이지 이동코드
-    // 구현중
-    @GetMapping(value = "/reservMng")
-    public String reservMng() {
-        log.info("start");
-
-        return "/trader/reservMng";
-    }
-
 
     // 상인정보 수정페이지 이동코드
     // 구현완료(11/13)
