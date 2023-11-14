@@ -36,6 +36,7 @@ public class FileService implements IFileService {
             .build();
     private final IPostMapper noticeMapper;
 
+    /* 파일 업로드 */
     @Override
     public void upload(String fileName,String folderName, MultipartFile mf) throws Exception {
 
@@ -71,6 +72,8 @@ public class FileService implements IFileService {
             e.printStackTrace();
         }
     }
+
+    /* 파일 URL 조회 */
     @Override
     public String getFileURL(String folderName, String fileName) throws Exception {
         String url = null;
@@ -85,6 +88,8 @@ public class FileService implements IFileService {
 
         return url;
     }
+
+    /* 이건 뭔지 모름 */
     private File convert(MultipartFile file, String folderName) throws IOException {
         File convertFile = new File(System.getProperty(folderName) + file.getOriginalFilename());
         try (FileOutputStream fos = new FileOutputStream(convertFile)) { // FileOutputStream 데이터를 파일에 바이트 스트림으로 저장하기 위함

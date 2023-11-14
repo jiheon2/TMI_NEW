@@ -28,12 +28,19 @@ public class GoodsController {
     private final IGoodsService goodsService;
     private final IFileService fileService;
 
+    /*
+        상품 정보 관리 페이지 접속 코드
+        구현완료(11/14)
+     */
     @GetMapping(value = "/goods/goodsMng")
     public String goodsMng(ModelMap model, HttpSession session, @RequestParam(defaultValue = "1") int page) throws Exception {
 
         log.info(this.getClass().getName() + ".goodsMng Start!");
 
         String traderId = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+        if (traderId.equals(null)) {
+            return "trader/login";
+        }
 
         GoodsDTO pDTO = new GoodsDTO();
         pDTO.setTraderId(traderId);
@@ -66,6 +73,11 @@ public class GoodsController {
 
         return "/goods/goodsMng";
     }
+
+    /*
+        상품 상세 정보 코드
+        구현완료(11/14)
+     */
     @GetMapping(value = "/goods/goodsMngInfo")
     public String goodsMngInfo(HttpSession session, HttpServletRequest request, ModelMap model) throws Exception {
         log.info(this.getClass().getName() + ".goodsMngInfo Start!");
@@ -86,6 +98,11 @@ public class GoodsController {
 
         return url;
     }
+
+    /*
+        상품 정보 등록 페이지 이동 코드
+        구현완료(11/14)
+     */
     @GetMapping(value = "/goods/goodsMngInsert")
     public String goodsMngInsert(HttpSession session, ModelMap model, HttpServletRequest request) throws Exception {
         log.info(this.getClass().getName() + ".goodsMngInsert start!");
@@ -109,6 +126,10 @@ public class GoodsController {
         return "/goods/goodsMngInsert";
     }
 
+    /*
+        상품 정보 업데이트 페이지 이동 코드
+        구현완료(11/14)
+     */
     @GetMapping(value = "/goods/goodsMngUpdate")
     public String goodsMngUpdate(HttpSession session, ModelMap model, HttpServletRequest request) throws Exception {
         log.info(this.getClass().getName() + ".goodsMngUpdate start!");
@@ -132,9 +153,14 @@ public class GoodsController {
         return "/goods/goodsMngUpdate";
     }
 
+
+    /*
+        상품 정보 업데이트 로직 실행 코드
+        구현완료(11/14)
+     */
     @ResponseBody
     @PostMapping(value = "/goods/updateGoods")
-    public MsgDTO updateGoods(HttpServletRequest request, @RequestParam (value = "fileUpload") MultipartFile mf, HttpSession session) throws Exception {
+    public MsgDTO updateGoods(HttpServletRequest request, @RequestParam(value = "fileUpload") MultipartFile mf, HttpSession session) throws Exception {
         log.info(this.getClass().getName() + ".updateGoods Start!");
 
         // 성공이면 1, 실패면 0
@@ -168,11 +194,11 @@ public class GoodsController {
             pDTO.setGoodsNumber(goodsNumber);
             pDTO.setGoodsImage("");
 
-            if(!mf.isEmpty()) {
+            if (!mf.isEmpty()) {
                 String image = mf.getOriginalFilename();
                 String fileName = image;
                 String folderName = "Trader" + "/" + pDTO.getTraderId() + "/" + "Goods" + "/";
-                fileService.upload(fileName, folderName , mf);
+                fileService.upload(fileName, folderName, mf);
                 pDTO.setGoodsImage(fileService.getFileURL(folderName, fileName));
                 log.info(pDTO.getGoodsImage());
             }
@@ -184,11 +210,11 @@ public class GoodsController {
 
 
             msg = "수정하였습니다";
-        }catch (Exception e) {
+        } catch (Exception e) {
             msg = "수정 실패하였습니다 : " + e;
             log.info(e.toString());
             e.printStackTrace();
-        }finally {
+        } finally {
             dto = new MsgDTO();
             dto.setMsg(msg);
             dto.setResult(res);
@@ -197,9 +223,13 @@ public class GoodsController {
         return dto;
     }
 
+    /*
+        상품정보 등록 로직 실행코드
+        구현완료(11/14)
+     */
     @ResponseBody
     @PostMapping(value = "/goods/insertGoods")
-    public MsgDTO insertGoods(HttpServletRequest request, @RequestParam (value = "fileUpload") MultipartFile mf, HttpSession session) throws Exception {
+    public MsgDTO insertGoods(HttpServletRequest request, @RequestParam(value = "fileUpload") MultipartFile mf, HttpSession session) throws Exception {
         log.info(this.getClass().getName() + ".insertGoods Start!");
 
         // 성공이면 1, 실패면 0
@@ -233,11 +263,11 @@ public class GoodsController {
             pDTO.setGoodsNumber(goodsNumber);
             pDTO.setGoodsImage("");
 
-            if(!mf.isEmpty()) {
+            if (!mf.isEmpty()) {
                 String image = mf.getOriginalFilename();
                 String fileName = image;
                 String folderName = "Trader" + "/" + pDTO.getTraderId() + "/" + "Goods" + "/";
-                fileService.upload(fileName, folderName , mf);
+                fileService.upload(fileName, folderName, mf);
                 pDTO.setGoodsImage(fileService.getFileURL(folderName, fileName));
                 log.info(pDTO.getGoodsImage());
             }
@@ -249,11 +279,11 @@ public class GoodsController {
 
             msg = "등록하였습니다";
 
-        }catch (Exception e) {
+        } catch (Exception e) {
             msg = "등록 실패하였습니다 : " + e;
             log.info(e.toString());
             e.printStackTrace();
-        }finally {
+        } finally {
             dto = new MsgDTO();
             dto.setMsg(msg);
             dto.setResult(res);
@@ -263,11 +293,15 @@ public class GoodsController {
     }
 
 
+    /*
+        상품삭제 로직 실행코드
+        구현 완료(11/14)
+     */
     @ResponseBody
     @PostMapping(value = "/goods/goodsMngDelete")
     public MsgDTO goodsMngDelete(HttpSession session, HttpServletRequest request) {
 
-        log.info(this.getClass().getName() + ".goodsMsgDelete Start!");
+        log.info(this.getClass().getName() + ".goodsMngDelete Start!");
 
         String msg = "";
         int res = 0;
@@ -275,14 +309,14 @@ public class GoodsController {
 
         try {
             String trader_id = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
-            String nSeq = CmmUtil.nvl(request.getParameter("seq"));
+            String goodsNumber = CmmUtil.nvl(request.getParameter("goodsNumber"));
 
             log.info("trader_id : " + trader_id);
-            log.info("nSeq : " + nSeq);
+            log.info("goodsNumber : " + goodsNumber);
 
             GoodsDTO pDTO = new GoodsDTO();
             pDTO.setTraderId(trader_id);
-            pDTO.setGoodsNumber(nSeq);
+            pDTO.setGoodsNumber(goodsNumber);
             goodsService.goodsInfoDelete(pDTO);
 
             msg = "삭제되었습니다.";
@@ -295,7 +329,7 @@ public class GoodsController {
             dto = new MsgDTO();
             dto.setResult(res);
             dto.setMsg(msg);
-            log.info(this.getClass().getName() + ".goodsMsgDelete End!");
+            log.info(this.getClass().getName() + ".goodsMngDelete End!");
         }
 
         return dto;

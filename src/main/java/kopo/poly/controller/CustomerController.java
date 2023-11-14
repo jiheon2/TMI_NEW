@@ -25,12 +25,16 @@ import java.util.Optional;
 public class CustomerController {
 
     private final ICustomerService customerService;
+
+    // 소비자 로그인페이지 이동코드
+    // 구현완료(10/24)
     @GetMapping(value = "/login")
     public String login(HttpSession session) {
-
-
         return "/customer/login";
     }
+
+    // 소비자 로그인 로직 코드
+    // 구현완료(11/10)
     @ResponseBody
     @PostMapping(value = "loginProc")
     public MsgDTO loginProc(HttpServletRequest request, HttpSession session) {
@@ -100,7 +104,8 @@ public class CustomerController {
         return dto;
     }
 
-
+    // 소비자 메인페이지 이동코드
+    // 구현완료(11/13)
     @GetMapping(value = "/customerIndex")
     public String customerIndex() {
         log.info("start!");
@@ -108,18 +113,23 @@ public class CustomerController {
         return "/customer/customerIndex";
     }
 
+    // 소비자 장바구니 이동코드
     @GetMapping(value = "/cart")
     public String cart() {
         log.info("start!");
         return "/customer/cart";
     }
 
+    // 소비자 회원가입페이지 이동코드
+    // 구현완료(11/13)
     @GetMapping(value = "/customerSignUp")
     public String customerSignUp() {
         log.info(this.getClass().getName() + "customerSignUp");
         return "/customer/customerSignUp";
     }
 
+    // 소비자 ID 중복확인 로직코드
+    // 구현완료(11/13)
     @ResponseBody
     @PostMapping(value = "getCustomerIdExists")
     public CustomerDTO getCustomerIdExists(HttpServletRequest request) throws Exception {
@@ -140,6 +150,9 @@ public class CustomerController {
         return rDTO;
     }
 
+
+    // 소비자 회원가입로직 코드
+    // 구현완료(11/13)
     @ResponseBody
     @PostMapping(value = "insertCustomer")
     public MsgDTO insertCustomer(HttpServletRequest request) throws Exception {
@@ -158,7 +171,7 @@ public class CustomerController {
             String customerPn = CmmUtil.nvl(request.getParameter("phoneNumber"));
             String customerName = CmmUtil.nvl(request.getParameter("customerName"));
             String customerEmail = CmmUtil.nvl(request.getParameter("customerEmail"));
-            
+
             log.info("customerId : " + customerId);
             log.info("customerPw : " + customerPw);
             log.info("customerPn : " + customerPn);
@@ -186,11 +199,11 @@ public class CustomerController {
             } else {
                 msg = "오류로 인해 회원가입에 실패하였습니다";
             }
-        }catch (Exception e) {
+        } catch (Exception e) {
             msg = "실패하였습니다 : " + e;
             log.info(e.toString());
             e.printStackTrace();
-        }finally {
+        } finally {
             dto = new MsgDTO();
             dto.setMsg(msg);
             dto.setResult(res);
@@ -198,18 +211,23 @@ public class CustomerController {
         }
         return dto;
     }
+
+    // 상점정보 조회 코드
     @GetMapping(value = "/shop")
     public String shop() {
         log.info(this.getClass().getName() + ".shop Start!");
         return "/customer/shop";
     }
 
+    // 지도페이지 이동코드
+    // 구현완료(10/24)
     @GetMapping(value = "/map")
     public String map() {
         log.info("start!");
         return "/customer/map";
     }
 
+    // 시장정보 조회 코드
     @GetMapping(value = "/market")
     public String market(HttpServletRequest request) {
         log.info("start!");
@@ -217,22 +235,23 @@ public class CustomerController {
         return "/customer/market";
     }
 
+    // 채팅페이지 이동코드
     @GetMapping(value = "/chat")
     public String chat() {
         log.info("start!");
         return "/customer/chat";
     }
 
+    // 소비자 마이페이지 이동코드
+    // 구현완료(11/14)
     @GetMapping(value = "/customerInfo")
-    public String getCustomerInfo(HttpSession session, ModelMap model) throws Exception{
+    public String getCustomerInfo(HttpSession session, ModelMap model) throws Exception {
         log.info(this.getClass().getName() + ".customerLogin");
 
         String customerId = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
-        String type = CmmUtil.nvl((String) session.getAttribute("Customer"));
 
         String url = "/customer/customerInfo";
-        if(!type.equals("Customer")) {
-            session.invalidate();
+        if (customerId.equals(null)) {
             url = "/customer/login";
         }
 
@@ -243,8 +262,11 @@ public class CustomerController {
         return url;
 
     }
+
+    // 소비자 정보 수정페이지 이동콛,
+    // 구현완료(11/10)
     @GetMapping(value = "/updateCustomerInfo")
-    public String updateCustomerInfo(HttpSession session, ModelMap model) throws Exception{
+    public String updateCustomerInfo(HttpSession session, ModelMap model) throws Exception {
         log.info(this.getClass().getName() + ".updateCustomerInfo start!");
 
         String customerId = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
@@ -263,8 +285,10 @@ public class CustomerController {
         return "/customer/updateCustomerInfo";
     }
 
+    // 소비자 비밀번호 수정 페이지 이동코드
+    // 구현완료(11/10)
     @GetMapping(value = "/updateCustomerPw")
-    public String updateCustomerPw(HttpSession session, ModelMap model) throws Exception{
+    public String updateCustomerPw(HttpSession session, ModelMap model) throws Exception {
         log.info(this.getClass().getName() + ".updateCustomerPw start!");
 
         String customerId = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
@@ -282,6 +306,9 @@ public class CustomerController {
         log.info(this.getClass().getName() + ".updateCustomerPw End!");
         return "/customer/updateCustomerPw";
     }
+
+    // 소비자 정보 수정 로직코드
+    // 구현완료(11/10)
     @ResponseBody
     @PostMapping(value = "updateInfo")
     public MsgDTO updateInfo(HttpServletRequest request, HttpSession session) throws Exception {
@@ -323,11 +350,11 @@ public class CustomerController {
             } else {
                 msg = "오류로 인해 수정에 실패하였습니다";
             }
-        }catch (Exception e) {
+        } catch (Exception e) {
             msg = "실패하였습니다 : " + e;
             log.info(e.toString());
             e.printStackTrace();
-        }finally {
+        } finally {
             dto = new MsgDTO();
             dto.setMsg(msg);
             dto.setResult(res);
@@ -335,6 +362,9 @@ public class CustomerController {
         }
         return dto;
     }
+
+    // 소비자 비밀번호 수정 코드
+    // 구현완료(11/10)
     @ResponseBody
     @PostMapping(value = "updatePw")
     public MsgDTO updatePw(HttpServletRequest request, HttpSession session) throws Exception {
@@ -369,11 +399,11 @@ public class CustomerController {
             } else {
                 msg = "오류로 인해 회원가입에 실패하였습니다";
             }
-        }catch (Exception e) {
+        } catch (Exception e) {
             msg = "실패하였습니다 : " + e;
             log.info(e.toString());
             e.printStackTrace();
-        }finally {
+        } finally {
             dto = new MsgDTO();
             dto.setMsg(msg);
             dto.setResult(res);
@@ -382,6 +412,7 @@ public class CustomerController {
         return dto;
     }
 
+    // 상품 상세정보 조회페이지 이동코드
     @GetMapping(value = "/single-product")
     public String singleProduct() {
         log.info("start!");

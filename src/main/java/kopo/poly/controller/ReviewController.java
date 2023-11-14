@@ -19,9 +19,10 @@ import java.util.*;
 @Controller
 public class ReviewController {
     private final IReviewService reviewService;
-    private final IShopService shopService;
 
-    @GetMapping(value = "/trader/reviewMng")
+    // 리뷰페이지 이동 및 조회 코드
+    // 구현완료(11/06)
+    @GetMapping(value = "/review/reviewMng")
     public String getReviewList(HttpSession session, ModelMap model, @RequestParam(defaultValue = "1") int page) throws Exception {
         log.info(this.getClass().getName() + ".getReviewList start!");
 
@@ -56,11 +57,13 @@ public class ReviewController {
         log.info(this.getClass().getName() + ".페이지 번호 : " + page);
         log.info(this.getClass().getName() + ".getReviewList End!");
 
-        return "/trader/reviewMng";
+        return "/review/reviewMng";
     }
 
+    // 리뷰 삭제로직 코드
+    // 구현완료(11/10)
     @ResponseBody
-    @PostMapping(value = "/trader/deleteReview")
+    @PostMapping(value = "/review/deleteReview")
     public MsgDTO deleteReview(HttpSession session, @RequestBody List<String> checkboxes) {
         log.info(this.getClass().getName() + ".reviewDelete Start!");
 
@@ -76,7 +79,7 @@ public class ReviewController {
             log.info("checkboxes : " + checkboxes);
 
             ReviewDTO pDTO = new ReviewDTO();
-            for(String reviewNumber : checkboxes) {
+            for (String reviewNumber : checkboxes) {
                 pDTO.setReviewNumber(reviewNumber);
                 pDTO.setTraderId(traderId);
                 reviewService.deleteReview(pDTO);

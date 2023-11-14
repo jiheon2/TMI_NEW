@@ -26,7 +26,7 @@
 
     <!-- 소비자 정보 조회 쿼리 -->
     <select id="getCustomerInfo" parameterType="CustomerDTO" resultType="CustomerDTO">
-        SELECT CUSTOMER_NAME, PHONE_NUMBER
+        SELECT CUSTOMER_NAME, PHONE_NUMBER, CUSTOMER_EMAIL
         FROM CUSTOMER
         WHERE CUSTOMER_ID = #{customerId}
     </select>

@@ -7,7 +7,7 @@ import lombok.Setter;
 @Setter
 public class ReviewDTO {
     private String reviewNumber;
-    private String goodsNumber;
+    private String goodsName;
     private String customerNumber;
     private String regDt;
     private String contents;

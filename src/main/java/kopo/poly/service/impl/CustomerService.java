@@ -15,6 +15,7 @@ import java.util.Optional;
 public class CustomerService implements ICustomerService {
     private final ICustomerMapper customerMapper;
 
+    /* 로그인 정보 조회 코드 */
     @Override
     public CustomerDTO getLogin(CustomerDTO pDTO) throws Exception {
         log.info(this.getClass().getName() + ".getLogin Start!");
@@ -27,6 +28,7 @@ public class CustomerService implements ICustomerService {
         return rDTO;
     }
 
+    /* 소비자 ID 중복확인 코드 */
     @Override
     public CustomerDTO getCustomerIdExists(CustomerDTO pDTO) throws Exception {
         log.info(this.getClass().getName() + ".getCustomerIdExists Start!");
@@ -37,6 +39,7 @@ public class CustomerService implements ICustomerService {
         return rDTO;
     }
 
+    /* 소비자 정보 등록 코드 */
     @Override
     public int insertCustomer(CustomerDTO pDTO) throws Exception {
         log.info(this.getClass().getName() + ".insertCustomer Start!");
@@ -55,6 +58,8 @@ public class CustomerService implements ICustomerService {
         log.info(this.getClass().getName() + ".insertCustomer Start!");
         return res;
     }
+
+    /* 소비자 정보 조회 코드 */
     @Override
     public CustomerDTO getCustomerInfo(CustomerDTO pDTO) throws Exception {
         log.info(this.getClass().getName() + ".getCustomerInfo Start!");
@@ -65,6 +70,8 @@ public class CustomerService implements ICustomerService {
         log.info(this.getClass().getName() + ".getCustomerInfo Start!");
         return rDTO;
     }
+
+    /* 소비자 정보 수정 코드 */
     @Override
     public int updateCustomerInfo(CustomerDTO pDTO) throws Exception {
         log.info(this.getClass().getName() + ".updateCustomerInfo Start!");
@@ -83,6 +90,8 @@ public class CustomerService implements ICustomerService {
         log.info(this.getClass().getName() + ".updateCustomerInfo Start!");
         return res;
     }
+
+    /* 소비자 비밀번호 수정 코드 */
     @Override
     public int updateCustomerPw(CustomerDTO pDTO) throws Exception {
         log.info(this.getClass().getName() + ".updateCustomerPw Start!");

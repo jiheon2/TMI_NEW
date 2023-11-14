@@ -38,6 +38,7 @@ public class GoodsService implements IGoodsService {
         return rDTO;
     }
 
+    /* 상품 정보 수정 */
     @Override
     public int updateGoods(GoodsDTO pDTO) throws Exception {
         log.info(this.getClass().getName() + ".updateGoods Start!");
@@ -49,6 +50,7 @@ public class GoodsService implements IGoodsService {
         return res;
     }
 
+    /* 상품 정보 등록 */
     @Override
     public int insertGoods(GoodsDTO pDTO) throws Exception {
         log.info(this.getClass().getName() + ".insertGoods Start!");
@@ -60,6 +62,7 @@ public class GoodsService implements IGoodsService {
         return res;
     }
 
+    /* 상품 정보 삭제 */
     @Override
     public void goodsInfoDelete(GoodsDTO pDTO) throws Exception {
         log.info(this.getClass().getName() + ".goodsMsgDelete start!");

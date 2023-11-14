@@ -50,10 +50,10 @@
                                     </thead>
                                     <tbody th:each="dto : ${rList}">
                                     <tr >
-                                        <td style="width: 10%"><input type="checkbox" name="choose" th:value="${dto.seq}"></td>
-                                        <td th:text="${dto.product}"></td>
-                                        <td th:text="${dto.name}"></td>
-                                        <td th:text="${dto.rating}"></td>
+                                        <td style="width: 10%"><input type="checkbox" name="choose" th:value="${dto.reviewNumber}"></td>
+                                        <td th:text="${dto.goodsName}"></td>
+                                        <td th:text="${dto.customerId}"></td>
+                                        <td th:text="${dto.score}"></td>
                                     </tr>
                                     <tr>
                                         <td>리뷰</td>
@@ -68,22 +68,22 @@
                         <div class="mx-auto">
                             <ul class="pagination pagination-primary" id="pagination">
                                 <li class="page-item">
-                                    <a class="page-link" th:href="@{/trader/reviewMng?page=1}">&laquo;</a>
+                                    <a class="page-link" th:href="@{/review/reviewMng?page=1}">&laquo;</a>
                                 </li>
                                 <!-- 이전 페이지로 이동하는 링크 -->
                                 <li class="page-item" th:if="${currentPage > 1}">
-                                    <a class="page-link" th:href="@{/trader/reviewMng(page=${currentPage - 1})}">&lt;</a>
+                                    <a class="page-link" th:href="@{/review/reviewMng(page=${currentPage - 1})}">&lt;</a>
                                 </li>
                                 <!-- 현재 페이지 주변에 페이지 번호 링크 표시 -->
                                 <li class="page-item" th:each="pageNumber : ${#numbers.sequence(1, totalPages)}" th:class="${pageNumber == currentPage ? 'active' : ''}">
-                                    <a class="page-link" th:href="@{/trader/reviewMng(page=${pageNumber})}" th:text="${pageNumber}"></a>
+                                    <a class="page-link" th:href="@{/review/reviewMng(page=${pageNumber})}" th:text="${pageNumber}"></a>
                                 </li>
                                 <!-- 다음 페이지로 이동하는 링크 -->
                                 <li class="page-item" th:if="${currentPage < totalPages}">
-                                    <a class="page-link" th:href="@{/trader/reviewMng(page=${currentPage + 1})}">&gt;</a>
+                                    <a class="page-link" th:href="@{/review/reviewMng(page=${currentPage + 1})}">&gt;</a>
                                 </li>
                                 <li class="page-item">
-                                    <a class="page-link" th:href="@{/trader/reviewMng(page=${totalPages})}">&raquo;</a>
+                                    <a class="page-link" th:href="@{/review/reviewMng(page=${totalPages})}">&raquo;</a>
                                 </li>
                             </ul>
                         </div>
@@ -143,7 +143,7 @@
 
                 if (confirm("선택한 리뷰들을 전부 삭제하시겠습니까?")) {
                     $.ajax({
-                            url: "/trader/deleteReview",
+                            url: "/review/deleteReview",
                             type: "post", // 전송방식은 Post
                             dataType: "JSON", // 전송 결과는 JSON으로 받기
                             contentType: "application/json; charset=utf-8",

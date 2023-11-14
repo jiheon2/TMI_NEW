@@ -58,9 +58,7 @@ public class ShopService implements IShopService {
 //        shopMapper.acceptBuy(pDTO);
 //    }
 
-
-
-
+    /* 상점정보 조회 코드 */
     @Override
     public ShopDTO getShopInfo(ShopDTO pDTO) throws Exception {
         log.info(this.getClass().getName() + ".getShopInfo Start!");
@@ -95,7 +93,7 @@ public class ShopService implements IShopService {
 //        return res;
 //    }
 
-
+    /* 상점정보 등록 코드 */
     @Override
     public int insertShopInfo(ShopDTO pDTO) throws Exception {
         int res = 0;
@@ -107,6 +105,7 @@ public class ShopService implements IShopService {
         return res;
     }
 
+    /* 상점 정보 수정 코드 */
     @Override
     public int updateShopInfo(ShopDTO pDTO) throws Exception {
         int res = 0;
@@ -117,21 +116,25 @@ public class ShopService implements IShopService {
         return res;
     }
 
+    /* 리뷰 개수 조회 코드 */
     @Override
     public String getReviewCount(ShopDTO pDTO) throws Exception {
         return null;
     }
 
+    /* 예약개수 조회 코드 */
     @Override
     public String getReserveCount(ShopDTO pDTO) throws Exception {
         return null;
     }
 
+    /* 구매 개수 조회 코드 */
     @Override
     public String getBuyCount(ShopDTO pDTO) throws Exception {
         return null;
     }
 
+    /* 예약 현황 조회 코드 */
     @Override
     public String getReserveStop(ShopDTO pDTO) throws Exception {
         return null;

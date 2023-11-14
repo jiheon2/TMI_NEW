@@ -20,6 +20,9 @@ import java.util.List;
 public class MarketController {
 
     private final IMarketService marketService;
+
+    // 시장 목록 조회 코드
+    // 구현완료(11/13)
     @GetMapping(value = "/list")
     @ResponseBody
     public List<String> getMarketList(HttpServletRequest request)
@@ -32,7 +35,7 @@ public class MarketController {
 
         List<String> list = new ArrayList<>();
 
-        for(MarketDTO dto : rList) {
+        for (MarketDTO dto : rList) {
             String text = dto.getMarketName() + "[" + dto.getMarketLocation() + "]";
             list.add(text);
         }
