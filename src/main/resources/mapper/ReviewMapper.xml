@@ -18,10 +18,10 @@
         ORDER BY REVIEW_NUMBER ASC
     </select>
     <select id="oneReviewList" parameterType="ReviewDTO" resultType="ReviewDTO">
-        SELECT CONTENTS, CUSTOMER_ID, GOODS_NUMBER, REG_DT, REVIEW_NUMBER, SCORE, TRADER_ID, COUNT(*) AS scoreCount
+        SELECT CONTENTS, CUSTOMER_ID, GOODS_NUMBER, REG_DT, REVIEW_NUMBER, SCORE, TRADER_ID
         FROM REVIEW
         WHERE GOODS_NUMBER = #{goodsNumber}
-        ORDER BY REVIEW_NUMBER ASC
+        ORDER BY REG_DT, REVIEW_NUMBER ASC
     </select>
     <select id="getScore" parameterType="ReviewDTO" resultType="ReviewDTO">
         SELECT SCORE, COUNT(*) AS countScore

@@ -18,7 +18,6 @@ public class ReviewDTO {
     private String score;
     private String customerId;
     private String traderId;
-    private String scoreCount;
     private String countScore;
 
 }

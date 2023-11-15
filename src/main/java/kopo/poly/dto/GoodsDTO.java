@@ -17,4 +17,5 @@ public class GoodsDTO {
     private String goodsImage;
     private String traderId;
     private String avgScore;
+    private String countScore;
 }

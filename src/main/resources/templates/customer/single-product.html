@@ -30,7 +30,7 @@
             $('.star-rating').each(function () {
                 var score = parseInt($(this).find('span').text());
 
-                $(this).find('i.fa-star').each(function(index) {
+                $(this).find('i.fa-star').each(function (index) {
                     if (index < score) {
                         $(this).addClass(' style="color: #ffffff;');
                     } else {
@@ -170,6 +170,7 @@
                                 <div class="box_total">
                                     <h5>평점</h5>
                                     <h4>[[${gDTO.avgScore}]]</h4>
+                                    <h3>( [[${gDTO.countScore}]] 개)</h3>
                                 </div>
                             </div>
                             <div class="col-6">
@@ -192,8 +193,10 @@
                                     </div>
                                     <div class="media-body">
                                         <h4>Blake Ruiz</h4>
-                                        <div th:each="star : ${dto.scoreCount}">
-                                            <i class="fa fa-star"></i>
+                                        <div th:each="i:${dto.score}">
+                                            <span th:each="j : ${#numbers.sequence(1, i)}">
+                                               <i class="fa fa-star"></i>
+                                            </span>
                                         </div>
                                     </div>
                                 </div>

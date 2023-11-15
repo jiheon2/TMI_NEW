@@ -20,7 +20,7 @@
 
     <!-- 상품 정보 조회 쿼리 -->
     <select id="getGoodsInfo" parameterType="GoodsDTO" resultType="GoodsDTO">
-        SELECT G.GOODS_NAME, G.PRICE, G.GOODS_TYPE, G.GOODS_DESCRIPTION, G.GOODS_IMAGE, G.GOODS_NUMBER, AVG(R.SCORE) as avgScore
+        SELECT G.GOODS_NAME, G.PRICE, G.GOODS_TYPE, G.GOODS_DESCRIPTION, G.GOODS_IMAGE, G.GOODS_NUMBER, AVG(R.SCORE) as avgScore, COUNT(R.SCORE) as countScore
         FROM GOODS G, REVIEW R
         WHERE G.GOODS_NUMBER = #{goodsNumber}
     </select>
