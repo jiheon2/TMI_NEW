@@ -70,45 +70,45 @@ public class MailController {
 
         return dto;
     }
-    @ResponseBody
-    @PostMapping(value = "mailCheck")
-    public MsgDTO mailCheck(HttpServletRequest request, HttpSession session) throws Exception {
-        log.info(this.getClass().getName() + ".mailCheck Start!");
-
-        String email = CmmUtil.nvl(request.getParameter("email"));
-        String type = CmmUtil.nvl(request.getParameter("type"));
-        String id = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
-
-        log.info("email : " + email);
-        log.info("type : " + type);
-
-        int res = 0;
-
-        if (type.equals("Trader")) {
-            TraderDTO pDTO = new TraderDTO();
-            pDTO.setEmail(email);
-            pDTO.setId(id);
-            TraderDTO rDTO = traderService.getEmailExists(pDTO);
-            if (!rDTO.getExistsYn().isEmpty()) {
-                res = 1;
-            }
-        } else {
-            CustomerDTO pDTO = new CustomerDTO();
-            pDTO.setEmail(email);
-            pDTO.setId(id);
-//            CustomerDTO rDTO = customerService.getEmailExists(pDTO);
+//    @ResponseBody
+//    @PostMapping(value = "mailCheck")
+//    public MsgDTO mailCheck(HttpServletRequest request, HttpSession session) throws Exception {
+//        log.info(this.getClass().getName() + ".mailCheck Start!");
+//
+//        String email = CmmUtil.nvl(request.getParameter("email"));
+//        String type = CmmUtil.nvl(request.getParameter("type"));
+//        String id = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+//
+//        log.info("email : " + email);
+//        log.info("type : " + type);
+//
+//        int res = 0;
+//
+//        if (type.equals("Trader")) {
+//            TraderDTO pDTO = new TraderDTO();
+//            pDTO.setEmail(email);
+//            pDTO.setId(id);
+//            TraderDTO rDTO = traderService.getEmailExists(pDTO);
 //            if (!rDTO.getExistsYn().isEmpty()) {
-                res = 1;
+//                res = 1;
 //            }
-        }
-
-        MsgDTO dto = new MsgDTO();
-        dto.setResult(res);
-
-        log.info(this.getClass().getName() + ".mailCheck End!");
-
-        return dto;
-    }
+//        } else {
+//            CustomerDTO pDTO = new CustomerDTO();
+//            pDTO.setEmail(email);
+//            pDTO.setId(id);
+////            CustomerDTO rDTO = customerService.getEmailExists(pDTO);
+////            if (!rDTO.getExistsYn().isEmpty()) {
+//                res = 1;
+////            }
+//        }
+//
+//        MsgDTO dto = new MsgDTO();
+//        dto.setResult(res);
+//
+//        log.info(this.getClass().getName() + ".mailCheck End!");
+//
+//        return dto;
+//    }
 
     @GetMapping(value = "/sendEmail")
     public String sendEmail(HttpServletRequest request, ModelMap model, HttpSession session) {

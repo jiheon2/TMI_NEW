@@ -94,15 +94,16 @@
 <div class="modal" id="searchModal">
     <div class="modal_body">
         <div style="display: flex">
-        <h2>시장 검색</h2>
-        <button id="closeModalBtn">x</button>
+            <h2>시장 검색</h2>
+            <button id="searchMarket">검색</button>
+            <button id="closeModalBtn">x</button>
         </div>
         <div class="form-group">
-            <input type="text" placeholder="시장 검색" class="form-control"/>
+            <input type="text" placeholder="시장 검색" id="shopCode" class="form-control"/>
         </div>
         <hr/>
         <div>
-            시장정보띄우기
+            <ul id="modalList"></ul>
         </div>
     </div>
 </div>
@@ -198,34 +199,97 @@
                         location.href = "/customer/market?marketNumber=" + i;
                     });
                 }
+            } else {
+                console.error("Button element not found: " + buttonId);
             }
-
-        else {
-            console.error("Button element not found: " + buttonId);
-        }
-    })}
+        })
+    }
 
     // 네이버 지도 API 로드가 완료된 후 initMap 함수를 실행합니다.
     naver.maps.onJSContentLoaded = initMap;
-</script>
-<script>
+
+    ///////////////////////////// 모달 //////////////////////////////////////
+
+    var modal = document.getElementById('searchModal');
+
     // 모달 열기
-    document.getElementById('openModalBtn').onclick = function() {
+    document.getElementById('openModalBtn').onclick = function () {
         document.getElementById('searchModal').style.display = 'flex';
     }
 
     // 모달 닫기
-    document.getElementById('closeModalBtn').onclick = function() {
+    document.getElementById('closeModalBtn').onclick = function () {
         document.getElementById('searchModal').style.display = 'none';
     }
 
     // 모달 외부 클릭 시 닫기
-    window.onclick = function(event) {
-        var modal = document.getElementById('searchModal');
+    window.onclick = function (event) {
+
         if (event.target == modal) {
             modal.style.display = 'none';
         }
     }
+
+    function displayModalList(listData) {
+        var modalList = document.getElementById("modalList");
+        modalList.innerHTML = ''; // 리스트 초기화
+        for (var i = 0; i < listData.length; i++) {
+            var listItem = document.createElement('li');
+            listItem.textContent = listData[i].marketName;
+            modalList.appendChild(listItem);
+
+            // 리스트 항목 클릭 시 값을 shopCode 필드에 설정
+            (function (index) {
+                listItem.onclick = function () {
+                    var marketNumber = listData[index].marketNumber - 1;
+                    infoWindows[marketNumber].open(map, markers[marketNumber]);
+                    let buttonId = 'customButton_' + marketNumber;
+                    let buttonElement = document.getElementById(buttonId);
+
+                    if (!buttonElement) {
+                        // 버튼이 없을 경우, 생성하고 이벤트 리스너를 할당
+                        let buttonHtml = '<button id="' + buttonId + '">상점 보기</button>';
+                        infoWindows[marketNumber].setContent(infoWindows[marketNumber].getContent() + buttonHtml);
+
+                        // 이제 버튼이 존재하므로 이벤트 리스너 할당
+                        buttonElement = document.getElementById(buttonId);
+
+                        if (buttonElement) {
+                            buttonElement.addEventListener('click', function () {
+                                // 각 버튼을 클릭할 때의 동작을 여기에 정의
+                                location.href = "/customer/market?marketNumber=" + marketNumber;
+                            });
+                        }
+                    } else {
+                        console.error("Button element not found: " + buttonId);
+                    }
+                    modal.style.display = 'none';
+                };
+            })(i);
+        }
+    }
+
+    document.getElementById("searchMarket").onclick = function () {
+        var shopCode = document.getElementById("shopCode").value;
+        console.log(1);
+        // AJAX를 사용하여 서버에서 데이터 가져오기
+        $.ajax({
+            url: '/market/list', // 서버 API 엔드포인트 URL
+            method: 'GET',
+            data: {
+                shopCode: shopCode
+            },
+            success: function (response) {
+                displayModalList(response);
+                modal.style.setProperty('display', 'block', 'important');
+                modal.style.display = "block"; // 모달 열기
+            },
+            error: function (error) {
+                console.error('데이터를 가져오는 중 오류가 발생했습니다: ', error);
+            }
+        });
+    }
+
 </script>
 </body>
 </html>
