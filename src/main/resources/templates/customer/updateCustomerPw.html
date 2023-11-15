@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TMI - 비밀번호 변경</title>
+    <link rel="stylesheet" href="/assets/css/font.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/bootstrap.css">
+    <link rel="stylesheet" href="/assets/vendors/choices.js/choices.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/perfect-scrollbar/perfect-scrollbar.css">
+    <link rel="stylesheet" href="/assets/vendors/bootstrap-icons/bootstrap-icons.css">
+    <link rel="stylesheet" href="/assets/css/app.css">
+    <script src="/js/jquery-3.6.0.min.js"></script>
+    <link rel="shortcut icon" href="/assets/images/favicon.svg" type="image/x-icon">
+    <link rel="stylesheet" href="/assets/css/font.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/bootstrap.css">
+    <link rel="stylesheet" href="/assets/vendors/choices.js/choices.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/perfect-scrollbar/perfect-scrollbar.css">
+    <link rel="stylesheet" href="/assets/vendors/bootstrap-icons/bootstrap-icons.css">
+    <link rel="stylesheet" href="/assets/css/app.css">
+    <link rel="shortcut icon" href="/assets/images/favicon.svg" type="image/x-icon">
+    <link rel="icon" href="/assets/images/favicon.png">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+    <!-- animate CSS -->
+    <link rel="stylesheet" href="/assets/css/animate.css">
+    <!-- owl carousel CSS -->
+    <link rel="stylesheet" href="/assets/css/owl.carousel.min.css">
+    <!-- font awesome CSS -->
+    <link rel="stylesheet" href="/assets/css/all.css">
+    <link rel="stylesheet" href="/assets/css/font.css">
+    <!-- flaticon CSS -->
+    <link rel="stylesheet" href="/assets/css/flaticon.css">
+    <link rel="stylesheet" href="/assets/css/themify-icons.css">
+    <!-- font awesome CSS -->
+    <link rel="stylesheet" href="/assets/css/magnific-popup.css">
+    <!-- swiper CSS -->
+    <link rel="stylesheet" href="/assets/css/slick.css">
+    <!-- style CSS -->
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <script src="https://kit.fontawesome.com/cb71939295.js" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $("#change").on("click", function() {
+                updateCustomerPw()
+            })
+            $("#cancel").on("click", function() {
+                cancel()
+            })
+
+            function changePw() {
+                $.ajax({
+                    url: "/customer/pwChange",
+                    type: "post", // 전송방식은 Post
+                    dataType: "JSON", // 전송 결과는 JSON으로 받기
+                    data: $("#f").serialize(), // form 태그 내 input 등 객체를 자동으로 전송할 형태로 변경하기
+                    success: function(json) { // 호출이 성공했다면..
+
+                        if (json.result === 1) { // 수정 성공
+                            alert(json.msg); // 메시지 띄우기
+                            location.href = "/customer/login"; // 로그인 페이지 이동
+
+                        } else { // 수정 실패
+                            alert(json.msg); // 메시지 띄우기
+                        }
+                    }
+                })
+            }
+
+            function cancel() {
+                location.href = "/customer/customerInfo";
+            }
+        })
+    </script>
+</head>
+
+<body>
+
+<!-- breadcrumb start-->
+<section class="breadcrumb" style="background-color: azure">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="breadcrumb_iner">
+                    <img src="/assets/images/bird/bird1.png" style="width: 400px">
+                    <div class="breadcrumb_iner_item">
+                        <h2>비밀번호 변경</h2>
+                        <p>개인정보 보호!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- breadcrumb end-->
+
+<!-- navigation -->
+<div th:replace="customerNav.html"></div>
+<!-- ---------- -->
+
+<br />
+<div class="page-heading">
+    <div class="page-title">
+        <div class="row">
+            <div class="col-12 col-md-6 order-md-1 order-last mx-auto text-center">
+                <h3>비밀번호 변경</h3>
+                <br>
+            </div>
+        </div>
+    </div>
+    <section class="bootstrap-select">
+        <section class="section">
+            <div class="card mx-auto">
+                <div class="card-content">
+                    <div class="card-body">
+                        <form id="f" class="form form-horizontal">
+                            <div class="form-body">
+                                <div class="row" style="text-align: center">
+                                    <div class="col-md-4">
+                                        <label>현재 비밀번호</label>
+                                    </div>
+                                    <div class="col-md-8 form-group">
+                                        <input type="password" class="form-control" id="pw" name="pw" />
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label>새 비밀번호</label>
+                                    </div>
+                                    <div class="col-md-8 form-group">
+                                        <input type="password" class="form-control" id="npw" name="npw" />
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label>새 비밀번호 확인</label>
+                                    </div>
+                                    <div class="col-md-8 form-group">
+                                        <input type="password" class="form-control" id="re_npw" name="re_npw" />
+                                    </div>
+                                    <br>
+                                    <div class="col-sm-12 d-flex justify-content-end">
+                                        <button type="button" id="change" class="btn btn-primary me-1 mb-1">수정</button>
+                                        <button type="button" id="cancel" class="btn btn-light-secondary me-1 mb-1">취소
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </section>
+</div>
+<script src="/assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+<script src="/assets/js/bootstrap.bundle.min.js"></script>
+
+<script src="/assets/js/main.js"></script>
+<!-- jquery plugins here-->
+<script src="/assets/js/jquery-1.12.1.min.js"></script>
+<!-- popper js -->
+<script src="/assets/js/popper.min.js"></script>
+<!-- bootstrap js -->
+<script src="/assets/js/bootstrap.min.js"></script>
+<!-- easing js -->
+<script src="/assets/js/jquery.magnific-popup.js"></script>
+<!-- swiper js -->
+<script src="/assets/js/swiper.min.js"></script>
+<!-- swiper js -->
+<script src="/assets/js/masonry.pkgd.js"></script>
+<!-- particles js -->
+<script src="/assets/js/owl.carousel.min.js"></script>
+<script src="/assets/js/jquery.nice-select.min.js"></script>
+<!-- slick js -->
+<script src="/assets/js/slick.min.js"></script>
+<script src="/assets/js/jquery.counterup.min.js"></script>
+<script src="/assets/js/waypoints.min.js"></script>
+<script src="/assets/js/contact.js"></script>
+<script src="/assets/js/jquery.ajaxchimp.min.js"></script>
+<script src="/assets/js/jquery.form.js"></script>
+<script src="/assets/js/jquery.validate.min.js"></script>
+<script src="/assets/js/mail-script.js"></script>
+<!-- custom js -->
+<script src="/assets/js/custom.js"></script>
+</body>
+
+</html>
