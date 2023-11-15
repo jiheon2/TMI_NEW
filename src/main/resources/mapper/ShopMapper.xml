@@ -45,6 +45,7 @@
         SELECT DATE(DATE) AS date, COUNT(*) AS dateCount
         FROM RESERVATION
         WHERE STATE = "1"
+        AND TID = #{tid}
         GROUP BY DATE
     </select>
     -->
