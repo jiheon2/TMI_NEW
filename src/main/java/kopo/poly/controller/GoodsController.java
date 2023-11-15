@@ -88,7 +88,6 @@ public class GoodsController {
         String url = "/goods/goodsMngInfo";
 
         GoodsDTO pDTO = new GoodsDTO();
-        pDTO.setTraderId(traderId);
         pDTO.setGoodsNumber(goodsNumber);
         GoodsDTO rDTO = Optional.ofNullable(goodsService.getGoodsInfo(pDTO)).orElseGet(GoodsDTO::new);
         model.addAttribute("rDTO", rDTO);

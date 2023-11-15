@@ -1,12 +1,15 @@
 package kopo.poly.controller;
 
-import kopo.poly.dto.CustomerDTO;
-import kopo.poly.dto.MsgDTO;
+import kopo.poly.dto.*;
 import kopo.poly.service.ICustomerService;
+import kopo.poly.service.IGoodsService;
+import kopo.poly.service.IReviewService;
+import kopo.poly.service.IShopService;
 import kopo.poly.util.CmmUtil;
 import kopo.poly.util.EncryptUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +19,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -25,9 +30,10 @@ import java.util.Optional;
 public class CustomerController {
 
     private final ICustomerService customerService;
+    private final IShopService shopService;
+    private final IGoodsService goodsService;
+    private final IReviewService reviewService;
 
-    // 소비자 로그인페이지 이동코드
-    // 구현완료(10/24)
     @GetMapping(value = "/login")
     public String login(HttpSession session) {
         return "/customer/login";
@@ -171,7 +177,7 @@ public class CustomerController {
             String customerPn = CmmUtil.nvl(request.getParameter("phoneNumber"));
             String customerName = CmmUtil.nvl(request.getParameter("customerName"));
             String customerEmail = CmmUtil.nvl(request.getParameter("customerEmail"));
-
+            
             log.info("customerId : " + customerId);
             log.info("customerPw : " + customerPw);
             log.info("customerPn : " + customerPn);
@@ -213,11 +219,25 @@ public class CustomerController {
     }
 
     // 상점정보 조회 코드
+    // 구현중(11/14)
     @GetMapping(value = "/shop")
-    public String shop() {
+    public String shop(HttpServletRequest request, ModelMap model) throws Exception{
         log.info(this.getClass().getName() + ".shop Start!");
+        String shopNumber = request.getParameter("shopNumber");
+
+        GoodsDTO pDTO = new GoodsDTO();
+
+        pDTO.setShopNumber(shopNumber);
+
+        List<GoodsDTO> rList = Optional.ofNullable(goodsService.getGoodsList(pDTO)).orElseGet(ArrayList::new);
+
+        model.addAttribute("rList", rList);
+
+        log.info(this.getClass().getName() + ".shop End!");
+
         return "/customer/shop";
     }
+
 
     // 지도페이지 이동코드
     // 구현완료(10/24)
@@ -228,12 +248,24 @@ public class CustomerController {
     }
 
     // 시장정보 조회 코드
+    // 구현중 (11/14)
     @GetMapping(value = "/market")
-    public String market(HttpServletRequest request) {
+    public String market(HttpServletRequest request, ModelMap model) throws Exception{
         log.info("start!");
+
+        String market = request.getParameter("marketNumber");
+
+        ShopDTO pDTO = new ShopDTO();
+
+        pDTO.setMarketNumber(market);
+
+        List<ShopDTO> rList = Optional.ofNullable(shopService.getShopList(pDTO)).orElseGet(ArrayList::new);
+
+        model.addAttribute("rList", rList);
 
         return "/customer/market";
     }
+
 
     // 채팅페이지 이동코드
     @GetMapping(value = "/chat")
@@ -249,6 +281,7 @@ public class CustomerController {
         log.info(this.getClass().getName() + ".customerLogin");
 
         String customerId = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+        String type = CmmUtil.nvl((String) session.getAttribute("Customer"));
 
         String url = "/customer/customerInfo";
         if (customerId.equals(null)) {
@@ -263,10 +296,10 @@ public class CustomerController {
 
     }
 
-    // 소비자 정보 수정페이지 이동콛,
+    // 소비자 정보 수정페이지 이동코드
     // 구현완료(11/10)
     @GetMapping(value = "/updateCustomerInfo")
-    public String updateCustomerInfo(HttpSession session, ModelMap model) throws Exception {
+    public String updateCustomerInfo(HttpSession session, ModelMap model) throws Exception{
         log.info(this.getClass().getName() + ".updateCustomerInfo start!");
 
         String customerId = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
@@ -414,8 +447,31 @@ public class CustomerController {
 
     // 상품 상세정보 조회페이지 이동코드
     @GetMapping(value = "/single-product")
-    public String singleProduct() {
-        log.info("start!");
+    public String singleProduct(HttpServletRequest request, ModelMap model) throws Exception {
+        log.info(this.getClass().getName() + ".goodsMngInfo Start!");
+
+        String goodsNumber = request.getParameter("goodsNumber");
+
+        log.info("goodsNumber : " + goodsNumber);
+
+        GoodsDTO pDTO = new GoodsDTO();
+        pDTO.setGoodsNumber(goodsNumber);
+        GoodsDTO gDTO = Optional.ofNullable(goodsService.getGoodsInfo(pDTO)).orElseGet(GoodsDTO::new);
+
+        ReviewDTO pDTO2 = new ReviewDTO();
+        pDTO2.setGoodsNumber(goodsNumber);
+        List<ReviewDTO> rDTO = Optional.ofNullable(reviewService.oneReviewList(pDTO2)).orElseGet(ArrayList::new);
+        List<ReviewDTO> cDTO = Optional.ofNullable(reviewService.getScore(pDTO2)).orElseGet(ArrayList::new);
+
+        log.info("gDTO : " + gDTO.toString());
+        log.info("rDTO : " + rDTO.toString());
+        log.info("cDTO : " + cDTO.toString());
+
+        model.addAttribute("cDTO", cDTO);
+        model.addAttribute("rDTO", rDTO);
+        model.addAttribute("gDTO", gDTO);
+
+        log.info(this.getClass().getName() + ".goodsMngInfo End!");
         return "/customer/single-product";
     }
 }

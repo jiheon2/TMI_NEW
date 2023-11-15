@@ -12,5 +12,6 @@ public interface IShopService {
     String getReserveCount(ShopDTO pDTO) throws Exception; // 예약 개수 조회
     String getBuyCount(ShopDTO pDTO) throws Exception; // 당일 구매 개수 조회
     String getReserveStop(ShopDTO pDTO) throws Exception; // 예약 개수 조회
-//    ShopDTO getCount(ShopDTO pDTO) throws Exception; // 개수 조회(리뷰, 예약, 당일구매
+    ShopDTO getCount(ShopDTO pDTO) throws Exception; // 개수 조회(리뷰, 예약, 당일구매)
+    List<ShopDTO> getShopList(ShopDTO pDTO) throws  Exception; // 상점 리스트 조회
 }

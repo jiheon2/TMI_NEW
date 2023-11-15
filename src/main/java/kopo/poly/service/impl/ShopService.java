@@ -139,4 +139,19 @@ public class ShopService implements IShopService {
     public String getReserveStop(ShopDTO pDTO) throws Exception {
         return null;
     }
+
+    /* 개수 조회 */
+    @Override
+    public ShopDTO getCount(ShopDTO pDTO) throws Exception {
+        return null;
+    }
+
+    /* 상점 정보 목록 조회 */
+    @Override
+    public List<ShopDTO> getShopList(ShopDTO pDTO) throws Exception {
+
+        log.info(this.getClass().getName() + ".getShopList Start!");
+
+        return shopMapper.getShopList(pDTO);
+    }
 }

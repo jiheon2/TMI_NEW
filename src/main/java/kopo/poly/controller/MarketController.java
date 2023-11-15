@@ -4,14 +4,23 @@ import kopo.poly.dto.MarketDTO;
 import kopo.poly.service.IMarketService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.json.JSONException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.json.JSONObject;
+import org.json.JSONTokener;
 
 @Controller
 @Slf4j
@@ -42,5 +51,20 @@ public class MarketController {
 
         log.info(this.getClass().getName() + ".list End!");
         return list;
+    }
+
+    // 마커 코드
+    @GetMapping(value = "/marker")
+    @ResponseBody
+    public List<MarketDTO> marker() throws Exception {
+        log.info(this.getClass().getName() + ".marker Start!");
+
+        List<MarketDTO> pList = marketService.getMarketList("");
+        if (pList == null) pList = new ArrayList<>();
+
+        log.info(pList.toString());
+
+        log.info(this.getClass().getName() + ".marker End!");
+        return pList;
     }
 }
