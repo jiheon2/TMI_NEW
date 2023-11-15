@@ -49,6 +49,8 @@ public class ShopController {
         ShopDTO rDTO = Optional.ofNullable(shopService.getShopInfo(pDTO)).orElseGet(ShopDTO::new);
         if (rDTO.getShopName() == null || rDTO.getShopName().isEmpty()) {
             url = "/trader/insertShopInfo";
+        } else {
+            url = "/trader/shopInfo";
         }
 
         model.addAttribute("rDTO", rDTO);
