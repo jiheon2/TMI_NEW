@@ -1,8 +1,10 @@
 package kopo.poly.controller;
 
-import kopo.poly.dto.CustomerDTO;
-import kopo.poly.dto.MsgDTO;
+import kopo.poly.dto.*;
 import kopo.poly.service.ICustomerService;
+import kopo.poly.service.IGoodsService;
+import kopo.poly.service.IReviewService;
+import kopo.poly.service.IShopService;
 import kopo.poly.util.CmmUtil;
 import kopo.poly.util.EncryptUtil;
 import lombok.RequiredArgsConstructor;
