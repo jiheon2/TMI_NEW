@@ -43,4 +43,19 @@ public class MarketController {
         log.info(this.getClass().getName() + ".list End!");
         return list;
     }
+
+    // 마커 코드
+    @GetMapping(value = "/marker")
+    @ResponseBody
+    public List<MarketDTO> marker() throws Exception {
+        log.info(this.getClass().getName() + ".marker Start!");
+
+        List<MarketDTO> pList = marketService.getMarketList("");
+        if (pList == null) pList = new ArrayList<>();
+
+        log.info(pList.toString());
+
+        log.info(this.getClass().getName() + ".marker End!");
+        return pList;
+    }
 }

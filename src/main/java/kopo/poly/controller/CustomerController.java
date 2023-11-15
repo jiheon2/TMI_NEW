@@ -1,8 +1,10 @@
 package kopo.poly.controller;
 
-import kopo.poly.dto.CustomerDTO;
-import kopo.poly.dto.MsgDTO;
+import kopo.poly.dto.*;
 import kopo.poly.service.ICustomerService;
+import kopo.poly.service.IGoodsService;
+import kopo.poly.service.IReviewService;
+import kopo.poly.service.IShopService;
 import kopo.poly.util.CmmUtil;
 import kopo.poly.util.EncryptUtil;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +18,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.List;
+import java.util.ArrayList;
 import java.util.Optional;
 
 @Controller
@@ -25,6 +29,9 @@ import java.util.Optional;
 public class CustomerController {
 
     private final ICustomerService customerService;
+    private final IGoodsService goodsService;
+    private final IShopService shopService;
+    private final IReviewService reviewService;
 
     // 소비자 로그인페이지 이동코드
     // 구현완료(10/24)
@@ -213,11 +220,25 @@ public class CustomerController {
     }
 
     // 상점정보 조회 코드
+    // 구현중(11/14)
     @GetMapping(value = "/shop")
-    public String shop() {
+    public String shop(HttpServletRequest request, ModelMap model) throws Exception{
         log.info(this.getClass().getName() + ".shop Start!");
+        String traderId = request.getParameter("TraderId");
+
+        GoodsDTO pDTO = new GoodsDTO();
+
+        pDTO.setTraderId(traderId);
+
+        List<GoodsDTO> rList = Optional.ofNullable(goodsService.getGoodsList(pDTO)).orElseGet(ArrayList::new);
+
+        model.addAttribute("rList", rList);
+
+        log.info(this.getClass().getName() + ".shop End!");
+
         return "/customer/shop";
     }
+
 
     // 지도페이지 이동코드
     // 구현완료(10/24)
@@ -228,12 +249,24 @@ public class CustomerController {
     }
 
     // 시장정보 조회 코드
+    // 구현중 (11/14)
     @GetMapping(value = "/market")
-    public String market(HttpServletRequest request) {
+    public String market(HttpServletRequest request, ModelMap model) throws Exception{
         log.info("start!");
+
+        String market = request.getParameter("marketNumber");
+
+        ShopDTO pDTO = new ShopDTO();
+
+        pDTO.setMarketNumber(market);
+
+        List<ShopDTO> rList = Optional.ofNullable(shopService.getShopList(pDTO)).orElseGet(ArrayList::new);
+
+        model.addAttribute("rList", rList);
 
         return "/customer/market";
     }
+
 
     // 채팅페이지 이동코드
     @GetMapping(value = "/chat")
@@ -263,7 +296,7 @@ public class CustomerController {
 
     }
 
-    // 소비자 정보 수정페이지 이동콛,
+    // 소비자 정보 수정페이지 이동코드
     // 구현완료(11/10)
     @GetMapping(value = "/updateCustomerInfo")
     public String updateCustomerInfo(HttpSession session, ModelMap model) throws Exception {
@@ -414,8 +447,25 @@ public class CustomerController {
 
     // 상품 상세정보 조회페이지 이동코드
     @GetMapping(value = "/single-product")
-    public String singleProduct() {
-        log.info("start!");
+    public String singleProduct(HttpServletRequest request, ModelMap model) throws Exception {
+        log.info(this.getClass().getName() + ".goodsMngInfo Start!");
+
+        String goodsNumber = request.getParameter("goodsNumber");
+        String traderId = request.getParameter("traderId");
+
+        GoodsDTO pDTO = new GoodsDTO();
+        pDTO.setTraderId(traderId);
+        pDTO.setGoodsNumber(goodsNumber);
+        GoodsDTO gDTO = Optional.ofNullable(goodsService.getGoodsInfo(pDTO)).orElseGet(GoodsDTO::new);
+
+        ReviewDTO pDTO2 = new ReviewDTO();
+        List<ReviewDTO> rDTO = Optional.ofNullable(reviewService.getReviewList(pDTO2)).orElseGet(ArrayList::new);
+
+        model.addAttribute("rDTO", rDTO);
+        model.addAttribute("gDTO", gDTO);
+        log.info(gDTO.toString());
+
+        log.info(this.getClass().getName() + ".goodsMngInfo End!");
         return "/customer/single-product";
     }
 }

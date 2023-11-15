@@ -90,4 +90,12 @@
         INSERT INTO SHOP (SHOP_NAME, SHOP_DESCRIPTION, IMAGE, MARKET_NAME, TRADER_ID, TRADER_NAME)
         VALUES (#{shopName}, #{shopDescription}, #{image}, #{marketName}, #{traderId}, #{traderName})
     </insert>
+
+    <!-- 상점 목록 조회 쿼리 -->
+    <select id="getShopList" parameterType="ShopDTO" resultType="ShopDTO">
+        SELECT SHOP_NUMBER, SHOP_NAME, SHOP_DESCRIPTION, IMAGE, MARKET_NAME, TRADER_ID
+        FROM SHOP
+        WHERE MARKET_NUMBER = #{marketNumber}
+        ORDER BY SHOP_NUMBER
+    </select>
 </mapper>

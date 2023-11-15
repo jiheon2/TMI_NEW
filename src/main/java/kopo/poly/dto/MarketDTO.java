@@ -9,4 +9,6 @@ public class MarketDTO {
     private String marketNumber;
     private String marketLocation;
     private String marketName;
+    private String latitude;
+    private String longitude;
 }
