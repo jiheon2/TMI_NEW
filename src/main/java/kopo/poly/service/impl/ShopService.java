@@ -136,4 +136,17 @@ public class ShopService implements IShopService {
     public String getReserveStop(ShopDTO pDTO) throws Exception {
         return null;
     }
+
+    @Override
+    public ShopDTO getCount(ShopDTO pDTO) throws Exception {
+        return null;
+    }
+
+    @Override
+    public List<ShopDTO> getShopList(ShopDTO pDTO) throws Exception {
+
+        log.info(this.getClass().getName() + ".getShopList Start!");
+
+        return shopMapper.getShopList(pDTO);
+    }
 }
