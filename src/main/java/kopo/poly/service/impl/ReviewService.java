@@ -24,6 +24,20 @@ public class ReviewService implements IReviewService {
 
         return reviewMapper.getReviewList(pDTO);
     }
+    @Override
+    public List<ReviewDTO> oneReviewList(ReviewDTO pDTO) throws Exception {
+
+        log.info(this.getClass().getName() + ".oneReviewList Start!");
+
+        return reviewMapper.oneReviewList(pDTO);
+    }
+    @Override
+    public List<ReviewDTO> getScore(ReviewDTO pDTO) throws Exception {
+
+        log.info(this.getClass().getName() + ".getScore Start!");
+
+        return reviewMapper.getScore(pDTO);
+    }
 
     /* 리뷰 삭제 코드 */
     @Override

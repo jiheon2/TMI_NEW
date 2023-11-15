@@ -30,8 +30,8 @@
     <script src="https://kit.fontawesome.com/cb71939295.js" crossorigin="anonymous"></script>
     <script type="text/javascript">
         //상세보기 이동
-        function goShop(traderId) {
-            location.href = "/customer/shop?traderId=" + traderId;
+        function goShop(shopNumber) {
+            location.href = "/customer/shop?shopNumber=" + shopNumber;
         }
     </script>
 </head>
@@ -273,9 +273,8 @@
                             <img th:src="${dto.image}">
                             <div class="single_product_text">
                                 <h4>[[${dto.shopName}]]</h4>
-                                <a th:attr="onclick='goShop(\'' + ${dto.traderId} + '\')'" class="add_cart">상점
-                                    보러가기<i
-                                            class="ti-heart"></i></a>
+                                <a th:attr="onclick='goShop(\'' + ${dto.shopNumber} + '\')'" class="add_cart">상점
+                                    보러가기<i class="ti-heart"></i></a>
                             </div>
                         </div>
                     </div>

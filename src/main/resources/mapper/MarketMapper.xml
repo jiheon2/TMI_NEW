@@ -5,8 +5,8 @@
 <mapper namespace="kopo.poly.persistance.mapper.IMarketMapper">
     <!-- 시장 정보 입력 쿼리 -->
     <insert id="insertMarket" parameterType="MarketDTO">
-        INSERT INTO MARKET (MARKET_NUMBER, MARKET_LOCATION, MARKET_NAME)
-        VALUES ((SELECT IFNULL(MAX(A.MARKET_NUMBER),0)+1 FROM MARKET A), #{marketLocation}, #{marketName})
+        INSERT INTO MARKET (MARKET_NUMBER, MARKET_LOCATION, MARKET_NAME, LATITUDE, LONGITUDE)
+        VALUES ((SELECT IFNULL(MAX(A.MARKET_NUMBER),0)+1 FROM MARKET A), #{marketLocation}, #{marketName}, #{latitude}, #{longitude})
     </insert>
 
     <!-- 시장 정보 삭제 쿼리 -->
@@ -16,7 +16,7 @@
 
     <!-- 시장 목록 조회 쿼리 -->
     <select id="getMarketList" resultType="MarketDTO" parameterType="java.lang.String">
-        SELECT MARKET_NUMBER, MARKET_LOCATION, MARKET_NAME
+        SELECT MARKET_NUMBER, MARKET_LOCATION, MARKET_NAME, LATITUDE, LONGITUDE
         FROM MARKET
         WHERE MARKET_NAME LIKE CONCAT('%',#{marketName},'%')
         ORDER BY MARKET_NUMBER DESC
