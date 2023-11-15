@@ -8,6 +8,7 @@
         SELECT CONTENTS,
                CUSTOMER_ID,
                GOODS_NUMBER,
+               GOODS_NAME,
                REG_DT,
                REVIEW_NUMBER,
                SCORE,

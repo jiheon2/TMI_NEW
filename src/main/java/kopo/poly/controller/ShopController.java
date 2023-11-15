@@ -185,6 +185,7 @@ public class ShopController {
 
         try {
             String traderId = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+            String originImage = CmmUtil.nvl((String) session.getAttribute("image"));
             String shopName = CmmUtil.nvl(request.getParameter("shopName"));
             String traderName = CmmUtil.nvl(request.getParameter("traderName"));
             String shopDescription = CmmUtil.nvl(request.getParameter("shopDescription"));
@@ -195,6 +196,7 @@ public class ShopController {
             log.info("traderName : " + traderName);
             log.info("shopDescription : " + shopDescription);
             log.info("marketName : " + marketName);
+            log.info("image : " + originImage);
 
             pDTO = new ShopDTO();
 
@@ -202,9 +204,7 @@ public class ShopController {
             pDTO.setShopName(shopName);
             pDTO.setShopDescription(shopDescription);
             pDTO.setTraderName(traderName);
-            pDTO.setImage("");
             pDTO.setMarketName(marketName);
-
 
             if (!mf.isEmpty()) {
                 String image = mf.getOriginalFilename();
@@ -213,7 +213,10 @@ public class ShopController {
                 fileService.upload(fileName, folderName, mf);
                 pDTO.setImage(fileService.getFileURL(folderName, fileName));
                 log.info(pDTO.getImage());
+            } else {
+                pDTO.setImage(originImage);
             }
+
             log.info(pDTO.toString());
 
             res = shopService.updateShopInfo(pDTO);
