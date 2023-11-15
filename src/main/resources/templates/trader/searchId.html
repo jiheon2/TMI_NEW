@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TMI - 비밀번호 변경</title>
+    <title>이메일 확인</title>
     <link rel="stylesheet" href="/assets/css/font.css">
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
@@ -17,32 +17,64 @@
     <link rel="shortcut icon" href="/assets/images/favicon.svg" type="image/x-icon">
     <script type="text/javascript">
         $(document).ready(function () {
-            $("#change").on("click", function () {
-                updateTraderPw()
-            })
             $("#cancel").on("click", function () {
                 cancel()
             })
+            $("#btnEmail").on("click", function () {
+                mailCheck()
+            })
+            $("#confirm").on("click", function () {
+                confirm()
+            })
 
-            function changePw() {
+            function mailCheck() {
+                let f = document.getElementById("f");
+                if (f.email.value === "") {
+                    alert("이메일을 입력하세요.");
+                    return;
+                }
+
+                // Ajax 호출해서 회원가입하기
                 $.ajax({
-                        url: "/trader/pwChange",
+                        url: "/trader/searchEmail",
                         type: "post", // 전송방식은 Post
                         dataType: "JSON", // 전송 결과는 JSON으로 받기
                         data: $("#f").serialize(), // form 태그 내 input 등 객체를 자동으로 전송할 형태로 변경하기
                         success: function (json) { // 호출이 성공했다면..
 
-                            if (json.result === 1) { // 수정 성공
-                                alert(json.msg); // 메시지 띄우기
-                                location.href = "/trader/login"; // 로그인 페이지 이동
+                            if (json.existsYn === "N") {
+                                alert("존재하지 않는 이메일입니다");
+                                f.email.focus();
 
-                            } else { // 수정 실패
-                                alert(json.msg); // 메시지 띄우기
+                            } else {
+                                alert("이메일로 인증번호가 발송되었습니다. \n받은 메일의 인증번호를 입력하기 바랍니다.");
+                                emailAuthNumber = json.authNumber;
+
                             }
                         }
                     }
                 )
             }
+
+            function confirm() {
+
+                let f = document.getElementById("f");
+                if (f.userName.value === "") {
+                    alert("이름을 입력하세요.");
+                    f.userName.focus();
+                    return;
+                }
+                if (f.email.value === "") {
+                    alert("이메일을 입력하세요.");
+                    f.email.focus();
+                    return;
+                }
+                f.method = "post";
+                f.action = "/trader/searchTraderIdProc"
+
+                f.submit();
+            }
+
             function cancel() {
                 location.href = "/trader/traderInfo";
             }
@@ -56,7 +88,7 @@
             <div class="page-title">
                 <div class="row">
                     <div class="col-12 col-md-6 order-md-1 order-last mx-auto text-center">
-                        <h3>비밀번호 변경</h3>
+                        <h3>이메일 확인</h3>
                         <br>
                     </div>
                 </div>
@@ -66,36 +98,42 @@
                     <div class="card mx-auto">
                         <div class="card-content">
                             <div class="card-body">
-                                <form id="f" class="form form-horizontal">
-                                    <div class="form-body">
-                                        <div class="row" style="text-align: center">
+                                <div class="form-body">
+                                    <div class="row" style="text-align: center">
+                                        <form id="f">
                                             <div class="col-md-4">
-                                                <label>현재 비밀번호</label>
+                                                <label>이름</label>
                                             </div>
                                             <div class="col-md-8 form-group">
-                                                <input type="password" class="form-control" id="pw" name="pw"/>
+                                                <input type="text" class="form-control" id="userName"
+                                                       name="userName"/>
                                             </div>
                                             <div class="col-md-4">
-                                                <label>새 비밀번호</label>
+                                                <label>이메일 입력</label>
                                             </div>
                                             <div class="col-md-8 form-group">
-                                                <input type="password" class="form-control" id="npw" name="npw"/>
+                                                <input type="email" class="form-control" id="email" name="email"/>
+                                                <button id="btnEmail" type="button">인증번호 전송</button>
                                             </div>
                                             <div class="col-md-4">
-                                                <label>새 비밀번호 확인</label>
+                                                <label>인증번호 확인</label>
                                             </div>
                                             <div class="col-md-8 form-group">
-                                                <input type="password" class="form-control" id="re_npw" name="re_npw"/>
+                                                <input type="text" class="form-control" id="authNumber"
+                                                       name="authNumber"/>
                                             </div>
                                             <br>
                                             <div class="col-sm-12 d-flex justify-content-end">
-                                                <button type="button" id="change" class="btn btn-primary me-1 mb-1">수정</button>
-                                                <button type="button" id="cancel" class="btn btn-light-secondary me-1 mb-1">취소
+                                                <button type="button" id="confirm" class="btn btn-primary me-1 mb-1">
+                                                    인증
+                                                </button>
+                                                <button type="button" id="cancel"
+                                                        class="btn btn-light-secondary me-1 mb-1">취소
                                                 </button>
                                             </div>
-                                        </div>
+                                        </form>
                                     </div>
-                                </form>
+                                </div>
                             </div>
                         </div>
                     </div>

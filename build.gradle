@@ -30,6 +30,13 @@ dependencies {
     implementation group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '4.7.1'
     implementation 'org.json:json:20210307' // 현재 버전을 확인하여 사용하세요.
     testImplementation 'org.seleniumhq.selenium:selenium-java:4.7.0'
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+    implementation 'org.seleniumhq.selenium:selenium-java:3.141.59'
+    implementation ('io.github.bonigarcia:webdrivermanager:5.0.3') {
+        exclude group: 'com.google.guava', module: 'guava'
+    }
+    implementation platform('com.google.guava:guava:31.0.1-jre')
+    implementation 'com.google.guava:guava'
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'com.mysql:mysql-connector-j'
     annotationProcessor 'org.projectlombok:lombok'

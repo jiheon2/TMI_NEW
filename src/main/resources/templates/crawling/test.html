@@ -17,34 +17,13 @@
     <link rel="shortcut icon" href="/assets/images/favicon.svg" type="image/x-icon">
     <script type="text/javascript">
         $(document).ready(function () {
-            $("#change").on("click", function () {
-                updateTraderPw()
-            })
+
             $("#cancel").on("click", function () {
                 cancel()
             })
 
-            function changePw() {
-                $.ajax({
-                        url: "/trader/pwChange",
-                        type: "post", // 전송방식은 Post
-                        dataType: "JSON", // 전송 결과는 JSON으로 받기
-                        data: $("#f").serialize(), // form 태그 내 input 등 객체를 자동으로 전송할 형태로 변경하기
-                        success: function (json) { // 호출이 성공했다면..
-
-                            if (json.result === 1) { // 수정 성공
-                                alert(json.msg); // 메시지 띄우기
-                                location.href = "/trader/login"; // 로그인 페이지 이동
-
-                            } else { // 수정 실패
-                                alert(json.msg); // 메시지 띄우기
-                            }
-                        }
-                    }
-                )
-            }
             function cancel() {
-                location.href = "/trader/traderInfo";
+                location.href = "/trader/login";
             }
         })
     </script>
@@ -56,7 +35,7 @@
             <div class="page-title">
                 <div class="row">
                     <div class="col-12 col-md-6 order-md-1 order-last mx-auto text-center">
-                        <h3>비밀번호 변경</h3>
+                        <h3>아이디</h3>
                         <br>
                     </div>
                 </div>
@@ -70,26 +49,11 @@
                                     <div class="form-body">
                                         <div class="row" style="text-align: center">
                                             <div class="col-md-4">
-                                                <label>현재 비밀번호</label>
+                                                <label>아이디</label>
                                             </div>
                                             <div class="col-md-8 form-group">
-                                                <input type="password" class="form-control" id="pw" name="pw"/>
                                             </div>
-                                            <div class="col-md-4">
-                                                <label>새 비밀번호</label>
-                                            </div>
-                                            <div class="col-md-8 form-group">
-                                                <input type="password" class="form-control" id="npw" name="npw"/>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <label>새 비밀번호 확인</label>
-                                            </div>
-                                            <div class="col-md-8 form-group">
-                                                <input type="password" class="form-control" id="re_npw" name="re_npw"/>
-                                            </div>
-                                            <br>
                                             <div class="col-sm-12 d-flex justify-content-end">
-                                                <button type="button" id="change" class="btn btn-primary me-1 mb-1">수정</button>
                                                 <button type="button" id="cancel" class="btn btn-light-secondary me-1 mb-1">취소
                                                 </button>
                                             </div>
