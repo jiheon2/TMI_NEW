@@ -8,18 +8,12 @@ import lombok.ToString;
 @Setter
 @ToString
 public class ShopDTO {
-    private String cname;
-    private String type;
-    private String loc;
-    private String des;
-    private String name;
+    private String shopNumber;
+    private String shopName;
+    private String shopDescription;
+    private String marketNumber;
+    private String traderId;
     private String image;
-    private String tid;
-    private String count;
-    private String reviewCount;
-    private String reserveCount;
-    private String dateCount;
-    private String date;
-    private String buyCount;
-    private String reserveStop;
+    private String traderName;
+    private String marketName;
 }

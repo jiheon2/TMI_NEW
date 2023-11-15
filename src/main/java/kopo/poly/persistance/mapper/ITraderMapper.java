@@ -1,27 +1,21 @@
 package kopo.poly.persistance.mapper;
 
-import kopo.poly.dto.ReviewDTO;
 import kopo.poly.dto.TraderDTO;
 import org.apache.ibatis.annotations.Mapper;
 
-import java.util.List;
-
 @Mapper
 public interface ITraderMapper {
-    int insertTrader(TraderDTO pDTO) throws Exception;
+    int insertTrader(TraderDTO pDTO) throws Exception; // 상인 회원가입
 
-    int changeTrader(TraderDTO pDTO) throws Exception;
+    int updateTraderInfo(TraderDTO pDTO) throws Exception; // 상인 정보 변경
 
-    int changePw(TraderDTO pDTO) throws Exception;
+    int updateTraderPw(TraderDTO pDTO) throws Exception; // 비밀번호 변경
 
-    TraderDTO getLogin(TraderDTO pDTO) throws Exception;
+    TraderDTO getLogin(TraderDTO pDTO) throws Exception; // 로그인 정보 확인
 
-    TraderDTO getTraderInfo(TraderDTO pDTO) throws Exception;
+    TraderDTO getTraderInfo(TraderDTO pDTO) throws Exception; // 상인정보 조회
 
-    TraderDTO getBusinessNumExists(TraderDTO pDTO) throws Exception;
+    TraderDTO getBusinessNumberExists(TraderDTO pDTO) throws Exception; // 사업자등록번호 중복확인
 
-    TraderDTO getTraderIdExists(TraderDTO pDTO) throws Exception;
-    TraderDTO getEmailExists(TraderDTO pDTO) throws Exception;
-    TraderDTO getTraderId(TraderDTO pDTO) throws Exception;
-
+    TraderDTO getTraderIdExists(TraderDTO pDTO) throws Exception; // ID 중복확인
 }

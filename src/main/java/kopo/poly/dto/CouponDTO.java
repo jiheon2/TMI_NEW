@@ -8,9 +8,9 @@ import lombok.ToString;
 @Setter
 @ToString
 public class CouponDTO {
-    private String couponCode;
-    private String customer;
+    private String couponNumber;
+    private String customerNumber;
     private String couponName;
-    private String useYn;
-    private String discount;
+    private String discountRate;
+    private String statement;
 }

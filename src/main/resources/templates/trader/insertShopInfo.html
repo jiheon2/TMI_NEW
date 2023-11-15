@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TMI - 상점 정보 수정</title>
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/bootstrap.css">
+    <link rel="stylesheet" href="/assets/css/font.css">
+    <link rel="stylesheet" href="/assets/vendors/quill/quill.bubble.css">
+    <link rel="stylesheet" href="/assets/vendors/quill/quill.snow.css">
+    <link rel="stylesheet" href="/assets/vendors/perfect-scrollbar/perfect-scrollbar.css">
+    <link rel="stylesheet" href="/assets/vendors/bootstrap-icons/bootstrap-icons.css">
+    <link rel="stylesheet" href="/assets/css/app.css">
+    <script src="/assets/js/jquery-3.6.0.min.js"></script>
+    <link rel="shortcut icon" href="/assets/images/favicon.svg" type="image/x-icon">
+    <script src="/assets/js/move.js"></script>
+    <script th:inline="javascript">
+        // HTML로딩이 완료되고, 실행됨
+        $(document).ready(function() {
+            // 버튼 클릭했을때, 발생되는 이벤트 생성함(onclick 이벤트와 동일함)
+            $("#btnSend").on("click", function() {
+                calBytes();
+                doSubmit(); // 공지사항 수정하기 실행
+            })
+        })
+
+        //글자 길이 바이트 단위로 체크하기(바이트값 전달)
+        function calBytes(str) {
+            let tcount = 0;
+            let tmpStr = String(str);
+            let strCnt = tmpStr.length;
+            let onechar;
+            for (let i = 0; i < strCnt; i++) {
+                onechar = tmpStr.charAt(i);
+                if (escape(onechar).length > 4) {
+                    tcount += 2;
+                } else {
+                    tcount += 1;
+                }
+            }
+            return tcount;
+        }
+
+        function doSubmit() {
+
+            let f = document.getElementById("f"); // form 태그
+
+            if (calBytes(f.shopDescription.value) > 4000) {
+                alert("최대 4000Bytes까지 입력 가능합니다.");
+                f.shopDescription.focus();
+                return;
+            }
+            var formData = new FormData($("#f")[0]);
+            $.ajax({
+                url: "/trader/insertShop",
+                type: "POST",
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(json) { // /notice/noticeUpdate 호출이 성공했다면..
+
+                    if (json.result === 1) { // 로그인 성공
+                        alert(json.msg); // 메시지 띄우기
+                        location.href = "/trader/shopInfo"; // 로그인 성공 페이지 이동
+
+                    } else { // 로그인 실패
+                        alert(json.msg); // 메시지 띄우기
+                    }
+
+                }
+            })
+
+        }
+    </script>
+</head>
+
+<body>
+<div id="app">
+    <div th:replace="sidebar.html"></div>
+    <div id="main">
+        <header class="mb-3">
+            <a href="#" class="burger-btn d-block d-xl-none">
+                <i class="bi bi-justify fs-3"></i>
+            </a>
+        </header>
+
+        <div class="page-heading">
+            <div>
+                <form id="f">
+                    <div class="page-title">
+                        <div class="row">
+                            <div class="col-12 col-md-6 order-md-1 order-last mx-auto text-center">
+                                <h3>상점 정보</h3>
+                                <input type="text" class="text-subtitle text-muted" id="marketName" name="marketName" placeholder="시장명" th:value="${rDTO.marketName}">
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="col-xl-4 col-md-6 col-sm-12 mx-auto">
+                        <div class="card">
+                            <div class="card-content" style="padding: 10px">
+                                <div class="card-body">
+                                    <div class="col-md-6 mx-auto">
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" id="shopName" name="shopName" placeholder="상호명" th:value="${rDTO.shopName}">
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" id="traderName" name="traderName" placeholder="상인명" th:value="${rDTO.traderName}">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div id="carouselExampleSlidesOnly" class="carousel slide" data-bs-ride="carousel">
+                                    <div class="carousel-inner">
+                                        <div class="carousel-item active" th:if="${not #strings.isEmpty(rDTO.image)}">
+                                            <img th:src="${rDTO.image}" class="d-block w-100" style="height:380px">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-1 mx-auto" style="width: 80%">
+                                    <fieldset>
+                                        <br>
+                                        <div class="input-group">
+                                            <input type="file" name="fileUpload" class="form-control" id="fileUpload" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
+                                        </div>
+                                    </fieldset>
+                                </div>
+                                <div class="card-body">
+                                    <div class="form-floating">
+                                        <textarea class="form-control" placeholder="상점 설명을 써주세요" name="shopDescription" id="shopDescription" style="height: 250px" th:field="*{rDTO.shopDescription}" th:text="${rDTO.shopDescription}"></textarea>
+                                    </div>
+                                </div>
+                                <div class="buttons" style="float: right"><a id="btnSend" type="submit" class="btn btn-primary">등록</a></div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer clearfix mb-0 text-muted">
+            <div class="float-start">
+                <p>2021 &copy; Mazer</p>
+            </div>
+            <div class="float-end">
+                <p>Crafted with <span class="text-danger"><i class="bi bi-heart"></i></span> by <a href="http://ahmadsaugi.com">A. Saugi</a></p>
+            </div>
+        </div>
+    </footer>
+</div>
+<script src="/assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+<script src="/assets/js/bootstrap.bundle.min.js"></script>
+<!-- jQuery 라이브러리 추가 -->
+<script src="/assets/js/main.js"></script>
+</body>
+
+</html>

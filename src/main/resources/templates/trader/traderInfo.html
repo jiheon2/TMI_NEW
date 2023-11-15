@@ -13,14 +13,14 @@
     <link rel="stylesheet" href="/assets/vendors/perfect-scrollbar/perfect-scrollbar.css">
     <link rel="stylesheet" href="/assets/vendors/bootstrap-icons/bootstrap-icons.css">
     <link rel="stylesheet" href="/assets/css/app.css">
-    <script src="/js/jquery-3.6.0.min.js"></script>
+    <script src="/assets/js/jquery-3.6.0.min.js"></script>
     <link rel="shortcut icon" href="/assets/images/favicon.svg" type="image/x-icon">
     <script type="text/javascript">
-        function changePw() {
-            location.href = "/trader/changePw";
+        function updateTraderPw() {
+            location.href = "/trader/updateTraderPw";
             }
-        function infoChange() {
-            location.href = "/trader/traderInfoChange";
+        function updateTraderInfo() {
+            location.href = "/trader/updateTraderInfo";
         }
     </script>
 </head>
@@ -56,30 +56,48 @@
                                                 <label>이름</label>
                                             </div>
                                             <div class="col-md-8 form-group">
-                                                <div class="form-control">[[${rDTO.name}]]</div>
+                                                <div class="form-control">[[${rDTO.traderName}]]</div>
                                             </div>
                                             <div class="col-md-4">
                                                 <label>전화번호</label>
                                             </div>
                                             <div class="col-md-8 form-group">
-                                                <div class="form-control">[[${rDTO.pn}]]</div>
+                                                <div class="form-control">[[${rDTO.phoneNumber}]]</div>
                                             </div>
                                             <div class="col-md-4">
                                                 <label>사업자 등록번호</label>
                                             </div>
                                             <div class="col-md-8 form-group">
-                                                <div class="form-control">[[${rDTO.businessNum}]]</div>
+                                                <div class="form-control">[[${rDTO.businessNumber}]]</div>
                                             </div>
                                             <div class="col-md-4">
-                                                <label>소속</label>
+                                                <label>EMAIL</label>
+                                            </div>
+                                            <div class="col-md-8 form-group">
+                                                <div class="form-control">[[${rDTO.email}]]</div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label>소속시장</label>
                                             </div>
                                             <div class="col-md-8 form-group">
                                                 <div class="form-control">[[${rDTO.shopCode}]]</div>
                                             </div>
+                                            <div class="col-md-4">
+                                                <label>은행</label>
+                                            </div>
+                                            <div class="col-md-8 form-group">
+                                                <div class="form-control">[[${rDTO.bank}]]</div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label>계좌번호</label>
+                                            </div>
+                                            <div class="col-md-8 form-group">
+                                                <div class="form-control">[[${rDTO.account}]]</div>
+                                            </div>
                                             <br>
                                             <div class="col-sm-12 d-flex justify-content-end">
-                                                <button type="button" onclick="changePw()" class="btn btn-primary me-1 mb-1">비밀번호 변경</button>
-                                                <button type="button" onclick="infoChange()"  class="btn btn-primary me-1 mb-1">수정</button>
+                                                <button type="button" onclick="updateTraderPw()" class="btn btn-primary me-1 mb-1">비밀번호 변경</button>
+                                                <button type="button" onclick="updateTraderInfo()"  class="btn btn-primary me-1 mb-1">수정</button>
                                             </div>
                                         </div>
                                     </div>
