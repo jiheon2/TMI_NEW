@@ -4,27 +4,27 @@
 <mapper namespace="kopo.poly.persistance.mapper.IReservationMapper">
     <!-- 예약 일정 등록 쿼리 -->
     <insert id="insertReservationInfo" parameterType="ReservationDTO">
-        INSERT INTO RESERVATION (TRADER_NAME, CUSTOMER_NAME, RESERVATION_CONTENTS, RESERVATION_PRICE, RESERVATION_DATE, RESERVATION_STATE)
-        VALUES (#{traderName}, #{customerName}, #{reservationContents}, #{reservationPrice}, #{reservationDate}, #{reservationState})
+        INSERT INTO RESERVATION (TRADER_NAME, CUSTOMER_NAME, RESERVATION_CONTENTS, RESERVATION_PRICE, RESERVATION_DATE)
+        VALUES (#{traderName}, #{customerName}, #{reservationContents}, #{reservationPrice}, #{reservationDate})
     </insert>
 
     <!-- 예약 목록 조회 쿼리 -->
     <select id="getReservationList" resultType="ReservationDTO">
-        SELECT RESERVATION_NUMBER, TRADER_NAME, CUSTOMER_NAME, RESERVATION_CONTENTS, RESERVATION_PRICE, RESERVATION_DATE, RESERVATION_STATE
+        SELECT RESERVATION_NUMBER, TRADER_NAME, CUSTOMER_NAME, RESERVATION_CONTENTS, RESERVATION_PRICE, RESERVATION_DATE
         FROM RESERVATION
         ORDER BY RESERVATION_NUMBER DESC
     </select>
 
     <!-- 당일 예약 목록 조회 쿼리 -->
     <select id="getTodayReservationList" parameterType="ReservationDTO" resultType="ReservationDTO">
-        SELECT RESERVATION_NUMBER, TRADER_NAME, CUSTOMER_NAME, RESERVATION_CONTENTS, RESERVATION_PRICE, RESERVATION_DATE, RESERVATION_STATE
+        SELECT RESERVATION_NUMBER, TRADER_NAME, CUSTOMER_NAME, RESERVATION_CONTENTS, RESERVATION_PRICE, RESERVATION_DATE
         FROM RESERVATION
         WHERE RESERVATION_DATE = #{reservationDate}
     </select>
 
     <!-- 예약 상세정보 조회 쿼리 -->
     <select id="getReservationInfo" resultType="ReservationDTO">
-        SELECT RESERVATION_NUMBER, TRADER_NAME, CUSTOMER_NAME, RESERVATION_CONTENTS, RESERVATION_PRICE, RESERVATION_DATE, RESERVATION_STATE
+        SELECT RESERVATION_NUMBER, TRADER_NAME, CUSTOMER_NAME, RESERVATION_CONTENTS, RESERVATION_PRICE, RESERVATION_DATE
         FROM RESERVATION
         WHERE RESERVATION_NUMBER = #{reservationNumber}
     </select>
@@ -38,14 +38,6 @@
                                RESERVATION_DATE = #{reservationDate}
         WHERE
             RESERVATION_NUMBER = #{reservationNumber}
-    </update>
-
-    <!-- 예약 상태 변경 쿼리 -->
-    <update id="updateReservationState" parameterType="ReservationDTO">
-        UPDATE RESERVATION SET
-                               RESERVATION_STATE = #{reservationState}
-        WHERE
-            RESERVATION_NUMBER = #{reservationState}
     </update>
 
     <!-- 예약 일정 삭제 쿼리 -->

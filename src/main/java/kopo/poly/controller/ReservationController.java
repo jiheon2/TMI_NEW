@@ -1,7 +1,9 @@
 package kopo.poly.controller;
 
+import kopo.poly.dto.MsgDTO;
 import kopo.poly.dto.ReservationDTO;
 import kopo.poly.service.IReservationService;
+import kopo.poly.util.CmmUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +17,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -61,7 +65,7 @@ public class ReservationController {
 
     @ResponseBody
     @PostMapping(value = "/reservation/getReservationInfo")
-    public String getReservationInfo(@RequestBody String selectDate, Model model) throws Exception {
+    public List<ReservationDTO> getReservationInfo(@RequestBody String selectDate, Model model) throws Exception {
         log.info(this.getClass().getName() + ".getReservationInfo Start!");
 
         log.info("selectDate : " + selectDate);
@@ -81,8 +85,55 @@ public class ReservationController {
         log.info("값2 : " + rDTO.getReservationDate());
         log.info("값3 : " + rDTO.getReservationPrice());
 
-        model.addAttribute("rList", rList);
+        return rList;
+    }
 
-        return "/reservation/reservMng";
+    @ResponseBody
+    @PostMapping(value = "/reservation/insertReservationInfo")
+    public MsgDTO insertReservationInfo(HttpServletRequest request, HttpSession session) throws Exception {
+
+        log.info(this.getClass().getName() + ".insertReservationInfo Start!");
+
+        String msg = "";
+        int res = 0;
+        MsgDTO dto = null;
+
+        try {
+            String traderName = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+            String customerName = CmmUtil.nvl(request.getParameter("customerName"));
+            String reservationContents = CmmUtil.nvl(request.getParameter("reservationContents"));
+            String reservationPrice = CmmUtil.nvl(request.getParameter("reservationPrice"));
+            String reservationDate = CmmUtil.nvl(request.getParameter("selectedDateInput"));
+
+            log.info("traderName : " + traderName);
+            log.info("customerName : " + customerName);
+            log.info("reservationContents : " + reservationContents);
+            log.info("reservationPrice : " + reservationPrice);
+            log.info("reservationDate : " + reservationDate);
+
+            ReservationDTO pDTO = new ReservationDTO();
+            pDTO.setTraderName(traderName);
+            pDTO.setCustomerName(customerName);
+            pDTO.setReservationContents(reservationContents);
+            pDTO.setReservationPrice(reservationPrice);
+            pDTO.setReservationDate(reservationDate);
+
+            reservationService.insertReservationInfo(pDTO);
+            msg = "등록되었습니다";
+            res = 1;
+
+        } catch (Exception e) {
+            msg = "실패하였습니다 : " + e.getMessage();
+            log.info(e.toString());
+            e.printStackTrace();
+        } finally {
+            dto = new MsgDTO();
+            dto.setMsg(msg);
+            dto.setResult(res);
+            log.info(dto.toString());
+            log.info(this.getClass().getName() + ".insertReservationInfo End!");
+        }
+
+       return dto;
     }
 }

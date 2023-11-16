@@ -61,7 +61,8 @@
                                 return event.startStr === selectDate;
                             });
                             if (!hasEventsOnDate) {
-                                $("#calendarModal").modal("show");
+                                $("#selectedDateInput").val(selectDate);
+                                $("#addModal").modal("show");
                             } else {
                                 $.ajax({
                                     url: '/reservation/getReservationInfo', // 서버의 엔드포인트 URL
@@ -70,13 +71,27 @@
                                     success: function (response) {
                                         // 서버에서의 성공 처리
                                         console.log('선택한 날짜를 서버에 전송했습니다.');
-                                        // 그 외의 처리 가능
+                                        console.log(response)
+
+                                        var reservationInfoDiv = document.getElementById('reservationInfo');
+                                        reservationInfoDiv.innerHTML = ``;
+
+                                        for (var i = 0; i < response.length; i++) {
+                                            var reservation = response[i];
+                                            var html = `
+                                            <div class="form-group">예약자: ${reservation.customerName}</div>
+                                            <div class="form-group">예약 내용: ${reservation.reservationContents}</div>
+                                            <div class="form-group">가격: ${reservation.reservationPrice}</div>
+                                            <hr/>`;
+
+                                            reservationInfoDiv.insertAdjacentHTML('beforeend', html);
+                                        }
                                     },
                                     error: function (error) {
                                         // 서버에서의 에러 처리
                                         console.error('서버에 선택한 날짜를 전송하는 중 에러가 발생했습니다:', error);
                                     }
-                                }).done(function() {
+                                }).done(function () {
                                     $("#infoModal").modal("show");
                                 })
                             }
@@ -101,7 +116,65 @@
 
     </script>
     <script type="text/javascript">
+        $(document).ready(function () {
 
+            let f = document.getElementById("insertForm")
+
+            $("#closeAddModal").on("click", function () {
+                closeAddModal()
+            })
+
+            $("#closeInfoModal").on("click", function () {
+                closeInfoModal()
+            })
+            $("#addCalendar").on("click", function () {
+                addCalendar(f)
+            })
+
+            function closeAddModal() {
+                $('#addModal').modal('hide'); // 모달 1 숨기기
+            }
+
+            function closeInfoModal() {
+                $('#infoModal').modal('hide'); // 모달 1 숨기기
+            }
+
+            function addCalendar(f) {
+                if (f.customerName.value === "") {
+                    alert("예약자를 입력하시기 바랍니다.");
+                    f.customerName.focus();
+                    return;
+                }
+                if (f.reservationContents.value === "") {
+                    alert("예약내용을 입력하시기 바랍니다.");
+                    f.reservationContents.focus();
+                    return;
+                }
+                if (f.reservationPrice.value === "") {
+                    alert("가격을 입력하시기 바랍니다.");
+                    f.reservationPrice.focus();
+                    return;
+                }
+
+                var formData = new FormData($("#insertForm")[0]);
+
+                $.ajax({
+                    url: "/reservation/insertReservationInfo",
+                    type: "POST",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (json) {
+                        if (json.result === 1) {
+                            alert(json.msg);
+                            location.href = "/reservation/reservMng"
+                        } else {
+                            alert(json.msg)
+                        }
+                    }
+                })
+            }
+        })
     </script>
 </head>
 
@@ -119,31 +192,31 @@
         <div id='calendar'></div>
 
         <!-- 일정 추가 modal -->
-        <div class="modal fade" id="calendarModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
              aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">예약일정</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
                     </div>
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label class="col-form-label">예약자</label>
-                            <input type="text" class="form-control" id="customer" name="customer">
-                            <label class="col-form-label">예약내용</label>
-                            <input type="text" class="form-control" id="content" name="content">
-                            <label class="col-form-label">가격</label>
-                            <input type="text" class="form-control" id="price" name="price">
+                    <form id="insertForm" name="insertForm">
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label class="col-form-label">예약자</label>
+                                <input type="text" class="form-control" id="customerName" name="customerName">
+                                <label class="col-form-label">예약내용</label>
+                                <input type="text" class="form-control" id="reservationContents"
+                                       name="reservationContents">
+                                <label class="col-form-label">가격</label>
+                                <input type="text" class="form-control" id="reservationPrice" name="reservationPrice">
+                                <label class="col-form-label">예약일</label>
+                                <input type="text" class="form-control" readonly id="selectedDateInput" name="selectedDateInput">
+                            </div>
                         </div>
-                    </div>
+                    </form>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-warning" id="addCalendar">추가</button>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal"
-                                id="closeAddModal">취소
-                        </button>
+                        <button type="button" class="btn btn-secondary" id="closeAddModal">취소</button>
                     </div>
                 </div>
             </div>
@@ -157,38 +230,14 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">예약일정</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
                 </div>
                 <div class="modal-body">
-                    <div class="form-group" th:each="reservation : ${rList}">
-                        <label class="col-form-label">예약자</label>
-                        <span th:text="${reservation.customerName}"/>
-                        <label class="col-form-label">예약내용</label>
-                        <span th:text="${reservation.reservationContents}"/>
-                        <label class="col-form-label">가격</label>
-                        <span th:text="${reservation.reservationPrice}"/>
-                        <label class="col-form-label">날짜</label>
-                        <span th:text="${reservation.reservationDate}"/>
-                        <label class="col-form-label">상태</label>
-                        <span th:switch="${reservation.reservationState}">
-                            <span th:case="'1'"> <!-- 상태가 '1'일 때 -->
-                                <span>요청</span>
-                            </span>
-                            <span th:case="'2'"> <!-- 상태가 '2'일 때 -->
-                                <span>진행</span>
-                            </span>
-                            <span th:case="'3'"> <!-- 상태가 '3'일 때 -->
-                                <span>완료</span>
-                            </span>
-                        </span>
+                    <div class="form-group">
+                        <div id="reservationInfo"></div>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal"
-                            id="closeInfoModal">취소
-                    </button>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" id="closeInfoModal">취소</button>
+                    </div>
                 </div>
             </div>
         </div>
