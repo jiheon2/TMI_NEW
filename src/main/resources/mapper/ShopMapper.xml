@@ -72,7 +72,7 @@
 
     <!-- 상점 정보 조회 쿼리 -->
     <select id="getShopInfo" parameterType="ShopDTO" resultType="ShopDTO">
-        SELECT SHOP_NAME, SHOP_DESCRIPTION, IMAGE, MARKET_NAME
+        SELECT SHOP_NAME, SHOP_DESCRIPTION, IMAGE, MARKET_NAME, TRADER_NAME
         FROM SHOP
         WHERE TRADER_ID = #{traderId}
     </select>

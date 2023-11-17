@@ -411,14 +411,21 @@ public class TraderController {
         try {
             String traderId = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
             String traderPw = CmmUtil.nvl(request.getParameter("traderPw"));
+            String newTraderPw = CmmUtil.nvl(request.getParameter("npw"));
 
             log.info("traderId : " + traderId);
             log.info("traderPw : " + traderPw);
+            log.info("newTraderPw : " + newTraderPw);
+
+            if (traderPw.equals(newTraderPw)) {
+                msg = "같은 비밀번호를 입력하셨습니다.";
+                throw new Exception();
+            }
 
             pDTO = new TraderDTO();
 
             pDTO.setTraderId(traderId);
-            pDTO.setTraderPw(EncryptUtil.encHashSHA256(traderPw));
+            pDTO.setTraderPw(EncryptUtil.encHashSHA256(newTraderPw));
             log.info(pDTO.toString());
 
             res = traderService.updateTraderPw(pDTO);
@@ -431,7 +438,7 @@ public class TraderController {
                 msg = "오류로 인해 수정에 실패하였습니다";
             }
         }catch (Exception e) {
-            msg = "실패하였습니다 : " + e;
+            msg = "같은 비밀번호를 입력하셨습니다.";
             log.info(e.toString());
             e.printStackTrace();
         }finally {

@@ -8,11 +8,11 @@
         SELECT CONTENTS,
                CUSTOMER_ID,
                GOODS_NUMBER,
+               GOODS_NAME,
                REG_DT,
                REVIEW_NUMBER,
                SCORE,
-               TRADER_ID,
-               COUNT(*)
+               TRADER_ID
         FROM REVIEW
         WHERE #{traderId} = TRADER_ID
         ORDER BY REVIEW_NUMBER ASC

@@ -306,7 +306,7 @@
                 modalList.innerHTML = ''; // 리스트 초기화
                 for (var i = 0; i < listData.length; i++) {
                     var listItem = document.createElement('li');
-                    listItem.textContent = listData[i].text; //dto 형식으로 받아와서 .text 추가
+                    listItem.textContent = listData[i];
                     modalList.appendChild(listItem);
 
                     // 리스트 항목 클릭 시 값을 shopCode 필드에 설정
@@ -320,7 +320,7 @@
 
             openModalBtn.onclick = function () {
                 var shopCode = document.getElementById("shopCode").value;
-                console.log(1);
+
                 // AJAX를 사용하여 서버에서 데이터 가져오기
                 $.ajax({
                     url: '/market/list', // 서버 API 엔드포인트 URL
@@ -338,7 +338,52 @@
                     }
                 });
             }
+            // let app = document.getElementById('list');
+            let app = document.getElementsByTagName('li');
+
+            app.addEventListener("click", function (e) {
+                console.log("1");
+                if (e.target && e.target.nodeName == "LI") {
+                    alert("clicked : " + e.target.innerHTML);
+                }
+            })
         });
+    </script>
+    <script>
+        function fetchListData() {
+            var shopCode = document.getElementById("shopCode").value;
+            // AJAX를 사용하여 서버에서 데이터 가져오기
+            $.ajax({
+                url: '/market/list', // 서버 API 엔드포인트 URL
+                method: 'GET',
+                data: {
+                    shopCode: shopCode
+                },
+                success: function(response) {
+                    // 서버에서 받아온 데이터를 화면에 표시
+                    var list = document.getElementById('list');
+                    list.innerHTML = ''; // 리스트 초기화
+                    for (var i = 0; i < response.length; i++) {
+                        var listItem = document.createElement('li');
+                        listItem.textContent = response[i];
+                        list.appendChild(listItem);
+                    }
+                    list.style.display = 'block'; // 리스트를 표시
+                },
+                error: function(error) {
+                    console.error('데이터를 가져오는 중 오류가 발생했습니다: ', error);
+                }
+            });
+        }
+        // let app = document.getElementById('list');
+        let app = document.getElementsByTagName('li');
+
+        app.addEventListener("click", function(e) {
+            console.log("1");
+            if (e.target && e.target.nodeName == "LI") {
+                alert("clicked : " + e.target.innerHTML);
+            }
+        })
     </script>
 </head>
 

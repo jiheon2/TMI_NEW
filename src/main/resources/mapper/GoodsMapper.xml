@@ -6,23 +6,26 @@
 
     <!-- 상품 목록 조회 쿼리 -->
     <select id="getGoodsList" parameterType="GoodsDTO" resultType="GoodsDTO">
-        SELECT GOODS_NAME, PRICE, GOODS_TYPE, GOODS_NUMBER, GOODS_IMAGE, TRADER_ID
-        FROM GOODS
+        SELECT G.GOODS_NAME, G.PRICE, G.GOODS_TYPE, G.GOODS_NUMBER, G.GOODS_IMAGE, G.TRADER_ID, G.SHOP_NUMBER,
+               S.SHOP_NAME, S.SHOP_DESCRIPTION
+        FROM GOODS G, SHOP S
         WHERE 1=1
         <if test="traderId neq null and traderId neq ''">
-            AND TRADER_ID = #{traderId}
+            AND G.TRADER_ID = #{traderId}
         </if>
         <if test="shopNumber neq null and shopNumber neq ''">
-            AND SHOP_NUMBER = #{shopNumber}
+            AND G.SHOP_NUMBER = #{shopNumber}
         </if>
-        ORDER BY GOODS_NUMBER DESC
+        ORDER BY G.GOODS_NUMBER DESC
     </select>
 
     <!-- 상품 정보 조회 쿼리 -->
     <select id="getGoodsInfo" parameterType="GoodsDTO" resultType="GoodsDTO">
         SELECT G.GOODS_NAME, G.PRICE, G.GOODS_TYPE, G.GOODS_DESCRIPTION, G.GOODS_IMAGE, G.GOODS_NUMBER, AVG(R.SCORE) as avgScore, COUNT(R.SCORE) as countScore
-        FROM GOODS G, REVIEW R
+        FROM GOODS G
+                 LEFT JOIN REVIEW R ON G.GOODS_NUMBER = R.GOODS_NUMBER
         WHERE G.GOODS_NUMBER = #{goodsNumber}
+        GROUP BY G.GOODS_NAME, G.PRICE, G.GOODS_TYPE, G.GOODS_DESCRIPTION, G.GOODS_IMAGE, G.GOODS_NUMBER;
     </select>
 
     <!-- 상품 정보 수정 쿼리 -->

@@ -231,8 +231,21 @@ public class CustomerController {
 
         List<GoodsDTO> rList = Optional.ofNullable(goodsService.getGoodsList(pDTO)).orElseGet(ArrayList::new);
 
-        model.addAttribute("rList", rList);
 
+
+        String shopName;
+        String shopDescription;
+        if (!rList.isEmpty()) {
+            GoodsDTO firstGoods = rList.get(0);
+            shopName = firstGoods.getShopName();
+            shopDescription = firstGoods.getShopDescription();
+        } else {
+            shopName = "아직 이 시장에는 상점이 없어요";
+            shopDescription = "";
+        }
+        model.addAttribute("rList", rList);
+        model.addAttribute("shopName", shopName);
+        model.addAttribute("shopDescription", shopDescription);
         log.info(this.getClass().getName() + ".shop End!");
 
         return "/customer/shop";
@@ -255,12 +268,23 @@ public class CustomerController {
 
         String market = request.getParameter("marketNumber");
 
+        log.info("marketNumber : " + market);
+
         ShopDTO pDTO = new ShopDTO();
 
         pDTO.setMarketNumber(market);
 
         List<ShopDTO> rList = Optional.ofNullable(shopService.getShopList(pDTO)).orElseGet(ArrayList::new);
 
+        String marketName;
+        if (!rList.isEmpty()) {
+            ShopDTO firstShop = rList.get(0);
+            marketName = firstShop.getMarketName();
+        } else {
+            marketName = "아직 이 시장에는 상점이 없어요";
+        }
+
+        model.addAttribute("marketName", marketName);
         model.addAttribute("rList", rList);
 
         return "/customer/market";

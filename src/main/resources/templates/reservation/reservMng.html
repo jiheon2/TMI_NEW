@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TMI - 예약 관리</title>
-
+    <link rel="stylesheet" href="/assets/css/global.css">
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/bootstrap.css">
@@ -28,38 +28,153 @@
     <script>
 
         document.addEventListener('DOMContentLoaded', function () {
-            var calendarEl = document.getElementById('calendar');
-            var calendar = new FullCalendar.Calendar(calendarEl, {
-                timeZone: 'UTC',
-                initialView: 'dayGridMonth',
-                expandRows: true, // 화면에 맞게 높이 재설정
-                headerToolbar: {
-                    left: 'dayGridMonth, listWeek',
-                    center: 'title',
-                    right: 'prev,next today'
-                },
-                editable: true, // 수정 가능?
-                dayMaxEvents: true, // 이벤트가 오버되면 높이 제한 (+ 몇 개식으로 표현)
-                locale: 'ko', // 한국어 설정
-                dateClick: function () {
-                    $("#calendarModal").modal("show");
-                },
-                select: function (arg) { // 캘린더에서 드래그로 이벤트를 생성할 수 있다.
-                    var title = prompt('Event Title:');
-                    if (title) {
-                        calendar.addEvent({
-                            title: title,
-                            start: arg.start,
-                            end: arg.end,
-                            allDay: arg.allDay
-                        })
-                    }
-                    calendar.unselect()
-                }
-            });
-            calendar.render();
+            $(function () {
+                var request = $.ajax({
+                    url: "/reservation/getReservationList",
+                    method: "GET",
+                    dataType: "json"
+                });
+                request.done(function (data) {
+                    console.log(data);
+
+                    var calendarEl = document.getElementById('calendar');
+                    var calendar = new FullCalendar.Calendar(calendarEl, {
+                        timeZone: 'UTC',
+                        initialView: 'dayGridMonth',
+                        expandRows: true, // 화면에 맞게 높이 재설정
+                        headerToolbar: {
+                            left: 'dayGridMonth listWeek',
+                            center: 'title',
+                            right: 'prev,next today'
+                        },
+                        events: data,
+                        editable: true, // 수정 가능?
+                        dayMaxEvents: true, // 이벤트가 오버되면 높이 제한 (+ 몇 개식으로 표현)
+                        locale: 'ko', // 한국어 설정
+                        dateClick: function (info) {
+                            let selectDate = info.dateStr;
+                            // FullCalendar의 getEvents() 함수를 사용하여 이벤트 목록을 가져옵니다.
+                            let calendarEvents = calendar.getEvents();
+
+                            // 선택한 날짜에 해당하는 이벤트가 있는지 확인합니다.
+                            let hasEventsOnDate = calendarEvents.some(function (event) {
+                                return event.startStr === selectDate;
+                            });
+                            if (!hasEventsOnDate) {
+                                $("#selectedDateInput").val(selectDate);
+                                $("#addModal").modal("show");
+                            } else {
+                                $.ajax({
+                                    url: '/reservation/getReservationInfo', // 서버의 엔드포인트 URL
+                                    method: 'POST', // 또는 GET, 원하는 HTTP 메서드 사용
+                                    data: selectDate,
+                                    success: function (response) {
+                                        // 서버에서의 성공 처리
+                                        console.log('선택한 날짜를 서버에 전송했습니다.');
+                                        console.log(response)
+
+                                        var reservationInfoDiv = document.getElementById('reservationInfo');
+                                        reservationInfoDiv.innerHTML = ``;
+
+                                        for (var i = 0; i < response.length; i++) {
+                                            var reservation = response[i];
+                                            var html = `
+                                            <div class="form-group">예약자: ${reservation.customerName}</div>
+                                            <div class="form-group">예약 내용: ${reservation.reservationContents}</div>
+                                            <div class="form-group">가격: ${reservation.reservationPrice}</div>
+                                            <hr/>`;
+
+                                            reservationInfoDiv.insertAdjacentHTML('beforeend', html);
+                                        }
+                                    },
+                                    error: function (error) {
+                                        // 서버에서의 에러 처리
+                                        console.error('서버에 선택한 날짜를 전송하는 중 에러가 발생했습니다:', error);
+                                    }
+                                }).done(function () {
+                                    $("#infoModal").modal("show");
+                                })
+                            }
+                        },
+                        select: function (arg) { // 캘린더에서 드래그로 이벤트를 생성할 수 있다.
+                            var title = prompt('Event Title:');
+                            if (title) {
+                                calendar.addEvent({
+                                    title: title,
+                                    start: arg.start,
+                                    end: arg.end,
+                                    allDay: arg.allDay
+                                })
+                            }
+                            calendar.unselect()
+                        }
+                    });
+                    calendar.render();
+                })
+            })
         });
 
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            let f = document.getElementById("insertForm")
+
+            $("#closeAddModal").on("click", function () {
+                closeAddModal()
+            })
+
+            $("#closeInfoModal").on("click", function () {
+                closeInfoModal()
+            })
+            $("#addCalendar").on("click", function () {
+                addCalendar(f)
+            })
+
+            function closeAddModal() {
+                $('#addModal').modal('hide'); // 모달 1 숨기기
+            }
+
+            function closeInfoModal() {
+                $('#infoModal').modal('hide'); // 모달 1 숨기기
+            }
+
+            function addCalendar(f) {
+                if (f.customerName.value === "") {
+                    alert("예약자를 입력하시기 바랍니다.");
+                    f.customerName.focus();
+                    return;
+                }
+                if (f.reservationContents.value === "") {
+                    alert("예약내용을 입력하시기 바랍니다.");
+                    f.reservationContents.focus();
+                    return;
+                }
+                if (f.reservationPrice.value === "") {
+                    alert("가격을 입력하시기 바랍니다.");
+                    f.reservationPrice.focus();
+                    return;
+                }
+
+                var formData = new FormData($("#insertForm")[0]);
+
+                $.ajax({
+                    url: "/reservation/insertReservationInfo",
+                    type: "POST",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (json) {
+                        if (json.result === 1) {
+                            alert(json.msg);
+                            location.href = "/reservation/reservMng"
+                        } else {
+                            alert(json.msg)
+                        }
+                    }
+                })
+            }
+        })
     </script>
 </head>
 
@@ -76,69 +191,72 @@
         </header>
         <div id='calendar'></div>
 
-        <!--        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"-->
-        <!--             aria-hidden="true">-->
-        <!--            <div class="modal-dialog" role="document">-->
-        <!--                <div class="modal-content">-->
-        <!--                    <div class="modal-header">-->
-        <!--                        <h5 class="modal-title" id="myModalLabel">모달 제목</h5>-->
-        <!--                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">-->
-        <!--                            <span aria-hidden="true">&times;</span>-->
-        <!--                        </button>-->
-        <!--                    </div>-->
-        <!--                    <div class="modal-body">-->
-        <!--                        &lt;!&ndash; 모달 내용 &ndash;&gt;-->
-        <!--                        <p>모달 내용을 여기에 추가하세요.</p>-->
-        <!--                    </div>-->
-        <!--                </div>-->
-        <!--            </div>-->
-        <!--        </div>-->
-
-        <!-- modal 추가 -->
-        <div class="modal fade" id="calendarModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        <!-- 일정 추가 modal -->
+        <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
              aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">예약일정</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
                     </div>
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label class="col-form-label">예약자</label>
-                            <input type="text" class="form-control" id="customer" name="customer">
-                            <label class="col-form-label">예약내용</label>
-                            <input type="text" class="form-control" id="content" name="content">
-                            <label class="col-form-label">가격</label>
-                            <input type="text" class="form-control" id="price" name="price">
+                    <form id="insertForm" name="insertForm">
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label class="col-form-label">예약자</label>
+                                <input type="text" class="form-control" id="customerName" name="customerName">
+                                <label class="col-form-label">예약내용</label>
+                                <input type="text" class="form-control" id="reservationContents"
+                                       name="reservationContents">
+                                <label class="col-form-label">가격</label>
+                                <input type="text" class="form-control" id="reservationPrice" name="reservationPrice">
+                                <label class="col-form-label">예약일</label>
+                                <input type="text" class="form-control" readonly id="selectedDateInput" name="selectedDateInput">
+                            </div>
                         </div>
-                    </div>
+                    </form>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-warning" id="addCalendar">추가</button>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal"
-                                id="sprintSettingModalClose">취소
-                        </button>
+                        <button type="button" class="btn btn-secondary" id="closeAddModal">취소</button>
                     </div>
-
                 </div>
             </div>
         </div>
     </div>
-    <!-- footer -->
-    <footer>
-        <div class="footer clearfix mb-0 text-muted">
-            <div class="float-start">
-                <p>2021 &copy; Mazer</p>
-            </div>
-            <div class="float-end">
-                <p>Crafted with <span class="text-danger"><i class="bi bi-heart"></i></span> by <a
-                        href="http://ahmadsaugi.com">A. Saugi</a></p>
+
+    <!-- 일정 조회 modal -->
+    <div class="modal fade" id="infoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">예약일정</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <div id="reservationInfo"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" id="closeInfoModal">취소</button>
+                    </div>
+                </div>
             </div>
         </div>
-    </footer>
-    <!-- -->
+    </div>
+</div>
+
+<!-- footer -->
+<footer>
+    <div class="footer clearfix mb-0 text-muted">
+        <div class="float-start">
+            <p>2021 &copy; Mazer</p>
+        </div>
+        <div class="float-end">
+            <p>Crafted with <span class="text-danger"><i class="bi bi-heart"></i></span> by <a
+                    href="http://ahmadsaugi.com">A. Saugi</a></p>
+        </div>
+    </div>
+</footer>
+<!-- -->
 </div>
 <!-- jQuery 라이브러리 추가 -->
 <script src="/assets/js/jquery-3.6.0.min.js"></script>
