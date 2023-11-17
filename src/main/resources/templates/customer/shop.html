@@ -1,18 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="zxx">
+
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <meta name="description" content="" />
-    <meta name="author" content="" />
-    <title>Shop Homepage - Start Bootstrap Template</title>
-    <link rel="stylesheet" href="/assets/css/global.css">
-    <!-- Favicon-->
-    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
-    <!-- Bootstrap icons-->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
-    <!-- Core theme CSS (includes Bootstrap)-->
-    <link href="/assets/scss/styles.css" rel="stylesheet" />
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>aranoz</title>
     <link rel="icon" href="/assets/images/favicon.png">
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
@@ -20,147 +13,333 @@
     <link rel="stylesheet" href="/assets/css/animate.css">
     <!-- owl carousel CSS -->
     <link rel="stylesheet" href="/assets/css/owl.carousel.min.css">
+    <!-- nice select CSS -->
+    <link rel="stylesheet" href="/assets/css/nice-select.css">
     <!-- font awesome CSS -->
-    <link rel="stylesheet" href="/assets/css/all.css">
+    <link rel="stylesheet" href="/assets/css/font.css">
     <!-- flaticon CSS -->
     <link rel="stylesheet" href="/assets/css/flaticon.css">
     <link rel="stylesheet" href="/assets/css/themify-icons.css">
-    <!-- font awesome CSS -->
-    <link rel="stylesheet" href="/assets/css/magnific-popup.css">
     <!-- swiper CSS -->
     <link rel="stylesheet" href="/assets/css/slick.css">
+    <link rel="stylesheet" href="/assets/css/price_rangs.css">
     <!-- style CSS -->
     <link rel="stylesheet" href="/assets/css/style.css">
-    <script src="https://kit.fontawesome.com/cb71939295.js" crossorigin="anonymous"></script>
-        <script src="/assets/js/jquery-3.6.0.min.js"></script>
-        <script type="text/javascript">
-            //상세보기 이동
+</head>
 
-
-            function goGoods(goodsNumber) {
-
-                location.href = "/customer/single-product?goodsNumber=" + goodsNumber;
-            }
-        </script>
-        <script src="/js/jquery-3.6.0.min.js"></script>
-    </head>
-    <body>
-      
-          <!--::header part start::-->
-     <header class="main_menu home_menu">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-12">
-                    <nav class="navbar navbar-expand-lg navbar-light">
-                        <a class="navbar-brand" href="index"> <img src="/assets/images/logo.png" alt="logo"> </a>
-
-                    <div class="collapse navbar-collapse main-menu-item" id="navbarSupportedContent" style="height: 100px">
-                    </div>
-                    <div class="hearer_icon d-flex">
-                        <div>
-                            <a><i class="fa-solid fa-map-location-dot" style="font-size:25px"></i>
-                            </a>
-                        </div>
-                        <div>
-                            <a><i class="fa-solid fa-comments" style="font-size:25px"></i>
-                            </a>
-                        </div>
-                        <a href=""><i class="fa-solid fa-heart" style="font-size:25px"></i></a>
-
-                        <div class="dropdown cart">
-                            <a class="dropdown-toggle" href="#" id="navbarDropdown3" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fas fa-cart-plus" style="font-size:25px"></i>
-                            </a>
-                        </div>
-                        <a><i class="fa-solid fa-customer" style="font-size:25px"></i>
-                        </a>
-                    </div>
+<body>
+<!--::header part start::-->
+<header class="main_menu home_menu">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-12">
+                <nav class="navbar navbar-expand-lg navbar-light">
+                    <a class="navbar-brand" href="/customer/customerIndex"><img src="/assets/images/bird/logo2.png" alt="logo" style="width: 100px" , height="50px"></a>
                 </nav>
             </div>
         </div>
     </div>
-
 </header>
+<!-- Header part end-->
+
 <!-- breadcrumb start-->
-<section class="breadcrumb breadcrumb_bg" style="background-image: url(img/%EC%83%89.png)">
+<section class="breadcrumb" style="background-color: azure">
     <div class="container">
-        <div class="row justify-content-center" >
+        <div class="row justify-content-center">
             <div class="col-lg-8">
                 <div class="breadcrumb_iner">
+                    <img src="/assets/images/bird/bird1.png" style="width: 400px">
                     <div class="breadcrumb_iner_item">
-                        <h2>장바구니</h2>
-                        <p>현재 예약하신 것들을 알려드립니다</p>
+                        <h2>지도</h2>
+                        <p>시장의 위치를 검색하세요!</p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-  </section>
-  <!-- breadcrumb start-->
-   
-       
-        <!-- Section-->
-        <section class="py-5">
-            <div class="container px-4 px-lg-5 mt-5">
-                <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center" th:each="dto:${rList}">
-                    <div class="col mb-5" >
-                        <div class="card h-100">
-                            <!-- Sale badge-->
-                            <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale</div>
-                            <!-- Product image-->
-                            <img class="card-img-top" th:src="${dto.goodsImage}" alt="..." />
-                            <!-- Product details-->
-                            <div class="card-body p-4">
-                                <div class="text-center">
-                                    <!-- Product name-->
-                                    <h5 class="fw-bolder">[[${dto.goodsName}]]</h5>
-                                    <!-- Product price-->
-                                    <span class="text-muted text-decoration-line-through">[[${dto.price}]]</span>
+</section>
+<!-- breadcrumb end-->
+
+<!-- navigation -->
+<div th:replace="customerNav.html"></div>
+<!-- ---------- -->
+
+<!--================Category Product Area =================-->
+<section class="cat_product_area section_padding">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="left_sidebar_area">
+                    <aside class="left_widgets p_filter_widgets">
+                        <div class="l_w_title">
+                            <h3>Browse Categories</h3>
+                        </div>
+                        <div class="widgets_inner">
+                            <ul class="list">
+                                <li>
+                                    <a href="#">Frozen Fish</a>
+                                    <span>(250)</span>
+                                </li>
+                                <li>
+                                    <a href="#">Dried Fish</a>
+                                    <span>(250)</span>
+                                </li>
+                                <li>
+                                    <a href="#">Fresh Fish</a>
+                                    <span>(250)</span>
+                                </li>
+                                <li>
+                                    <a href="#">Meat Alternatives</a>
+                                    <span>(250)</span>
+                                </li>
+                                <li>
+                                    <a href="#">Fresh Fish</a>
+                                    <span>(250)</span>
+                                </li>
+                                <li>
+                                    <a href="#">Meat Alternatives</a>
+                                    <span>(250)</span>
+                                </li>
+                                <li>
+                                    <a href="#">Meat</a>
+                                    <span>(250)</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </aside>
+
+                    <aside class="left_widgets p_filter_widgets">
+                        <div class="l_w_title">
+                            <h3>Product filters</h3>
+                        </div>
+                        <div class="widgets_inner">
+                            <ul class="list">
+                                <li>
+                                    <a href="#">Apple</a>
+                                </li>
+                                <li>
+                                    <a href="#">Asus</a>
+                                </li>
+                                <li class="active">
+                                    <a href="#">Gionee</a>
+                                </li>
+                                <li>
+                                    <a href="#">Micromax</a>
+                                </li>
+                                <li>
+                                    <a href="#">Samsung</a>
+                                </li>
+                            </ul>
+                            <ul class="list">
+                                <li>
+                                    <a href="#">Apple</a>
+                                </li>
+                                <li>
+                                    <a href="#">Asus</a>
+                                </li>
+                                <li class="active">
+                                    <a href="#">Gionee</a>
+                                </li>
+                                <li>
+                                    <a href="#">Micromax</a>
+                                </li>
+                                <li>
+                                    <a href="#">Samsung</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </aside>
+
+                    <aside class="left_widgets p_filter_widgets">
+                        <div class="l_w_title">
+                            <h3>Color Filter</h3>
+                        </div>
+                        <div class="widgets_inner">
+                            <ul class="list">
+                                <li>
+                                    <a href="#">Black</a>
+                                </li>
+                                <li>
+                                    <a href="#">Black Leather</a>
+                                </li>
+                                <li class="active">
+                                    <a href="#">Black with red</a>
+                                </li>
+                                <li>
+                                    <a href="#">Gold</a>
+                                </li>
+                                <li>
+                                    <a href="#">Spacegrey</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </aside>
+                </div>
+            </div>
+            <div class="col-lg-9">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="product_top_bar d-flex justify-content-between align-items-center">
+                            <div class="single_product_menu">
+                                <p><span>10000 </span> Prodict Found</p>
+                            </div>
+                            <div class="single_product_menu d-flex">
+                                <h5>short by : </h5>
+                                <select>
+                                    <option data-display="Select">name</option>
+                                    <option value="1">price</option>
+                                    <option value="2">product</option>
+                                </select>
+                            </div>
+                            <div class="single_product_menu d-flex">
+                                <h5>show :</h5>
+                                <div class="top_pageniation">
+                                    <ul>
+                                        <li>1</li>
+                                        <li>2</li>
+                                        <li>3</li>
+                                    </ul>
                                 </div>
                             </div>
-                            <!-- Product actions-->
-                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" th:attr="onclick='goGoods(\'' + ${dto.goodsNumber} + '\')'">물건 보러가기</a></div>
+                            <div class="single_product_menu d-flex">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" placeholder="search" aria-describedby="inputGroupPrepend">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="inputGroupPrepend"><i class="ti-search"></i></span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
+
+                <div class="row align-items-center latest_product_inner">
+                    <div class="col-lg-4 col-sm-6" th:each="dto : ${rList}">
+                        <div class="single_product_item">
+                            <div class="goodsImage">
+                                <img th:src="${dto.goodsImage}" alt="">
+                            </div>
+                            <div class="single_product_text">
+                                <h4 th:text="${dto.goodsName}">Quartz Belt Watch</h4>
+                                <h3 th:text="${dto.price}">$150.00</h3>
+                                <a href="#" class="add_cart">물건 사러가기<i class="ti-heart"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-12">
+                        <div class="pageination">
+                            <nav aria-label="Page navigation example">
+                                <ul class="pagination justify-content-center">
+                                    <li class="page-item">
+                                        <a class="page-link" href="#" aria-label="Previous">
+                                            <i class="ti-angle-double-left"></i>
+                                        </a>
+                                    </li>
+                                    <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">4</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">5</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">6</a></li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="#" aria-label="Next">
+                                            <i class="ti-angle-double-right"></i>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </section>
-        <!-- Footer-->
-    
-        <!-- Bootstrap core JS-->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-        <!-- Core theme JS-->
-        <script src="/assets/js/scripts.js"></script>
-         <!-- jquery plugins here-->
-    <!-- jquery -->
-    <script src="/assets/js/jquery-1.12.1.min.js"></script>
-    <!-- popper js -->
-    <script src="/assets/js/popper.min.js"></script>
-    <!-- bootstrap js -->
-    <script src="/assets/js/bootstrap.min.js"></script>
-    <!-- easing js -->
-    <script src="/assets/js/jquery.magnific-popup.js"></script>
-    <!-- swiper js -->
-    <script src="/assets/js/swiper.min.js"></script>
-    <!-- swiper js -->
-    <script src="/assets/js/masonry.pkgd.js"></script>
-    <!-- particles js -->
-    <script src="/assets/js/owl.carousel.min.js"></script>
-    <script src="/assets/js/jquery.nice-select.min.js"></script>
-    <!-- slick js -->
-    <script src="/assets/js/slick.min.js"></script>
-    <script src="/assets/js/jquery.counterup.min.js"></script>
-    <script src="/assets/js/waypoints.min.js"></script>
-    <script src="/assets/js/contact.js"></script>
-    <script src="/assets/js/jquery.ajaxchimp.min.js"></script>
-    <script src="/assets/js/jquery.form.js"></script>
-    <script src="/assets/js/jquery.validate.min.js"></script>
-    <script src="/assets/js/mail-script.js"></script>
-    <script src="/assets/js/stellar.js"></script>
-    <script src="/assets/js/price_rangs.js"></script>
-    <!-- custom js -->
-    <script src="/assets/js/custom.js"></script>
+        </div>
+    </div>
+</section>
+<!--================End Category Product Area =================-->
+
+<!-- product_list part start-->
+<section class="product_list best_seller">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-12">
+                <div class="section_tittle text-center">
+                    <h2>Best Sellers <span>shop</span></h2>
+                </div>
+            </div>
+        </div>
+        <div class="row align-items-center justify-content-between">
+            <div class="col-lg-12">
+                <div class="best_product_slider owl-carousel">
+                    <div class="single_product_item">
+                        <img src="img/product/product_1.png" alt="">
+                        <div class="single_product_text">
+                            <h4>Quartz Belt Watch</h4>
+                            <h3>$150.00</h3>
+                        </div>
+                    </div>
+                    <div class="single_product_item">
+                        <img src="img/product/product_2.png" alt="">
+                        <div class="single_product_text">
+                            <h4>Quartz Belt Watch</h4>
+                            <h3>$150.00</h3>
+                        </div>
+                    </div>
+                    <div class="single_product_item">
+                        <img src="img/product/product_3.png" alt="">
+                        <div class="single_product_text">
+                            <h4>Quartz Belt Watch</h4>
+                            <h3>$150.00</h3>
+                        </div>
+                    </div>
+                    <div class="single_product_item">
+                        <img src="img/product/product_4.png" alt="">
+                        <div class="single_product_text">
+                            <h4>Quartz Belt Watch</h4>
+                            <h3>$150.00</h3>
+                        </div>
+                    </div>
+                    <div class="single_product_item">
+                        <img src="img/product/product_5.png" alt="">
+                        <div class="single_product_text">
+                            <h4>Quartz Belt Watch</h4>
+                            <h3>$150.00</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- product_list part end-->
+
+<!-- jquery plugins here-->
+<script src="/assets/js/jquery-3.6.0.min.js"></script>
+<!-- popper js -->
+<script src="/assets/js/popper.min.js"></script>
+<!-- bootstrap js -->
+<script src="/assets/js/bootstrap.min.js"></script>
+<!-- easing js -->
+<script src="/assets/js/jquery.magnific-popup.js"></script>
+<!-- swiper js -->
+<script src="/assets/js/swiper.min.js"></script>
+<!-- swiper js -->
+<script src="/assets/js/masonry.pkgd.js"></script>
+<!-- particles js -->
+<script src="/assets/js/owl.carousel.min.js"></script>
+<script src="/assets/js/jquery.nice-select.min.js"></script>
+<!-- slick js -->
+<script src="/assets/js/slick.min.js"></script>
+<script src="/assets/js/jquery.counterup.min.js"></script>
+<script src="/assets/js/waypoints.min.js"></script>
+<script src="/assets/js/contact.js"></script>
+<script src="/assets/js/jquery.ajaxchimp.min.js"></script>
+<script src="/assets/js/jquery.form.js"></script>
+<script src="/assets/js/jquery.validate.min.js"></script>
+<script src="/assets/js/mail-script.js"></script>
+<script src="/assets/js/stellar.js"></script>
+<script src="/assets/js/price_rangs.js"></script>
+<!-- custom js -->
+<script src="/assets/js/custom.js"></script>
 </body>
+
 </html>

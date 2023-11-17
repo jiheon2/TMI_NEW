@@ -255,6 +255,8 @@ public class CustomerController {
 
         String market = request.getParameter("marketNumber");
 
+        log.info("marketNumber : " + market);
+
         ShopDTO pDTO = new ShopDTO();
 
         pDTO.setMarketNumber(market);

@@ -4,6 +4,9 @@
     font-weight: normal;
     font-style: normal;
 }
+* {
+    font-family: 'BMJUA';
+}
 
 body {
     font-family: 'BMJUA';    
