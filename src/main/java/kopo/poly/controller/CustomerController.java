@@ -471,11 +471,10 @@ public class CustomerController {
 
     // 상품 상세정보 조회페이지 이동코드
     @GetMapping(value = "/single-product")
-    public String singleProduct(HttpServletRequest request, ModelMap model) throws Exception {
+    public String singleProduct(HttpServletRequest request, ModelMap model, HttpSession session) throws Exception {
         log.info(this.getClass().getName() + ".goodsMngInfo Start!");
 
         String goodsNumber = request.getParameter("goodsNumber");
-
         log.info("goodsNumber : " + goodsNumber);
 
         GoodsDTO pDTO = new GoodsDTO();
