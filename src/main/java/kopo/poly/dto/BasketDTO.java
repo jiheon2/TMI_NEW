@@ -15,4 +15,5 @@ public class BasketDTO {
     private String quantity;
     private String goodsName;
     private String goodsImage;
+    private String customerId;
 }

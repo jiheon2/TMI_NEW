@@ -18,4 +18,6 @@ public class GoodsDTO {
     private String traderId;
     private String avgScore;
     private String countScore;
+    private String shopName;
+    private String shopDescription;
 }
