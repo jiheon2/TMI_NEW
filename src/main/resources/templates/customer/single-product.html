@@ -26,6 +26,7 @@
     <link rel="stylesheet" href="/assets/css/style.css">
     <script src="https://kit.fontawesome.com/cb71939295.js" crossorigin="anonymous"></script>
     <script src="/assets/js/jquery-3.6.0.min.js"></script>
+<!--    별점 체크-->
     <script>
 
         //별점 마킹 모듈 프로토타입으로 생성
@@ -56,12 +57,17 @@
         });
 
     </script>
+
+<!--    리뷰 작성-->
     <script th:inline="javascript">
 
         const goodsNumber = /*[[${gDTO.goodsNumber}]]*/ '';
         const goodsName = /*[[${gDTO.goodsName}]]*/ '';
         const traderId = /*[[${gDTO.traderId}]]*/ '';
         const customerId = /*[[${session.SS_ID}]]*/ '';
+        const price = /*[[${gDTO.price}]]*/ '';
+        const goodsImage = /*[[${gDTO.goodsImage}]]*/ '';
+        const shopName = /*[[${gDTO.shopName}]]*/ '';
 
         $(document).ready(function() {
             let f = document.getElementById("f");
@@ -74,8 +80,15 @@
             $("#writeReview").on("click", function () {
                 writeReview(f)
             })
+            $("#doBasket").on("click", function () {
+                doBasket()
+            })
+            $("#changeLike").on("click", function () {
+                changeLike()
+            })
             function writeReview(f) {
                 if(customerId === "") {
+                    alert("로그인 하세요")
                     location.href="/customer/login";
                 }
                     if(f.rating.rate == 0){
@@ -101,12 +114,74 @@
                             traderId  : traderId,
                             goodsName : goodsName,
                             goodsNumber: goodsNumber,
-                            customerId : customerId},
+                            },
                     success: function (json) {
 
                         if (json.result === 1) {
                             alert(json.msg);
                             location.href = "/customer/single-product?goodsNumber=" + goodsNumber;
+
+                        } else {
+                            alert(json.msg);
+                        }
+
+                    }
+                })
+            }
+            <!--    장바구니에 담기-->
+            function doBasket() {
+                if(customerId === "") {
+                    alert("로그인 하세요")
+                    location.href="/customer/login";
+                }
+
+                var quantity = document.getElementById("quantity").value;
+                console.log(quantity)
+
+                $.ajax({
+                    url: "/basket/doBasket",
+                    type: "post", // 전송방식은 Post
+                    dataType: "JSON", // 전송 결과는 JSON으로 받기
+                    data: {
+                        quantity : quantity,
+                        price : price,
+                        goodsName : goodsName,
+                        goodsNumber: goodsNumber,
+                        goodsImage : goodsImage
+                    },
+                    success: function (json) {
+
+                        if (json.result === 1) {
+                            alert(json.msg);
+
+                        } else {
+                            alert(json.msg);
+                        }
+
+                    }
+                })
+            }
+            <!--    찜목록에 담기-->
+            function changeLike() {
+                if(customerId === "") {
+                    alert("로그인 하세요")
+                    location.href="/customer/login";
+                }
+                $.ajax({
+                    url: "/wishlist/doWishlist",
+                    type: "post", // 전송방식은 Post
+                    dataType: "JSON", // 전송 결과는 JSON으로 받기
+                    data: {
+                        shopName : shopName,
+                        price : price,
+                        goodsName : goodsName,
+                        goodsNumber: goodsNumber,
+                        goodsImage : goodsImage
+                    },
+                    success: function (json) {
+
+                        if (json.result === 1) {
+                            alert(json.msg);
 
                         } else {
                             alert(json.msg);
@@ -207,7 +282,7 @@
                             <input class="input-number" id="quantity" type="text" value="1" min="0" max="10">
                             <span class="number-increment"> <i class="ti-plus"></i></span>
                         </div>
-                        <a href="#" id="addCart" class="btn_3">장바구니에 담기</a>
+                        <a href="#" id="doBasket"  class="btn_3">장바구니에 담기</a>
                         <a href="#" id="changeLike" class="like_us"> <i class="ti-heart"></i> </a>
                     </div>
                 </div>

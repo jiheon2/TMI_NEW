@@ -9,7 +9,7 @@ import lombok.ToString;
 @ToString
 public class BasketDTO {
     private String basketNumber;
-    private String customerNumber;
+    private String customerId;
     private String goodsNumber;
     private String price;
     private String quantity;
