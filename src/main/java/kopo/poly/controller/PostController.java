@@ -30,6 +30,7 @@ public class PostController {
     private final IFileService fileService;
 
     //GET 방식은 데이터 조회, POST 방식에서 새로운 데이터 추가.
+
     // 게시글 목록 조회 및 페이지 이동 코드
     // 구현완료(11/13)
     @GetMapping(value = "/postList")

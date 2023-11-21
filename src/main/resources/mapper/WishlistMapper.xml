@@ -3,5 +3,9 @@
 
 <!-- JAVA와 연결할 Mapper 파일 설정 -->
 <mapper namespace="kopo.poly.persistance.mapper.IWishlistMapper">
-
+    <!-- 찜목록에 담기 쿼리 -->
+    <insert id="addWishlist" parameterType="WishListDTO">
+        INSERT INTO WISHLIST (WISHLIST_NUMBER, CUSTOMER_ID, GOODS_NUMBER,SHOP_NAME, GOODS_NAME, GOODS_IMAGE)
+        VALUES ((SELECT IFNULL(MAX(A.BASKET_NUMBER), 0) + 1 FROM BASKET A), #{customerId}, #{goodsNumber}, #{shopName}, #{goodsName}, #{goodsImage})
+    </insert>
 </mapper>

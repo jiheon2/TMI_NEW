@@ -6,7 +6,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>aranoz</title>
-    <link rel="icon" href="/assets/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
     <!-- animate CSS -->
@@ -16,18 +16,15 @@
     <!-- nice select CSS -->
     <link rel="stylesheet" href="/assets/css/nice-select.css">
     <!-- font awesome CSS -->
-    <link rel="stylesheet" href="/assets/css/all.css">
+    <link rel="stylesheet" href="/assets/css/font.css">
     <!-- flaticon CSS -->
     <link rel="stylesheet" href="/assets/css/flaticon.css">
     <link rel="stylesheet" href="/assets/css/themify-icons.css">
-    <!-- font awesome CSS -->
-    <link rel="stylesheet" href="/assets/css/magnific-popup.css">
     <!-- swiper CSS -->
     <link rel="stylesheet" href="/assets/css/slick.css">
     <link rel="stylesheet" href="/assets/css/price_rangs.css">
     <!-- style CSS -->
     <link rel="stylesheet" href="/assets/css/style.css">
-    <script src="https://kit.fontawesome.com/cb71939295.js" crossorigin="anonymous"></script>
     <script type="text/javascript">
         //상세보기 이동
         function goShop(shopNumber) {
@@ -43,223 +40,60 @@
         <div class="row align-items-center">
             <div class="col-lg-12">
                 <nav class="navbar navbar-expand-lg navbar-light">
-                    <a class="navbar-brand" href="index"> <img src="/assets/images/logo.png" alt="logo"> </a>
-
-                    <div class="collapse navbar-collapse main-menu-item" id="navbarSupportedContent"
-                         style="height: 100px">
-                    </div>
-                    <div class="hearer_icon d-flex">
-                        <div>
-                            <a><i class="fa-solid fa-map-location-dot" style="font-size:25px"></i>
-                            </a>
-                        </div>
-                        <div>
-                            <a><i class="fa-solid fa-comments" style="font-size:25px"></i>
-                            </a>
-                        </div>
-                        <a href=""><i class="fa-solid fa-heart" style="font-size:25px"></i></a>
-
-                        <div class="dropdown cart">
-                            <a class="dropdown-toggle" href="#" id="navbarDropdown3" role="button"
-                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fas fa-cart-plus" style="font-size:25px"></i>
-                            </a>
-                        </div>
-                        <a><i class="fa-solid fa-customer" style="font-size:25px"></i>
-                        </a>
-                    </div>
+                    <a class="navbar-brand" href="/customer/customerIndex"><img src="/assets/images/bird/logo2.png" alt="logo" style="width: 100px" , height="50px"></a>
                 </nav>
             </div>
         </div>
     </div>
-
 </header>
 <!-- Header part end-->
 
-<!--================Home Banner Area =================-->
 <!-- breadcrumb start-->
-<section class="breadcrumb breadcrumb_bg">
+<section class="breadcrumb" style="background-color: azure">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-lg-8">
                 <div class="breadcrumb_iner">
+                    <img src="/assets/images/bird/bird1.png" style="width: 400px">
                     <div class="breadcrumb_iner_item">
-                        <h2>Shop Category</h2>
-                        <p>Home <span>-</span> Shop Category</p>
+                        <h2>[[${marketName}]]</h2>
+                        <p>수많은 상점들을 구경하세요!</p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
-<!-- breadcrumb start-->
+<!-- breadcrumb end-->
+
+<!-- navigation -->
+<div th:replace="customerNav.html"></div>
+<!-- ---------- -->
 
 <!--================Category Product Area =================-->
 <section class="cat_product_area section_padding">
     <div class="container">
         <div class="row">
-            <div class="col-lg-3">
-                <div class="left_sidebar_area">
-                    <aside class="left_widgets p_filter_widgets">
-                        <div class="l_w_title">
-                            <h3>Browse Categories</h3>
-                        </div>
-                        <div class="widgets_inner">
-                            <ul class="list">
-                                <li>
-                                    <a href="#">Frozen Fish</a>
-                                    <span>(250)</span>
-                                </li>
-                                <li>
-                                    <a href="#">Dried Fish</a>
-                                    <span>(250)</span>
-                                </li>
-                                <li>
-                                    <a href="#">Fresh Fish</a>
-                                    <span>(250)</span>
-                                </li>
-                                <li>
-                                    <a href="#">Meat Alternatives</a>
-                                    <span>(250)</span>
-                                </li>
-                                <li>
-                                    <a href="#">Fresh Fish</a>
-                                    <span>(250)</span>
-                                </li>
-                                <li>
-                                    <a href="#">Meat Alternatives</a>
-                                    <span>(250)</span>
-                                </li>
-                                <li>
-                                    <a href="#">Meat</a>
-                                    <span>(250)</span>
-                                </li>
-                            </ul>
-                        </div>
-                    </aside>
-
-                    <aside class="left_widgets p_filter_widgets">
-                        <div class="l_w_title">
-                            <h3>Product filters</h3>
-                        </div>
-                        <div class="widgets_inner">
-                            <ul class="list">
-                                <li>
-                                    <a href="#">Apple</a>
-                                </li>
-                                <li>
-                                    <a href="#">Asus</a>
-                                </li>
-                                <li class="active">
-                                    <a href="#">Gionee</a>
-                                </li>
-                                <li>
-                                    <a href="#">Micromax</a>
-                                </li>
-                                <li>
-                                    <a href="#">Samsung</a>
-                                </li>
-                            </ul>
-                            <ul class="list">
-                                <li>
-                                    <a href="#">Apple</a>
-                                </li>
-                                <li>
-                                    <a href="#">Asus</a>
-                                </li>
-                                <li class="active">
-                                    <a href="#">Gionee</a>
-                                </li>
-                                <li>
-                                    <a href="#">Micromax</a>
-                                </li>
-                                <li>
-                                    <a href="#">Samsung</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </aside>
-
-                    <aside class="left_widgets p_filter_widgets">
-                        <div class="l_w_title">
-                            <h3>Color Filter</h3>
-                        </div>
-                        <div class="widgets_inner">
-                            <ul class="list">
-                                <li>
-                                    <a href="#">Black</a>
-                                </li>
-                                <li>
-                                    <a href="#">Black Leather</a>
-                                </li>
-                                <li class="active">
-                                    <a href="#">Black with red</a>
-                                </li>
-                                <li>
-                                    <a href="#">Gold</a>
-                                </li>
-                                <li>
-                                    <a href="#">Spacegrey</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </aside>
-
-                    <aside class="left_widgets p_filter_widgets price_rangs_aside">
-                        <div class="l_w_title">
-                            <h3>Price Filter</h3>
-                        </div>
-                        <div class="widgets_inner">
-                            <div class="range_item">
-                                <!-- <div id="slider-range"></div> -->
-                                <input type="text" class="js-range-slider" value=""/>
-                                <div class="d-flex">
-                                    <div class="price_text">
-                                        <p>Price :</p>
-                                    </div>
-                                    <div class="price_value d-flex justify-content-center">
-                                        <input type="text" class="js-input-from" id="amount1" readonly/>
-                                        <span>to</span>
-                                        <input type="text" class="js-input-to" id="amount2" readonly/>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </aside>
-                </div>
-            </div>
             <div class="col-lg-9">
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="product_top_bar d-flex justify-content-between align-items-center">
                             <div class="single_product_menu">
-                                <p><span>10000 </span> Prodict Found</p>
+                                <p><span>(숫자) </span> 상점 개수</p>
                             </div>
                             <div class="single_product_menu d-flex">
-                                <h5>short by : </h5>
+                                <h5>상점 유형 : </h5>
                                 <select>
-                                    <option data-display="Select">name</option>
-                                    <option value="1">price</option>
-                                    <option value="2">product</option>
+                                    <option data-display="전체">과일</option>
+                                    <option value="1">의류</option>
+                                    <option value="2">기타</option>
                                 </select>
                             </div>
                             <div class="single_product_menu d-flex">
-                                <h5>show :</h5>
-                                <div class="top_pageniation">
-                                    <ul>
-                                        <li>1</li>
-                                        <li>2</li>
-                                        <li>3</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="single_product_menu d-flex">
                                 <div class="input-group">
-                                    <input type="text" class="form-control" placeholder="search"
-                                           aria-describedby="inputGroupPrepend">
+                                    <input type="text" class="form-control" placeholder="상점 검색" aria-describedby="inputGroupPrepend">
                                     <div class="input-group-prepend">
-                                            <span class="input-group-text" id="inputGroupPrepend"><i
-                                                    class="ti-search"></i></span>
+                                        <span class="input-group-text" id="inputGroupPrepend"><i class="ti-search"></i></span>
                                     </div>
                                 </div>
                             </div>
@@ -267,40 +101,17 @@
                     </div>
                 </div>
 
-                <div class="row align-items-center latest_product_inner" th:each="dto:${rList}">
-                    <div class="col-lg-4 col-sm-6">
+                <div class="row align-items-center latest_product_inner">
+                    <div class="col-lg-4 col-sm-6"  th:each="dto : ${rList}">
                         <div class="single_product_item">
-                            <img th:src="${dto.image}">
+                            <div class="goodsImage">
+                                <img th:src="${dto.image}" alt="">
+                            </div>
                             <div class="single_product_text">
                                 <h4>[[${dto.shopName}]]</h4>
-                                <a th:attr="onclick='goShop(\'' + ${dto.shopNumber} + '\')'" class="add_cart">상점
-                                    보러가기<i class="ti-heart"></i></a>
+                                <a th:attr="onclick='goShop(\'' + ${dto.shopNumber} + '\')'" class="add_cart">물건 사러가기<i class="ti-heart"></i></a>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div class="col-lg-12">
-                    <div class="pageination">
-                        <nav aria-label="Page navigation example">
-                            <ul class="pagination justify-content-center">
-                                <li class="page-item">
-                                    <a class="page-link" href="#" aria-label="Previous">
-                                        <i class="ti-angle-double-left"></i>
-                                    </a>
-                                </li>
-                                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                <li class="page-item"><a class="page-link" href="#">4</a></li>
-                                <li class="page-item"><a class="page-link" href="#">5</a></li>
-                                <li class="page-item"><a class="page-link" href="#">6</a></li>
-                                <li class="page-item">
-                                    <a class="page-link" href="#" aria-label="Next">
-                                        <i class="ti-angle-double-right"></i>
-                                    </a>
-                                </li>
-                            </ul>
-                        </nav>
                     </div>
                 </div>
             </div>
@@ -309,64 +120,8 @@
 </section>
 <!--================End Category Product Area =================-->
 
-<!-- product_list part start-->
-<section class="product_list best_seller">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-lg-12">
-                <div class="section_tittle text-center">
-                    <h2>Best Sellers <span>shop</span></h2>
-                </div>
-            </div>
-        </div>
-        <div class="row align-items-center justify-content-between">
-            <div class="col-lg-12">
-                <div class="best_product_slider owl-carousel">
-                    <div class="single_product_item">
-                        <img src="/assets/images/product/product_1.png" alt="">
-                        <div class="single_product_text">
-                            <h4>Quartz Belt Watch</h4>
-                            <h3>$150.00</h3>
-                        </div>
-                    </div>
-                    <div class="single_product_item">
-                        <img src="/assets/images/product/product_2.png" alt="">
-                        <div class="single_product_text">
-                            <h4>Quartz Belt Watch</h4>
-                            <h3>$150.00</h3>
-                        </div>
-                    </div>
-                    <div class="single_product_item">
-                        <img src="/assets/images/product/product_3.png" alt="">
-                        <div class="single_product_text">
-                            <h4>Quartz Belt Watch</h4>
-                            <h3>$150.00</h3>
-                        </div>
-                    </div>
-                    <div class="single_product_item">
-                        <img src="/assets/images/product/product_4.png" alt="">
-                        <div class="single_product_text">
-                            <h4>Quartz Belt Watch</h4>
-                            <h3>$150.00</h3>
-                        </div>
-                    </div>
-                    <div class="single_product_item">
-                        <img src="/assets/images/product/product_5.png" alt="">
-                        <div class="single_product_text">
-                            <h4>Quartz Belt Watch</h4>
-                            <h3>$150.00</h3>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-<!-- product_list part end-->
-
-<script src="/assets/js/jquery-3.6.0.min.js"></script>
 <!-- jquery plugins here-->
-<script src="/assets/js/jquery-1.12.1.min.js"></script>
+<script src="/assets/js/jquery-3.6.0.min.js"></script>
 <!-- popper js -->
 <script src="/assets/js/popper.min.js"></script>
 <!-- bootstrap js -->

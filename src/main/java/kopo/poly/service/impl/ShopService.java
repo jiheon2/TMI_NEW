@@ -63,7 +63,6 @@ public class ShopService implements IShopService {
     public ShopDTO getShopInfo(ShopDTO pDTO) throws Exception {
         log.info(this.getClass().getName() + ".getShopInfo Start!");
 
-
         ShopDTO rDTO = Optional.ofNullable(shopMapper.getShopInfo(pDTO)).orElseGet(ShopDTO::new);
 
         log.info(this.getClass().getName() + ".getShopInfo Start!");

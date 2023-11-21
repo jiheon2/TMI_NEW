@@ -14,4 +14,5 @@ public class WishListDTO {
     private String goodsName;
     private String shopName;
     private String goodsImage;
+    private String customerId;
 }

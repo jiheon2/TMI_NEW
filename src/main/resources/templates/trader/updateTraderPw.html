@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="/assets/vendors/perfect-scrollbar/perfect-scrollbar.css">
     <link rel="stylesheet" href="/assets/vendors/bootstrap-icons/bootstrap-icons.css">
     <link rel="stylesheet" href="/assets/css/app.css">
-    <script src="/js/jquery-3.6.0.min.js"></script>
+    <script src="/assets/js/jquery-3.6.0.min.js"></script>
     <link rel="shortcut icon" href="/assets/images/favicon.svg" type="image/x-icon">
     <script type="text/javascript">
         $(document).ready(function () {
@@ -24,9 +24,9 @@
                 cancel()
             })
 
-            function changePw() {
+            function updateTraderPw() {
                 $.ajax({
-                        url: "/trader/pwChange",
+                        url: "/trader/updatePw",
                         type: "post", // 전송방식은 Post
                         dataType: "JSON", // 전송 결과는 JSON으로 받기
                         data: $("#f").serialize(), // form 태그 내 input 등 객체를 자동으로 전송할 형태로 변경하기
@@ -73,7 +73,7 @@
                                                 <label>현재 비밀번호</label>
                                             </div>
                                             <div class="col-md-8 form-group">
-                                                <input type="password" class="form-control" id="pw" name="pw"/>
+                                                <input type="password" class="form-control" id="traderPw" name="traderPw"/>
                                             </div>
                                             <div class="col-md-4">
                                                 <label>새 비밀번호</label>

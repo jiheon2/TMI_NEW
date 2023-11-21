@@ -4,6 +4,9 @@
     font-weight: normal;
     font-style: normal;
 }
+* {
+    font-family: 'BMJUA';
+}
 
 body {
     font-family: 'BMJUA';    
@@ -53,4 +56,14 @@ li  {
 a  {
     font-family: 'BMJUA';
     font-size: 14px;
+}
+
+p {
+    font-family: 'BMJUA';
+    font-size: 15px;
+}
+
+i {
+    font-family: 'BMJUA';
+    font-size: 20px;
 }

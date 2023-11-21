@@ -8,11 +8,11 @@
         SELECT CONTENTS,
                CUSTOMER_ID,
                GOODS_NUMBER,
+               GOODS_NAME,
                REG_DT,
                REVIEW_NUMBER,
                SCORE,
-               TRADER_ID,
-               COUNT(*)
+               TRADER_ID
         FROM REVIEW
         WHERE #{traderId} = TRADER_ID
         ORDER BY REVIEW_NUMBER ASC
@@ -37,4 +37,13 @@
         FROM REVIEW
         WHERE REVIEW_NUMBER = #{reviewNumber}
     </delete>
+    <!-- 리뷰 등록 쿼리 -->
+    <insert id="insertReview" parameterType="ReviewDTO">
+        INSERT INTO REVIEW
+        (REVIEW_NUMBER, GOODS_NAME, REG_DT, SCORE, CONTENTS, CUSTOMER_ID, TRADER_ID, GOODS_NUMBER)
+        VALUES (
+                       (SELECT IFNULL(MAX(A.REVIEW_NUMBER),0)+1 FROM REVIEW A),
+                       #{goodsName}, NOW(), #{score}, #{contents}, #{customerId}, #{traderId}, #{goodsNumber}
+               )
+    </insert>
 </mapper>

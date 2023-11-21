@@ -5,7 +5,8 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>aranoz</title>
+    <title>TMI - 지도</title>
+    <link rel="stylesheet" href="/assets/css/global.css">
     <link rel="icon" href="/assets/images/favicon.png">
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
@@ -28,6 +29,7 @@
     <script type="text/javascript"
             src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=ekfqtwltvc"></script>
     <link rel="stylesheet" href="/assets/css/searchModal.css">
+    <link rel="stylesheet" href="/assets/css/font.css">
 </head>
 
 <body>
@@ -37,72 +39,61 @@
         <div class="row align-items-center">
             <div class="col-lg-12">
                 <nav class="navbar navbar-expand-lg navbar-light">
-                    <a class="navbar-brand" href="index.html"> <img src="/assets/images/logo.png" alt="logo"> </a>
-                    <div class="collapse navbar-collapse main-menu-item" id="navbarSupportedContent"
-                         style="height: 100px">
-                    </div>
-
-
-                    <div class="hearer_icon d-flex">
-                        <div>
-                            <a><i class="fa-solid fa-map-location-dot" style="font-size:25px"></i>
-                            </a>
-                        </div>
-                        <div>
-                            <a><i class="fa-solid fa-comments" style="font-size:25px"></i>
-                            </a>
-                        </div>
-                        <a href=""><i class="fa-solid fa-heart" style="font-size:25px"></i></a>
-
-                        <div class="dropdown cart">
-                            <a class="dropdown-toggle" href="#" id="navbarDropdown3" role="button"
-                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fas fa-cart-plus" style="font-size:25px"></i>
-                            </a>
-                        </div>
-                        <a><i class="fa-solid fa-customer" style="font-size:25px"></i>
-                        </a>
-                    </div>
+                    <a class="navbar-brand" href="/customer/customerIndex"><img src="/assets/images/bird/logo2.png"
+                                                                                alt="logo" style="width: 100px" ,
+                                                                                height="50px"></a>
                 </nav>
             </div>
         </div>
     </div>
-
 </header>
 <!-- Header part end-->
-<!--  aside  -->
+
 <!-- breadcrumb start-->
-<section class="breadcrumb breadcrumb_bg" style="background-image: url(/assets/images/about_img.png)">
+<section class="breadcrumb" style="background-color: azure">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-lg-8">
                 <div class="breadcrumb_iner">
+                    <img src="/assets/images/bird/bird1.png" style="width: 400px">
                     <div class="breadcrumb_iner_item">
                         <h2>지도</h2>
-                        <p>시장 위치를 알려드립니다</p>
+                        <p>시장의 위치를 검색하세요!</p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
-<!-- breadcrumb start-->
-<!--  aside  -->
+<!-- breadcrumb end-->
+
+<!-- navigation -->
+<div th:replace="customerNav.html"></div>
+<!-- ---------- -->
+
 
 <!-- 모달(검색) -->
-<button id="openModalBtn">검색</button>
+<div style="float: right">
+    <button class="btn icon icon-left btn-success" style="width: 70px; height: 45px; margin: 15px;" id="openModalBtn">
+        검색
+    </button>
+</div>
 <div class="modal" id="searchModal">
     <div class="modal_body">
-        <div style="display: flex">
-        <h2>시장 검색</h2>
-        <button id="closeModalBtn">x</button>
+        <div style="display: flex; justify-content: space-between">
+            <h2>시장 검색</h2>
+            <button class="btn btn-light" style="margin-bottom: 12px; background: none; border: none"
+                    id="closeModalBtn">x
+            </button>
         </div>
-        <div class="form-group">
-            <input type="text" placeholder="시장 검색" class="form-control"/>
+        <div class="form-group" style="display: flex">
+            <input type="text" placeholder="시장 검색" id="shopCode" class="form-control" style="width: 80%"/>
+            <button class="btn btn-success" id="searchMarket" style="width: 20%">검색</button>
         </div>
         <hr/>
         <div>
-            시장정보띄우기
+            <ul id="modalList"></ul>
+            <hr/>
         </div>
     </div>
 </div>
@@ -111,7 +102,7 @@
 <div style="height: 100px; "></div>
 
 
-<div id="map" style="text-align: center; width:60%; height:800px; margin: auto;"></div>
+<div id="map" style="text-align: center; width:80%; height:800px; margin: auto; border: #5c636a 3px solid"></div>
 <div style="height: 50px; "></div>
 
 
@@ -161,7 +152,7 @@
 
                     marker.setMap(map);
                     infoWindows.push(new naver.maps.InfoWindow({
-                        content: '<h3>' + location.marketName + '</h3><p>' + location.marketLocation + '</p></div>'
+                        content: '<div class="card-body" style="margin: 10px"><h3 class="card-title">' + location.marketName + '</h3><p class="card-text">' + location.marketLocation + '</p></div>'
                     }));
                     attachInfoWindowEvent(i, data);
                 }
@@ -186,7 +177,7 @@
 
             if (!buttonElement) {
                 // 버튼이 없을 경우, 생성하고 이벤트 리스너를 할당
-                let buttonHtml = '<button id="' + buttonId + '">상점 보기</button>';
+                let buttonHtml = '<button style="margin: 10px;" class="btn btn-success" id="' + buttonId + '">상점 보기</button>';
                 infoWindows[i].setContent(infoWindows[i].getContent() + buttonHtml);
 
                 // 이제 버튼이 존재하므로 이벤트 리스너 할당
@@ -198,34 +189,105 @@
                         location.href = "/customer/market?marketNumber=" + i;
                     });
                 }
+            } else {
+                console.error("Button element not found: " + buttonId);
             }
-
-        else {
-            console.error("Button element not found: " + buttonId);
-        }
-    })}
+        })
+    }
 
     // 네이버 지도 API 로드가 완료된 후 initMap 함수를 실행합니다.
     naver.maps.onJSContentLoaded = initMap;
-</script>
-<script>
+
+    ///////////////////////////// 모달 //////////////////////////////////////
+
+    var modal = document.getElementById('searchModal');
+
     // 모달 열기
-    document.getElementById('openModalBtn').onclick = function() {
+    document.getElementById('openModalBtn').onclick = function () {
         document.getElementById('searchModal').style.display = 'flex';
     }
 
     // 모달 닫기
-    document.getElementById('closeModalBtn').onclick = function() {
+    document.getElementById('closeModalBtn').onclick = function () {
         document.getElementById('searchModal').style.display = 'none';
     }
 
     // 모달 외부 클릭 시 닫기
-    window.onclick = function(event) {
-        var modal = document.getElementById('searchModal');
+    window.onclick = function (event) {
+
         if (event.target == modal) {
             modal.style.display = 'none';
         }
     }
+
+    function displayModalList(listData) {
+        var modalList = document.getElementById("modalList");
+        modalList.innerHTML = ''; // 리스트 초기화
+        for (var i = 0; i < listData.length; i++) {
+            var listItem = document.createElement('li');
+            listItem.textContent = listData[i].marketName;
+            modalList.appendChild(listItem);
+
+            var hr = document.createElement('hr');
+            modalList.appendChild(hr);
+
+            // 리스트 항목 클릭 시 값을 shopCode 필드에 설정
+            (function (index) {
+                listItem.onclick = function () {
+                    var marketNumber = listData[index].marketNumber - 1;
+                    infoWindows[marketNumber].open(map, markers[marketNumber]);
+                    let buttonId = 'customButton_' + marketNumber;
+                    let buttonElement = document.getElementById(buttonId);
+
+                    if (!buttonElement) {
+                        // 버튼이 없을 경우, 생성하고 이벤트 리스너를 할당
+                        let buttonHtml = '<button id="' + buttonId + '">상점 보기</button>';
+                        infoWindows[marketNumber].setContent(infoWindows[marketNumber].getContent() + buttonHtml);
+
+                        // 이제 버튼이 존재하므로 이벤트 리스너 할당
+                        buttonElement = document.getElementById(buttonId);
+
+                        if (buttonElement) {
+                            buttonElement.addEventListener('click', function () {
+                                // 각 버튼을 클릭할 때의 동작을 여기에 정의
+                                location.href = "/customer/market?marketNumber=" + marketNumber;
+                            });
+                        }
+                    } else {
+                        console.error("Button element not found: " + buttonId);
+                    }
+                    modal.style.display = 'none';
+                };
+            })(i);
+        }
+    }
+
+    function showSearchModal() {
+        var modal = document.getElementById("searchModal");
+        // 모달에 CSS 클래스 추가
+        modal.classList.add('afterSearchModal'); // .modal 클래스 추가
+    }
+
+    document.getElementById("searchMarket").onclick = function () {
+        var shopCode = document.getElementById("shopCode").value;
+        console.log(1);
+        // AJAX를 사용하여 서버에서 데이터 가져오기
+        $.ajax({
+            url: '/market/list', // 서버 API 엔드포인트 URL
+            method: 'GET',
+            data: {
+                shopCode: shopCode
+            },
+            success: function (response) {
+                displayModalList(response);
+                showSearchModal();
+            },
+            error: function (error) {
+                console.error('데이터를 가져오는 중 오류가 발생했습니다: ', error);
+            }
+        });
+    }
+
 </script>
 </body>
 </html>
@@ -257,4 +319,5 @@
 <script src="/assets/js/mail-script.js"></script>
 <!-- custom js -->
 <script src="/assets/js/custom.js"></script>
-</body></html>
+</body>
+</html>

@@ -231,8 +231,19 @@ public class CustomerController {
 
         List<GoodsDTO> rList = Optional.ofNullable(goodsService.getGoodsList(pDTO)).orElseGet(ArrayList::new);
 
+        String shopName;
+        String shopDescription;
+        if (!rList.isEmpty()) {
+            GoodsDTO firstGoods = rList.get(0);
+            shopName = firstGoods.getShopName();
+            shopDescription = firstGoods.getShopDescription();
+        } else {
+            shopName = "아직 이 시장에는 상점이 없어요";
+            shopDescription = "";
+        }
         model.addAttribute("rList", rList);
-
+        model.addAttribute("shopName", shopName);
+        model.addAttribute("shopDescription", shopDescription);
         log.info(this.getClass().getName() + ".shop End!");
 
         return "/customer/shop";
@@ -255,12 +266,23 @@ public class CustomerController {
 
         String market = request.getParameter("marketNumber");
 
+        log.info("marketNumber : " + market);
+
         ShopDTO pDTO = new ShopDTO();
 
         pDTO.setMarketNumber(market);
 
         List<ShopDTO> rList = Optional.ofNullable(shopService.getShopList(pDTO)).orElseGet(ArrayList::new);
 
+        String marketName;
+        if (!rList.isEmpty()) {
+            ShopDTO firstShop = rList.get(0);
+            marketName = firstShop.getMarketName();
+        } else {
+            marketName = "아직 이 시장에는 상점이 없어요";
+        }
+
+        model.addAttribute("marketName", marketName);
         model.addAttribute("rList", rList);
 
         return "/customer/market";
@@ -447,11 +469,10 @@ public class CustomerController {
 
     // 상품 상세정보 조회페이지 이동코드
     @GetMapping(value = "/single-product")
-    public String singleProduct(HttpServletRequest request, ModelMap model) throws Exception {
+    public String singleProduct(HttpServletRequest request, ModelMap model, HttpSession session) throws Exception {
         log.info(this.getClass().getName() + ".goodsMngInfo Start!");
 
         String goodsNumber = request.getParameter("goodsNumber");
-
         log.info("goodsNumber : " + goodsNumber);
 
         GoodsDTO pDTO = new GoodsDTO();

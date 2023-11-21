@@ -34,7 +34,7 @@ public class MarketController {
     // 구현완료(11/13)
     @GetMapping(value = "/list")
     @ResponseBody
-    public List<String> getMarketList(HttpServletRequest request)
+    public List<MarketDTO> getMarketList(HttpServletRequest request) //list<MarketDTO>로 변경
             throws Exception {
         log.info(this.getClass().getName() + ".list Start!");
 
@@ -42,11 +42,22 @@ public class MarketController {
         List<MarketDTO> rList = marketService.getMarketList(nm);
         if (rList == null) rList = new ArrayList<>();
 
-        List<String> list = new ArrayList<>();
+        List<MarketDTO> list = new ArrayList<>();
 
-        for (MarketDTO dto : rList) {
+        for (MarketDTO dto : rList) {  //dto에 각자 담아서 리스트에 담기
             String text = dto.getMarketName() + "[" + dto.getMarketLocation() + "]";
-            list.add(text);
+            String lat = dto.getLatitude();
+            String lon = dto.getLongitude();
+            String num = dto.getMarketNumber();
+
+            MarketDTO rDTO = new MarketDTO();
+            rDTO.setLongitude(lon);
+            rDTO.setLatitude(lat);
+            rDTO.setMarketName(text);
+            rDTO.setMarketNumber(num);
+            list.add(rDTO);
+
+            log.info("list : " + list); //데이터 값을 잘받아오는지 확인하기
         }
 
         log.info(this.getClass().getName() + ".list End!");

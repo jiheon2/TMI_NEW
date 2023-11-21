@@ -1,11 +1,13 @@
 package kopo.poly.service.impl;
 
+import kopo.poly.dto.PostDTO;
 import kopo.poly.dto.ReviewDTO;
 import kopo.poly.persistance.mapper.IReviewMapper;
 import kopo.poly.service.IReviewService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 @Service
@@ -46,5 +48,11 @@ public class ReviewService implements IReviewService {
         log.info(this.getClass().getName() + ".deleteReview Start!");
 
         reviewMapper.deleteReview(pDTO);
+    }
+    @Transactional
+    @Override
+    public void insertReview(ReviewDTO pDTO) throws Exception {
+        log.info(this.getClass().getName() + ".InsertReview start!");
+        reviewMapper.insertReview(pDTO);
     }
 }

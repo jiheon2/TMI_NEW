@@ -19,7 +19,7 @@
         SELECT MARKET_NUMBER, MARKET_LOCATION, MARKET_NAME, LATITUDE, LONGITUDE
         FROM MARKET
         WHERE MARKET_NAME LIKE CONCAT('%',#{marketName},'%')
-        ORDER BY MARKET_NUMBER DESC
+        ORDER BY MARKET_NUMBER
     </select>
-
+    <!-- 정렬방식 오름차순으로 정렬-->
 </mapper>
