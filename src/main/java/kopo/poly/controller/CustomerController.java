@@ -231,8 +231,6 @@ public class CustomerController {
 
         List<GoodsDTO> rList = Optional.ofNullable(goodsService.getGoodsList(pDTO)).orElseGet(ArrayList::new);
 
-
-
         String shopName;
         String shopDescription;
         if (!rList.isEmpty()) {
