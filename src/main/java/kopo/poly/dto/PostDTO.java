@@ -16,4 +16,5 @@ public class PostDTO {
     private String chgDt;
     private String customerId;
     private String image;
+    private String countComment;
 }

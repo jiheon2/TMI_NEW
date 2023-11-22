@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -25,7 +26,7 @@ public class BasketController {
     // 장바구니 담기
     // 구현완료(11/21)
     @ResponseBody
-    @PostMapping(value = "doBasket")
+    @PostMapping(value = "/doBasket")
     public MsgDTO doBasket(HttpServletRequest request, HttpSession session) throws Exception {
         log.info(this.getClass().getName() + ".doBasket Start!");
 

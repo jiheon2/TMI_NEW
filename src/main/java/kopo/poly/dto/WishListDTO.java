@@ -10,8 +10,9 @@ import lombok.ToString;
 public class WishListDTO {
     private String wishlistNumber;
     private String goodsNumber;
-    private String customerId;
+    private String customerNumber;
     private String goodsName;
     private String shopName;
     private String goodsImage;
+    private String customerId;
 }

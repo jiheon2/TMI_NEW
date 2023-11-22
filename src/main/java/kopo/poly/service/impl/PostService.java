@@ -18,11 +18,11 @@ public class PostService implements IPostService {
 
     /* 게시글 목록 조회 코드 */
     @Override
-    public List<PostDTO> getPostList() throws Exception {
+    public List<PostDTO> getPostList(String type) throws Exception {
 
         log.info(this.getClass().getName() + ".getPostList start!");
 
-        return postMapper.getPostList();
+        return postMapper.getPostList(type);
     }
 
     /* 게시글 정보 조회 코드 */
