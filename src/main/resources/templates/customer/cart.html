@@ -62,7 +62,42 @@
                     }
                 );
             }
-          })
+        })
+    </script>
+    <script>
+        $(document).ready(function () {
+            console.log("Document is ready!");
+
+            // 각 품목의 총액을 계산하고 결과를 업데이트하는 함수
+            function calculateTotalAmount() {
+                var totalAmount = 0;
+
+                // 테이블의 각 행을 반복
+                $("tbody tr").each(function () {
+                    var price = parseFloat($(this).find("#price").text().replace("₩", "").replace(",", ""));
+                    var quantity = parseInt($(this).find(".quantity").val());
+                    var rowTotal = price * quantity;
+
+                    // 이 행에 대한 총액 업데이트
+                    $(this).find(".totalAmount").text("₩" + rowTotal.toLocaleString());
+
+                    // 행 총액을 전체 총액에 추가
+                    totalAmount += rowTotal;
+                });
+
+                // 전체 총액으로 결과 업데이트
+                $("#result").text("₩" + totalAmount.toLocaleString());
+            }
+
+            // 수량 변경 이벤트에 대한 리스너 추가 (change 이벤트 사용)
+            $("tbody").on("change", ".quantity", function () {
+                console.log("Quantity changed!");
+                calculateTotalAmount();
+            });
+
+            // 페이지 로드 시 초기 계산 수행
+            calculateTotalAmount();
+        });
     </script>
 </head>
 
@@ -115,6 +150,7 @@
                 <table class="table">
                     <thead>
                     <tr>
+                        <th scope="col">이미지</th>
                         <th scope="col">상품명</th>
                         <th scope="col">가격</th>
                         <th scope="col">수량</th>
@@ -122,34 +158,39 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr>
+                    <tr th:each="dto : ${rList}">
                         <td>
-                            <div class="media">
-                                <div class="d-flex">
-                                    <img src="/assets/images/product/single-product/cart-1.jpg" alt=""/>
-                                </div>
-                                <div class="media-body">
-                                    <p>Minimalistic shop for multipurpose use</p>
-                                </div>
+                            <div class="goodsImage">
+                                <img th:src="${dto.goodsImage}" alt=""/>
                             </div>
                         </td>
                         <td>
-                            <h5>$360.00</h5>
-                        </td>
-                        <td>
-                            <div class="product_count">
-                                <span class="input-number-decrement"> <i class="ti-angle-down"></i></span>
-                                <input class="input-number" type="text" value="1" min="0" max="10">
-                                <span class="input-number-increment"> <i class="ti-angle-up"></i></span>
+                            <div class="media-body">
+                                <p>[[${dto.goodsName}]]</p>
                             </div>
+
                         </td>
                         <td>
-                            <h5>$720.00</h5>
+                            <h5 id="price">[[${dto.price}]]</h5>
+                        </td>
+                        <td>
+                            <!-- Use select box for quantity -->
+                            <select class="quantity">
+                                <option th:each="option : ${#numbers.sequence(0, 10)}"
+                                        th:value="${option}"
+                                        th:text="${option}"
+                                        th:selected="${option} == ${dto.quantity}"></option>
+                            </select>
+                        </td>
+                        <td>
+                            <h5 class="totalAmount" th:id="${dto.goodsNumber}"></h5>
                         </td>
                     </tr>
                     </tbody>
                 </table>
-                <div style="float: right"><i class="fa-solid" style="font-family: BMJUA,serif; font-size: 20px; color: #222222"> 결제 금액 : </i> 자바스크립트로 금액 계산한 값</div>
+                <div style="float: right; display: flex">
+                    <i class="fa-solid" style="font-family: BMJUA,serif; font-size: 20px; color: #222222; margin: 10px"> 결제 금액 : </i><p id="result" style="font-size: 20px">
+                </div>
                 <br/>
                 <br/>
                 <div style="float: right">
@@ -162,6 +203,13 @@
 </section>
 <!--================End Cart Area =================-->
 
+<style>
+    .table {
+        width: 100%; /* 테이블이 부모 컨테이너의 100%를 차지하도록 설정 */
+        overflow-x: hidden; /* x 방향으로 오버플로우가 발생하면 가려지도록 설정 */
+        white-space: nowrap; /* 텍스트가 줄 바꿈되지 않도록 설정 */
+    }
+</style>
 <!-- jquery plugins here-->
 <!-- jquery -->
 <script src="/assets/js/jquery-1.12.1.min.js"></script>

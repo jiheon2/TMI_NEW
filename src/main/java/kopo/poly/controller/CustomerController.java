@@ -1,10 +1,8 @@
 package kopo.poly.controller;
 
 import kopo.poly.dto.*;
-import kopo.poly.service.ICustomerService;
-import kopo.poly.service.IGoodsService;
-import kopo.poly.service.IReviewService;
-import kopo.poly.service.IShopService;
+import kopo.poly.persistance.mapper.IBasketMapper;
+import kopo.poly.service.*;
 import kopo.poly.util.CmmUtil;
 import kopo.poly.util.EncryptUtil;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +31,7 @@ public class CustomerController {
     private final IShopService shopService;
     private final IGoodsService goodsService;
     private final IReviewService reviewService;
+    private final IBasketService basketService;
 
     @GetMapping(value = "/login")
     public String login(HttpSession session) {
@@ -121,8 +120,22 @@ public class CustomerController {
 
     // 소비자 장바구니 이동코드
     @GetMapping(value = "/cart")
-    public String cart() {
-        log.info("start!");
+    public String cart(HttpSession session, ModelMap model) throws Exception {
+        log.info(this.getClass().getName() + ".cart Start!");
+
+        String customerId = (String) session.getAttribute("SS_ID");
+
+        BasketDTO pDTO = new BasketDTO();
+
+        pDTO.setCustomerId(customerId);
+
+        List<BasketDTO> rList = Optional.ofNullable(basketService.getBasketList(pDTO)).orElseGet(ArrayList::new);
+
+        log.info(rList.toString());
+
+        model.addAttribute("rList", rList);
+
+        log.info(this.getClass().getName() + ".cart Start!");
         return "/customer/cart";
     }
 
@@ -231,16 +244,19 @@ public class CustomerController {
 
         List<GoodsDTO> rList = Optional.ofNullable(goodsService.getGoodsList(pDTO)).orElseGet(ArrayList::new);
 
+        log.info(rList.toString());
         String shopName;
         String shopDescription;
+
         if (!rList.isEmpty()) {
             GoodsDTO firstGoods = rList.get(0);
             shopName = firstGoods.getShopName();
             shopDescription = firstGoods.getShopDescription();
         } else {
-            shopName = "아직 이 시장에는 상점이 없어요";
+            shopName = "아직 이 상점에는 상품이 없어요";
             shopDescription = "";
         }
+
         model.addAttribute("rList", rList);
         model.addAttribute("shopName", shopName);
         model.addAttribute("shopDescription", shopDescription);
