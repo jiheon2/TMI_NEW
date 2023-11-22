@@ -1,11 +1,14 @@
 package kopo.poly.service.impl;
 
 import kopo.poly.dto.BasketDTO;
+import kopo.poly.dto.GoodsDTO;
 import kopo.poly.persistance.mapper.IBasketMapper;
 import kopo.poly.service.IBasketService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -31,4 +34,12 @@ public class BasketService implements IBasketService {
         log.info(this.getClass().getName() + ".addBasket Start!");
         return res;
     }
+    @Override
+    public List<BasketDTO> getBasketList(BasketDTO pDTO) throws Exception {
+
+        log.info(this.getClass().getName() + ".getBasketList start!");
+
+        return basketMapper.getBasketList(pDTO);
+    }
+
 }
