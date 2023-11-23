@@ -103,7 +103,10 @@
 
                                         $("#updateInfoModal").on("click", function () {
                                             $("#updateModal").modal("show");
+                                        })
 
+                                        $('#deleteCalendar').on('click', function() {
+                                            deleteReservation(reservationNumber)
                                         })
                                     },
                                     error: function (error) {
@@ -164,7 +167,6 @@
             function closeAddModal() {
                 $('#addModal').modal('hide'); // 모달 1 숨기기
             }
-
             function closeInfoModal() {
                 $('#infoModal').modal('hide'); // 모달 1 숨기기
             }
@@ -214,19 +216,19 @@
             $("#updateModal").modal("show");
         }
         function updateReservationInfo(f2, reservationNumberInput) {
-            if (f2.customerName.value === "") {
+            if (f2.updateCustomerName.value === "") {
                 alert("예약자를 입력하시기 바랍니다.");
-                f2.customerName.focus();
+                f2.updateCustomerName.focus();
                 return;
             }
-            if (f2.reservationContents.value === "") {
+            if (f2.updateReservationContents.value === "") {
                 alert("예약내용을 입력하시기 바랍니다.");
-                f2.reservationContents.focus();
+                f2.updateReservationContents.focus();
                 return;
             }
-            if (f2.reservationPrice.value === "") {
+            if (f2.updateReservationPrice.value === "") {
                 alert("가격을 입력하시기 바랍니다.");
-                f2.reservationPrice.focus();
+                f2.updateReservationPrice.focus();
                 return;
             }
 
@@ -249,6 +251,32 @@
                 }
             })
         }
+        // Delete 버튼을 클릭했을 때 실행되는 함수
+        function deleteReservation(reservationNumber) {
+            // Ajax를 통한 POST 요청
+            $.ajax({
+                type: 'POST',
+                url: '/reservation/deleteReservation',
+                data: {
+                    reservationNumber: reservationNumber
+                },
+                success: function(response) {
+                    // 서버로부터의 응답 처리
+                    if (response.result === 1) {
+                        // 성공적으로 삭제된 경우
+                        alert(response.msg);
+                        location.href="/reservation/reservMng"
+                    } else {
+                        alert(response.msg);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    // Ajax 요청 실패 시 처리
+                    console.error('Error:', error);
+                }
+            });
+        }
+
     </script>
 </head>
 
@@ -312,8 +340,7 @@
                         <div id="reservationInfo"></div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn-btn-secondary" id="addNewCalendar">추가</button>
-                        <button type="button" class="btn btn-secondary" id="updateCalendar">수정</button>
+                        <button type="button" class="btn btn-warning" id="addNewCalendar">추가</button>
                         <button type="button" class="btn btn-secondary" id="closeInfoModal">취소</button>
                     </div>
                 </div>
@@ -348,6 +375,7 @@
                 </form>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-warning" id="updateReservationInfo">수정</button>
+                    <button type="button" class="btn btn-secondary" id="deleteCalendar">삭제</button>
                     <button type="button" class="btn btn-secondary" id="closeUpdateModal">취소</button>
                 </div>
             </div>

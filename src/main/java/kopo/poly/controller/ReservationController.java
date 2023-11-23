@@ -135,7 +135,7 @@ public class ReservationController {
             log.info(this.getClass().getName() + ".insertReservationInfo End!");
         }
 
-       return dto;
+        return dto;
     }
 
     @ResponseBody
@@ -187,6 +187,46 @@ public class ReservationController {
             log.info(this.getClass().getName() + ".updateReservationInfo End!");
         }
 
+        return dto;
+    }
+
+    @ResponseBody
+    @PostMapping(value = "/reservation/deleteReservation")
+    public MsgDTO reservationDelete(HttpSession session, HttpServletRequest request) {
+
+        log.info(this.getClass().getName() + ".reservationDelete Start!");
+
+        String msg = "";
+        int res = 0;
+        MsgDTO dto = null;
+
+        try {
+            String traderId = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+            String reservationNumber = CmmUtil.nvl(request.getParameter("reservationNumber"));
+
+            log.info("traderId : " + traderId);
+            log.info("reservationNumber : " + reservationNumber);
+
+            if (traderId.isEmpty()) {
+                msg = "로그인 해주시길 바랍니다.";
+            } else {
+                ReservationDTO pDTO = new ReservationDTO();
+                pDTO.setReservationNumber(reservationNumber);
+                reservationService.deleteReservationInfo(pDTO);
+
+                msg = "삭제되었습니다.";
+                res = 1;
+            }
+        } catch (Exception e) {
+            msg = "실패하였습니다. : " + e.getMessage();
+            log.info(e.toString());
+            e.printStackTrace();
+        } finally {
+            dto = new MsgDTO();
+            dto.setResult(res);
+            dto.setMsg(msg);
+            log.info(this.getClass().getName() + ".reservationDelete End!");
+        }
         return dto;
     }
 }
