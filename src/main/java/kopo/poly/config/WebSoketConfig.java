@@ -46,9 +46,7 @@ public class WebSoketConfig implements WebSocketConfigurer {
 
                                 String roomNameHash = EncryptUtil.encHashSHA256(roomName);
 
-                                log.info("roomName : " + roomName);
-                                log.info("customerId : " + customerId);
-                                log.info("roomNameHash : " + roomNameHash);
+                                log.info("roomName : " + roomName + " / customerId : + " + customerId);
 
                                 attributes.put("roomName", roomName);
                                 attributes.put("customerId", customerId);

@@ -22,6 +22,7 @@ public class ChatHandler extends TextWebSocketHandler {
     private static Set<WebSocketSession> clients = Collections.synchronizedSet(new LinkedHashSet<>());
     public static Map<String, String> roomInfo = Collections.synchronizedMap(new LinkedHashMap<>());
 
+    /* websocket 연결 성공 시 */
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         log.info(this.getClass().getName() + ".afterConnectionEstablished Start!");
@@ -62,9 +63,14 @@ public class ChatHandler extends TextWebSocketHandler {
             log.info("session open : " + session);
         }
 
+        session.getAttributes().put("roomName", roomName);
+        session.getAttributes().put("customerId", customerId);
+        session.getAttributes().put("roomNameHash", roomNameHash);
+
         log.info(this.getClass().getName() + ".afterConnectionEstablished End!");
     }
 
+    /* websocket 연결 종료시 */
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
         log.info(this.getClass().getName() + ".afterConnectionClosed Start!");
@@ -103,9 +109,13 @@ public class ChatHandler extends TextWebSocketHandler {
         log.info(this.getClass().getName() + ".afterConnectionClosed End!");
     }
 
+    /* websocket 메세지 수신 및 송신 */
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         log.info(this.getClass().getName() + ".handleTextMessage Start!");
+
+        String payload = message.getPayload();
+        log.info("payload : " + payload);
 
         String roomName = CmmUtil.nvl((String) session.getAttributes().get("roomName"));
         String customerId = CmmUtil.nvl((String) session.getAttributes().get("customerId"));
