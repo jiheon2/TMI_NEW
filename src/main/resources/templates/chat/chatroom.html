@@ -32,7 +32,7 @@
                     <div class="col-12 col-md-6 order-md-2 order-first">
                         <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                             <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="index">Dashboard</a></li>
+                                <li class="breadcrumb-item"><a href="/trader/traderIndex">Dashboard</a></li>
                             </ol>
                         </nav>
                     </div>
@@ -74,38 +74,6 @@
                 </div>
             </section>
         </div>
-
-        <!--
-        <div class="page-heading">
-            <h3>채팅</h3>
-        </div>
-        <div class="page-content">
-            <div class="divTable minimalistBlack">
-                <div class="divTableHeading">
-                    <div class="divTableRow">
-                        <div class="divTableHead">대화 내용</div>
-                    </div>
-                </div>
-                <div class="divTableBody">
-                    <div class="divTableRow">
-                        <div class="divTableCell" id="chat"></div>
-                    </div>
-                </div>
-            </div>
-            <br /><br />
-            <div class="divTable minimalistBlack">
-                <div class="divTableBody">
-                    <div class="divTableRow">
-                        <div class="divTableCell">전달할 메시지</div>
-                        <div class="divTableCell">
-                            <input type="text" id="msg">
-                            <button id="btnSend">메시지 전송</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>-->
-
         <footer>
             <div class="footer clearfix mb-0 text-muted">
                 <div class="float-start">
@@ -128,7 +96,7 @@
 <!-- jquery plugins here-->
 <!-- jquery -->
 <script src="/assets/js/jquery-1.12.1.min.js"></script>
-<script src="/js/jquery-3.6.0.min.js"></script>
+<script src="/assets/js/jquery-3.6.0.min.js"></script>
 <!-- popper js -->
 <script src="/assets/js/popper.min.js"></script>
 <!-- bootstrap js -->
@@ -162,12 +130,12 @@
 <script src="/assets/js/pages/dashboard.js"></script>
 
 <script src="/assets/js/main.js"></script>
-<script type="text/javascript">
+<script th:inline="javascript">
 
     let data = {};//전송 데이터(JSON)
     let ws; // 웹소켓 객체
     const roomName = "${roomName}"; // 채팅룸 이름
-    const customerName = "${customerName}"; // 채팅유저 이름
+    const customerName = "${customerId}"; // 채팅유저 이름
 
     $(document).ready(function () {
 

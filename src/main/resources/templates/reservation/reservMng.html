@@ -26,6 +26,7 @@
     <!-- fullcalendar 언어 CDN -->
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.8.0/locales-all.min.js'></script>
     <script>
+        let reservationNumberInput = "";
 
         document.addEventListener('DOMContentLoaded', function () {
             $(function () {
@@ -64,6 +65,11 @@
                                 $("#selectedDateInput").val(selectDate);
                                 $("#addModal").modal("show");
                             } else {
+                                $("#addNewCalendar").on("click", function () {
+                                    $('#infoModal').modal('hide'); // 모달 1 숨기기
+                                    $("#selectedDateInput").val(selectDate);
+                                    $("#addModal").modal("show");
+                                })
                                 $.ajax({
                                     url: '/reservation/getReservationInfo', // 서버의 엔드포인트 URL
                                     method: 'POST', // 또는 GET, 원하는 HTTP 메서드 사용
@@ -78,14 +84,27 @@
 
                                         for (var i = 0; i < response.length; i++) {
                                             var reservation = response[i];
+                                            var reservationNumber = reservation.reservationNumber;
                                             var html = `
+                                           <a href="#" onclick="openUpdateInfoModal(${reservation.reservationNumber})">
+                                            <div class="form-group">${i+1}번 예약일정</div>
+                                            <div class="form-group" style="display: none">예약번호: ${reservation.reservationNumber}</div>
                                             <div class="form-group">예약자: ${reservation.customerName}</div>
                                             <div class="form-group">예약 내용: ${reservation.reservationContents}</div>
                                             <div class="form-group">가격: ${reservation.reservationPrice}</div>
-                                            <hr/>`;
+                                            <hr/>
+                                           </a>`;
 
+
+                                            var reservationNumberInput = document.getElementById('reservationNumber');
+                                            reservationNumberInput.value = reservationNumber;
                                             reservationInfoDiv.insertAdjacentHTML('beforeend', html);
                                         }
+
+                                        $("#updateInfoModal").on("click", function () {
+                                            $("#updateModal").modal("show");
+
+                                        })
                                     },
                                     error: function (error) {
                                         // 서버에서의 에러 처리
@@ -114,21 +133,32 @@
             })
         });
 
-    </script>
-    <script type="text/javascript">
         $(document).ready(function () {
 
-            let f = document.getElementById("insertForm")
+            let f1 = document.getElementById("insertForm")
+            let f2 = document.getElementById("updateForm")
 
             $("#closeAddModal").on("click", function () {
                 closeAddModal()
             })
-
             $("#closeInfoModal").on("click", function () {
                 closeInfoModal()
             })
+            $("#closeUpdateModal").on("click", function () {
+                closeUpdateModal()
+            })
             $("#addCalendar").on("click", function () {
-                addCalendar(f)
+                addCalendar(f1)
+            })
+            $("#addNewCalendar").on("click", function () {
+                $('#infoModal').modal('hide'); // 모달 1 숨기기
+                $("#addModal").modal("show");
+            })
+            $("#updateCalendar").on("click", function () {
+                updateReservationInfo(f2)
+            })
+            $("#updateReservationInfo").on("click", function () {
+                updateReservationInfo(f2)
             })
 
             function closeAddModal() {
@@ -138,21 +168,24 @@
             function closeInfoModal() {
                 $('#infoModal').modal('hide'); // 모달 1 숨기기
             }
+            function closeUpdateModal() {
+                $('#updateModal').modal('hide'); // 모달 1 숨기기
+            }
 
-            function addCalendar(f) {
-                if (f.customerName.value === "") {
+            function addCalendar(f1) {
+                if (f1.customerName.value === "") {
                     alert("예약자를 입력하시기 바랍니다.");
-                    f.customerName.focus();
+                    f1.customerName.focus();
                     return;
                 }
-                if (f.reservationContents.value === "") {
+                if (f1.reservationContents.value === "") {
                     alert("예약내용을 입력하시기 바랍니다.");
-                    f.reservationContents.focus();
+                    f1.reservationContents.focus();
                     return;
                 }
-                if (f.reservationPrice.value === "") {
+                if (f1.reservationPrice.value === "") {
                     alert("가격을 입력하시기 바랍니다.");
-                    f.reservationPrice.focus();
+                    f1.reservationPrice.focus();
                     return;
                 }
 
@@ -175,6 +208,47 @@
                 })
             }
         })
+
+        function openUpdateInfoModal(reservationNumberInput) {
+            document.getElementById('updateReservationNumber').value = reservationNumberInput;
+            $("#updateModal").modal("show");
+        }
+        function updateReservationInfo(f2, reservationNumberInput) {
+            if (f2.customerName.value === "") {
+                alert("예약자를 입력하시기 바랍니다.");
+                f2.customerName.focus();
+                return;
+            }
+            if (f2.reservationContents.value === "") {
+                alert("예약내용을 입력하시기 바랍니다.");
+                f2.reservationContents.focus();
+                return;
+            }
+            if (f2.reservationPrice.value === "") {
+                alert("가격을 입력하시기 바랍니다.");
+                f2.reservationPrice.focus();
+                return;
+            }
+
+            var formData = new FormData($("#updateForm")[0]);
+            formData.append('updateReservationNumber', reservationNumberInput);
+
+            $.ajax({
+                url: "/reservation/updateReservationInfo",
+                type: "POST",
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (json) {
+                    if (json.result === 1) {
+                        alert(json.msg);
+                        location.href = "/reservation/reservMng"
+                    } else {
+                        alert(json.msg)
+                    }
+                }
+            })
+        }
     </script>
 </head>
 
@@ -202,6 +276,8 @@
                     <form id="insertForm" name="insertForm">
                         <div class="modal-body">
                             <div class="form-group">
+                                <label class="col-form-label" style="display: none">예약번호</label>
+                                <input type="text" style="display: none" class="form-control" id="reservationNumber" name="reservationNumber">
                                 <label class="col-form-label">예약자</label>
                                 <input type="text" class="form-control" id="customerName" name="customerName">
                                 <label class="col-form-label">예약내용</label>
@@ -210,7 +286,7 @@
                                 <label class="col-form-label">가격</label>
                                 <input type="text" class="form-control" id="reservationPrice" name="reservationPrice">
                                 <label class="col-form-label">예약일</label>
-                                <input type="text" class="form-control" readonly id="selectedDateInput" name="selectedDateInput">
+                                <input type="text" class="form-control" id="selectedDateInput" name="selectedDateInput">
                             </div>
                         </div>
                     </form>
@@ -236,8 +312,43 @@
                         <div id="reservationInfo"></div>
                     </div>
                     <div class="modal-footer">
+                        <button type="button" class="btn-btn-secondary" id="addNewCalendar">추가</button>
+                        <button type="button" class="btn btn-secondary" id="updateCalendar">수정</button>
                         <button type="button" class="btn btn-secondary" id="closeInfoModal">취소</button>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 일정 수정 modal -->
+    <div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">예약일정</h5>
+                </div>
+                <form id="updateForm" name="updateForm">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label class="col-form-label" style="display: none">예약번호</label>
+                            <input type="text" style="display: none" class="form-control" id="updateReservationNumber" name="updateReservationNumber">
+                            <label class="col-form-label">예약자</label>
+                            <input type="text" class="form-control" id="updateCustomerName" name="updateCustomerName">
+                            <label class="col-form-label">예약내용</label>
+                            <input type="text" class="form-control" id="updateReservationContents"
+                                   name="updateReservationContents">
+                            <label class="col-form-label">가격</label>
+                            <input type="text" class="form-control" id="updateReservationPrice" name="updateReservationPrice">
+                            <label class="col-form-label">예약일</label>
+                            <input type="date" class="form-control" id="selectedNewDateInput" name="selectedNewDateInput">
+                        </div>
+                    </div>
+                </form>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-warning" id="updateReservationInfo">수정</button>
+                    <button type="button" class="btn btn-secondary" id="closeUpdateModal">취소</button>
                 </div>
             </div>
         </div>

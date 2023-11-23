@@ -488,6 +488,7 @@ public class CustomerController {
     public String singleProduct(HttpServletRequest request, ModelMap model, HttpSession session) throws Exception {
         log.info(this.getClass().getName() + ".goodsMngInfo Start!");
 
+        String customerId = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
         String goodsNumber = request.getParameter("goodsNumber");
         log.info("goodsNumber : " + goodsNumber);
 
@@ -507,6 +508,7 @@ public class CustomerController {
         model.addAttribute("cDTO", cDTO);
         model.addAttribute("rDTO", rDTO);
         model.addAttribute("gDTO", gDTO);
+        model.addAttribute("customerId", customerId);
 
         log.info(this.getClass().getName() + ".goodsMngInfo End!");
         return "/customer/single-product";
