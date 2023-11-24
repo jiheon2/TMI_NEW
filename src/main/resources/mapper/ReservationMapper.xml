@@ -25,6 +25,17 @@
     </select>
 
     <!-- 상품 추천 쿼리 -->
+    <select id="getPopularShop" resultType="ShopDTO">
+        SELECT S.SHOP_NAME, S.IMAGE, S.SHOP_NUMBER, M.MARKET_NAME,
+        COUNT(*) AS RESERVATION_COUNT
+        FROM SHOP S
+        JOIN MARKET M ON M.MARKET_NUMBER = S.MARKET_NUMBER
+        JOIN RESERVATION R ON S.SHOP_NUMBER = R.SHOP_NUMBER
+        GROUP BY S.SHOP_NAME, S.IMAGE, S.SHOP_NUMBER
+        ORDER BY RESERVATION_COUNT DESC
+    </select>
+
+    <!-- 상품 추천 쿼리 -->
     <select id="getPopularGoods" parameterType="java.lang.String" resultType="GoodsDTO">
         SELECT G.GOODS_NUMBER, G.GOODS_NAME, G.PRICE, G.SHOP_NUMBER, G.GOODS_IMAGE, S.SHOP_NAME,
         COUNT(*) AS RESERVATION_COUNT
@@ -33,7 +44,7 @@
         JOIN SHOP S ON G.SHOP_NUMBER = S.SHOP_NUMBER
         WHERE 1=1
         <if test="market neq null and market neq ''">
-            AND R.MARKET_NUMBER = ${market}
+            AND S.MARKET_NUMBER = ${market}
         </if>
         GROUP BY G.GOODS_NUMBER, G.GOODS_NAME, G.PRICE, G.SHOP_NUMBER, G.GOODS_IMAGE, S.SHOP_NAME
         ORDER BY RESERVATION_COUNT DESC
