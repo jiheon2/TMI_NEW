@@ -11,16 +11,19 @@
         LEFT JOIN (
         SELECT POST_NUMBER, COUNT(COMMENT_NUMBER) AS COUNT_COMMENT
         FROM COMMENT
-        GROUP BY POST_NUMBER) C ON P.POST_NUMBER = C.POST_NUMBER
+        GROUP BY POST_NUMBER
+        ) C ON P.POST_NUMBER = C.POST_NUMBER
         WHERE 1=1
         <if test="type eq 'notice'">
             AND P.CUSTOMER_ID = 'test'
         </if>
+        <if test="type eq null or type eq ''">
+            AND P.CUSTOMER_ID != 'test'
+        </if>
         <if test="type eq 'verification'">
             AND P.READ_COUNT >= 500
         </if>
-        ORDER BY
-        P.POST_NUMBER DESC;
+        ORDER BY P.POST_NUMBER DESC;
     </select>
 
     <!-- 게시글 등록 쿼리 -->

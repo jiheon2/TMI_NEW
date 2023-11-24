@@ -33,6 +33,9 @@ public class CustomerController {
     private final IReviewService reviewService;
     private final IBasketService basketService;
 
+    private final IPostService postService;
+    private final IReservationService reservationService;
+
     @GetMapping(value = "/login")
     public String login(HttpSession session) {
         return "/customer/login";
@@ -112,8 +115,23 @@ public class CustomerController {
     // 소비자 메인페이지 이동코드
     // 구현완료(11/13)
     @GetMapping(value = "/customerIndex")
-    public String customerIndex() {
-        log.info("start!");
+    public String customerIndex(ModelMap model) throws Exception {
+        log.info(this.getClass().getName() + ".customerIndex Start!");
+
+        String type = "verification";
+        String market = "";
+
+        List<PostDTO> pList = Optional.ofNullable(postService.getPostList(type)).orElseGet(ArrayList::new);
+        List<GoodsDTO> gList = Optional.ofNullable(reservationService.getPopularGoods(market)).orElseGet(ArrayList::new);
+        List<MarketDTO> mList = Optional.ofNullable(reservationService.getPopularMarket()).orElseGet(ArrayList::new);
+
+        log.info(pList.toString());
+        log.info(gList.toString());
+        log.info(mList.toString());
+
+        model.addAttribute("pList",pList);
+        model.addAttribute("gList",gList);
+        model.addAttribute("mList",mList);
 
         return "/customer/customerIndex";
     }
@@ -144,6 +162,7 @@ public class CustomerController {
     @GetMapping(value = "/customerSignUp")
     public String customerSignUp() {
         log.info(this.getClass().getName() + "customerSignUp");
+
         return "/customer/customerSignUp";
     }
 
