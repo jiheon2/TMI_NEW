@@ -69,23 +69,26 @@
         <div class="row">
             <div class="col-lg-8 mb-5 mb-lg-0">
                 <div class="blog_left_sidebar">
-                    <article class="blog_item">
+                    <article class="blog_item" th:each="dto : ${rList}">
                         <div class="blog_item_img">
-                            <img class="card-img rounded-0" src="/assets/images/blog/single_blog_1.png" alt="">
+                            <img class="card-img rounded-0" th:src="${dto.image}" alt="">
                             <a href="#" class="blog_item_date">
-                                <h3>몇일(숫자만)</h3>
-                                <p>몇월</p>
+                                <h3 th:text="${#strings.substring(dto.regDt, 5, 7)}"></h3>
+                                <p th:text="${#strings.substring(dto.regDt, 8, 10)}"></p>
                             </a>
                         </div>
 
                         <div class="blog_details">
                             <a class="d-inline-block" href="single-blog.html">
-                                <h2>제목</h2>
+                                <h2>[[${dto.title}]]</h2>
                             </a>
-                            <p>내용 일부분(컨트롤러에서 content 길이 자르기)</p>
+                            <p th:if="${dto.contents != null and #strings.length(dto.contents) > 20}"
+                               th:text="${#strings.substring(dto.contents, 0, 20)}"></p>
+                            <p th:if="${dto.contents == null or #strings.length(dto.contents) <= 20}"
+                               th:text="${#strings.substring(dto.contents, 0, dto.contents.length())}"></p>
                             <ul class="blog-info-link">
-                                <li><a href="#"><i class="far fa-user"></i> 작성자</a></li>
-                                <li><a href="#"><i class="far fa-comments"></i> 댓글 개수(숫자)</a></li>
+                                <li><a href="#"><i class="far fa-user"></i>[[${dto.customerId}]]</a></li>
+                                <li><a href="#"><i class="far fa-comments"></i> [[${dto.countComment}]]</a></li>
                             </ul>
                         </div>
                     </article>
@@ -125,29 +128,6 @@
                             </div>
                             <button class="button rounded-0 primary-bg text-white w-100 btn_1" type="submit">검색</button>
                         </form>
-                    </aside>
-                    <aside class="single_sidebar_widget post_category_widget">
-                        <h4 class="widget_title">카테고리</h4>
-                        <ul class="list cat-list">
-                            <li>
-                                <a href="#" class="d-flex">
-                                    <p>시장</p>
-                                    <p>(개수)</p>
-                                </a>
-                            </li>
-                        </ul>
-                    </aside>
-                    <aside class="single_sidebar_widget popular_post_widget">
-                        <h3 class="widget_title">최근 인증게시물(최대 5개만 뜨게)</h3>
-                        <div class="media post_item">
-                            <img src="images/post/post_1.png" alt="post">
-                            <div class="media-body">
-                                <a href="single-blog.html">
-                                    <h3>게시물 제목</h3>
-                                </a>
-                                <p>작성 날짜</p>
-                            </div>
-                        </div>
                     </aside>
                 </div>
             </div>
