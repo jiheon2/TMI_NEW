@@ -392,18 +392,18 @@
         <div class="row justify-content-center">
             <div class="col-lg-12">
                 <div class="section_tittle text-center">
-                    <h2>다른 상품 둘러보기</h2>
+                    <h2>같은 시장의 상품 둘러보기</h2>
                 </div>
             </div>
         </div>
         <div class="row align-items-center justify-content-between">
             <div class="col-lg-12">
                 <div class="best_product_slider owl-carousel">
-                    <div class="single_product_item">
-                        <img src="/assets/images/product/product_1.png" alt="">
+                    <div class="single_product_item" th:each="dto : ${gList}">
+                        <img th:src="${dto.goodsImage}" alt="">
                         <div class="single_product_text">
-                            <h4>상품명</h4>
-                            <h3>(가격)원</h3>
+                            <h4>[[${dto.goodsName}]]</h4>
+                            <h3>[[${dto.price}]]원</h3>
                         </div>
                     </div>
                 </div>

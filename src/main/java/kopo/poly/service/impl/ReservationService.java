@@ -3,6 +3,7 @@ package kopo.poly.service.impl;
 import kopo.poly.dto.GoodsDTO;
 import kopo.poly.dto.MarketDTO;
 import kopo.poly.dto.ReservationDTO;
+import kopo.poly.dto.ShopDTO;
 import kopo.poly.persistance.mapper.IReservationMapper;
 import kopo.poly.service.IReservationService;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +36,7 @@ public class ReservationService implements IReservationService {
         reservationMapper.insertReservationInfo(pDTO);
     }
 
-    /* 예약 목록 조회 */
+    /* 인기 상품 조회 */
     @Override
     public List<GoodsDTO> getPopularGoods(String market) throws Exception {
 
@@ -43,7 +44,15 @@ public class ReservationService implements IReservationService {
 
         return reservationMapper.getPopularGoods(market);
     }
-    /* 예약 목록 조회 */
+    /* 인기 상점 조회 */
+    @Override
+    public List<ShopDTO> getPopularShop() throws Exception {
+
+        log.info(this.getClass().getName() + ".getPopularShop Start!");
+
+        return reservationMapper.getPopularShop();
+    }
+    /* 인기 시장 조회 */
     @Override
     public List<MarketDTO> getPopularMarket() throws Exception {
 
