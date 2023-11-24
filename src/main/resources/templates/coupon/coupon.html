@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <title>TMI - 쿠폰</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>aranoz</title>
+    <link rel="stylesheet" href="/assets/css/global.css">
+    <link rel="icon" href="/assets/images/favicon.png">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+    <!-- animate CSS -->
+    <link rel="stylesheet" href="/assets/css/animate.css">
+    <!-- owl carousel CSS -->
+    <link rel="stylesheet" href="/assets/css/owl.carousel.min.css">
+    <!-- nice select CSS -->
+    <link rel="stylesheet" href="/assets/css/nice-select.css">
+    <!-- font awesome CSS -->
+    <link rel="stylesheet" href="/assets/css/all.css">
+    <!-- flaticon CSS -->
+    <link rel="stylesheet" href="/assets/css/flaticon.css">
+    <link rel="stylesheet" href="/assets/css/themify-icons.css">
+    <!-- font awesome CSS -->
+    <link rel="stylesheet" href="/assets/css/magnific-popup.css">
+    <!-- swiper CSS -->
+    <link rel="stylesheet" href="/assets/css/slick.css">
+    <link rel="stylesheet" href="/assets/css/price_rangs.css">
+    <!-- style CSS -->
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/roulette.css">
+    <script>
+        const sessionId = [[${session.SS_ID}]];
+
+        // // 세션 아이디가 있는 경우
+        // if (sessionId) {
+        //     document.getElementById('withSession').style.display = 'block'; // 밑의 필드셋 보이게
+        //     document.getElementById('withoutSession').style.display = 'none'; // 위의 필드셋 숨기게
+        // } else {
+        //     // 세션 아이디가 없는 경우
+        //     document.getElementById('withSession').style.display = 'none'; // 밑의 필드셋 숨기게
+        //     document.getElementById('withoutSession').style.display = 'block'; // 위의 필드셋 보이게
+        // }
+    </script>
+
+</head>
+<body>
+<!--::header part start::-->
+<header class="main_menu home_menu">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-12">
+                <nav class="navbar navbar-expand-lg navbar-light">
+                    <a class="navbar-brand" href="/customer/customerIndex"><img src="/assets/images/bird/logo2.png"
+                                                                                alt="logo" style="width: 100px" ,
+                                                                                height="50px"></a>
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+<!-- Header part end-->
+
+<!-- breadcrumb start-->
+<section class="breadcrumb" style="background-color: azure">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="breadcrumb_iner">
+                    <img src="/assets/images/bird/bird1.png" style="width: 400px">
+                    <div class="breadcrumb_iner_item">
+                        <h2 class="fa-solid" style="font-family: BMJUA,serif; font-size: 36px; color: #222222">쿠폰</h2>
+                        <p style="font-family: BMJUA,serif; font-size: 18px; color: #777777">룰렛을 통해 쿠폰을 획득하세요!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- breadcrumb end-->
+
+<!-- navigation -->
+<div th:replace="customerNav.html"></div>
+<!-- ---------- -->
+<div style="margin-bottom: 50px; padding: 30px; display: flex">
+    <fieldset class="sessionClass" th:if="${session.SS_ID != null}" id="withSession"
+              style="width: 220px; height: 150px; border: 1px solid #d0d0d0; background-color: #f8f8f8">
+        <div style="margin: 10px">
+            <div style="display: flex; justify-content: space-between">
+                <div>OOO님</div>
+                <div style="font-size: 11px">로그아웃</div>
+            </div>
+            <div>
+                <br>
+                <div>포인트 : <a>보유포인트</a></div>
+                <br>
+                <div>쿠폰 : <a>보유쿠폰수</a></div>
+                <br>
+            </div>
+            <div style="float: right; font-size: 11px">마이페이지</div>
+        </div>
+    </fieldset>
+    <fieldset class="sessionClass" th:if="${session.SS_ID == null}" id="withoutSession"
+              style="width: 220px; height: 150px; text-align: center; border: 1px solid #d0d0d0; background-color: #f8f8f8">
+        <p style="color: #969696">로그인이 필요한 서비스입니다</p>
+        <button style="width: 210px; height: 90px; background-color: #ff3368; color: #ffffff; border: 1px solid #ff3368; border-radius: 50px; font-size: 18px">
+            TMI 로그인
+        </button>
+    </fieldset>
+    <div class="roulette">
+        <canvas width="380" height='380'></canvas>
+        <button onclick="rotate()">룰렛 돌리기</button>
+    </div>
+    <div class="row" style="max-width: 1108px">
+        <div class="col-xl-4 col-md-6 col-sm-12">
+            <div class="card">
+                <div class="card-content">
+                    <img src="/assets/images/1000coupon.png" class="card-img-top img-fluid" alt="singleminded">
+                    <div class="card-body">
+                        <h5 class="card-title">1000원</h5>
+                        <button>구매</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-4 col-md-6 col-sm-12">
+            <div class="card">
+                <div class="card-content">
+                    <img src="/assets/images/3000coupon.png" class="card-img-top img-fluid" alt="singleminded">
+                    <div class="card-body">
+                        <h5 class="card-title">3000원</h5>
+                        <button>구매</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-4 col-md-6 col-sm-12">
+            <div class="card">
+                <div class="card-content">
+                    <img src="/assets/images/5000coupon.png" class="card-img-top img-fluid" alt="singleminded">
+                    <div class="card-body">
+                        <h5 class="card-title">5000원</h5>
+                        <button>구매</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-4 col-md-6 col-sm-12">
+            <div class="card">
+                <div class="card-content">
+                    <img src="/assets/images/10000coupon.png" class="card-img-top img-fluid" alt="singleminded">
+                    <div class="card-body">
+                        <h5 class="card-title">10000원</h5>
+                        <button>구매</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-4 col-md-6 col-sm-12">
+            <div class="card">
+                <div class="card-content">
+                    <img src="/assets/images/30000coupon.png" class="card-img-top img-fluid" alt="singleminded">
+                    <div class="card-body">
+                        <h5 class="card-title">30000원</h5>
+                        <button>구매</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-4 col-md-6 col-sm-12">
+            <div class="card">
+                <div class="card-content">
+                    <img src="/assets/images/50000coupon.png" class="card-img-top img-fluid" alt="singleminded">
+                    <div class="card-body">
+                        <h5 class="card-title">50000원</h5>
+                        <button>구매</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+<!-- Start Script -->
+<script src="/assets/js/notice/jquery-1.11.0.min.js"></script>
+<script src="/assets/js/notice/jquery-migrate-1.2.1.min.js"></script>
+<script src="/assets/js/notice/bootstrap.bundle.min.js"></script>
+<script src="/assets/js/notice/templatemo.js"></script>
+<script src="/assets/js/notice/custom.js"></script>
+<!-- popper js -->
+<script src="/assets/js/popper.min.js"></script>
+<!-- bootstrap js -->
+<script src="/assets/js/bootstrap.min.js"></script>
+<!-- easing js -->
+<script src="/assets/js/jquery.magnific-popup.js"></script>
+<!-- swiper js -->
+<script src="/assets/js/swiper.min.js"></script>
+<!-- swiper js -->
+<script src="/assets/js/masonry.pkgd.js"></script>
+<!-- particles js -->
+<script src="/assets/js/owl.carousel.min.js"></script>
+<script src="/assets/js/jquery.nice-select.min.js"></script>
+<!-- slick js -->
+<script src="/assets/js/slick.min.js"></script>
+<script src="/assets/js/jquery.counterup.min.js"></script>
+<script src="/assets/js/waypoints.min.js"></script>
+<script src="/assets/js/contact.js"></script>
+<script src="/assets/js/jquery.ajaxchimp.min.js"></script>
+<script src="/assets/js/jquery.form.js"></script>
+<script src="/assets/js/jquery.validate.min.js"></script>
+<script src="/assets/js/mail-script.js"></script>
+<script src="/assets/js/stellar.js"></script>
+<script src="/assets/js/price_rangs.js"></script>
+<!-- custom js -->
+<script src="/assets/js/custom.js"></script>
+<!-- End Script -->
+<script src="/assets/js/jquery-3.6.0.min.js"></script>
+<script type="text/javascript">
+    const $c = document.querySelector("canvas");
+    const ctx = $c.getContext(`2d`);
+
+
+    const product = [
+        "떡볶이", '돈가스', "초밥", "피자", "냉면", "치킨", '족발', "피자", "삼겹살",
+    ];
+
+    const colors = ["#dc0936", "#e6471d", "#f7a416", "#efe61f ", "#60b236", "#209b6c", "#169ed8", "#3f297e", "#87207b", "#be107f", "#e7167b"];
+
+    const newMake = () => {
+        const [cw, ch] = [$c.width / 2, $c.height / 2];
+        const arc = Math.PI / (product.length / 2);
+
+        for (let i = 0; i < product.length; i++) {
+            ctx.beginPath();
+            ctx.fillStyle = colors[i % (colors.length - 1)];
+            ctx.moveTo(cw, ch);
+            ctx.arc(cw, ch, cw, arc * (i - 1), arc * i);
+            ctx.fill();
+            ctx.closePath();
+        }
+
+        ctx.fillStyle = "#fff";
+        ctx.font = "18px Pretendard";
+        ctx.textAlign = "center";
+
+        for (let i = 0; i < product.length; i++) {
+            const angle = (arc * i) + (arc / 2);
+
+            ctx.save();
+
+            ctx.translate(
+                cw + Math.cos(angle) * (cw - 50),
+                ch + Math.sin(angle) * (ch - 50),
+            );
+
+            ctx.rotate(angle + Math.PI / 2);
+
+            product[i].split(" ").forEach((text, j) => {
+                ctx.fillText(text, 0, 30 * j);
+            });
+
+            ctx.restore();
+        }
+    }
+
+    const rotate = () => {
+        $c.style.transform = `initial`;
+        $c.style.transition = `initial`;
+
+        setTimeout(() => {
+
+            const ran = Math.floor(Math.random() * product.length);
+
+            const arc = 360 / product.length;
+            const rotate = (ran * arc) + 3600 + (arc * 3) - (arc / 4);
+
+            $c.style.transform = `rotate(-${rotate}deg)`;
+            $c.style.transition = `2s`;
+
+            setTimeout(() => alert(`오늘의 야식은?! ${product[ran]} 어떠신가요?`), 2000);
+        }, 1);
+    };
+
+    newMake();
+</script>
+</body>
+
+</html>
