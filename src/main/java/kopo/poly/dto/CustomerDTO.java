@@ -17,4 +17,5 @@ public class CustomerDTO {
     private String customerPw;
     private String customerEmail;
     private String existsYn;
+    private String point;
 }

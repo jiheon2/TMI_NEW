@@ -15,12 +15,6 @@
     <link rel="stylesheet" href="/assets/css/app.css">
     <link rel="shortcut icon" href="/assets/images/favicon.svg" type="image/x-icon">
     <script src="/assets/js/jquery-3.6.0.min.js"></script>
-    <!--    <link href='/calendar/fullcalendar-4.4.0/packages/core/main.css' rel='stylesheet'/>-->
-    <!--    <link href='/calendar/fullcalendar-4.4.0/packages/daygrid/main.css' rel='stylesheet'/>-->
-    <!--    <script src='/calendar/fullcalendar-4.4.0/packages/core/main.js'></script>-->
-    <!--    <script src='/calendar/fullcalendar-4.4.0/packages/interaction/main.js'></script>-->
-    <!--    <script src='/calendar/fullcalendar-4.4.0/packages/daygrid/main.js'></script>-->
-    <!-- fullcalendar CDN -->
     <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.8.0/main.min.css' rel='stylesheet'/>
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.8.0/main.min.js'></script>
     <!-- fullcalendar 언어 CDN -->
@@ -49,7 +43,7 @@
                             right: 'prev,next today'
                         },
                         events: data,
-                        editable: true, // 수정 가능?
+                        editable: false, // 수정 가능?
                         dayMaxEvents: true, // 이벤트가 오버되면 높이 제한 (+ 몇 개식으로 표현)
                         locale: 'ko', // 한국어 설정
                         dateClick: function (info) {
@@ -87,11 +81,11 @@
                                             var reservationNumber = reservation.reservationNumber;
                                             var html = `
                                            <a href="#" onclick="openUpdateInfoModal(${reservation.reservationNumber})">
-                                            <div class="form-group">${i+1}번 예약일정</div>
-                                            <div class="form-group" style="display: none">예약번호: ${reservation.reservationNumber}</div>
-                                            <div class="form-group">예약자: ${reservation.customerName}</div>
-                                            <div class="form-group">예약 내용: ${reservation.reservationContents}</div>
-                                            <div class="form-group">가격: ${reservation.reservationPrice}</div>
+                                            <div class="form-group" style="font-size: 20px; color: black">${i+1}번 예약일정</div>
+                                            <div class="form-group" style="display: none; font-size: 20px; color: black">예약번호: ${reservation.reservationNumber}</div>
+                                            <div class="form-group" style="font-size: 20px; color: black">예약자: ${reservation.customerName}</div>
+                                            <div class="form-group" style="font-size: 20px; color: black">예약 내용: ${reservation.reservationContents}</div>
+                                            <div class="form-group" style="font-size: 20px; color: black">가격: ${reservation.reservationPrice}</div>
                                             <hr/>
                                            </a>`;
 
@@ -118,18 +112,6 @@
                                 })
                             }
                         },
-                        // select: function (arg) { // 캘린더에서 드래그로 이벤트를 생성할 수 있다.
-                        //     var title = prompt('Event Title:');
-                        //     if (title) {
-                        //         calendar.addEvent({
-                        //             title: title,
-                        //             start: arg.start,
-                        //             end: arg.end,
-                        //             allDay: arg.allDay
-                        //         })
-                        //     }
-                        //     calendar.unselect()
-                        // }
                     });
                     calendar.render();
                 })
@@ -337,7 +319,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <div id="reservationInfo"></div>
+                        <div id="reservationInfo" style="overflow: scroll"></div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-warning" id="addNewCalendar">추가</button>

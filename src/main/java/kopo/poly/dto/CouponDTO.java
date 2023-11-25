@@ -9,8 +9,9 @@ import lombok.ToString;
 @ToString
 public class CouponDTO {
     private String couponNumber;
-    private String customerNumber;
+    private String customerId;
     private String couponName;
     private String discountRate;
     private String statement;
+    private int couponCount;
 }
