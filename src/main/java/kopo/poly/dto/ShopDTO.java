@@ -16,4 +16,5 @@ public class ShopDTO {
     private String image;
     private String traderName;
     private String marketName;
+    private String ShopCount;
 }

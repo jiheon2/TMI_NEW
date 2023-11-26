@@ -25,11 +25,90 @@
     <link rel="stylesheet" href="/assets/css/price_rangs.css">
     <!-- style CSS -->
     <link rel="stylesheet" href="/assets/css/style.css">
+    <script src="/assets/js/jquery-3.6.0.min.js"></script>
+
+    <script th:inline="javascript">
+        document.addEventListener("DOMContentLoaded", function() {
+            const rList = /*[[${rList}]]*/ '';
+
+            console.log(rList);
+            displayShop(rList);
+
+            // 검색 결과를 화면에 보여주는 함수
+            function displayShop(goods) {
+                console.log("displayShop start");
+                var resultsList = document.getElementById("resultsList");
+                resultsList.innerHTML = ""; // 이전 결과 초기화
+
+                console.log(goods);
+
+                goods.forEach(function(item) {
+                    var div = document.createElement("div");
+                    div.className = "col-lg-4 col-sm-6";
+                    div.innerHTML = `
+                    <div class="single_product_item">
+                        <div class="goodsImage">
+                            <img src="${item.image}" alt="">
+                        </div>
+                        <div class="single_product_text">
+                            <h4>${item.shopName}</h4>
+                            <a onclick="goShop(${item.shopNumber})" class="add_cart">상점 보러가기<i class="ti-heart"></i></a>
+                        </div>
+                    </div>
+                `;
+                    resultsList.appendChild(div);
+                });
+
+            }
+        });
+    </script>
     <script type="text/javascript">
         //상세보기 이동
         function goShop(shopNumber) {
             location.href = "/customer/shop?shopNumber=" + shopNumber;
         }
+    </script>
+    <script th:inline="javascript">
+            const rList = /*[[${rList}]]*/ '';
+
+            console.log(rList);
+
+            // 검색 기능 구현
+            function searchShop() {
+                var searchInput = document.getElementById("searchInput").value.toLowerCase();
+                var filteredGoods = rList.filter(function(item) {
+                    return item.shopName.toLowerCase().includes(searchInput);
+                });
+                console.log(filteredGoods);
+                displayShop(filteredGoods);
+            }
+
+            // 검색 결과를 화면에 보여주는 함수
+            function displayShop(goods) {
+                console.log("displayShop start");
+                var resultsList = document.getElementById("resultsList");
+                resultsList.innerHTML = ""; // 이전 결과 초기화
+
+                console.log(goods);
+
+                goods.forEach(function(item) {
+                    var div = document.createElement("div");
+                    div.className = "col-lg-4 col-sm-6";
+                    div.innerHTML = `
+                    <div class="single_product_item">
+                        <div class="goodsImage">
+                            <img src="${item.image}" alt="">
+                        </div>
+                        <div class="single_product_text">
+                            <h4>${item.shopName}</h4>
+                            <a onclick="goGoods(${item.shopNumber})" class="add_cart">상점 보러가기<i class="ti-heart"></i></a>
+                        </div>
+                    </div>
+                `;
+                    resultsList.appendChild(div);
+                });
+
+            }
     </script>
 </head>
 
@@ -79,7 +158,7 @@
                     <div class="col-lg-12">
                         <div class="product_top_bar d-flex justify-content-between align-items-center">
                             <div class="single_product_menu">
-                                <p><span>(숫자) </span> 상점 개수</p>
+                                <p><span>[[${shopCount}]] </span> 상점 개수</p>
                             </div>
                             <div class="single_product_menu d-flex">
                                 <h5>상점 유형 : </h5>
@@ -91,7 +170,8 @@
                             </div>
                             <div class="single_product_menu d-flex">
                                 <div class="input-group">
-                                    <input type="text" class="form-control" placeholder="상점 검색" aria-describedby="inputGroupPrepend">
+                                    <input type="text" id="searchInput" class="form-control" placeholder="상점 검색"
+                                           aria-describedby="inputGroupPrepend" oninput="searchShop()">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" id="inputGroupPrepend"><i class="ti-search"></i></span>
                                     </div>
@@ -102,17 +182,7 @@
                 </div>
 
                 <div class="row align-items-center latest_product_inner">
-                    <div class="col-lg-4 col-sm-6"  th:each="dto : ${rList}">
-                        <div class="single_product_item">
-                            <div class="goodsImage">
-                                <img th:src="${dto.image}" alt="">
-                            </div>
-                            <div class="single_product_text">
-                                <h4>[[${dto.shopName}]]</h4>
-                                <a th:attr="onclick='goShop(\'' + ${dto.shopNumber} + '\')'" class="add_cart">물건 사러가기<i class="ti-heart"></i></a>
-                            </div>
-                        </div>
-                    </div>
+                    <div class="row align-items-center latest_product_inner" id="resultsList"></div>
                 </div>
             </div>
         </div>
@@ -121,7 +191,6 @@
 <!--================End Category Product Area =================-->
 
 <!-- jquery plugins here-->
-<script src="/assets/js/jquery-3.6.0.min.js"></script>
 <!-- popper js -->
 <script src="/assets/js/popper.min.js"></script>
 <!-- bootstrap js -->

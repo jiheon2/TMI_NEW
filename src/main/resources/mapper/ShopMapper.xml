@@ -94,7 +94,8 @@
 
     <!-- 상점 목록 조회 쿼리 -->
     <select id="getShopList" parameterType="ShopDTO" resultType="ShopDTO">
-        SELECT SHOP_NUMBER, SHOP_NAME, SHOP_DESCRIPTION, IMAGE, MARKET_NAME, TRADER_ID
+        SELECT SHOP_NUMBER, SHOP_NAME, SHOP_DESCRIPTION, IMAGE, MARKET_NAME, TRADER_ID,
+               (SELECT COUNT(*) FROM SHOP WHERE MARKET_NUMBER = #{marketNumber}) AS SHOP_COUNT
         FROM SHOP
         WHERE MARKET_NUMBER = #{marketNumber}
         ORDER BY SHOP_NUMBER

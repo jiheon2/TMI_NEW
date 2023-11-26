@@ -268,18 +268,21 @@ public class CustomerController {
         String shopName;
         String shopDescription;
         String market;
-
+        String goodsCount;
         if (!rList.isEmpty()) {
             GoodsDTO firstGoods = rList.get(0);
             shopName = firstGoods.getShopName();
             shopDescription = firstGoods.getShopDescription();
             market = firstGoods.getMarketNumber();
+            goodsCount = firstGoods.getGoodsCount();
         } else {
             shopName = "아직 이 상점에는 상품이 없어요";
             shopDescription = "";
             market = "";
+            goodsCount = "0";
         }
 
+        model.addAttribute("goodsCount", goodsCount);
         model.addAttribute("rList", rList);
         model.addAttribute("sList", sList);
         model.addAttribute("shopName", shopName);
@@ -316,13 +319,17 @@ public class CustomerController {
         List<ShopDTO> rList = Optional.ofNullable(shopService.getShopList(pDTO)).orElseGet(ArrayList::new);
 
         String marketName;
+        String shopCount;
         if (!rList.isEmpty()) {
             ShopDTO firstShop = rList.get(0);
             marketName = firstShop.getMarketName();
+            shopCount = firstShop.getShopCount();
         } else {
             marketName = "아직 이 시장에는 상점이 없어요";
+            shopCount = "0";
         }
 
+        model.addAttribute("shopCount", shopCount);
         model.addAttribute("marketName", marketName);
         model.addAttribute("rList", rList);
 
