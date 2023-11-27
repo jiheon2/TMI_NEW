@@ -41,10 +41,13 @@
     <link rel="stylesheet" href="/assets/css/notice/css.css">
 
     <!-- Load fonts style after rendering the layout styles -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;700;900&display=swap">
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;700;900&display=swap">
     <link rel="stylesheet" href="/assets/css/notice/fontawesome.min.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/assets/css/notice/font-awesome.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/assets/css/notice/all.min.css">
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/assets/css/notice/font-awesome.min.css">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/assets/css/notice/all.min.css">
 
     <script th:inline="javascript">
         // Controller에서 받은 세션에 저장된 값
@@ -57,19 +60,19 @@
         const postNumber = /*[[${rDTO.postNumber}]]*/ '';
 
         // HTML로딩이 완료되고, 실행됨
-        $(document).ready(function() {
+        $(document).ready(function () {
             // 버튼 클릭했을때, 발생되는 이벤트 생성함(onclick 이벤트와 동일함)
-            $("#btnEdit").on("click", function() {
+            $("#btnEdit").on("click", function () {
                 doEdit(); // 공지사항 수정하기 실행
             })
 
             // 버튼 클릭했을때, 발생되는 이벤트 생성함(onclick 이벤트와 동일함)
-            $("#btnDelete").on("click", function() {
+            $("#btnDelete").on("click", function () {
                 doDelete(); // 공지사항 수정하기 실행
             })
 
             // 버튼 클릭했을때, 발생되는 이벤트 생성함(onclick 이벤트와 동일함)
-            $("#btnList").on("click", function() {
+            $("#btnList").on("click", function () {
                 location.href = "/post/postList"; // 공지사항 리스트 이동
             })
         })
@@ -99,7 +102,7 @@
                         data: {
                             "postNumber": postNumber
                         }, // form 태그 내 input 등 객체를 자동으로 전송할 형태로 변경하기
-                        success: function(json) { // /notice/noticeUpdate 호출이 성공했다면..
+                        success: function (json) { // /notice/noticeUpdate 호출이 성공했다면..
 
                             if (json.result === 1) { // 로그인 성공
                                 alert(json.msg); // 메시지 띄우기
@@ -130,7 +133,9 @@
         <div class="row align-items-center">
             <div class="col-lg-12">
                 <nav class="navbar navbar-expand-lg navbar-light">
-                    <a class="navbar-brand" href="/customer/customerIndex"><img src="/assets/images/bird/logo2.png" alt="logo" style="width: 100px" , height="50px"></a>
+                    <a class="navbar-brand" href="/customer/customerIndex"><img src="/assets/images/bird/logo2.png"
+                                                                                alt="logo" style="width: 100px" ,
+                                                                                height="50px"></a>
                 </nav>
             </div>
         </div>
@@ -170,6 +175,10 @@
                 </div>
                 <div class="info">
                     <dl>
+                        <dt>작성자</dt>
+                        <dd>[[${rDTO.customerId}]]</dd>
+                    </dl>
+                    <dl>
                         <dt>작성일</dt>
                         <dd>[[${rDTO.regDt}]]</dd>
                     </dl>
@@ -189,15 +198,49 @@
                     [[${rDTO.contents}]]
                 </div>
             </div>
-            <div class="bt_wrap">
+            <div class="bt_wrap" th:if="${session.SS_ID == rDTO.customerId}">
                 <a href="/post/postList" class="on">목록</a>
                 <a id="btnEdit" onclick="doEdit()" type="button">수정</a>
                 <a id="btnDelete" onclick="doDelete()" type="button">삭제</a>
             </div>
+            <div>
+                <label>댓글쓰기</label>
+                <textarea></textarea>
+                <button type="button">등록</button>
+            </div>
+            <div class="comments-area">
+                <h4>05 Comments</h4>
+                <div class="comment-list">
+                    <div class="single-comment justify-content-between d-flex">
+                        <div class="user justify-content-between d-flex">
+                            <div class="thumb">
+                                <img src="img/comment/comment_1.png" alt="">
+                            </div>
+                            <div class="desc">
+                                <p class="comment">
+                                    Multiply sea night grass fourth day sea lesser rule open subdue female fill which
+                                    them
+                                    Blessed, give fill lesser bearing multiply sea night grass fourth day sea lesser
+                                </p>
+                                <div class="d-flex justify-content-between">
+                                    <div class="d-flex align-items-center">
+                                        <h5>
+                                            <a href="#">Emilly Blunt</a>
+                                        </h5>
+                                        <p class="date">December 4, 2017 at 3:12 pm </p>
+                                    </div>
+                                    <div class="reply-btn">
+                                        <a href="#" class="btn-reply text-uppercase">reply</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </form>
-
 
 
 <!-- Start Script -->

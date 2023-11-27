@@ -6,11 +6,10 @@ import lombok.ToString;
 
 @Getter
 @Setter
-@ToString
 public class CommentDTO {
-    private String commentNumber;
-    private String postNumber;
-    private String customerId;
-    private String regDt;
-    private String contents;
+    private String commentNumber; // 댓글번호
+    private String postNumber; // 게시글 번호
+    private String regId; // 등록자
+    private String regDt; // 등록일
+    private String contents; // 댓글 내용
 }

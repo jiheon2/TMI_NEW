@@ -7,6 +7,7 @@ import kopo.poly.util.CmmUtil;
 import kopo.poly.util.EncryptUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -17,9 +18,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.time.LocalTime;
+import java.util.*;
 
 @Controller
 @Slf4j
@@ -80,6 +80,10 @@ public class CustomerController {
                 res = 1;
 
                 msg = "로그인이 성공했습니다.";
+
+                if(rDTO.getReward() == 0) {
+                    customerService.pointReward(pDTO); // 10포인트 추가
+                }
 
                 session.setAttribute("SS_ID", CmmUtil.nvl(rDTO.getCustomerId()));
 

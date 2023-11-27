@@ -82,6 +82,7 @@
 <div class="page-heading" style="margin-bottom: 200px">
     <div class="card-body" style="display: flex">
         <div class="btn btn-outline-secondary" style="flex: 1; margin-left: 30px; margin-right: 30px ">리뷰내역</div>
+        <div class="btn btn-outline-secondary" style="flex: 1; margin-left: 30px; margin-right: 30px ">보유쿠폰</div>
         <div class="btn btn-outline-secondary" style="flex: 1; margin-left: 30px; margin-right: 30px">주문내역</div>
     </div>
     <section class="bootstrap-select" style="margin-left: 20%; margin-right: 20%">
@@ -109,6 +110,12 @@
                                     </div>
                                     <div class="col-md-8 form-group">
                                         <div class="form-control">[[${rDTO.customerEmail}]]</div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label>포인트</label>
+                                    </div>
+                                    <div class="col-md-8 form-group">
+                                        <div class="form-control">[[${rDTO.point}]]</div>
                                     </div>
                                     <br>
                                     <div class="col-sm-12 d-flex justify-content-end">
