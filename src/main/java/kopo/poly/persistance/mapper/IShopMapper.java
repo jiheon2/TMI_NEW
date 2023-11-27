@@ -1,6 +1,7 @@
 package kopo.poly.persistance.mapper;
 
 
+import kopo.poly.dto.ReservationDTO;
 import kopo.poly.dto.ShopDTO;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -8,9 +9,9 @@ import java.util.List;
 
 @Mapper
 public interface IShopMapper {
-//    List<ReserveDTO> goodsBuyInfo(ReserveDTO pDTO) throws Exception;
-//    void deleteBuy(ReserveDTO pDTO) throws Exception;
-//    void acceptBuy(ReserveDTO pDTO) throws Exception;
+    List<ReservationDTO> goodsBuyInfo(ReservationDTO pDTO) throws Exception; //예약 정보 확인
+    void deleteBuy(ReservationDTO pDTO) throws Exception;
+    void acceptBuy(ReservationDTO pDTO) throws Exception;
     int insertShop(ShopDTO pDTO) throws Exception; // 상점 정보 입력
     ShopDTO getShopInfo(ShopDTO pDTO) throws Exception; // 상점 정보 조회
     int updateShop(ShopDTO pDTO) throws Exception; // 상점 정보 수정

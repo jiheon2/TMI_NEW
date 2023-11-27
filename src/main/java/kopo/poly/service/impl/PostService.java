@@ -22,7 +22,7 @@ public class PostService implements IPostService {
 
         log.info(this.getClass().getName() + ".getPostList start!");
 
-        return postMapper.getPostList();
+        return postMapper.getPostList(type);
     }
 
     /* 게시글 정보 조회 코드 */

@@ -33,7 +33,7 @@
     <!-- PortOne SDK -->
     <script src="https://cdn.iamport.kr/v1/iamport.js"></script>
     <script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.1.5.js"></script>
-    <script>
+    <script th:inline="javascript">
         $(document).ready(function () {
             $("#btnPayment").on("click", function () {
                 requestPay();
@@ -43,22 +43,41 @@
             IMP.init("imp05623571");
 
             function requestPay() {
+                var rList = /*[[${rList}]]*/ '';
+                var rDTO = /*[[${rDTO}]]*/ '';
+                console.log(rDTO);
+                var name = rList.map(item => item.goodsName).join(',');
+                console.log(name)
+                var amount = document.getElementById("result").textContent;
+                console.log(amount)
+                console.log(rDTO.customerEmail)
+                console.log(rDTO.customerName)
+                console.log(rDTO.phoneNumber)
+
                 IMP.request_pay(
                     {
                         pg: "kcp.AO09C",
                         pay_method: "card",
                         merchant_uid: "57008833-33004",
-                        name: "당근 10kg",
-                        amount: 1004,
-                        buyer_email: "Iamport@chai.finance",
-                        buyer_name: "포트원 기술지원팀",
-                        buyer_tel: "010-1234-5678",
+                        name: name,
+                        amount: amount,
+                        buyer_email: rDTO.customerEmail,
+                        buyer_name: rDTO.customerName,
+                        buyer_tel: rDTO.phoneNumber,
                         buyer_addr: "서울특별시 강남구 삼성동",
                         buyer_postcode: "123-456",
                     },
                     function (rsp) {
-                        // callback
-                        //rsp.imp_uid 값으로 결제 단건조회 API를 호출하여 결제결과를 판단합니다.
+                        console.log(rsp);
+                        if (rsp.success) {
+                            var msg = '결제가 완료되었습니다.';
+                            alert(msg);
+                            // location.href = "결제 완료 후 이동할 페이지 url"
+                        } else {
+                            var msg = '결제에 실패하였습니다.';
+                            msg += '에러내용 : ' + rsp.error_msg;
+                            alert(msg);
+                        }
                     }
                 );
             }

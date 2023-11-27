@@ -13,4 +13,6 @@ public class MarketDTO {
     private String marketName;
     private String latitude;
     private String longitude;
+    private String PopularMarket;
+    private String marketImage;
 }

@@ -1,6 +1,7 @@
 package kopo.poly.controller;
 
 import kopo.poly.dto.*;
+import kopo.poly.service.IShopService;
 import kopo.poly.service.ITraderService;
 import kopo.poly.util.CmmUtil;
 import kopo.poly.util.EncryptUtil;
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -24,6 +27,7 @@ import java.util.Optional;
 public class TraderController {
 
     private final ITraderService traderService;
+    private final IShopService shopService;
 
     /*
         로그인 페이지 코드
@@ -243,19 +247,22 @@ public class TraderController {
         TraderDTO rDTO = new TraderDTO();
         rDTO.setTraderId(traderId);
 
-//        ShopDTO pDTO1 = new ShopDTO();
+        ShopDTO pDTO1 = new ShopDTO();
 
-//        pDTO1.setTraderId(traderId);
-//        ShopDTO rDTO = Optional.ofNullable(shopService.getCount(pDTO1)).orElseGet(ShopDTO::new);
-//        rDTO.setTraderId(traderId);
-//
-//        ReserveDTO pDTO2 = new ReserveDTO();
-//        pDTO2.setTraderId(traderId);
-//        pDTO2.setState("1");
-//        List<ReserveDTO> rList = Optional.ofNullable(shopService.goodsBuyInfo(pDTO2)).orElseGet(ArrayList::new);
-//
-//        model.addAttribute("rDTO", rDTO);
-//        model.addAttribute("rList", rList);
+        pDTO1.setTraderId(traderId);
+        ShopDTO sDTO = Optional.ofNullable(shopService.getCount(pDTO1)).orElseGet(ShopDTO::new);
+        rDTO.setTraderId(traderId);
+
+        ReservationDTO pDTO2 = new ReservationDTO();
+        pDTO2.setTraderId(traderId);
+        pDTO2.setState("1");
+        List<ReservationDTO> rList = Optional.ofNullable(shopService.goodsBuyInfo(pDTO2)).orElseGet(ArrayList::new);
+
+        log.info("rList : " + rList.toString());
+
+        model.addAttribute("rDTO", rDTO);
+        model.addAttribute("rList", rList);
+        model.addAttribute("sDTO", sDTO);
 
         model.addAttribute("rDTO", rDTO);
 

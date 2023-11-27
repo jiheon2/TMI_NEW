@@ -31,8 +31,6 @@ import java.util.Map;
 public class MarketService implements IMarketService {
 
     private final IMarketMapper marketMapper;
-    private final String apiURL = "http://openapi.seoul.go.kr:8088/7a424178626a756e33326366416358/json/ListTraditionalMarket/1/400/";
-
 
     /* 시장 정보 조회 API 코드 */
     @Scheduled(cron = "0 0 0 * * ?") // 매일 자정에 실행

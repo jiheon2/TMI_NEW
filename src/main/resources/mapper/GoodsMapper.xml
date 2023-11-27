@@ -7,7 +7,8 @@
     <!-- 상품 목록 조회 쿼리 -->
     <select id="getGoodsList" parameterType="GoodsDTO" resultType="GoodsDTO">
         SELECT G.GOODS_NAME, G.PRICE, G.GOODS_TYPE, G.GOODS_NUMBER, G.GOODS_IMAGE, G.TRADER_ID, G.SHOP_NUMBER,
-        S.SHOP_NAME, S.SHOP_DESCRIPTION
+        S.SHOP_NAME, S.SHOP_DESCRIPTION, S.MARKET_NUMBER,
+        (SELECT COUNT(*) FROM GOODS WHERE SHOP_NUMBER = #{shopNumber}) AS GOODS_COUNT
         FROM GOODS G
         JOIN SHOP S ON G.SHOP_NUMBER = S.SHOP_NUMBER
         WHERE 1=1

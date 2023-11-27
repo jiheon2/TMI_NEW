@@ -2,23 +2,23 @@ package kopo.poly.controller;
 
 import kopo.poly.dto.GoodsDTO;
 import kopo.poly.dto.MsgDTO;
+import kopo.poly.dto.ReservationDTO;
 import kopo.poly.service.IFileService;
 import kopo.poly.service.IGoodsService;
+import kopo.poly.service.IShopService;
 import kopo.poly.util.CmmUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Controller
@@ -27,6 +27,7 @@ import java.util.Optional;
 public class GoodsController {
     private final IGoodsService goodsService;
     private final IFileService fileService;
+    private final IShopService shopService;
 
     /*
         상품 정보 관리 페이지 접속 코드
@@ -329,6 +330,74 @@ public class GoodsController {
             dto.setResult(res);
             dto.setMsg(msg);
             log.info(this.getClass().getName() + ".goodsMngDelete End!");
+        }
+
+        return dto;
+    }
+    @GetMapping(value = "/goods/goodsBuyInfo")
+    public String goodsBuyInfo(ModelMap model, HttpSession session) throws Exception {
+
+        log.info(this.getClass().getName() + ".goodsBuyInfo Start!");
+
+        String id = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+
+        ReservationDTO pDTO = new ReservationDTO();
+        pDTO.setTraderId(id);
+        pDTO.setState("0");
+        List<ReservationDTO> rList = shopService.goodsBuyInfo(pDTO);
+        if (rList == null) rList = new ArrayList<>();
+
+        model.addAttribute("rList", rList);
+
+        log.info(this.getClass().getName() + ".goodsBuyInfo End!");
+
+        return "/goods/goodsBuyInfo";
+    }
+    @ResponseBody
+    @PostMapping(value = "/goods/acceptBuy")
+    public MsgDTO acceptBuy(HttpSession session,@RequestBody Map<String, Object> requestData) {
+        log.info(this.getClass().getName() + ".acceptBuy Start!");
+
+        String msg = "";
+        int res = 0;
+        MsgDTO dto = null;
+
+        try {
+            String id = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+            String want = (String) requestData.get("want");
+            List<String> checkboxes = (List<String>) requestData.get("selectedSeqs");
+            log.info(want);
+            log.info("id : " + id);
+            log.info("checkboxes : " + checkboxes);
+            ReservationDTO pDTO = new ReservationDTO();
+            if (want.equals("delete")) {
+                for (String seq : checkboxes) {
+                    pDTO.setReservationNumber(seq);
+                    pDTO.setTraderId(id);
+
+                    shopService.deleteBuy(pDTO);
+                }
+                msg = "삭제되었습니다.";
+            } else {
+                for (String seq : checkboxes) {
+                    pDTO.setReservationNumber(seq);
+                    pDTO.setTraderId(id);
+
+                    shopService.acceptBuy(pDTO);
+                }
+                msg = "수락하였습니다.";
+            }
+
+            res = 1;
+        } catch (Exception e) {
+            msg = "실패하였습니다. : " + e.getMessage();
+            log.info(e.toString());
+            e.printStackTrace();
+        } finally {
+            dto = new MsgDTO();
+            dto.setResult(res);
+            dto.setMsg(msg);
+            log.info(this.getClass().getName() + ".deleteBuy End!");
         }
 
         return dto;

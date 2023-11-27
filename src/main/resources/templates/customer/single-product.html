@@ -31,15 +31,14 @@
     <script>
 
         //별점 마킹 모듈 프로토타입으로 생성
-        function Rating() {
-        };
+        function Rating(){};
         Rating.prototype.rate = 0;
-        Rating.prototype.setRate = function (newrate) {
+        Rating.prototype.setRate = function(newrate){
             //별점 마킹 - 클릭한 별 이하 모든 별 체크 처리
             this.rate = newrate;
             let items = document.querySelectorAll('.rate_radio');
-            items.forEach(function (item, idx) {
-                if (idx < newrate) {
+            items.forEach(function(item, idx){
+                if(idx < newrate){
                     item.checked = true;
                 } else {
                     item.checked = false;
@@ -48,11 +47,11 @@
         }
         let rating = new Rating();//별점 인스턴스 생성
 
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function(){
             //별점선택 이벤트 리스너
-            document.querySelector('.rating').addEventListener('click', function (e) {
+            document.querySelector('.rating').addEventListener('click',function(e){
                 let elem = e.target;
-                if (elem.classList.contains('rate_radio')) {
+                if(elem.classList.contains('rate_radio')){
                     rating.setRate(parseInt(elem.value));
                 }
             })
@@ -436,18 +435,18 @@
         <div class="row justify-content-center">
             <div class="col-lg-12">
                 <div class="section_tittle text-center">
-                    <h2>다른 상품 둘러보기</h2>
+                    <h2>같은 시장의 상품 둘러보기</h2>
                 </div>
             </div>
         </div>
         <div class="row align-items-center justify-content-between">
             <div class="col-lg-12">
                 <div class="best_product_slider owl-carousel">
-                    <div class="single_product_item">
-                        <img src="/assets/images/product/product_1.png" alt="">
+                    <div class="single_product_item" th:each="dto : ${gList}">
+                        <img th:src="${dto.goodsImage}" alt="">
                         <div class="single_product_text">
-                            <h4>상품명</h4>
-                            <h3>(가격)원</h3>
+                            <h4>[[${dto.goodsName}]]</h4>
+                            <h3>[[${dto.price}]]원</h3>
                         </div>
                     </div>
                 </div>

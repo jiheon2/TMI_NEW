@@ -20,4 +20,7 @@ public class GoodsDTO {
     private String countScore;
     private String shopName;
     private String shopDescription;
+    private String MarketNumber;
+    private String PopularGoods;
+    private String goodsCount;
 }

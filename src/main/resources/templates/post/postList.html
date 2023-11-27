@@ -53,7 +53,7 @@
             location.href = "/post/postInfo?postNumber=" + postNumber;
         }
         function goToNotice() {
-            window.location.href = "/post/noticeList"; // 공지사항 페이지 URL로 변경해야 합니다.
+            window.location.href = "/post/postList?type=notice"; // 공지사항 페이지 URL로 변경해야 합니다.
         }
 
         function goToPost() {
@@ -61,7 +61,7 @@
         }
 
         function goToVerification() {
-            window.location.href = "/post/verificationList"; // 인증게시글 페이지 URL로 변경해야 합니다.
+            window.location.href = "/post/postList?type=verification"; // 인증게시글 페이지 URL로 변경해야 합니다.
         }
     </script>
 </head>
