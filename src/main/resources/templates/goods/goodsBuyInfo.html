@@ -53,14 +53,14 @@
                                     </thead>
                                     <tbody th:each="dto : ${rList}">
                                     <tr >
-                                        <td style="width: 10%"><input type="checkbox" name="choose" th:value="${dto.seq}"></td>
-                                        <td th:text="${dto.name}"></td>
-                                        <td th:text="${dto.bid}"></td>
-                                        <td th:text="${dto.price}"></td>
+                                        <td style="width: 10%"><input type="checkbox" name="choose" th:value="${dto.reservationNumber}"></td>
+                                        <td th:text="${dto.goodsName}"></td>
+                                        <td th:text="${dto.customerName}"></td>
+                                        <td th:text="${dto.reservationPrice}"></td>
                                     </tr>
                                     <tr>
                                         <td>요청사항</td>
-                                        <td th:text="${dto.contents}" colspan="3"></td>
+                                        <td th:text="${dto.reservationContents}" colspan="3"></td>
                                     </tr>
                                     </tbody>
                                 </table>
@@ -124,7 +124,7 @@
             };
 
             $.ajax({
-                url: "/trader/acceptBuy",
+                url: "/goods/acceptBuy",
                 type: "post",
                 dataType: "JSON",
                 contentType: "application/json; charset=utf-8",

@@ -17,4 +17,8 @@ public class ShopDTO {
     private String traderName;
     private String marketName;
     private String ShopCount;
+    private String reviewCount;
+    private String reserveCount;
+    private String buyCount;
+    private String reserveStop;
 }
