@@ -42,16 +42,14 @@ public class WebSoketConfig implements WebSocketConfigurer {
                                 String[] urlInfo = path.split("/");
 
                                 String roomName = CmmUtil.nvl(urlInfo[2]);
-                                String customerName = CmmUtil.nvl(urlInfo[3]);
+                                String customerId = CmmUtil.nvl(urlInfo[3]);
 
                                 String roomNameHash = EncryptUtil.encHashSHA256(roomName);
 
-                                log.info("roomName : " + roomName);
-                                log.info("customerName : " + customerName);
-                                log.info("roomNameHash : " + roomNameHash);
+                                log.info("roomName : " + roomName + " / customerId : + " + customerId);
 
                                 attributes.put("roomName", roomName);
-                                attributes.put("customerName", customerName);
+                                attributes.put("customerId", customerId);
                                 attributes.put("roomNameHash", roomNameHash);
 
                                 return super.beforeHandshake(request, response, wsHandler, attributes);

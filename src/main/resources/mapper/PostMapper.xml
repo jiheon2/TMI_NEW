@@ -3,11 +3,24 @@
 
 <mapper namespace="kopo.poly.persistance.mapper.IPostMapper">
     <!-- 게시판 목록 조회 쿼리 -->
-    <select id="getPostList" resultType="PostDTO">
-        SELECT POST_NUMBER, TITLE, READ_COUNT, CUSTOMER_ID,
-                DATE_FORMAT(REG_DT, '%Y/%m/%d') AS REG_DT
-            FROM POST
-        ORDER BY POST_NUMBER DESC
+    <select id="getPostList" parameterType="java.lang.String" resultType="PostDTO">
+        SELECT P.POST_NUMBER, P.TITLE, P.READ_COUNT, P.CUSTOMER_ID, P.CONTENTS, P.IMAGE,
+        DATE_FORMAT(P.REG_DT, '%Y/%m/%d') AS REG_DT,
+        COALESCE(COUNT_COMMENT, 0) AS COUNT_COMMENT
+        FROM POST P
+        LEFT JOIN (
+        SELECT POST_NUMBER, COUNT(COMMENT_NUMBER) AS COUNT_COMMENT
+        FROM COMMENT
+        GROUP BY POST_NUMBER) C ON P.POST_NUMBER = C.POST_NUMBER
+        WHERE 1=1
+        <if test="type eq 'notice'">
+            AND P.CUSTOMER_ID = 'test'
+        </if>
+        <if test="type eq 'verification'">
+            AND P.READ_COUNT >= 500
+        </if>
+        ORDER BY
+        P.POST_NUMBER DESC;
     </select>
 
     <!-- 게시글 등록 쿼리 -->

@@ -3,5 +3,23 @@
 
 <!-- JAVA와 연결할 Mapper 파일 설정 -->
 <mapper namespace="kopo.poly.persistance.mapper.ICouponMapper">
-
+    <update id="buyCoupon" parameterType="CustomerDTO">
+        UPDATE CUSTOMER
+        SET POINT = POINT - #{point}
+        WHERE CUSTOMER_ID = #{customerId}
+    </update>
+    <insert id="updateCoupon" parameterType="CouponDTO">
+        INSERT INTO COUPON (CUSTOMER_ID, COUPON_NAME, DISCOUNT_RATE, STATEMENT)
+        VALUES (#{customerId}, #{couponName}, #{discountRate}, 0)
+    </insert>
+    <update id="roulettePoint" parameterType="CustomerDTO">
+        UPDATE CUSTOMER
+        SET POINT = POINT + #{point}
+        WHERE CUSTOMER_ID = #{customerId}
+    </update>
+    <select id="getCouponCount" parameterType="CouponDTO">
+        SELECT COUNT(CUSTOMER_ID) AS couponCount
+        FROM COUPON
+        WHERE CUSTOMER_ID = #{customerId}
+    </select>
 </mapper>

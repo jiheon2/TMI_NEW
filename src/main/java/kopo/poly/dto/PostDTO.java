@@ -16,4 +16,5 @@ public class PostDTO {
     private String chgDt;
     private String customerId;
     private String image;
+    private String postType; // 1. 일반 게시글 2.인증 게시글 3.공지사항
 }

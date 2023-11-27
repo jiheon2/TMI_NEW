@@ -34,12 +34,16 @@ public class PostController {
     // 게시글 목록 조회 및 페이지 이동 코드
     // 구현완료(11/13)
     @GetMapping(value = "/postList")
-    public String postList(ModelMap model, @RequestParam(defaultValue = "1") int page)
+    public String postList(ModelMap model, @RequestParam(defaultValue = "1") int page, HttpServletRequest request)
             throws Exception {
         log.info(this.getClass().getName() + ".postList Start!");
 
-        List<PostDTO> rList = postService.getPostList();
+        String type = CmmUtil.nvl(request.getParameter("type"));
+
+        List<PostDTO> rList = postService.getPostList(type);
         if (rList == null) rList = new ArrayList<>();
+
+        log.info(rList.toString());
 
         // 페이지당 보여줄 아이템 개수 정의
         int itemsPerPage = 3;
@@ -60,7 +64,14 @@ public class PostController {
         model.addAttribute("totalPages", totalPages);
 
         log.info(this.getClass().getName() + ".페이지 번호 : " + page);
+
         log.info(this.getClass().getName() + ".postList End!");
+        if(type.equals("notice")) {
+            return "/post/noticeList";
+        }
+        if(type.equals("verification")) {
+            return "/post/verificationPostList";
+        }
         return "/post/postList";
     }
 

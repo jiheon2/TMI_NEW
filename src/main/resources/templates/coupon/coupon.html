@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <title>TMI - 쿠폰</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>aranoz</title>
+    <link rel="stylesheet" href="/assets/css/global.css">
+    <link rel="icon" href="/assets/images/favicon.png">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+    <!-- animate CSS -->
+    <link rel="stylesheet" href="/assets/css/animate.css">
+    <!-- owl carousel CSS -->
+    <link rel="stylesheet" href="/assets/css/owl.carousel.min.css">
+    <!-- nice select CSS -->
+    <link rel="stylesheet" href="/assets/css/nice-select.css">
+    <!-- font awesome CSS -->
+    <link rel="stylesheet" href="/assets/css/all.css">
+    <!-- flaticon CSS -->
+    <link rel="stylesheet" href="/assets/css/flaticon.css">
+    <link rel="stylesheet" href="/assets/css/themify-icons.css">
+    <!-- font awesome CSS -->
+    <link rel="stylesheet" href="/assets/css/magnific-popup.css">
+    <!-- swiper CSS -->
+    <link rel="stylesheet" href="/assets/css/slick.css">
+    <link rel="stylesheet" href="/assets/css/price_rangs.css">
+    <!-- style CSS -->
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/roulette.css">
+</head>
+<body>
+<!--::header part start::-->
+<header class="main_menu home_menu">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-12">
+                <nav class="navbar navbar-expand-lg navbar-light">
+                    <a class="navbar-brand" href="/customer/customerIndex"><img src="/assets/images/bird/logo2.png"
+                                                                                alt="logo" style="width: 100px" ,
+                                                                                height="50px"></a>
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+<!-- Header part end-->
+
+<!-- breadcrumb start-->
+<section class="breadcrumb" style="background-color: azure">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="breadcrumb_iner">
+                    <img src="/assets/images/bird/bird1.png" style="width: 400px">
+                    <div class="breadcrumb_iner_item">
+                        <h2 class="fa-solid" style="font-family: BMJUA,serif; font-size: 36px; color: #222222">쿠폰</h2>
+                        <p style="font-family: BMJUA,serif; font-size: 18px; color: #777777">룰렛을 통해 쿠폰을 획득하세요!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- breadcrumb end-->
+
+<!-- navigation -->
+<div th:replace="customerNav.html"></div>
+<!-- ---------- -->
+<div style="margin-bottom: 50px; padding: 30px; display: flex; justify-content: center">
+    <div style="display: flex; margin-bottom: 50px; border: 1px solid black; margin-left: 50px; margin-right: 50px; padding: 50px" >
+        <!-- 룰렛 -->
+        <fieldset
+                style="display: flex; justify-content: center; align-items: center; height: 100%; margin-top: 37px; margin-right: 50px">
+            <div class="roulette">
+                <canvas width="380" height='380'></canvas>
+                <button onclick="rotate()">룰렛 돌리기</button>
+            </div>
+        </fieldset>
+
+        <fieldset class="sessionClass" id="withSession"
+                  style="width: 220px; border: 1px solid #d0d0d0; background-color: #f8f8f8; margin: 5px">
+            <div style="margin: 10px; text-align: center">
+                <div>
+                    <div style="font-size: 30px" th:text="${session.SS_ID + '님'}"></div>
+                </div>
+                <div style="font-size: 20px">
+                    <br>
+                    <div>포인트 : <a href="/customer/customerInfo" style="font-size: 20px">보유포인트</a></div>
+                    <br>
+                    <div>쿠폰 : <a href="/customer/customerInfo" style="font-size: 20px"></a></div>
+                    <br>
+                </div>
+                <div>
+
+                </div>
+            </div>
+        </fieldset>
+    </div>
+
+    <!-- 쿠폰 상점 -->
+    <form action="/coupon/buyCoupon" method="get">
+        <fieldset>
+            <div>쿠폰 상점</div>
+            <div class="row" style="max-width: 900px; text-align: center">
+                <div class="col-xl-4 col-md-6 col-sm-12">
+                    <div class="card">
+                        <div class="card-content">
+                            <img src="/assets/images/1000coupon.png" class="card-img-top img-fluid" alt="singleminded">
+                            <div class="card-body">
+                                <h5 class="card-title">1000원</h5>
+                                <button class="buyCoupon" type="submit" name="point" value="1000">구매</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-4 col-md-6 col-sm-12">
+                    <div class="card">
+                        <div class="card-content">
+                            <img src="/assets/images/3000coupon.png" class="card-img-top img-fluid" alt="singleminded">
+                            <div class="card-body">
+                                <h5 class="card-title">3000원</h5>
+                                <button class="buyCoupon" type="submit" name="point" value="3000">구매</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-4 col-md-6 col-sm-12">
+                    <div class="card">
+                        <div class="card-content">
+                            <img src="/assets/images/5000coupon.png" class="card-img-top img-fluid" alt="singleminded">
+                            <div class="card-body">
+                                <h5 class="card-title">5000원</h5>
+                                <button class="buyCoupon" type="submit" name="point" value="5000">구매</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-4 col-md-6 col-sm-12">
+                    <div class="card">
+                        <div class="card-content">
+                            <img src="/assets/images/10000coupon.png" class="card-img-top img-fluid" alt="singleminded">
+                            <div class="card-body">
+                                <h5 class="card-title">10000원</h5>
+                                <button class="buyCoupon" type="submit" name="point" value="10000">구매</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-4 col-md-6 col-sm-12">
+                    <div class="card">
+                        <div class="card-content">
+                            <img src="/assets/images/30000coupon.png" class="card-img-top img-fluid" alt="singleminded">
+                            <div class="card-body">
+                                <h5 class="card-title">30000원</h5>
+                                <button class="buyCoupon" type="submit" name="point" value="30000">구매</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-4 col-md-6 col-sm-12">
+                    <div class="card">
+                        <div class="card-content">
+                            <img src="/assets/images/50000coupon.png" class="card-img-top img-fluid" alt="singleminded">
+                            <div class="card-body">
+                                <h5 class="card-title">50000원</h5>
+                                <button class="buyCoupon" type="submit" name="point" value="50000">구매</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+</div>
+</body>
+
+<!-- Start Script -->
+<script src="/assets/js/notice/jquery-1.11.0.min.js"></script>
+<script src="/assets/js/notice/jquery-migrate-1.2.1.min.js"></script>
+<script src="/assets/js/notice/bootstrap.bundle.min.js"></script>
+<script src="/assets/js/notice/templatemo.js"></script>
+<script src="/assets/js/notice/custom.js"></script>
+<!-- popper js -->
+<script src="/assets/js/popper.min.js"></script>
+<!-- bootstrap js -->
+<script src="/assets/js/bootstrap.min.js"></script>
+<!-- easing js -->
+<script src="/assets/js/jquery.magnific-popup.js"></script>
+<!-- swiper js -->
+<script src="/assets/js/swiper.min.js"></script>
+<!-- swiper js -->
+<script src="/assets/js/masonry.pkgd.js"></script>
+<!-- particles js -->
+<script src="/assets/js/owl.carousel.min.js"></script>
+<script src="/assets/js/jquery.nice-select.min.js"></script>
+<!-- slick js -->
+<script src="/assets/js/slick.min.js"></script>
+<script src="/assets/js/jquery.counterup.min.js"></script>
+<script src="/assets/js/waypoints.min.js"></script>
+<script src="/assets/js/contact.js"></script>
+<script src="/assets/js/jquery.ajaxchimp.min.js"></script>
+<script src="/assets/js/jquery.form.js"></script>
+<script src="/assets/js/jquery.validate.min.js"></script>
+<script src="/assets/js/mail-script.js"></script>
+<script src="/assets/js/stellar.js"></script>
+<script src="/assets/js/price_rangs.js"></script>
+<!-- custom js -->
+<script src="/assets/js/custom.js"></script>
+<!-- End Script -->
+<script src="/assets/js/jquery-3.6.0.min.js"></script>
+<script type="text/javascript" th:inline="javascript">
+    const customerId = /*[[${session.SS_ID}]]*/'';
+
+    const $c = document.querySelector("canvas");
+    const ctx = $c.getContext(`2d`);
+
+
+    const product = [
+        "1000원쿠폰", '꽝', "100포인트", "꽝", "꽝", "50포인트", '꽝', "10포인트", "꽝",
+    ];
+
+    const colors = ["#dc0936", "#e6471d", "#f7a416", "#efe61f ", "#60b236", "#209b6c", "#169ed8", "#3f297e", "#87207b", "#be107f", "#e7167b"];
+
+    const newMake = () => {
+        const [cw, ch] = [$c.width / 2, $c.height / 2];
+        const arc = Math.PI / (product.length / 2);
+
+        for (let i = 0; i < product.length; i++) {
+            ctx.beginPath();
+            ctx.fillStyle = colors[i % (colors.length - 1)];
+            ctx.moveTo(cw, ch);
+            ctx.arc(cw, ch, cw, arc * (i - 1), arc * i);
+            ctx.fill();
+            ctx.closePath();
+        }
+
+        ctx.fillStyle = "#fff";
+        ctx.font = "18px Pretendard";
+        ctx.textAlign = "center";
+
+        for (let i = 0; i < product.length; i++) {
+            const angle = (arc * i) + (arc / 2);
+
+            ctx.save();
+
+            ctx.translate(
+                cw + Math.cos(angle) * (cw - 50),
+                ch + Math.sin(angle) * (ch - 50),
+            );
+
+            ctx.rotate(angle + Math.PI / 2);
+
+            product[i].split(" ").forEach((text, j) => {
+                ctx.fillText(text, 0, 30 * j);
+            });
+
+            ctx.restore();
+        }
+    }
+
+    // const rotate = () => {
+    //     $c.style.transform = `initial`;
+    //     $c.style.transition = `initial`;
+    //
+    //     setTimeout(() => {
+    //
+    //         const ran = Math.floor(Math.random() * product.length);
+    //         const arc = 360 / product.length;
+    //         const rotate = (ran * arc) + 3600 + (arc * 3) - (arc / 4);
+    //
+    //         $c.style.transform = `rotate(-${rotate}deg)`;
+    //         $c.style.transition = `2s`;
+    //
+    //         setTimeout(() => alert(`축하합니다! ${product[ran]}입니다!`), 2000);
+    //     }, 1);
+    // };
+
+    const rotate = () => {
+        $c.style.transform = `initial`;
+        $c.style.transition = `initial`;
+
+        setTimeout(() => {
+            const ran = Math.floor(Math.random() * product.length);
+            const arc = 360 / product.length;
+            const rotate = (ran * arc) + 3600 + (arc * 3) - (arc / 4);
+
+            $c.style.transform = `rotate(-${rotate}deg)`;
+            $c.style.transition = `2s`;
+
+            setTimeout(() => {
+                const result = product[ran];
+                alert(`축하합니다! ${result}입니다!`);
+
+                // 룰렛 결과에 따른 다른 액션 수행
+                switch (result) {
+                    case '1000원쿠폰':
+                        console.log('1000원쿠폰 액션 수행');
+                        $.ajax({
+                            url: "/coupon/rouletteCoupon",
+                            type: "post",
+                            dataType: "json",
+                            data: {
+                                point: 1000
+                            },
+                            success:
+                                console.log("1000원쿠폰 적립")
+                        })
+                        break;
+                    case '10포인트':
+                        // 50포인트에 대한 액션 수행
+                        console.log('10포인트 액션 수행');
+                        $.ajax({
+                            url: "/coupon/updatePoint",
+                            type: "post",
+                            dataType: "json",
+                            data: {
+                                point: 10
+                            },
+                            success:
+                                console.log("10포인트 적립")
+                        })
+                        break;
+                    case '50포인트':
+                        // 50포인트에 대한 액션 수행
+                        console.log('50포인트 액션 수행');
+                        $.ajax({
+                            url: "/coupon/updatePoint",
+                            type: "post",
+                            dataType: "json",
+                            data: {
+                                point: 50
+                            },
+                            success:
+                                console.log("50포인트 적립")
+                        })
+                        break;
+                    case '100포인트':
+                        // 50포인트에 대한 액션 수행
+                        console.log('100포인트 액션 수행');
+                        $.ajax({
+                            url: "/coupon/updatePoint",
+                            type: "post",
+                            dataType: "json",
+                            data: {
+                                point: 100
+                            },
+                            success:
+                                console.log('100포인트 적립')
+                        })
+                        break;
+                    case '꽝':
+                        console.log('꽝')
+                        break;
+                    default:
+                        // 결과에 해당하는 액션 없을 시의 처리
+                        console.log('액션 없음');
+                        break;
+                }
+            }, 2000);
+        }, 1);
+    };
+
+
+    newMake();
+</script>
+<script>
+    $(document).ready(function () {
+        $(".buyCoupon").on("click", function () {
+            location.href = "/coupon/buyCoupon"
+        })
+    })
+</script>
+</body>
+
+</html>

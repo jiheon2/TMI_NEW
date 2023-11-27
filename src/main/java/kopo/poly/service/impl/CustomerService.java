@@ -5,6 +5,7 @@ import kopo.poly.persistance.mapper.ICustomerMapper;
 import kopo.poly.service.ICustomerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -109,5 +110,18 @@ public class CustomerService implements ICustomerService {
 
         log.info(this.getClass().getName() + ".updateCustomerPw Start!");
         return res;
+    }
+
+    @Override
+    public int pointReward(CustomerDTO pDTO) throws Exception {
+        log.info("pointReward Start!");
+
+        return customerMapper.pointReward(pDTO);
+    }
+
+    @Override
+    public void resetReward() throws Exception {
+        log.info("resetReward start");
+        customerMapper.resetReward();
     }
 }
