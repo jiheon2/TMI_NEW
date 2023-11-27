@@ -33,74 +33,14 @@
     <!-- PortOne SDK -->
     <script src="https://cdn.iamport.kr/v1/iamport.js"></script>
     <script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.1.5.js"></script>
-    <script>
-        $(document).ready(function () {
-            $("#btnPayment").on("click", function () {
-                requestPay();
-            })
-
-            var IMP = window.IMP;
-            IMP.init("imp05623571");
-
-            function requestPay() {
-                IMP.request_pay(
-                    {
-                        pg: "kcp.AO09C",
-                        pay_method: "card",
-                        merchant_uid: "57008833-33004",
-                        name: "당근 10kg",
-                        amount: 1004,
-                        buyer_email: "Iamport@chai.finance",
-                        buyer_name: "포트원 기술지원팀",
-                        buyer_tel: "010-1234-5678",
-                        buyer_addr: "서울특별시 강남구 삼성동",
-                        buyer_postcode: "123-456",
-                    },
-                    function (rsp) {
-                        // callback
-                        //rsp.imp_uid 값으로 결제 단건조회 API를 호출하여 결제결과를 판단합니다.
-                    }
-                );
-            }
-        })
-    </script>
-    <script>
-        $(document).ready(function () {
-            console.log("Document is ready!");
-
-            // 각 품목의 총액을 계산하고 결과를 업데이트하는 함수
-            function calculateTotalAmount() {
-                var totalAmount = 0;
-
-                // 테이블의 각 행을 반복
-                $("tbody tr").each(function () {
-                    var price = parseFloat($(this).find("#price").text().replace("₩", "").replace(",", ""));
-                    var quantity = parseInt($(this).find(".quantity").val());
-                    var rowTotal = price * quantity;
-
-                    // 이 행에 대한 총액 업데이트
-                    $(this).find(".totalAmount").text("₩" + rowTotal.toLocaleString());
-
-                    // 행 총액을 전체 총액에 추가
-                    totalAmount += rowTotal;
-                });
-
-                // 전체 총액으로 결과 업데이트
-                $("#result").text("₩" + totalAmount.toLocaleString());
-            }
-
-            // 수량 변경 이벤트에 대한 리스너 추가 (change 이벤트 사용)
-            $("tbody").on("change", ".quantity", function () {
-                console.log("Quantity changed!");
-                calculateTotalAmount();
-            });
-
-            // 페이지 로드 시 초기 계산 수행
-            calculateTotalAmount();
-        });
-    </script>
 </head>
-
+<script>
+    $(document).ready(function () {
+        $("#goCart").on("click", function () {
+            location.href="/customer/cart"
+        })
+    })
+</script>
 <body>
 <!--::header part start::-->
 <header class="main_menu home_menu">
@@ -128,8 +68,8 @@
                 <div class="breadcrumb_iner">
                     <img src="/assets/images/bird/birdShop.png" style="width: 400px">
                     <div class="breadcrumb_iner_item">
-                        <h2 class="fa-solid" style="font-family: BMJUA,serif; font-size: 36px; color: #222222">장바구니</h2>
-                        <p style="font-family: BMJUA,serif; font-size: 18px; color: #777777">고르신 상품을 알려드립니다!</p>
+                        <h2 class="fa-solid" style="font-family: BMJUA,serif; font-size: 36px; color: #222222">찜목록</h2>
+                        <p style="font-family: BMJUA,serif; font-size: 18px; color: #777777">원하는 상품을 찜 해놓으세요!</p>
                     </div>
                 </div>
             </div>
@@ -154,8 +94,6 @@
                         <th scope="col">이미지</th>
                         <th scope="col">상품명</th>
                         <th scope="col">가격</th>
-                        <th scope="col">수량</th>
-                        <th scope="col">합계</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -175,28 +113,13 @@
                         <td>
                             <h5 id="price">[[${dto.price}]]</h5>
                         </td>
-                        <td>
-                            <!-- Use select box for quantity -->
-                            <select class="quantity">
-                                <option th:each="option : ${#numbers.sequence(0, 10)}"
-                                        th:value="${option}"
-                                        th:text="${option}"
-                                        th:selected="${option} == ${dto.quantity}"></option>
-                            </select>
-                        </td>
-                        <td>
-                            <h5 class="totalAmount" th:id="${dto.goodsNumber}"></h5>
-                        </td>
                     </tr>
                     </tbody>
                 </table>
-                <div style="float: right; display: flex">
-                    <i class="fa-solid" style="font-family: BMJUA,serif; font-size: 20px; color: #222222; margin: 10px"> 결제 금액 : </i><p id="result" style="font-size: 20px">
-                </div>
                 <br/>
                 <br/>
                 <div style="float: right">
-                    <button class="btn btn-primary" id="btnPayment">결제</button>
+                    <button class="btn btn-primary" id="goCart">장바구니</button>
                     <button class="btn btn-light-secondary me-1 mb-1" id="btnDelete">삭제</button>
                 </div>
             </div>
