@@ -41,12 +41,15 @@
 
             var IMP = window.IMP;
             IMP.init("imp05623571");
+            const rList = /*[[${rList}]]*/ '';
+            const rDTO = /*[[${rDTO}]]*/ '';
 
             function requestPay() {
-                var rList = /*[[${rList}]]*/ '';
-                var rDTO = /*[[${rDTO}]]*/ '';
-                console.log(rDTO);
+
+                console.log(rDTO.toString());
                 var name = rList.map(item => item.goodsName).join(',');
+                var uid = rList[0].basketNumber
+                console.log(uid)
                 console.log(name)
                 var amount = document.getElementById("result").textContent;
                 console.log(amount)
@@ -58,7 +61,7 @@
                     {
                         pg: "kcp.AO09C",
                         pay_method: "card",
-                        merchant_uid: "57008833-33004",
+                        merchant_uid: uid,
                         name: name,
                         amount: amount,
                         buyer_email: rDTO.customerEmail,
@@ -70,8 +73,52 @@
                     function (rsp) {
                         console.log(rsp);
                         if (rsp.success) {
-                            var msg = '결제가 완료되었습니다.';
-                            alert(msg);
+                            var basketNumbers = rList.map(function(basket) {
+                                return basket.basketNumber;
+                            });
+                            console.log(basketNumbers)
+
+                            var dataToSend = {
+                                basketNumbers: basketNumbers,
+                                applyNum : rsp.applyNum,
+                                bankName : rsp.bankName,
+                                buyerAddr : rsp.buyerAddr,
+                                buyerEmail : rsp.buyerEmail,
+                                buyerPostcod : rsp.buyerPostcod,
+                                buyerTel :  rsp.buyerTel,
+                                cardName : rsp.cardName,
+                                cardNumber : rsp.cardNumber,
+                                cardQuote :  rsp.cardQuote,
+                                currency : rsp.currency,
+                                customData : rsp.customData,
+                                impUid : rsp.impUid,
+                                name : rsp.name,
+                                paidAmount : rsp.paidAmount,
+                                paidAt : rsp.paidAt,
+                                payMethod : rsp.payMethod,
+                                pgProvider : rsp.pgProvider,
+                                pgTid : rsp.pgTid,
+                                pgType : rsp.pgType,
+                                reciptUrl : rsp.reciptUrl,
+                                status : rsp.status,
+                                success : rsp.success
+                            };
+
+                            $.ajax({
+                                url: "/basket/insertBasket",
+                                type: "post",
+                                dataType: "JSON",
+                                contentType: "application/json; charset=utf-8",
+                                data: JSON.stringify(dataToSend), // JSON 데이터로 변환
+                                success: function (json) {
+                                    if (json.result === 1) {
+                                        alert(json.msg);
+                                        location.reload();
+                                    } else {
+                                        alert(json.msg);
+                                    }
+                                }
+                            });
                             // location.href = "결제 완료 후 이동할 페이지 url"
                         } else {
                             var msg = '결제에 실패하였습니다.';
@@ -117,6 +164,48 @@
             // 페이지 로드 시 초기 계산 수행
             calculateTotalAmount();
         });
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#btnDelete").on("click", function () {
+                deleteBasket();
+            })
+
+            function deleteBasket() {
+                    var selectedSeqs = []; // 선택된 체크박스 값들을 저장할 배열
+
+                    // 모든 체크박스 엘리먼트를 선택
+                    var checkboxes = document.getElementsByName("choose");
+
+                    console.log(checkboxes);
+                    for (var i = 0; i < checkboxes.length; i++) {
+                        if (checkboxes[i].checked) {
+                            selectedSeqs.push(checkboxes[i].value);
+                            console.log("Checkbox " + i + "의 value 값: " + checkboxes[i].value);
+                        }
+                    }
+
+                    var dataToSend = {
+                        selectedSeqs: selectedSeqs
+                    };
+
+                    $.ajax({
+                        url: "/basket/deleteBasket",
+                        type: "post",
+                        dataType: "JSON",
+                        contentType: "application/json; charset=utf-8",
+                        data: JSON.stringify(dataToSend), // JSON 데이터로 변환
+                        success: function (json) {
+                            if (json.result === 1) {
+                                alert(json.msg);
+                                location.reload();
+                            } else {
+                                alert(json.msg);
+                            }
+                        }
+                    });
+                }
+        })
     </script>
 </head>
 
@@ -179,7 +268,7 @@
                     </thead>
                     <tbody>
                     <tr th:each="dto : ${rList}">
-                        <td><input type="checkbox"></td>
+                        <td><input type="checkbox" name="choose" th:value="${dto.basketNumber}"></td>
                         <td>
                             <div class="goodsImage">
                                 <img th:src="${dto.goodsImage}" alt=""/>

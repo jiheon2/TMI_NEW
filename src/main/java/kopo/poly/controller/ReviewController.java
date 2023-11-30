@@ -76,7 +76,7 @@ public class ReviewController {
 
         try {
             String traderId = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
-//            ArrayList<String> checkboxes = CmmUtil.nvl(request.getParameter("checkboxes"));
+//            ArrayList<String> checkboxes = CmmUtil.nvl((String)request.getParameter("checkboxes"));
 
             log.info("traderId : " + traderId);
             log.info("checkboxes : " + checkboxes);
