@@ -21,5 +21,11 @@
         WHERE MARKET_NAME LIKE CONCAT('%',#{marketName},'%')
         ORDER BY MARKET_NUMBER
     </select>
+
+    <select id="getMarketName" resultType="MarketDTO">
+        SELECT MARKET_NAME
+        FROM MARKET
+        ORDER BY MARKET_NUMBER
+    </select>
     <!-- 정렬방식 오름차순으로 정렬-->
 </mapper>

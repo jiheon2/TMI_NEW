@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.swing.text.html.Option;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -32,7 +33,7 @@ public class CustomerController {
     private final IGoodsService goodsService;
     private final IReviewService reviewService;
     private final IBasketService basketService;
-
+    private final ITraderService traderService;
     private final IPostService postService;
     private final IReservationService reservationService;
 
@@ -218,7 +219,7 @@ public class CustomerController {
             String customerPn = CmmUtil.nvl(request.getParameter("phoneNumber"));
             String customerName = CmmUtil.nvl(request.getParameter("customerName"));
             String customerEmail = CmmUtil.nvl(request.getParameter("customerEmail"));
-            
+
             log.info("customerId : " + customerId);
             log.info("customerPw : " + customerPw);
             log.info("customerPn : " + customerPn);
@@ -544,15 +545,23 @@ public class CustomerController {
         List<ReviewDTO> rDTO = Optional.ofNullable(reviewService.oneReviewList(pDTO2)).orElseGet(ArrayList::new);
         List<ReviewDTO> cDTO = Optional.ofNullable(reviewService.getScore(pDTO2)).orElseGet(ArrayList::new);
 
+        String traderId = gDTO.getTraderId();
+        log.info("traderId : " + traderId);
+        TraderDTO nDTO = new TraderDTO();
+        nDTO.setTraderId(traderId);
+        TraderDTO tDTO = Optional.ofNullable(traderService.getTraderInfo(nDTO)).orElseGet(TraderDTO::new);
+
         log.info("gDTO : " + gDTO.toString());
         log.info("rDTO : " + rDTO.toString());
         log.info("cDTO : " + cDTO.toString());
         log.info("gList : " + gList.toString());
+        log.info("tDTO : " + tDTO.toString());
 
         model.addAttribute("cDTO", cDTO);
         model.addAttribute("rDTO", rDTO);
         model.addAttribute("gDTO", gDTO);
         model.addAttribute("gList", gList);
+        model.addAttribute("tDTO", tDTO);
 
         log.info(this.getClass().getName() + ".goodsMngInfo End!");
         return "/customer/single-product";

@@ -24,6 +24,7 @@
     <link rel="stylesheet" href="/assets/css/magnific-popup.css">
     <!-- style CSS -->
     <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/reservationModal.css">
     <script src="/assets/js/jquery-3.6.0.min.js"></script>
     <script src="https://kit.fontawesome.com/cb71939295.js" crossorigin="anonymous"></script>
 
@@ -31,14 +32,15 @@
     <script>
 
         //별점 마킹 모듈 프로토타입으로 생성
-        function Rating(){};
+        function Rating() {
+        };
         Rating.prototype.rate = 0;
-        Rating.prototype.setRate = function(newrate){
+        Rating.prototype.setRate = function (newrate) {
             //별점 마킹 - 클릭한 별 이하 모든 별 체크 처리
             this.rate = newrate;
             let items = document.querySelectorAll('.rate_radio');
-            items.forEach(function(item, idx){
-                if(idx < newrate){
+            items.forEach(function (item, idx) {
+                if (idx < newrate) {
                     item.checked = true;
                 } else {
                     item.checked = false;
@@ -47,11 +49,11 @@
         }
         let rating = new Rating();//별점 인스턴스 생성
 
-        document.addEventListener('DOMContentLoaded', function(){
+        document.addEventListener('DOMContentLoaded', function () {
             //별점선택 이벤트 리스너
-            document.querySelector('.rating').addEventListener('click',function(e){
+            document.querySelector('.rating').addEventListener('click', function (e) {
                 let elem = e.target;
-                if(elem.classList.contains('rate_radio')){
+                if (elem.classList.contains('rate_radio')) {
                     rating.setRate(parseInt(elem.value));
                 }
             })
@@ -86,6 +88,9 @@
             })
             $("#changeLike").on("click", function () {
                 changeLike()
+            })
+            $("#btnChat").on("click", function () {
+                dochat()
             })
 
             function writeReview(f) {
@@ -197,32 +202,19 @@
             }
         })
     </script>
+    <script type="text/javascript">
+        document.addEventListener("DOMContentLoaded", function () {
+            var modal = document.getElementById('reservationModal');
 
-<!--    <script th:inline="javascript">-->
-<!--        $(document).ready(function () {-->
-<!--            $("#chatWithTrader").on("click", function () {-->
-<!--                chatWithTrader()-->
-<!--            })-->
+            document.getElementById('openReservationModal').onclick = function () {
+                document.getElementById('reservationModal').style.display = 'flex';
+            }
 
-<!--            function chatWithTrader() {-->
-<!--                $.ajax({-->
-<!--                    url: "/chat/chatroom",-->
-<!--                    type: "post",-->
-<!--                    dataType: "json",-->
-<!--                    data: {-->
-<!--                        traderId: traderId,-->
-<!--                        customerId: customerId,-->
-<!--                        roomName: goodsName + customerId-->
-<!--                    },-->
-<!--                    success: function () {-->
-<!--                    },-->
-<!--                    error: function (error) {-->
-<!--                        console.error("에러 발생: ", error);-->
-<!--                    }-->
-<!--                });-->
-<!--            }-->
-<!--        })-->
-<!--    </script>-->
+            document.getElementById('closeReservationModal').onclick = function () {
+                document.getElementById('reservationModal').style.display = 'none';
+            }
+        });
+    </script>
 </head>
 
 <body>
@@ -298,11 +290,7 @@
                         <a href="#" id="changeLike" class="like_us"> <i class="ti-heart"></i> </a>
                     </div>
                     <div class="card_area d-flex justify-content-between align-items-center">
-                        <form name="chat" id="chat" method="post" action="/chat/chatroom">
-                            <input type="text" name="customerId" id="customerId" style="display: none" th:value="${customerId}">
-                            <input type="text" name="roomName" id="roomName" style="display: none" th:value="${gDTO.goodsName + customerId}">
-                            <button type="submit" class="btn-success">상품 문의하기</button>
-                        </form>
+                        <button type="button" class="btn-success" id="openReservationModal">상품 문의하기</button>
                     </div>
                 </div>
             </div>
@@ -310,6 +298,134 @@
     </div>
 </div>
 <!--================End Single Product Area =================-->
+
+<!-- 모달 창 -->
+<div class="modal" id="reservationModal">
+    <div class="modal_body">
+        <div style="display: flex; justify-content: space-between">
+            <h2>예약하기</h2>
+            <button class="btn btn-light" style="margin-bottom: 12px; background: none; border: none"
+                    id="closeReservationModal">x
+            </button>
+        </div>
+        <hr/>
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">상인 정보</h4>
+            </div>
+            <div class="card-content">
+                <div class="card-body">
+                    <form class="form form-vertical">
+                        <div class="form-body">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label for="traderId">판매자</label>
+                                        <div id="traderId" class="form-control">[[${tDTO.traderId}]]</div>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label for="traderPhoneNumber">판매자 전화번호</label>
+                                        <div id="traderPhoneNumber" class="form-control">[[${tDTO.phoneNumber}]]</div>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label for="traderShop">상점명</label>
+                                        <div id="traderShop" class="form-control" th:text="${gList[0].shopName}"></div>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label for="traderNotice">상인의 말</label>
+                                        <div id="traderNotice" class="form-control">[[${tDTO.traderNotice}]]</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="card">
+            <div class="card-header">
+                <h4>상품정보</h4>
+            </div>
+            <div class="card-body">
+                <div id="carouselExampleSlidesOnly" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner" style="margin-bottom: 3px">
+                        <div class="carousel-item active">
+                            <img th:src="${gDTO.getGoodsImage}" class="d-block w-100" alt="...">
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label for="goodsName">상품명</label>
+                            <div id="goodsName" class="form-control">[[${gDTO.goodsName}]]</div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label for="goodsPrice">상품가격</label>
+                            <div id="goodsPrice" class="form-control">[[${gDTO.price}]]</div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label for="goodsDescription">상품설명</label>
+                            <div id="goodsDescription" class="form-control">[[${gDTO.goodsDescription}]]</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">예약정보</h4>
+            </div>
+            <div class="card-content">
+                <div class="card-body">
+                    <form id="reservation" class="form form-vertical">
+                        <div class="form-body">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label for="reservationName">예약자명</label>
+                                        <input type="text" id="reservationName" class="form-control"
+                                               name="reservationName" placeholder="예약자명">
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label for="reservationPhoneNumber">휴대폰번호</label>
+                                        <input type="text" id="reservationPhoneNumber" class="form-control"
+                                               name="reservationPhoneNumber" placeholder="휴대폰번호">
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label for="reservationInfo">예약내용</label>
+                                        <textarea type="text" id="reservationInfo" class="form-control"
+                                                  name="reservationInfo" placeholder="예약내용"></textarea>
+                                    </div>
+                                </div>
+                                <div class="col-12 d-flex justify-content-end">
+                                    <button type="submit" class="btn btn-primary me-1 mb-1">예약신청</button>
+                                    <button type="reset"
+                                            class="btn btn-light-secondary me-1 mb-1">다시작성
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!--================Product Description Area =================-->
 <section class="product_description_area">

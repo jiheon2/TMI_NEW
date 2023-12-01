@@ -15,7 +15,6 @@
     <link rel="stylesheet" href="/assets/vendors/perfect-scrollbar/perfect-scrollbar.css">
     <link rel="stylesheet" href="/assets/vendors/bootstrap-icons/bootstrap-icons.css">
     <link rel="stylesheet" href="/assets/css/app.css">
-    <link rel="shortcut icon" href="../static/assets/images/favicon.svg" type="image/x-icon">
 </head>
 
 <body>
@@ -95,7 +94,6 @@
 <script src="/assets/js/scripts.js"></script>
 <!-- jquery plugins here-->
 <!-- jquery -->
-<script src="/assets/js/jquery-1.12.1.min.js"></script>
 <script src="/assets/js/jquery-3.6.0.min.js"></script>
 <!-- popper js -->
 <script src="/assets/js/popper.min.js"></script>
@@ -125,8 +123,6 @@
 <script src="/assets/js/custom.js"></script>
 <script src="/assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
 <script src="/assets/js/bootstrap.bundle.min.js"></script>
-
-<script src="/assets/vendors/apexcharts/apexcharts.js"></script>
 <script src="/assets/js/pages/dashboard.js"></script>
 
 <script src="/assets/js/main.js"></script>
@@ -134,8 +130,9 @@
 
     let data = {};//전송 데이터(JSON)
     let ws; // 웹소켓 객체
-    const roomName = /*[[${roomName}]]*/ ''; // 채팅룸 이름
-    const customerId = /*[[${customerId}]]*/ ''; // 채팅유저 이름
+
+    const roomName = /*[[${roomName}]]*/'';
+    const userName = /*[[${userName}]]*/'';
 
     $(document).ready(function () {
 
@@ -147,7 +144,7 @@
         }
 
         // 접속 URL 예 : ws://localhost:10000/ws/테스트방/별명
-        ws = new WebSocket("ws://" + location.host + "/ws/" + roomName + "/" + customerId);
+        ws = new WebSocket("ws://" + location.host + "/ws/" + roomName +  "/" + userName);
 
         // 웹소켓 열기
         ws.onopen = function (event) {
@@ -163,7 +160,7 @@
             // 웹소켓으로부터 받은 데이터를 JSON 구조로 변환하기
             let data = JSON.parse(msg.data);
 
-            if (data.name === customerId) { // 내가 발송한 채팅 메시지는 파란색 글씩
+            if (data.name === userName) { // 내가 발송한 채팅 메시지는 파란색 글씩
                 $("#chat").append("<div>");
                 $("#chat").append("<span style='color: blue'><b>[보낸 사람] : </b></span>");
                 $("#chat").append("<span style='color: blue'> 나 </span>");
@@ -197,7 +194,7 @@
         }
 
         $("#btnSend").on("click", function () {
-            data.name = customerId; // 별명
+            data.name = userName; // 별명
             data.msg = $("#msg").val();  // 입력한 메시지
 
             let chatMsg = JSON.stringify(data); // 데이터 구조를 JSON 형태로 변경하기

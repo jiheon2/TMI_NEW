@@ -147,6 +147,12 @@ public class MarketService implements IMarketService {
         return marketMapper.getMarketList(nm);
     }
 
+    @Override
+    public List<MarketDTO> getMarketName() throws Exception {
 
+        log.info("getMarketName start");
+
+        return marketMapper.getMarketName();
+    }
 }
 

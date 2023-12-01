@@ -18,4 +18,5 @@ public class TraderDTO {
     private String shopCode;
     private String account;
     private String bank;
+    private String traderNotice;
 }
