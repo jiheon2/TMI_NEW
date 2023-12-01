@@ -2,6 +2,7 @@ package kopo.poly.persistance.mapper;
 
 import kopo.poly.dto.BasketDTO;
 import kopo.poly.dto.GoodsDTO;
+import kopo.poly.dto.PaymentDTO;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -12,4 +13,6 @@ public interface IBasketMapper {
     List<BasketDTO> getBasketList(BasketDTO pDTO) throws Exception; // 장바구니 목록 조회
     int upBasketCount(BasketDTO pDTO) throws Exception; // 장바구니 수량 증가
     int downBasketCount(BasketDTO pDTO) throws Exception; // 장바구니 수량 감소
+    int insertPayment(PaymentDTO pDTO) throws Exception; // 결제목록 담기
+    int deleteBuy(BasketDTO pDTO) throws Exception; // 장바구니 삭제
 }

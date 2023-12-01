@@ -7,7 +7,6 @@ import kopo.poly.util.CmmUtil;
 import kopo.poly.util.EncryptUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -18,8 +17,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.time.LocalTime;
-import java.util.*;
+import javax.swing.text.html.Option;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Controller
 @Slf4j
@@ -32,6 +33,9 @@ public class CustomerController {
     private final IGoodsService goodsService;
     private final IReviewService reviewService;
     private final IBasketService basketService;
+    private final ITraderService traderService;
+    private final IPostService postService;
+    private final IReservationService reservationService;
 
     @GetMapping(value = "/login")
     public String login(HttpSession session) {
@@ -116,8 +120,23 @@ public class CustomerController {
     // 소비자 메인페이지 이동코드
     // 구현완료(11/13)
     @GetMapping(value = "/customerIndex")
-    public String customerIndex() {
-        log.info("start!");
+    public String customerIndex(ModelMap model) throws Exception {
+        log.info(this.getClass().getName() + ".customerIndex Start!");
+
+        String type = "verification";
+        String market = "";
+
+        List<PostDTO> pList = Optional.ofNullable(postService.getPostList(type)).orElseGet(ArrayList::new);
+        List<GoodsDTO> gList = Optional.ofNullable(reservationService.getPopularGoods(market)).orElseGet(ArrayList::new);
+        List<MarketDTO> mList = Optional.ofNullable(reservationService.getPopularMarket()).orElseGet(ArrayList::new);
+
+        log.info(pList.toString());
+        log.info(gList.toString());
+        log.info(mList.toString());
+
+        model.addAttribute("pList",pList);
+        model.addAttribute("gList",gList);
+        model.addAttribute("mList",mList);
 
         return "/customer/customerIndex";
     }
@@ -134,20 +153,27 @@ public class CustomerController {
         pDTO.setCustomerId(customerId);
 
         List<BasketDTO> rList = Optional.ofNullable(basketService.getBasketList(pDTO)).orElseGet(ArrayList::new);
+        CustomerDTO pDTO1 = new CustomerDTO();
+        pDTO1.setCustomerId(customerId);
+        CustomerDTO rDTO = Optional.ofNullable(customerService.getCustomerInfo(pDTO1)).orElseGet(CustomerDTO::new);
 
         log.info(rList.toString());
+        log.info(rDTO.toString());
 
         model.addAttribute("rList", rList);
+        model.addAttribute("rDTO", rDTO);
 
-        log.info(this.getClass().getName() + ".cart Start!");
+        log.info(this.getClass().getName() + ".cart End!");
         return "/customer/cart";
     }
+
 
     // 소비자 회원가입페이지 이동코드
     // 구현완료(11/13)
     @GetMapping(value = "/customerSignUp")
     public String customerSignUp() {
         log.info(this.getClass().getName() + "customerSignUp");
+
         return "/customer/customerSignUp";
     }
 
@@ -167,6 +193,7 @@ public class CustomerController {
         pDTO.setCustomerId(customerId);
 
         CustomerDTO rDTO = Optional.ofNullable(customerService.getCustomerIdExists(pDTO)).orElseGet(CustomerDTO::new);
+        log.info(rDTO.toString());
 
         log.info(this.getClass().getName() + ".getCustomerIdExists End!");
 
@@ -194,7 +221,7 @@ public class CustomerController {
             String customerPn = CmmUtil.nvl(request.getParameter("phoneNumber"));
             String customerName = CmmUtil.nvl(request.getParameter("customerName"));
             String customerEmail = CmmUtil.nvl(request.getParameter("customerEmail"));
-            
+
             log.info("customerId : " + customerId);
             log.info("customerPw : " + customerPw);
             log.info("customerPn : " + customerPn);
@@ -247,23 +274,32 @@ public class CustomerController {
         pDTO.setShopNumber(shopNumber);
 
         List<GoodsDTO> rList = Optional.ofNullable(goodsService.getGoodsList(pDTO)).orElseGet(ArrayList::new);
+        List<ShopDTO> sList = Optional.ofNullable(reservationService.getPopularShop()).orElseGet(ArrayList::new);
 
         log.info(rList.toString());
         String shopName;
         String shopDescription;
-
+        String market;
+        String goodsCount;
         if (!rList.isEmpty()) {
             GoodsDTO firstGoods = rList.get(0);
             shopName = firstGoods.getShopName();
             shopDescription = firstGoods.getShopDescription();
+            market = firstGoods.getMarketNumber();
+            goodsCount = firstGoods.getGoodsCount();
         } else {
             shopName = "아직 이 상점에는 상품이 없어요";
             shopDescription = "";
+            market = "";
+            goodsCount = "0";
         }
 
+        model.addAttribute("goodsCount", goodsCount);
         model.addAttribute("rList", rList);
+        model.addAttribute("sList", sList);
         model.addAttribute("shopName", shopName);
         model.addAttribute("shopDescription", shopDescription);
+        model.addAttribute("market", market);
         log.info(this.getClass().getName() + ".shop End!");
 
         return "/customer/shop";
@@ -295,13 +331,17 @@ public class CustomerController {
         List<ShopDTO> rList = Optional.ofNullable(shopService.getShopList(pDTO)).orElseGet(ArrayList::new);
 
         String marketName;
+        String shopCount;
         if (!rList.isEmpty()) {
             ShopDTO firstShop = rList.get(0);
             marketName = firstShop.getMarketName();
+            shopCount = firstShop.getShopCount();
         } else {
             marketName = "아직 이 시장에는 상점이 없어요";
+            shopCount = "0";
         }
 
+        model.addAttribute("shopCount", shopCount);
         model.addAttribute("marketName", marketName);
         model.addAttribute("rList", rList);
 
@@ -492,27 +532,38 @@ public class CustomerController {
     public String singleProduct(HttpServletRequest request, ModelMap model, HttpSession session) throws Exception {
         log.info(this.getClass().getName() + ".goodsMngInfo Start!");
 
-        String customerId = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
         String goodsNumber = request.getParameter("goodsNumber");
+        String market = request.getParameter("market");
         log.info("goodsNumber : " + goodsNumber);
+        log.info("market : " + market);
 
         GoodsDTO pDTO = new GoodsDTO();
         pDTO.setGoodsNumber(goodsNumber);
         GoodsDTO gDTO = Optional.ofNullable(goodsService.getGoodsInfo(pDTO)).orElseGet(GoodsDTO::new);
+        List<GoodsDTO> gList = Optional.ofNullable(reservationService.getPopularGoods(market)).orElseGet(ArrayList::new);
 
         ReviewDTO pDTO2 = new ReviewDTO();
         pDTO2.setGoodsNumber(goodsNumber);
         List<ReviewDTO> rDTO = Optional.ofNullable(reviewService.oneReviewList(pDTO2)).orElseGet(ArrayList::new);
         List<ReviewDTO> cDTO = Optional.ofNullable(reviewService.getScore(pDTO2)).orElseGet(ArrayList::new);
 
+        String traderId = gDTO.getTraderId();
+        log.info("traderId : " + traderId);
+        TraderDTO nDTO = new TraderDTO();
+        nDTO.setTraderId(traderId);
+        TraderDTO tDTO = Optional.ofNullable(traderService.getTraderInfo(nDTO)).orElseGet(TraderDTO::new);
+
         log.info("gDTO : " + gDTO.toString());
         log.info("rDTO : " + rDTO.toString());
         log.info("cDTO : " + cDTO.toString());
+        log.info("gList : " + gList.toString());
+        log.info("tDTO : " + tDTO.toString());
 
         model.addAttribute("cDTO", cDTO);
         model.addAttribute("rDTO", rDTO);
         model.addAttribute("gDTO", gDTO);
-        model.addAttribute("customerId", customerId);
+        model.addAttribute("gList", gList);
+        model.addAttribute("tDTO", tDTO);
 
         log.info(this.getClass().getName() + ".goodsMngInfo End!");
         return "/customer/single-product";

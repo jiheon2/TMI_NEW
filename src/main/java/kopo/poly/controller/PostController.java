@@ -38,6 +38,7 @@ public class PostController {
             throws Exception {
         log.info(this.getClass().getName() + ".postList Start!");
 
+
         String type = CmmUtil.nvl(request.getParameter("type"));
 
         List<PostDTO> rList = postService.getPostList(type);

@@ -24,6 +24,23 @@
     <link rel="stylesheet" href="/assets/css/slick.css">
     <!-- style CSS -->
     <link rel="stylesheet" href="/assets/css/style.css">
+    <script type="text/javascript">
+        //상세보기 이동
+        function doDetail(postNumber) {
+            location.href = "/post/postInfo?postNumber=" + postNumber;
+        }
+        function goToNotice() {
+            window.location.href = "/post/postList?type=notice"; // 공지사항 페이지 URL로 변경해야 합니다.
+        }
+
+        function goToPost() {
+            window.location.href = "/post/postList"; // 일반게시글 페이지 URL로 변경해야 합니다.
+        }
+
+        function goToVerification() {
+            window.location.href = "/post/postList?type=verification"; // 인증게시글 페이지 URL로 변경해야 합니다.
+        }
+    </script>
 </head>
 
 <body>
@@ -61,6 +78,11 @@
 
 <!-- navigation -->
 <div th:replace="customerNav.html"></div>
+<div class="card-body" style="display: flex">
+    <div class="btn btn-outline-secondary" style="flex: 1; margin-left: 30px; margin-right: 30px" id="notice" onclick="goToNotice()">공지사항</div>
+    <div class="btn btn-outline-secondary" style="flex: 1; margin-left: 30px; margin-right: 30px" id="post" onclick="goToPost()">일반게시글</div>
+    <div class="btn btn-outline-secondary" style="flex: 1; margin-left: 30px; margin-right: 30px" id="verification" onclick="goToVerification()">인증게시글</div>
+</div>
 <!-- ---------- -->
 
 <!--================Blog Area =================-->

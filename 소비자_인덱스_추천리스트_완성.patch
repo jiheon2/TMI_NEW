@@ -1,0 +1,508 @@
+Subject: [PATCH] 소비자 인덱스 추천리스트 완성
+---
+Index: src/main/java/kopo/poly/controller/CustomerController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/kopo/poly/controller/CustomerController.java b/src/main/java/kopo/poly/controller/CustomerController.java
+--- a/src/main/java/kopo/poly/controller/CustomerController.java	(revision 87f6e4463c550cff6c5b796c3ce4f9adb057e0c0)
++++ b/src/main/java/kopo/poly/controller/CustomerController.java	(revision fb92eeee22bc20efd01d7bebac9edb5960c3f6e2)
+@@ -33,6 +33,9 @@
+     private final IReviewService reviewService;
+     private final IBasketService basketService;
+ 
++    private final IPostService postService;
++    private final IReservationService reservationService;
++
+     @GetMapping(value = "/login")
+     public String login(HttpSession session) {
+         return "/customer/login";
+@@ -112,8 +115,23 @@
+     // 소비자 메인페이지 이동코드
+     // 구현완료(11/13)
+     @GetMapping(value = "/customerIndex")
+-    public String customerIndex() {
+-        log.info("start!");
++    public String customerIndex(ModelMap model) throws Exception {
++        log.info(this.getClass().getName() + ".customerIndex Start!");
++
++        String type = "verification";
++        String market = "";
++
++        List<PostDTO> pList = Optional.ofNullable(postService.getPostList(type)).orElseGet(ArrayList::new);
++        List<GoodsDTO> gList = Optional.ofNullable(reservationService.getPopularGoods(market)).orElseGet(ArrayList::new);
++        List<MarketDTO> mList = Optional.ofNullable(reservationService.getPopularMarket()).orElseGet(ArrayList::new);
++
++        log.info(pList.toString());
++        log.info(gList.toString());
++        log.info(mList.toString());
++
++        model.addAttribute("pList",pList);
++        model.addAttribute("gList",gList);
++        model.addAttribute("mList",mList);
+ 
+         return "/customer/customerIndex";
+     }
+@@ -144,6 +162,7 @@
+     @GetMapping(value = "/customerSignUp")
+     public String customerSignUp() {
+         log.info(this.getClass().getName() + "customerSignUp");
++
+         return "/customer/customerSignUp";
+     }
+ 
+Index: src/main/java/kopo/poly/dto/GoodsDTO.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/kopo/poly/dto/GoodsDTO.java b/src/main/java/kopo/poly/dto/GoodsDTO.java
+--- a/src/main/java/kopo/poly/dto/GoodsDTO.java	(revision 87f6e4463c550cff6c5b796c3ce4f9adb057e0c0)
++++ b/src/main/java/kopo/poly/dto/GoodsDTO.java	(revision fb92eeee22bc20efd01d7bebac9edb5960c3f6e2)
+@@ -20,4 +20,5 @@
+     private String countScore;
+     private String shopName;
+     private String shopDescription;
++    private String PopularGoods;
+ }
+Index: src/main/java/kopo/poly/dto/MarketDTO.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/kopo/poly/dto/MarketDTO.java b/src/main/java/kopo/poly/dto/MarketDTO.java
+--- a/src/main/java/kopo/poly/dto/MarketDTO.java	(revision 87f6e4463c550cff6c5b796c3ce4f9adb057e0c0)
++++ b/src/main/java/kopo/poly/dto/MarketDTO.java	(revision fb92eeee22bc20efd01d7bebac9edb5960c3f6e2)
+@@ -13,4 +13,6 @@
+     private String marketName;
+     private String latitude;
+     private String longitude;
++    private String PopularMarket;
++    private String marketImage;
+ }
+Index: src/main/java/kopo/poly/persistance/mapper/IReservationMapper.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/kopo/poly/persistance/mapper/IReservationMapper.java b/src/main/java/kopo/poly/persistance/mapper/IReservationMapper.java
+--- a/src/main/java/kopo/poly/persistance/mapper/IReservationMapper.java	(revision 87f6e4463c550cff6c5b796c3ce4f9adb057e0c0)
++++ b/src/main/java/kopo/poly/persistance/mapper/IReservationMapper.java	(revision fb92eeee22bc20efd01d7bebac9edb5960c3f6e2)
+@@ -1,5 +1,7 @@
+ package kopo.poly.persistance.mapper;
+ 
++import kopo.poly.dto.GoodsDTO;
++import kopo.poly.dto.MarketDTO;
+ import kopo.poly.dto.ReservationDTO;
+ import org.apache.ibatis.annotations.Mapper;
+ 
+@@ -9,6 +11,8 @@
+ public interface IReservationMapper {
+     List<ReservationDTO> getReservationList() throws Exception; // 예약 목록 조회 쿼리
+     List<ReservationDTO> getTodayReservationList(ReservationDTO pDTO) throws Exception; // 당일 예약 목록 조회 쿼리
++    List<GoodsDTO> getPopularGoods(String market) throws Exception; // 인기 상품 조회
++    List<MarketDTO> getPopularMarket() throws Exception; // 인기 시장 조회
+ 
+     void insertReservationInfo(ReservationDTO pDTO) throws Exception; // 예약 일정 등록 쿼리
+     ReservationDTO getReservationInfo(ReservationDTO pDTO) throws Exception; // 예약 상세정보 조회 쿼리
+Index: src/main/java/kopo/poly/service/IReservationService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/kopo/poly/service/IReservationService.java b/src/main/java/kopo/poly/service/IReservationService.java
+--- a/src/main/java/kopo/poly/service/IReservationService.java	(revision 87f6e4463c550cff6c5b796c3ce4f9adb057e0c0)
++++ b/src/main/java/kopo/poly/service/IReservationService.java	(revision fb92eeee22bc20efd01d7bebac9edb5960c3f6e2)
+@@ -1,5 +1,7 @@
+ package kopo.poly.service;
+ 
++import kopo.poly.dto.GoodsDTO;
++import kopo.poly.dto.MarketDTO;
+ import kopo.poly.dto.ReservationDTO;
+ 
+ import java.util.List;
+@@ -7,7 +9,8 @@
+ public interface IReservationService {
+     List<ReservationDTO> getReservationList() throws Exception; // 예약 목록 조회 쿼리
+     List<ReservationDTO> getTodayReservationList(ReservationDTO pDTO) throws Exception; // 당일 예약 목록 조회 쿼리
+-
++    List<GoodsDTO> getPopularGoods(String market) throws Exception; // 인기 상품 조회
++    List<MarketDTO> getPopularMarket() throws Exception; // 인기 시장 조회
+     void insertReservationInfo(ReservationDTO pDTO) throws Exception; // 예약 일정 등록 쿼리
+     ReservationDTO getReservationInfo(ReservationDTO pDTO) throws Exception; // 예약 상세정보 조회 쿼리
+     void updateReservationInfo(ReservationDTO pDTO) throws Exception; // 예약 수정 쿼리
+Index: src/main/java/kopo/poly/service/impl/MarketService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/kopo/poly/service/impl/MarketService.java b/src/main/java/kopo/poly/service/impl/MarketService.java
+--- a/src/main/java/kopo/poly/service/impl/MarketService.java	(revision 87f6e4463c550cff6c5b796c3ce4f9adb057e0c0)
++++ b/src/main/java/kopo/poly/service/impl/MarketService.java	(revision fb92eeee22bc20efd01d7bebac9edb5960c3f6e2)
+@@ -31,9 +31,7 @@
+ public class MarketService implements IMarketService {
+ 
+     private final IMarketMapper marketMapper;
+-    private final String apiURL = "http://openapi.seoul.go.kr:8088/7a424178626a756e33326366416358/json/ListTraditionalMarket/1/400/";
+-
+-
++    
+     /* 시장 정보 조회 API 코드 */
+     @Scheduled(cron = "0 0 0 * * ?") // 매일 자정에 실행
+ //    @Scheduled(fixedRate = 60000) // 매분마다 실행
+Index: src/main/java/kopo/poly/service/impl/ReservationService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/kopo/poly/service/impl/ReservationService.java b/src/main/java/kopo/poly/service/impl/ReservationService.java
+--- a/src/main/java/kopo/poly/service/impl/ReservationService.java	(revision 87f6e4463c550cff6c5b796c3ce4f9adb057e0c0)
++++ b/src/main/java/kopo/poly/service/impl/ReservationService.java	(revision fb92eeee22bc20efd01d7bebac9edb5960c3f6e2)
+@@ -1,5 +1,7 @@
+ package kopo.poly.service.impl;
+ 
++import kopo.poly.dto.GoodsDTO;
++import kopo.poly.dto.MarketDTO;
+ import kopo.poly.dto.ReservationDTO;
+ import kopo.poly.persistance.mapper.IReservationMapper;
+ import kopo.poly.service.IReservationService;
+@@ -33,6 +35,22 @@
+         reservationMapper.insertReservationInfo(pDTO);
+     }
+ 
++    /* 예약 목록 조회 */
++    @Override
++    public List<GoodsDTO> getPopularGoods(String market) throws Exception {
++
++        log.info(this.getClass().getName() + ".getPopularGoods Start!");
++
++        return reservationMapper.getPopularGoods(market);
++    }
++    /* 예약 목록 조회 */
++    @Override
++    public List<MarketDTO> getPopularMarket() throws Exception {
++
++        log.info(this.getClass().getName() + ".getPopularMarket Start!");
++
++        return reservationMapper.getPopularMarket();
++    }
+     /* 예약 상세 정보 조회 */
+     @Override
+     public ReservationDTO getReservationInfo(ReservationDTO pDTO) throws Exception {
+Index: src/main/resources/mapper/PostMapper.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/resources/mapper/PostMapper.xml b/src/main/resources/mapper/PostMapper.xml
+--- a/src/main/resources/mapper/PostMapper.xml	(revision 87f6e4463c550cff6c5b796c3ce4f9adb057e0c0)
++++ b/src/main/resources/mapper/PostMapper.xml	(revision fb92eeee22bc20efd01d7bebac9edb5960c3f6e2)
+@@ -11,16 +11,19 @@
+         LEFT JOIN (
+         SELECT POST_NUMBER, COUNT(COMMENT_NUMBER) AS COUNT_COMMENT
+         FROM COMMENT
+-        GROUP BY POST_NUMBER) C ON P.POST_NUMBER = C.POST_NUMBER
++        GROUP BY POST_NUMBER
++        ) C ON P.POST_NUMBER = C.POST_NUMBER
+         WHERE 1=1
+         <if test="type eq 'notice'">
+             AND P.CUSTOMER_ID = 'test'
+         </if>
++        <if test="type eq null or type eq ''">
++            AND P.CUSTOMER_ID != 'test'
++        </if>
+         <if test="type eq 'verification'">
+             AND P.READ_COUNT >= 500
+         </if>
+-        ORDER BY
+-        P.POST_NUMBER DESC;
++        ORDER BY P.POST_NUMBER DESC;
+     </select>
+ 
+     <!-- 게시글 등록 쿼리 -->
+Index: src/main/resources/mapper/ReservationMapper.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/resources/mapper/ReservationMapper.xml b/src/main/resources/mapper/ReservationMapper.xml
+--- a/src/main/resources/mapper/ReservationMapper.xml	(revision 87f6e4463c550cff6c5b796c3ce4f9adb057e0c0)
++++ b/src/main/resources/mapper/ReservationMapper.xml	(revision fb92eeee22bc20efd01d7bebac9edb5960c3f6e2)
+@@ -14,6 +14,31 @@
+         FROM RESERVATION
+         ORDER BY RESERVATION_NUMBER DESC
+     </select>
++    <!-- 시장 추천 쿼리 -->
++    <select id="getPopularMarket" resultType="MarketDTO">
++        SELECT M.MARKET_NUMBER, M.MARKET_LOCATION, M.MARKET_NAME, M.MARKET_IMAGE,
++               COUNT(*) AS RESERVATION_COUNT
++        FROM MARKET M
++                 JOIN RESERVATION R ON R.MARKET_NUMBER = M.MARKET_NUMBER
++        GROUP BY M.MARKET_NUMBER, M.MARKET_LOCATION, M.MARKET_NAME
++        ORDER BY RESERVATION_COUNT DESC;
++    </select>
++
++    <!-- 상품 추천 쿼리 -->
++    <select id="getPopularGoods" parameterType="java.lang.String" resultType="GoodsDTO">
++        SELECT G.GOODS_NUMBER, G.GOODS_NAME, G.PRICE, G.SHOP_NUMBER, G.GOODS_IMAGE, S.SHOP_NAME,
++        COUNT(*) AS RESERVATION_COUNT
++        FROM GOODS G
++        JOIN RESERVATION R ON G.GOODS_NUMBER = R.GOODS_NUMBER
++        JOIN SHOP S ON G.SHOP_NUMBER = S.SHOP_NUMBER
++        WHERE 1=1
++        <if test="market neq null and market neq ''">
++            AND R.MARKET_NUMBER = ${market}
++        </if>
++        GROUP BY G.GOODS_NUMBER, G.GOODS_NAME, G.PRICE, G.SHOP_NUMBER, G.GOODS_IMAGE, S.SHOP_NAME
++        ORDER BY RESERVATION_COUNT DESC
++    </select>
++
+ 
+     <!-- 당일 예약 목록 조회 쿼리 -->
+     <select id="getTodayReservationList" parameterType="ReservationDTO" resultType="ReservationDTO">
+Index: src/main/resources/templates/customer/customerIndex.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/resources/templates/customer/customerIndex.html b/src/main/resources/templates/customer/customerIndex.html
+--- a/src/main/resources/templates/customer/customerIndex.html	(revision 87f6e4463c550cff6c5b796c3ce4f9adb057e0c0)
++++ b/src/main/resources/templates/customer/customerIndex.html	(revision fb92eeee22bc20efd01d7bebac9edb5960c3f6e2)
+@@ -124,42 +124,11 @@
+         <div class="row align-items-center justify-content-between">
+             <div class="col-lg-12">
+                 <div class="best_product_slider owl-carousel">
+-                    <div class="single_product_item">
+-                        <img src="/assets/images/product/product_1.png" alt="">
+-                        <div class="single_product_text">
+-                            <h4>시장이름</h4>
+-                            <h3>중계동</h3>
+-                        </div>
+-                    </div>
+-
+-                    <div class="single_product_item">
+-                        <img src="/assets/images/product/product_2.png" alt="">
+-                        <div class="single_product_text">
+-                            <h4>시장이름</h4>
+-                            <h3>면목동</h3>
+-                        </div>
+-                    </div>
+-
+-                    <div class="single_product_item">
+-                        <img src="/assets/images/product/product_3.png" alt="">
+-                        <div class="single_product_text">
+-                            <h4>시장이름</h4>
+-                            <h3>화곡동</h3>
+-                        </div>
+-                    </div>
+-
+-                    <div class="single_product_item">
+-                        <img src="/assets/images/product/product_4.png" alt="">
++                    <div class="single_product_item" th:each="dto : ${mList}">
++                        <img th:src="${dto.marketImage}" alt="이 시장은 이미지가 없습니다">
+                         <div class="single_product_text">
+-                            <h4>시장이름</h4>
+-                            <h3>마곡동</h3>
+-                        </div>
+-                    </div>
+-                    <div class="single_product_item">
+-                        <img src="/assets/images/product/product_5.png" alt="">
+-                        <div class="single_product_text">
+-                            <h4>시장이름</h4>
+-                            <h3>중앙동</h3>
++                            <h4>[[${dto.marketName}]]</h4>
++                            <h3>[[${dto.marketLocation}]]</h3>
+                         </div>
+                     </div>
+                 </div>
+@@ -182,39 +151,12 @@
+         <div class="row align-items-center justify-content-between">
+             <div class="col-lg-12">
+                 <div class="best_product_slider owl-carousel">
+-                    <div class="single_product_item">
+-                        <img src="/assets/images/product/product_1.png" alt="">
+-                        <div class="single_product_text">
+-                            <h4>상품명</h4>
+-                            <h3>가격</h3>
+-                        </div>
+-                    </div>
+-                    <div class="single_product_item">
+-                        <img src="/assets/images/product/product_2.png" alt="">
+-                        <div class="single_product_text">
+-                            <h4>상품명</h4>
+-                            <h3>가격</h3>
+-                        </div>
+-                    </div>
+-                    <div class="single_product_item">
+-                        <img src="/assets/images/product/product_3.png" alt="">
++                    <div class="single_product_item" th:each="dto : ${gList}">
++                        <img th:src="${dto.goodsImage}" alt="이 상품은 이미지가 없습니다">
+                         <div class="single_product_text">
+-                            <h4>상품명</h4>
+-                            <h3>가격</h3>
+-                        </div>
+-                    </div>
+-                    <div class="single_product_item">
+-                        <img src="/assets/images/product/product_4.png" alt="">
+-                        <div class="single_product_text">
+-                            <h4>상품명</h4>
+-                            <h3>가격</h3>
+-                        </div>
+-                    </div>
+-                    <div class="single_product_item">
+-                        <img src="/assets/images/product/product_5.png" alt="">
+-                        <div class="single_product_text">
+-                            <h4>상품명</h4>
+-                            <h3>가격</h3>
++                            <h4>[[${dto.goodsName}]]</h4>
++                            <h3>[[${dto.price}]]</h3>
++                            <h3>[[${dto.shopName}]]</h3>
+                         </div>
+                     </div>
+                 </div>
+@@ -237,39 +179,11 @@
+         <div class="row align-items-center justify-content-between">
+             <div class="col-lg-12">
+                 <div class="best_product_slider owl-carousel">
+-                    <div class="single_product_item">
+-                        <img src="/assets/images/product/product_1.png" alt="">
+-                        <div class="single_product_text">
+-                            <h4>Quartz Belt Watch</h4>
+-                            <h3>$150.00</h3>
+-                        </div>
+-                    </div>
+-                    <div class="single_product_item">
+-                        <img src="/assets/images/product/product_2.png" alt="">
++                    <div class="single_product_item"  th:each="dto : ${pList}">
++                        <img th:src="${dto.image}" alt="이 게시글에는 이미지가 없습니다">
+                         <div class="single_product_text">
+-                            <h4>제목</h4>
+-                            <h3>조회수</h3>
+-                        </div>
+-                    </div>
+-                    <div class="single_product_item">
+-                        <img src="/assets/images/product/product_3.png" alt="">
+-                        <div class="single_product_text">
+-                            <h4>제목</h4>
+-                            <h3>조회수</h3>
+-                        </div>
+-                    </div>
+-                    <div class="single_product_item">
+-                        <img src="/assets/images/product/product_4.png" alt="">
+-                        <div class="single_product_text">
+-                            <h4>제목</h4>
+-                            <h3>조회수</h3>
+-                        </div>
+-                    </div>
+-                    <div class="single_product_item">
+-                        <img src="/assets/images/product/product_5.png" alt="">
+-                        <div class="single_product_text">
+-                            <h4>제목</h4>
+-                            <h3>조회수</h3>
++                            <h4>[[${dto.title}]]</h4>
++                            <h3>[[${dto.readCount}]]</h3>
+                         </div>
+                     </div>
+                 </div>
+Index: src/main/resources/templates/post/noticeList.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/resources/templates/post/noticeList.html b/src/main/resources/templates/post/noticeList.html
+--- a/src/main/resources/templates/post/noticeList.html	(revision 87f6e4463c550cff6c5b796c3ce4f9adb057e0c0)
++++ b/src/main/resources/templates/post/noticeList.html	(revision fb92eeee22bc20efd01d7bebac9edb5960c3f6e2)
+@@ -50,7 +50,18 @@
+     <script type="text/javascript">
+         //상세보기 이동
+         function doDetail(postNumber) {
+-            location.href = "/post/noticeInfo?postNumber=" + postNumber;
++            location.href = "/post/postInfo?postNumber=" + postNumber;
++        }
++        function goToNotice() {
++            window.location.href = "/post/postList?type=notice"; // 공지사항 페이지 URL로 변경해야 합니다.
++        }
++
++        function goToPost() {
++            window.location.href = "/post/postList"; // 일반게시글 페이지 URL로 변경해야 합니다.
++        }
++
++        function goToVerification() {
++            window.location.href = "/post/postList?type=verification"; // 인증게시글 페이지 URL로 변경해야 합니다.
+         }
+     </script>
+ </head>
+@@ -90,6 +101,11 @@
+ 
+ <!-- navigation -->
+ <div th:replace="customerNav.html"></div>
++<div class="card-body" style="display: flex">
++    <div class="btn btn-outline-secondary" style="flex: 1; margin-left: 30px; margin-right: 30px" id="notice" onclick="goToNotice()">공지사항</div>
++    <div class="btn btn-outline-secondary" style="flex: 1; margin-left: 30px; margin-right: 30px" id="post" onclick="goToPost()">일반게시글</div>
++    <div class="btn btn-outline-secondary" style="flex: 1; margin-left: 30px; margin-right: 30px" id="verification" onclick="goToVerification()">인증게시글</div>
++</div>
+ <!-- ---------- -->
+ 
+ <div class="board_wrap">
+Index: src/main/resources/templates/post/postList.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/resources/templates/post/postList.html b/src/main/resources/templates/post/postList.html
+--- a/src/main/resources/templates/post/postList.html	(revision 87f6e4463c550cff6c5b796c3ce4f9adb057e0c0)
++++ b/src/main/resources/templates/post/postList.html	(revision fb92eeee22bc20efd01d7bebac9edb5960c3f6e2)
+@@ -57,7 +57,7 @@
+         }
+ 
+         function goToPost() {
+-            window.location.href = "/post/postList?type=post"; // 일반게시글 페이지 URL로 변경해야 합니다.
++            window.location.href = "/post/postList"; // 일반게시글 페이지 URL로 변경해야 합니다.
+         }
+ 
+         function goToVerification() {
+Index: src/main/resources/templates/post/verificationPostList.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/resources/templates/post/verificationPostList.html b/src/main/resources/templates/post/verificationPostList.html
+--- a/src/main/resources/templates/post/verificationPostList.html	(revision 87f6e4463c550cff6c5b796c3ce4f9adb057e0c0)
++++ b/src/main/resources/templates/post/verificationPostList.html	(revision fb92eeee22bc20efd01d7bebac9edb5960c3f6e2)
+@@ -24,6 +24,23 @@
+     <link rel="stylesheet" href="/assets/css/slick.css">
+     <!-- style CSS -->
+     <link rel="stylesheet" href="/assets/css/style.css">
++    <script type="text/javascript">
++        //상세보기 이동
++        function doDetail(postNumber) {
++            location.href = "/post/postInfo?postNumber=" + postNumber;
++        }
++        function goToNotice() {
++            window.location.href = "/post/postList?type=notice"; // 공지사항 페이지 URL로 변경해야 합니다.
++        }
++
++        function goToPost() {
++            window.location.href = "/post/postList"; // 일반게시글 페이지 URL로 변경해야 합니다.
++        }
++
++        function goToVerification() {
++            window.location.href = "/post/postList?type=verification"; // 인증게시글 페이지 URL로 변경해야 합니다.
++        }
++    </script>
+ </head>
+ 
+ <body>
+@@ -61,6 +78,11 @@
+ 
+ <!-- navigation -->
+ <div th:replace="customerNav.html"></div>
++<div class="card-body" style="display: flex">
++    <div class="btn btn-outline-secondary" style="flex: 1; margin-left: 30px; margin-right: 30px" id="notice" onclick="goToNotice()">공지사항</div>
++    <div class="btn btn-outline-secondary" style="flex: 1; margin-left: 30px; margin-right: 30px" id="post" onclick="goToPost()">일반게시글</div>
++    <div class="btn btn-outline-secondary" style="flex: 1; margin-left: 30px; margin-right: 30px" id="verification" onclick="goToVerification()">인증게시글</div>
++</div>
+ <!-- ---------- -->
+ 
+ <!--================Blog Area =================-->

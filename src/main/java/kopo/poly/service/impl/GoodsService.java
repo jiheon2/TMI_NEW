@@ -1,6 +1,7 @@
 package kopo.poly.service.impl;
 
 import kopo.poly.dto.GoodsDTO;
+import kopo.poly.dto.ReservationDTO;
 import kopo.poly.persistance.mapper.IGoodsMapper;
 import kopo.poly.service.IGoodsService;
 import lombok.RequiredArgsConstructor;

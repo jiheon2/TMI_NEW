@@ -53,7 +53,7 @@
             location.href = "/post/postInfo?postNumber=" + postNumber;
         }
         function goToNotice() {
-            window.location.href = "/post/noticeList"; // 공지사항 페이지 URL로 변경해야 합니다.
+            window.location.href = "/post/postList?type=notice"; // 공지사항 페이지 URL로 변경해야 합니다.
         }
 
         function goToPost() {
@@ -61,7 +61,7 @@
         }
 
         function goToVerification() {
-            window.location.href = "/post/verificationList"; // 인증게시글 페이지 URL로 변경해야 합니다.
+            window.location.href = "/post/postList?type=verification"; // 인증게시글 페이지 URL로 변경해야 합니다.
         }
     </script>
 </head>
@@ -129,22 +129,22 @@
             <div class="mx-auto">
                 <ul class="pagination pagination-primary" id="pagination">
                     <li class="page-item">
-                        <a class="page-link" th:href="@{/templates/post/postList?page=1}">&laquo;</a>
+                        <a class="page-link" th:href="@{/post/postList?page=1}">&laquo;</a>
                     </li>
                     <!-- 이전 페이지로 이동하는 링크 -->
                     <li class="page-item" th:if="${currentPage > 1}">
-                        <a class="page-link" th:href="@{/templates/post/postList(page=${currentPage - 1})}">&lt;</a>
+                        <a class="page-link" th:href="@{/post/postList(page=${currentPage - 1})}">&lt;</a>
                     </li>
                     <!-- 현재 페이지 주변에 페이지 번호 링크 표시 -->
                     <li class="page-item" th:each="pageNumber : ${#numbers.sequence(1, totalPages)}" th:class="${pageNumber == currentPage ? 'active' : ''}">
-                        <a class="page-link" th:href="@{/templates/post/postList(page=${pageNumber})}" th:text="${pageNumber}"></a>
+                        <a class="page-link" th:href="@{/post/postList(page=${pageNumber})}" th:text="${pageNumber}"></a>
                     </li>
                     <!-- 다음 페이지로 이동하는 링크 -->
                     <li class="page-item" th:if="${currentPage < totalPages}">
-                        <a class="page-link" th:href="@{/templates/post/postList(page=${currentPage + 1})}">&gt;</a>
+                        <a class="page-link" th:href="@{/post/postList(page=${currentPage + 1})}">&gt;</a>
                     </li>
                     <li class="page-item">
-                        <a class="page-link" th:href="@{/templates/post/postList(page=${totalPages})}">&raquo;</a>
+                        <a class="page-link" th:href="@{/post/postList(page=${totalPages})}">&raquo;</a>
                     </li>
                 </ul>
             </div>

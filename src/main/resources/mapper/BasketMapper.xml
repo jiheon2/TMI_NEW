@@ -16,4 +16,63 @@
         WHERE CUSTOMER_ID = #{customerId}
         ORDER BY GOODS_NUMBER DESC
     </select>
+
+    <!--  결제목록 담기  -->
+    <insert id="insertPayment" parameterType="PaymentDTO">
+        INSERT INTO PAYMENT (
+                applyNum,
+                bankName,
+                buyerAddr,
+                buyerEmail,
+                buyerPostcode,
+                buyerTel,
+                cardName,
+                cardNumber,
+                cardQuote,
+                currency,
+                customData,
+                impUid,
+                name,
+                paidAmount,
+                paidAt,
+                payMethod,
+                pgProvider,
+                pgTid,
+                pgType,
+                reciptUrl,
+                status,
+                success
+        )
+        VALUES (
+                #{applyNum},
+                #{bankName},
+                #{buyerAddr},
+                #{buyerEmail},
+                #{buyerPostcode},
+                #{buyerTel},
+                #{cardName},
+                #{cardNumber},
+                #{cardQuote},
+                #{currency},
+                #{customData},
+                #{impUid},
+                #{name},
+                #{paidAmount},
+                #{paidAt},
+                #{payMethod},
+                #{pgProvider},
+                #{pgTid},
+                #{pgType},
+                #{reciptUrl},
+                #{status},
+                #{success}
+        )
+    </insert>
+
+    <!--  장바구니 삭제  -->
+    <insert id="deleteBuy" parameterType="BasketDTO">
+        DELETE
+        FROM BASKET
+        WHERE BASKET_NUMBER = #{basketNumber}
+    </insert>
 </mapper>

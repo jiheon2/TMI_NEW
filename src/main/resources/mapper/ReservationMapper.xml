@@ -14,6 +14,42 @@
         FROM RESERVATION
         ORDER BY RESERVATION_NUMBER DESC
     </select>
+    <!-- 시장 추천 쿼리 -->
+    <select id="getPopularMarket" resultType="MarketDTO">
+        SELECT M.MARKET_NUMBER, M.MARKET_LOCATION, M.MARKET_NAME, M.MARKET_IMAGE,
+               COUNT(*) AS RESERVATION_COUNT
+        FROM MARKET M
+                 JOIN RESERVATION R ON R.MARKET_NUMBER = M.MARKET_NUMBER
+        GROUP BY M.MARKET_NUMBER, M.MARKET_LOCATION, M.MARKET_NAME
+        ORDER BY RESERVATION_COUNT DESC;
+    </select>
+
+    <!-- 상품 추천 쿼리 -->
+    <select id="getPopularShop" resultType="ShopDTO">
+        SELECT S.SHOP_NAME, S.IMAGE, S.SHOP_NUMBER, M.MARKET_NAME,
+               COUNT(*) AS RESERVATION_COUNT
+        FROM SHOP S
+                 JOIN MARKET M ON M.MARKET_NUMBER = S.MARKET_NUMBER
+                 JOIN RESERVATION R ON S.SHOP_NUMBER = R.SHOP_NUMBER
+        GROUP BY S.SHOP_NAME, S.IMAGE, S.SHOP_NUMBER
+        ORDER BY RESERVATION_COUNT DESC
+    </select>
+
+    <!-- 상품 추천 쿼리 -->
+    <select id="getPopularGoods" parameterType="java.lang.String" resultType="GoodsDTO">
+        SELECT G.GOODS_NUMBER, G.GOODS_NAME, G.PRICE, G.SHOP_NUMBER, G.GOODS_IMAGE, S.SHOP_NAME,
+        COUNT(*) AS RESERVATION_COUNT
+        FROM GOODS G
+        JOIN RESERVATION R ON G.GOODS_NUMBER = R.GOODS_NUMBER
+        JOIN SHOP S ON G.SHOP_NUMBER = S.SHOP_NUMBER
+        WHERE 1=1
+        <if test="market neq null and market neq ''">
+            AND S.MARKET_NUMBER = ${market}
+        </if>
+        GROUP BY G.GOODS_NUMBER, G.GOODS_NAME, G.PRICE, G.SHOP_NUMBER, G.GOODS_IMAGE, S.SHOP_NAME
+        ORDER BY RESERVATION_COUNT DESC
+    </select>
+
 
     <!-- 당일 예약 목록 조회 쿼리 -->
     <select id="getTodayReservationList" parameterType="ReservationDTO" resultType="ReservationDTO">
