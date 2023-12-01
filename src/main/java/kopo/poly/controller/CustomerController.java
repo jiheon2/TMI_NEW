@@ -154,17 +154,19 @@ public class CustomerController {
 
         List<BasketDTO> rList = Optional.ofNullable(basketService.getBasketList(pDTO)).orElseGet(ArrayList::new);
         CustomerDTO pDTO1 = new CustomerDTO();
-        pDTO.setCustomerId(customerId);
+        pDTO1.setCustomerId(customerId);
         CustomerDTO rDTO = Optional.ofNullable(customerService.getCustomerInfo(pDTO1)).orElseGet(CustomerDTO::new);
 
         log.info(rList.toString());
+        log.info(rDTO.toString());
 
         model.addAttribute("rList", rList);
         model.addAttribute("rDTO", rDTO);
 
-        log.info(this.getClass().getName() + ".cart Start!");
+        log.info(this.getClass().getName() + ".cart End!");
         return "/customer/cart";
     }
+
 
     // 소비자 회원가입페이지 이동코드
     // 구현완료(11/13)
