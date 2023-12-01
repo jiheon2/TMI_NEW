@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.swing.text.html.Option;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -32,7 +33,7 @@ public class CustomerController {
     private final IGoodsService goodsService;
     private final IReviewService reviewService;
     private final IBasketService basketService;
-
+    private final ITraderService traderService;
     private final IPostService postService;
     private final IReservationService reservationService;
 
@@ -83,6 +84,10 @@ public class CustomerController {
                 res = 1;
 
                 msg = "로그인이 성공했습니다.";
+
+                if(rDTO.getReward() == 0) {
+                    customerService.pointReward(pDTO); // 10포인트 추가
+                }
 
                 session.setAttribute("SS_ID", CmmUtil.nvl(rDTO.getCustomerId()));
 
@@ -148,12 +153,17 @@ public class CustomerController {
         pDTO.setCustomerId(customerId);
 
         List<BasketDTO> rList = Optional.ofNullable(basketService.getBasketList(pDTO)).orElseGet(ArrayList::new);
+        CustomerDTO pDTO1 = new CustomerDTO();
+        pDTO1.setCustomerId(customerId);
+        CustomerDTO rDTO = Optional.ofNullable(customerService.getCustomerInfo(pDTO1)).orElseGet(CustomerDTO::new);
 
         log.info(rList.toString());
+        log.info(rDTO.toString());
 
         model.addAttribute("rList", rList);
+        model.addAttribute("rDTO", rDTO);
 
-        log.info(this.getClass().getName() + ".cart Start!");
+        log.info(this.getClass().getName() + ".cart End!");
         return "/customer/cart";
     }
 
@@ -162,7 +172,6 @@ public class CustomerController {
     @GetMapping(value = "/customerSignUp")
     public String customerSignUp() {
         log.info(this.getClass().getName() + "customerSignUp");
-
         return "/customer/customerSignUp";
     }
 
@@ -182,6 +191,7 @@ public class CustomerController {
         pDTO.setCustomerId(customerId);
 
         CustomerDTO rDTO = Optional.ofNullable(customerService.getCustomerIdExists(pDTO)).orElseGet(CustomerDTO::new);
+        log.info(rDTO.toString());
 
         log.info(this.getClass().getName() + ".getCustomerIdExists End!");
 
@@ -535,15 +545,23 @@ public class CustomerController {
         List<ReviewDTO> rDTO = Optional.ofNullable(reviewService.oneReviewList(pDTO2)).orElseGet(ArrayList::new);
         List<ReviewDTO> cDTO = Optional.ofNullable(reviewService.getScore(pDTO2)).orElseGet(ArrayList::new);
 
+        String traderId = gDTO.getTraderId();
+        log.info("traderId : " + traderId);
+        TraderDTO nDTO = new TraderDTO();
+        nDTO.setTraderId(traderId);
+        TraderDTO tDTO = Optional.ofNullable(traderService.getTraderInfo(nDTO)).orElseGet(TraderDTO::new);
+
         log.info("gDTO : " + gDTO.toString());
         log.info("rDTO : " + rDTO.toString());
         log.info("cDTO : " + cDTO.toString());
         log.info("gList : " + gList.toString());
+        log.info("tDTO : " + tDTO.toString());
 
         model.addAttribute("cDTO", cDTO);
         model.addAttribute("rDTO", rDTO);
         model.addAttribute("gDTO", gDTO);
         model.addAttribute("gList", gList);
+        model.addAttribute("tDTO", tDTO);
 
         log.info(this.getClass().getName() + ".goodsMngInfo End!");
         return "/customer/single-product";

@@ -1,6 +1,5 @@
-<!doctype html>
-<html lang="zxx">
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -25,24 +24,19 @@
     <link rel="stylesheet" href="/assets/css/price_rangs.css">
     <!-- style CSS -->
     <link rel="stylesheet" href="/assets/css/style.css">
-    <script src="/assets/js/jquery-3.6.0.min.js"></script>
-    <script th:inline="javascript">
-        $(document).ready(function () {
+    <script type="text/javascript">
+        document.addEventListener("DOMContentLoaded", function() {
+            // JavaScript를 사용하여 드롭다운 토글링
+            $(document).ready(function () {
+                $('.dropdown-toggle').on('click', function () {
+                    $(this).next('.dropdown-menu').toggle();
+                });
 
-        });
-
-    </script>
-    <script>
-        // JavaScript를 사용하여 드롭다운 토글링
-        $(document).ready(function () {
-            $('.dropdown-toggle').on('click', function () {
-                $(this).next('.dropdown-menu').toggle();
-            });
-
-            $(document).click(function (e) {
-                if (!$(e.target).closest('.dropdown').length) {
-                    $('.dropdown-menu').hide();
-                }
+                $(document).click(function (e) {
+                    if (!$(e.target).closest('.dropdown').length) {
+                        $('.dropdown-menu').hide();
+                    }
+                });
             });
         });
     </script>
@@ -303,6 +297,7 @@
 <!-- product_list part end-->
 
 <!-- jquery plugins here-->
+<script src="/assets/js/jquery-3.6.0.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 <!-- popper js -->
 <script src="/assets/js/popper.min.js"></script>

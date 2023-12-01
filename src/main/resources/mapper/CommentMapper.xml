@@ -4,4 +4,46 @@
 <!-- JAVA와 연결할 Mapper 파일 설정 -->
 <mapper namespace="kopo.poly.persistance.mapper.ICommentMapper">
 
+    <!-- 댓글 추가 -->
+    <insert id="insertComment" parameterType="CommentDTO">
+        INSERT INTO comment (post_number, depth, customer_id, contents, reg_dt)
+        VALUES (#{postNumber}, 0, #{customerId}, #{contents}, Now())
+    </insert>
+
+    <!-- 대댓글 추가 -->
+    <insert id="insertReply" parameterType="CommentDTO">
+        INSERT INTO COMMENT (post_number, depth, customer_id, contents, reg_dt)
+        VALUES (#{postNumber}, 1, #{customerId}, #{contents}, Now())
+    </insert>
+
+    <!-- 댓글 수정 -->
+    <update id="updateComment" parameterType="CommentDTO">
+        UPDATE COMMENT
+        SET contents = #{contents}, reg_dt = Now()
+        WHERE comment_number = #{commentNumber}
+    </update>
+
+    <!-- 댓글 삭제 -->
+    <delete id="deleteComment" parameterType="CommentDTO">
+        DELETE FROM COMMENT WHERE comment_number = #{commentNumber}
+    </delete>
+
+    <!-- 대댓글 삭제 -->
+    <delete id="deleteReply" parameterType="CommentDTO">
+        DELETE FROM COMMENT WHERE comment_number = #{commentNumber}
+    </delete>
+
+    <!-- 댓글 삭제 시 내용 변경 -->
+    <update id="updateCommentForDeletion" parameterType="CommentDTO">
+        UPDATE COMMENT SET contents = '(삭제된 댓글입니다)' WHERE comment_number = #{commentNumber}
+    </update>
+
+    <!-- 댓글 조회 -->
+    <select id="getCommentList" parameterType="CommentDTO" resultType="CommentDTO">
+        SELECT *
+        FROM COMMENT
+        WHERE COMMENT_NUMBER = #{commentNumber}
+        ORDER BY depth ASC, comment_number ASC
+    </select>
+
 </mapper>

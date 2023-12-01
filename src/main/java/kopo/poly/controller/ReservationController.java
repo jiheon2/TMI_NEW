@@ -84,6 +84,7 @@ public class ReservationController {
         log.info("값1 : " + rDTO.getReservationContents());
         log.info("값2 : " + rDTO.getReservationDate());
         log.info("값3 : " + rDTO.getReservationPrice());
+        log.info("값4 : " + rDTO.getReservationNumber());
 
         return rList;
     }
@@ -134,6 +135,98 @@ public class ReservationController {
             log.info(this.getClass().getName() + ".insertReservationInfo End!");
         }
 
-       return dto;
+        return dto;
+    }
+
+    @ResponseBody
+    @PostMapping(value = "/reservation/updateReservationInfo")
+    public MsgDTO updateReservationInfo(HttpServletRequest request, HttpSession session) throws Exception {
+
+        log.info(this.getClass().getName() + ".updateReservationInfo Start!");
+
+        String msg = "";
+        int res = 0;
+        MsgDTO dto = null;
+
+        try {
+            String traderName = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+            String customerName = CmmUtil.nvl(request.getParameter("updateCustomerName"));
+            String reservationContents = CmmUtil.nvl(request.getParameter("updateReservationContents"));
+            String reservationPrice = CmmUtil.nvl(request.getParameter("updateReservationPrice"));
+            String reservationDate = CmmUtil.nvl(request.getParameter("selectedNewDateInput"));
+            String reservationNumber = CmmUtil.nvl(request.getParameter("updateReservationNumber"));
+
+            log.info("traderName : " + traderName);
+            log.info("customerName : " + customerName);
+            log.info("reservationContents : " + reservationContents);
+            log.info("reservationPrice : " + reservationPrice);
+            log.info("reservationDate : " + reservationDate);
+            log.info("reservationNumber : " + reservationNumber);
+
+            ReservationDTO pDTO = new ReservationDTO();
+            pDTO.setTraderName(traderName);
+            pDTO.setCustomerName(customerName);
+            pDTO.setReservationContents(reservationContents);
+            pDTO.setReservationPrice(reservationPrice);
+            pDTO.setReservationDate(reservationDate);
+            pDTO.setReservationNumber(reservationNumber);
+
+            reservationService.updateReservationInfo(pDTO);
+            msg = "등록되었습니다";
+            res = 1;
+
+        } catch (Exception e) {
+            msg = "실패하였습니다 : " + e.getMessage();
+            log.info(e.toString());
+            e.printStackTrace();
+        } finally {
+            dto = new MsgDTO();
+            dto.setMsg(msg);
+            dto.setResult(res);
+            log.info(dto.toString());
+            log.info(this.getClass().getName() + ".updateReservationInfo End!");
+        }
+
+        return dto;
+    }
+
+    @ResponseBody
+    @PostMapping(value = "/reservation/deleteReservation")
+    public MsgDTO reservationDelete(HttpSession session, HttpServletRequest request) {
+
+        log.info(this.getClass().getName() + ".reservationDelete Start!");
+
+        String msg = "";
+        int res = 0;
+        MsgDTO dto = null;
+
+        try {
+            String traderId = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+            String reservationNumber = CmmUtil.nvl(request.getParameter("reservationNumber"));
+
+            log.info("traderId : " + traderId);
+            log.info("reservationNumber : " + reservationNumber);
+
+            if (traderId.isEmpty()) {
+                msg = "로그인 해주시길 바랍니다.";
+            } else {
+                ReservationDTO pDTO = new ReservationDTO();
+                pDTO.setReservationNumber(reservationNumber);
+                reservationService.deleteReservationInfo(pDTO);
+
+                msg = "삭제되었습니다.";
+                res = 1;
+            }
+        } catch (Exception e) {
+            msg = "실패하였습니다. : " + e.getMessage();
+            log.info(e.toString());
+            e.printStackTrace();
+        } finally {
+            dto = new MsgDTO();
+            dto.setResult(res);
+            dto.setMsg(msg);
+            log.info(this.getClass().getName() + ".reservationDelete End!");
+        }
+        return dto;
     }
 }

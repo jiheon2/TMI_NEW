@@ -24,33 +24,36 @@
     <link rel="stylesheet" href="/assets/css/magnific-popup.css">
     <!-- style CSS -->
     <link rel="stylesheet" href="/assets/css/style.css">
-    <script src="https://kit.fontawesome.com/cb71939295.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="/assets/css/reservationModal.css">
     <script src="/assets/js/jquery-3.6.0.min.js"></script>
+    <script src="https://kit.fontawesome.com/cb71939295.js" crossorigin="anonymous"></script>
+
     <!--    별점 체크-->
     <script>
 
         //별점 마킹 모듈 프로토타입으로 생성
-        function Rating(){};
+        function Rating() {
+        };
         Rating.prototype.rate = 0;
-        Rating.prototype.setRate = function(newrate){
+        Rating.prototype.setRate = function (newrate) {
             //별점 마킹 - 클릭한 별 이하 모든 별 체크 처리
             this.rate = newrate;
             let items = document.querySelectorAll('.rate_radio');
-            items.forEach(function(item, idx){
-                if(idx < newrate){
+            items.forEach(function (item, idx) {
+                if (idx < newrate) {
                     item.checked = true;
-                }else{
+                } else {
                     item.checked = false;
                 }
             });
         }
         let rating = new Rating();//별점 인스턴스 생성
 
-        document.addEventListener('DOMContentLoaded', function(){
+        document.addEventListener('DOMContentLoaded', function () {
             //별점선택 이벤트 리스너
-            document.querySelector('.rating').addEventListener('click',function(e){
+            document.querySelector('.rating').addEventListener('click', function (e) {
                 let elem = e.target;
-                if(elem.classList.contains('rate_radio')){
+                if (elem.classList.contains('rate_radio')) {
                     rating.setRate(parseInt(elem.value));
                 }
             })
@@ -69,7 +72,7 @@
         const goodsImage = /*[[${gDTO.goodsImage}]]*/ '';
         const shopName = /*[[${gDTO.shopName}]]*/ '';
 
-        $(document).ready(function() {
+        $(document).ready(function () {
             let f = document.getElementById("f");
 
             console.log("goodsNumber : " + goodsNumber)
@@ -77,120 +80,15 @@
             console.log("traderId : " + traderId)
             console.log("customerId : " + customerId)
 
-            $("#writeReview").on("click", function () {
-                writeReview(f)
-            })
-            $("#doBasket").on("click", function () {
-                doBasket()
-            })
-            $("#changeLike").on("click", function () {
-                changeLike()
-            })
-            function writeReview(f) {
-                if(customerId === "") {
-                    alert("로그인 하세요")
-                    location.href="/customer/login";
-                }
-                if(f.rating.rate == 0){
-                    f.rating.focus()
-                    return;
-                }
-
-                // 모든 체크된 별점을 가져오기
-                const checkedRatings = document.querySelectorAll("input[name='rating']:checked");
-
-                // 마지막으로 체크된 별점 값 가져오기
-                const selectedRating = checkedRatings.length > 0 ? checkedRatings[checkedRatings.length - 1].value : null;
-
-                var reviewContents = f.contents.value.trim();
-                console.log(selectedRating)
-                console.log(reviewContents)
-                $.ajax({
-                    url: "/review/insertReview",
-                    type: "post", // 전송방식은 Post
-                    dataType: "JSON", // 전송 결과는 JSON으로 받기
-                    data: { rating : selectedRating,
-                        contents : reviewContents,
-                        traderId  : traderId,
-                        goodsName : goodsName,
-                        goodsNumber: goodsNumber,
-                    },
-                    success: function (json) {
-
-                        if (json.result === 1) {
-                            alert(json.msg);
-                            location.href = "/customer/single-product?goodsNumber=" + goodsNumber;
-
-                        } else {
-                            alert(json.msg);
-                        }
-
+                $(this).find('i.fa-star').each(function (index) {
+                    if (index < score) {
+                        $(this).addClass(' style="color: #ffffff;');
+                    } else {
+                        $(this).removeClass(' style="color: #ffffff;');
                     }
-                })
-            }
-            <!--    장바구니에 담기-->
-            function doBasket() {
-                if(customerId === "") {
-                    alert("로그인 하세요")
-                    location.href="/customer/login";
-                }
-
-                var quantity = document.getElementById("quantity").value;
-                console.log(quantity)
-
-                $.ajax({
-                    url: "/basket/doBasket",
-                    type: "post", // 전송방식은 Post
-                    dataType: "JSON", // 전송 결과는 JSON으로 받기
-                    data: {
-                        quantity : quantity,
-                        price : price,
-                        goodsName : goodsName,
-                        goodsNumber: goodsNumber,
-                        goodsImage : goodsImage
-                    },
-                    success: function (json) {
-
-                        if (json.result === 1) {
-                            alert(json.msg);
-
-                        } else {
-                            alert(json.msg);
-                        }
-
-                    }
-                })
-            }
-            <!--    찜목록에 담기-->
-            function changeLike() {
-                if(customerId === "") {
-                    alert("로그인 하세요")
-                    location.href="/customer/login";
-                }
-                $.ajax({
-                    url: "/wishlist/doWishlist",
-                    type: "post", // 전송방식은 Post
-                    dataType: "JSON", // 전송 결과는 JSON으로 받기
-                    data: {
-                        shopName : shopName,
-                        price : price,
-                        goodsName : goodsName,
-                        goodsNumber: goodsNumber,
-                        goodsImage : goodsImage
-                    },
-                    success: function (json) {
-
-                        if (json.result === 1) {
-                            alert(json.msg);
-
-                        } else {
-                            alert(json.msg);
-                        }
-
-                    }
-                })
-            }
-        })
+                });
+            });
+        });
     </script>
 </head>
 
@@ -263,8 +161,11 @@
                             <input class="input-number" id="quantity" type="text" value="1" min="0" max="10">
                             <span class="number-increment"> <i class="ti-plus"></i></span>
                         </div>
-                        <a href="#" id="doBasket"  class="btn_3">장바구니에 담기</a>
+                        <a href="#" id="doBasket" class="btn_3">장바구니에 담기</a>
                         <a href="#" id="changeLike" class="like_us"> <i class="ti-heart"></i> </a>
+                    </div>
+                    <div class="card_area d-flex justify-content-between align-items-center">
+                        <button type="button" class="btn-success" id="openReservationModal">상품 문의하기</button>
                     </div>
                 </div>
             </div>
@@ -272,6 +173,134 @@
     </div>
 </div>
 <!--================End Single Product Area =================-->
+
+<!-- 모달 창 -->
+<div class="modal" id="reservationModal">
+    <div class="modal_body">
+        <div style="display: flex; justify-content: space-between">
+            <h2>예약하기</h2>
+            <button class="btn btn-light" style="margin-bottom: 12px; background: none; border: none"
+                    id="closeReservationModal">x
+            </button>
+        </div>
+        <hr/>
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">상인 정보</h4>
+            </div>
+            <div class="card-content">
+                <div class="card-body">
+                    <form class="form form-vertical">
+                        <div class="form-body">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label for="traderId">판매자</label>
+                                        <div id="traderId" class="form-control">[[${tDTO.traderId}]]</div>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label for="traderPhoneNumber">판매자 전화번호</label>
+                                        <div id="traderPhoneNumber" class="form-control">[[${tDTO.phoneNumber}]]</div>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label for="traderShop">상점명</label>
+                                        <div id="traderShop" class="form-control" th:text="${gList[0].shopName}"></div>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label for="traderNotice">상인의 말</label>
+                                        <div id="traderNotice" class="form-control">[[${tDTO.traderNotice}]]</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="card">
+            <div class="card-header">
+                <h4>상품정보</h4>
+            </div>
+            <div class="card-body">
+                <div id="carouselExampleSlidesOnly" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner" style="margin-bottom: 3px">
+                        <div class="carousel-item active">
+                            <img th:src="${gDTO.getGoodsImage}" class="d-block w-100" alt="...">
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label for="goodsName">상품명</label>
+                            <div id="goodsName" class="form-control">[[${gDTO.goodsName}]]</div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label for="goodsPrice">상품가격</label>
+                            <div id="goodsPrice" class="form-control">[[${gDTO.price}]]</div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label for="goodsDescription">상품설명</label>
+                            <div id="goodsDescription" class="form-control">[[${gDTO.goodsDescription}]]</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">예약정보</h4>
+            </div>
+            <div class="card-content">
+                <div class="card-body">
+                    <form id="reservation" class="form form-vertical">
+                        <div class="form-body">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label for="reservationName">예약자명</label>
+                                        <input type="text" id="reservationName" class="form-control"
+                                               name="reservationName" placeholder="예약자명">
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label for="reservationPhoneNumber">휴대폰번호</label>
+                                        <input type="text" id="reservationPhoneNumber" class="form-control"
+                                               name="reservationPhoneNumber" placeholder="휴대폰번호">
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label for="reservationInfo">예약내용</label>
+                                        <textarea type="text" id="reservationInfo" class="form-control"
+                                                  name="reservationInfo" placeholder="예약내용"></textarea>
+                                    </div>
+                                </div>
+                                <div class="col-12 d-flex justify-content-end">
+                                    <button type="submit" class="btn btn-primary me-1 mb-1">예약신청</button>
+                                    <button type="reset"
+                                            class="btn btn-light-secondary me-1 mb-1">다시작성
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!--================Product Description Area =================-->
 <section class="product_description_area">
@@ -353,15 +382,20 @@
                                     <div class="warning_msg">별점을 선택해 주세요.</div>
                                     <div class="rating">
                                         <!-- 해당 별점을 클릭하면 해당 별과 그 왼쪽의 모든 별의 체크박스에 checked 적용 -->
-                                        <input type="checkbox" name="rating" id="rating1" value="1" class="rate_radio" title="1점">
+                                        <input type="checkbox" name="rating" id="rating1" value="1" class="rate_radio"
+                                               title="1점">
                                         <label for="rating1"></label>
-                                        <input type="checkbox" name="rating" id="rating2" value="2" class="rate_radio" title="2점">
+                                        <input type="checkbox" name="rating" id="rating2" value="2" class="rate_radio"
+                                               title="2점">
                                         <label for="rating2"></label>
-                                        <input type="checkbox" name="rating" id="rating3" value="3" class="rate_radio" title="3점" >
+                                        <input type="checkbox" name="rating" id="rating3" value="3" class="rate_radio"
+                                               title="3점">
                                         <label for="rating3"></label>
-                                        <input type="checkbox" name="rating" id="rating4" value="4" class="rate_radio" title="4점">
+                                        <input type="checkbox" name="rating" id="rating4" value="4" class="rate_radio"
+                                               title="4점">
                                         <label for="rating4"></label>
-                                        <input type="checkbox" name="rating" id="rating5" value="5" class="rate_radio" title="5점">
+                                        <input type="checkbox" name="rating" id="rating5" value="5" class="rate_radio"
+                                               title="5점">
                                         <label for="rating5"></label>
                                     </div>
                                 </div>
@@ -415,7 +449,7 @@
 
 
 <style>
-    .wrap{
+    .wrap {
         max-width: 480px;
         margin: 0 auto; /* 화면 가운데로 */
         background-color: #fff;
@@ -424,11 +458,13 @@
         box-sizing: border-box;
 
     }
-    .reviewform textarea{
+
+    .reviewform textarea {
         width: 100%;
         padding: 10px;
         box-sizing: border-box;
     }
+
     .rating .rate_radio {
         position: relative;
         display: inline-block;
@@ -441,6 +477,7 @@
         vertical-align: top;
         display: none;
     }
+
     .rating .rate_radio + label {
         position: relative;
         display: inline-block;
@@ -454,6 +491,7 @@
         cursor: pointer;
         background-color: #f0f0f0;
     }
+
     .rating .rate_radio:checked + label {
         background-color: #ff8;
     }
@@ -473,7 +511,7 @@
 </style>
 <!-- jquery plugins here-->
 <!-- jquery -->
-<script src="/assets/js/jquery-1.12.1.min.js"></script>
+<script src="/assets/js/jquery-3.6.0.min.js"></script>
 <!-- popper js -->
 <script src="/assets/js/popper.min.js"></script>
 <!-- bootstrap js -->

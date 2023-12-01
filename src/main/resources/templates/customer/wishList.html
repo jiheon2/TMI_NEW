@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="zxx">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>TMI - 장바구니</title>
+    <link rel="stylesheet" href="/assets/css/global.css">
+    <link rel="icon" href="/assets/images/favicon.png">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+    <!-- animate CSS -->
+    <link rel="stylesheet" href="/assets/css/animate.css">
+    <!-- owl carousel CSS -->
+    <link rel="stylesheet" href="/assets/css/owl.carousel.min.css">
+    <!-- nice select CSS -->
+    <link rel="stylesheet" href="/assets/css/nice-select.css">
+    <!-- font awesome CSS -->
+    <link rel="stylesheet" href="/assets/css/all.css">
+    <!-- flaticon CSS -->
+    <link rel="stylesheet" href="/assets/css/flaticon.css">
+    <link rel="stylesheet" href="/assets/css/themify-icons.css">
+    <!-- font awesome CSS -->
+    <link rel="stylesheet" href="/assets/css/magnific-popup.css">
+    <!-- swiper CSS -->
+    <link rel="stylesheet" href="/assets/css/slick.css">
+    <link rel="stylesheet" href="/assets/css/price_rangs.css">
+    <!-- style CSS -->
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <script src="https://kit.fontawesome.com/cb71939295.js" crossorigin="anonymous"></script>
+    <script src="/assets/js/jquery-3.6.0.min.js"></script>
+    <!-- PortOne SDK -->
+    <script src="https://cdn.iamport.kr/v1/iamport.js"></script>
+    <script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.1.5.js"></script>
+</head>
+<script>
+    $(document).ready(function () {
+        $("#goCart").on("click", function () {
+            location.href="/customer/cart"
+        })
+    })
+</script>
+<body>
+<!--::header part start::-->
+<header class="main_menu home_menu">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-12">
+                <nav class="navbar navbar-expand-lg navbar-light">
+                    <a class="navbar-brand" href="/customer/customerIndex"><img src="/assets/images/bird/logo2.png"
+                                                                                alt="logo" style="width: 100px" ,
+                                                                                height="50px"></a>
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+<!-- Header part end-->
+
+
+<!--================Home Banner Area =================-->
+<!-- breadcrumb start-->
+<section class="breadcrumb" style="background-color: azure">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="breadcrumb_iner">
+                    <img src="/assets/images/bird/birdShop.png" style="width: 400px">
+                    <div class="breadcrumb_iner_item">
+                        <h2 class="fa-solid" style="font-family: BMJUA,serif; font-size: 36px; color: #222222">찜목록</h2>
+                        <p style="font-family: BMJUA,serif; font-size: 18px; color: #777777">원하는 상품을 찜 해놓으세요!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- breadcrumb start-->
+
+<!-- navigation part -->
+<div th:replace="customerNav.html"></div>
+<!-- --------------- -->
+
+<!--================Cart Area =================-->
+<section class="cart_area padding_top">
+    <div class="container">
+        <div class="cart_inner">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th scope="col"><input type="checkbox"></th>
+                        <th scope="col">이미지</th>
+                        <th scope="col">상품명</th>
+                        <th scope="col">가격</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="dto : ${rList}">
+                        <td><input type="checkbox"></td>
+                        <td>
+                            <div class="goodsImage">
+                                <img th:src="${dto.goodsImage}" alt=""/>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="media-body">
+                                <p>[[${dto.goodsName}]]</p>
+                            </div>
+
+                        </td>
+                        <td>
+                            <h5 id="price">[[${dto.price}]]</h5>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <br/>
+                <br/>
+                <div style="float: right">
+                    <button class="btn btn-primary" id="goCart">장바구니</button>
+                    <button class="btn btn-light-secondary me-1 mb-1" id="btnDelete">삭제</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--================End Cart Area =================-->
+
+<style>
+    .table {
+        width: 100%; /* 테이블이 부모 컨테이너의 100%를 차지하도록 설정 */
+        overflow-x: hidden; /* x 방향으로 오버플로우가 발생하면 가려지도록 설정 */
+        white-space: nowrap; /* 텍스트가 줄 바꿈되지 않도록 설정 */
+    }
+</style>
+<!-- jquery plugins here-->
+<!-- jquery -->
+<script src="/assets/js/jquery-1.12.1.min.js"></script>
+<!-- popper js -->
+<script src="/assets/js/popper.min.js"></script>
+<!-- bootstrap js -->
+<script src="/assets/js/bootstrap.min.js"></script>
+<!-- easing js -->
+<script src="/assets/js/jquery.magnific-popup.js"></script>
+<!-- swiper js -->
+<script src="/assets/js/swiper.min.js"></script>
+<!-- swiper js -->
+<script src="/assets/js/masonry.pkgd.js"></script>
+<!-- particles js -->
+<script src="/assets/js/owl.carousel.min.js"></script>
+<script src="/assets/js/jquery.nice-select.min.js"></script>
+<!-- slick js -->
+<script src="/assets/js/slick.min.js"></script>
+<script src="/assets/js/jquery.counterup.min.js"></script>
+<script src="/assets/js/waypoints.min.js"></script>
+<script src="/assets/js/contact.js"></script>
+<script src="/assets/js/jquery.ajaxchimp.min.js"></script>
+<script src="/assets/js/jquery.form.js"></script>
+<script src="/assets/js/jquery.validate.min.js"></script>
+<script src="/assets/js/mail-script.js"></script>
+<script src="/assets/js/stellar.js"></script>
+<script src="/assets/js/price_rangs.js"></script>
+<!-- custom js -->
+<script src="/assets/js/custom.js"></script>
+</body>
+
+</html>

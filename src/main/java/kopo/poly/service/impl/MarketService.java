@@ -31,7 +31,7 @@ import java.util.Map;
 public class MarketService implements IMarketService {
 
     private final IMarketMapper marketMapper;
-    
+
     /* 시장 정보 조회 API 코드 */
     @Scheduled(cron = "0 0 0 * * ?") // 매일 자정에 실행
 //    @Scheduled(fixedRate = 60000) // 매분마다 실행
@@ -147,6 +147,12 @@ public class MarketService implements IMarketService {
         return marketMapper.getMarketList(nm);
     }
 
+    @Override
+    public List<MarketDTO> getMarketName() throws Exception {
 
+        log.info("getMarketName start");
+
+        return marketMapper.getMarketName();
+    }
 }
 

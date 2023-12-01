@@ -19,8 +19,8 @@
 
     <!-- 상인 회원가입 쿼리 -->
     <insert id="insertTrader" parameterType="TraderDTO">
-        INSERT INTO TRADER (TRADER_ID, TRADER_PW, BUSINESS_NUMBER, TRADER_NAME, PHONE_NUMBER, EMAIL, SHOP_CODE, ACCOUNT, BANK)
-        VALUES (#{traderId}, #{traderPw}, #{businessNumber}, #{traderName}, #{phoneNumber}, #{email}, #{shopCode}, #{account}, #{bank})
+        INSERT INTO TRADER (TRADER_ID, TRADER_PW, BUSINESS_NUMBER, TRADER_NAME, PHONE_NUMBER, EMAIL, SHOP_CODE, ACCOUNT, BANK, TRADER_NOTICE)
+        VALUES (#{traderId}, #{traderPw}, #{businessNumber}, #{traderName}, #{phoneNumber}, #{email}, #{shopCode}, #{account}, #{bank}, #{traderNotice})
     </insert>
 
     <!-- 상인 정보 변경 쿼리 -->
@@ -31,6 +31,7 @@
             EMAIL = #{email},
             ACCOUNT = #{account},
             BANK = #{bank}
+            TRADER_NOTICE = #{traderNotice}
         WHERE TRADER_ID = #{traderId}
     </update>
 
@@ -51,7 +52,7 @@
 
     <!-- 상인정보 조회 쿼리 -->
     <select id="getTraderInfo" parameterType="TraderDTO" resultType="TraderDTO">
-        SELECT TRADER_NAME, PHONE_NUMBER, BUSINESS_NUMBER, EMAIL, SHOP_CODE, ACCOUNT, BANK
+        SELECT TRADER_ID, TRADER_NAME, PHONE_NUMBER, BUSINESS_NUMBER, EMAIL, SHOP_CODE, ACCOUNT, BANK, TRADER_NOTICE
         FROM TRADER
         WHERE TRADER_ID = #{traderId}
     </select>

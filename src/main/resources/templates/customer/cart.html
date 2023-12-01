@@ -6,7 +6,6 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>TMI - 장바구니</title>
-    <link rel="stylesheet" href="/assets/css/global.css">
     <link rel="icon" href="/assets/images/favicon.png">
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
@@ -33,7 +32,7 @@
     <!-- PortOne SDK -->
     <script src="https://cdn.iamport.kr/v1/iamport.js"></script>
     <script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.1.5.js"></script>
-    <script>
+    <script th:inline="javascript">
         $(document).ready(function () {
             $("#btnPayment").on("click", function () {
                 requestPay();
@@ -41,24 +40,90 @@
 
             var IMP = window.IMP;
             IMP.init("imp05623571");
+            const rList = /*[[${rList}]]*/ '';
+            const rDTO = /*[[${rDTO}]]*/ '';
 
             function requestPay() {
+
+                console.log(rDTO.toString());
+                var name = rList.map(item => item.goodsName).join(',');
+                var uid = rList[0].basketNumber
+                console.log(uid)
+                console.log(name)
+                var amount = document.getElementById("result").textContent;
+                console.log(amount)
+                console.log(rDTO.customerEmail)
+                console.log(rDTO.customerName)
+                console.log(rDTO.phoneNumber)
+
                 IMP.request_pay(
                     {
                         pg: "kcp.AO09C",
                         pay_method: "card",
-                        merchant_uid: "57008833-33004",
-                        name: "당근 10kg",
-                        amount: 1004,
-                        buyer_email: "Iamport@chai.finance",
-                        buyer_name: "포트원 기술지원팀",
-                        buyer_tel: "010-1234-5678",
+                        merchant_uid: uid,
+                        name: name,
+                        amount: amount,
+                        buyer_email: rDTO.customerEmail,
+                        buyer_name: rDTO.customerName,
+                        buyer_tel: rDTO.phoneNumber,
                         buyer_addr: "서울특별시 강남구 삼성동",
                         buyer_postcode: "123-456",
                     },
                     function (rsp) {
-                        // callback
-                        //rsp.imp_uid 값으로 결제 단건조회 API를 호출하여 결제결과를 판단합니다.
+                        console.log(rsp);
+                        if (rsp.success) {
+                            var basketNumbers = rList.map(function(basket) {
+                                return basket.basketNumber;
+                            });
+                            console.log(basketNumbers)
+
+                            var dataToSend = {
+                                basketNumbers: basketNumbers,
+                                applyNum : rsp.applyNum,
+                                bankName : rsp.bankName,
+                                buyerAddr : rsp.buyerAddr,
+                                buyerEmail : rsp.buyerEmail,
+                                buyerPostcod : rsp.buyerPostcod,
+                                buyerTel :  rsp.buyerTel,
+                                cardName : rsp.cardName,
+                                cardNumber : rsp.cardNumber,
+                                cardQuote :  rsp.cardQuote,
+                                currency : rsp.currency,
+                                customData : rsp.customData,
+                                impUid : rsp.impUid,
+                                name : rsp.name,
+                                paidAmount : rsp.paidAmount,
+                                paidAt : rsp.paidAt,
+                                payMethod : rsp.payMethod,
+                                pgProvider : rsp.pgProvider,
+                                pgTid : rsp.pgTid,
+                                pgType : rsp.pgType,
+                                reciptUrl : rsp.reciptUrl,
+                                status : rsp.status,
+                                success : rsp.success
+                            };
+
+                            $.ajax({
+                                url: "/basket/insertBasket",
+                                type: "post",
+                                dataType: "JSON",
+                                contentType: "application/json; charset=utf-8",
+                                data: JSON.stringify(dataToSend), // JSON 데이터로 변환
+                                success: function (json) {
+                                    if (json.result === 1) {
+                                        alert(json.msg);
+                                        location.reload();
+                                    } else {
+                                        alert(json.msg);
+                                    }
+                                }
+                            });
+                            // location.href = "결제 완료 후 이동할 페이지 url"
+                        } else {
+                            var msg = '결제에 실패하였습니다.';
+                            msg += '에러내용 : ' + rsp.error_msg;
+                            alert(msg);
+                        }
                     }
                 );
             }
@@ -98,6 +163,48 @@
             // 페이지 로드 시 초기 계산 수행
             calculateTotalAmount();
         });
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#btnDelete").on("click", function () {
+                deleteBasket();
+            })
+
+            function deleteBasket() {
+                    var selectedSeqs = []; // 선택된 체크박스 값들을 저장할 배열
+
+                    // 모든 체크박스 엘리먼트를 선택
+                    var checkboxes = document.getElementsByName("choose");
+
+                    console.log(checkboxes);
+                    for (var i = 0; i < checkboxes.length; i++) {
+                        if (checkboxes[i].checked) {
+                            selectedSeqs.push(checkboxes[i].value);
+                            console.log("Checkbox " + i + "의 value 값: " + checkboxes[i].value);
+                        }
+                    }
+
+                    var dataToSend = {
+                        selectedSeqs: selectedSeqs
+                    };
+
+                    $.ajax({
+                        url: "/basket/deleteBasket",
+                        type: "post",
+                        dataType: "JSON",
+                        contentType: "application/json; charset=utf-8",
+                        data: JSON.stringify(dataToSend), // JSON 데이터로 변환
+                        success: function (json) {
+                            if (json.result === 1) {
+                                alert(json.msg);
+                                location.reload();
+                            } else {
+                                alert(json.msg);
+                            }
+                        }
+                    });
+                }
+        })
     </script>
 </head>
 
@@ -150,6 +257,7 @@
                 <table class="table">
                     <thead>
                     <tr>
+                        <th scope="col"><input type="checkbox"></th>
                         <th scope="col">이미지</th>
                         <th scope="col">상품명</th>
                         <th scope="col">가격</th>
@@ -159,6 +267,7 @@
                     </thead>
                     <tbody>
                     <tr th:each="dto : ${rList}">
+                        <td><input type="checkbox" name="choose" th:value="${dto.basketNumber}"></td>
                         <td>
                             <div class="goodsImage">
                                 <img th:src="${dto.goodsImage}" alt=""/>
@@ -195,7 +304,7 @@
                 <br/>
                 <div style="float: right">
                     <button class="btn btn-primary" id="btnPayment">결제</button>
-                    <button class="btn btn-light-secondary me-1 mb-1">취소</button>
+                    <button class="btn btn-light-secondary me-1 mb-1" id="btnDelete">삭제</button>
                 </div>
             </div>
         </div>

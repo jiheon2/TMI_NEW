@@ -2,6 +2,7 @@ package kopo.poly.service.impl;
 
 import kopo.poly.dto.BasketDTO;
 import kopo.poly.dto.GoodsDTO;
+import kopo.poly.dto.PaymentDTO;
 import kopo.poly.persistance.mapper.IBasketMapper;
 import kopo.poly.service.IBasketService;
 import lombok.RequiredArgsConstructor;
@@ -40,5 +41,41 @@ public class BasketService implements IBasketService {
         log.info(this.getClass().getName() + ".getBasketList start!");
 
         return basketMapper.getBasketList(pDTO);
+    }
+    @Override
+    public int insertPayment(PaymentDTO pDTO) throws Exception {
+        log.info(this.getClass().getName() + ".insertPayment Start!");
+
+        //회원가입 성공시 1, 에러 0
+        int res = 0;
+
+        int success = basketMapper.insertPayment(pDTO);
+
+        if(success > 0) {
+            res = 1;
+        } else {
+            res = 0;
+        }
+
+        log.info(this.getClass().getName() + ".insertPayment Start!");
+        return res;
+    }
+    @Override
+    public int deleteBuy(BasketDTO pDTO) throws Exception {
+        log.info(this.getClass().getName() + ".deleteBuy Start!");
+
+        //회원가입 성공시 1, 에러 0
+        int res = 0;
+
+        int success = basketMapper.deleteBuy(pDTO);
+
+        if(success > 0) {
+            res = 1;
+        } else {
+            res = 0;
+        }
+
+        log.info(this.getClass().getName() + ".deleteBuy Start!");
+        return res;
     }
 }

@@ -45,6 +45,7 @@ public class PostController {
         if (rList == null) rList = new ArrayList<>();
 
         log.info(rList.toString());
+
         // 페이지당 보여줄 아이템 개수 정의
         int itemsPerPage = 3;
 
