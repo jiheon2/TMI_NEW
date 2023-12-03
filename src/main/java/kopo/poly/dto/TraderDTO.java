@@ -14,9 +14,11 @@ public class TraderDTO {
     private String businessNumber;
     private String traderName;
     private String phoneNumber;
-    private String email;
+    private String traderEmail;
     private String shopCode;
     private String account;
     private String bank;
     private String traderNotice;
+    private int authNumber;
+    private String existsYn;
 }

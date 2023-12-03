@@ -43,6 +43,9 @@
             $("#btnId").on("click", function() {
                 idExists(f)
             })
+            $("#btnEmail").on("click", function() {
+                emailExists(f)
+            })
             $("#btnSend").on("click", function() {
                 doSubmit(f)
             })
@@ -72,7 +75,7 @@
         }
         function emailExists() {
             let f = document.getElementById("register-form");
-            if (f.email.value === "") {
+            if (f.customerEmail.value === "") {
                 alert("이메일을 입력하세요.");
                 return;
             }
@@ -82,7 +85,7 @@
                     url: "/customer/searchEmail",
                     type: "post", // 전송방식은 Post
                     dataType: "JSON", // 전송 결과는 JSON으로 받기
-                    data: {email : f.email.value}, // form 태그 내 input 등 객체를 자동으로 전송할 형태로 변경하기
+                    data: {email : f.customerEmail.value}, // form 태그 내 input 등 객체를 자동으로 전송할 형태로 변경하기
                     success: function (json) { // 호출이 성공했다면..
 
                         if (json.existsYn === "N") {
@@ -91,8 +94,8 @@
                             emailAuthNumber = json.authNumber;
 
                         } else {
-                            alert("이메일로 인증번호가 발송되었습니다. \n받은 메일의 인증번호를 입력하기 바랍니다.");
-                            f.customerEmailForId.focus();
+                            alert("이미 있는 이메일입니다");
+                            f.customerEmail.focus();
 
                         }
                     }
@@ -220,8 +223,13 @@
                             <input type="tel" name="phoneNumber" id="phoneNumber" placeholder="핸드폰 번호" />
                         </div>
                         <div class="form-group">
-                            <label for="phoneNumber"><i class="zmdi zmdi-phone"></i></label>
+                            <label for="customerEmail"><i class="zmdi zmdi-phone"></i></label>
                             <input type="text" name="customerEmail" id="customerEmail" placeholder="이메일" />
+                            <button class="btn btn-primary" type="button" name="btnEmail" id="btnEmail" style="width: 20%; border: 0px">인증</button>
+                        </div>
+                        <div class="form-group">
+                            <label for="authNumber"><i class="zmdi zmdi-phone"></i></label>
+                            <input type="text" name="authNumber" id="authNumber" placeholder="인증번호" />
                         </div>
                     </form>
                 </div>

@@ -1,5 +1,6 @@
 package kopo.poly.persistance.mapper;
 
+import kopo.poly.dto.CustomerDTO;
 import kopo.poly.dto.TraderDTO;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -18,4 +19,7 @@ public interface ITraderMapper {
     TraderDTO getBusinessNumberExists(TraderDTO pDTO) throws Exception; // 사업자등록번호 중복확인
 
     TraderDTO getTraderIdExists(TraderDTO pDTO) throws Exception; // ID 중복확인
+    TraderDTO getEmailExists(TraderDTO pDTO) throws Exception; // 이메일 확인
+    TraderDTO getTraderId(TraderDTO pDTO) throws Exception; // 아이디 보여주기
+    TraderDTO getTraderPw(TraderDTO pDTO) throws Exception; // 비밀번호 보여주기
 }

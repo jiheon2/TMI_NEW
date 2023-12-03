@@ -9,6 +9,26 @@
         FROM TRADER
         WHERE TRADER_ID = #{traderId}
     </select>
+    <!-- 소비자 이메일 중복 확인 쿼리 -->
+    <select id="getEmailExists" parameterType="TraderDTO" resultType="TraderDTO">
+        SELECT IF(COUNT(1) = 0, 'N', 'Y')  AS EXISTS_YN
+        FROM TRADER
+        WHERE TRADER_EMAIL = #{traderEmail}
+    </select>
+    <!-- 아이디 찾기 아이디 가져오기 쿼리 -->
+    <select id="getCustomerId" parameterType="TraderDTO" resultType="TraderDTO">
+        SELECT TRADER_ID
+        FROM TRADER
+        WHERE  TRADER_EMAIL = #{traderEmail}
+          AND TRADER_NAME = #{traderName}
+    </select>
+    <!-- 비밀번호 찾기 아이디 가져오기 쿼리 -->
+    <select id="getCustomerPw" parameterType="TraderDTO" resultType="TraderDTO">
+        SELECT TRADER_ID
+        FROM TRADER
+        WHERE  TRADER_EMAIL = #{traderEmail}
+          AND TRADER_ID = #{traderId}
+    </select>
 
     <!-- 사업자 등록번호 중복 확인 쿼리 -->
     <select id="getBusinessNumberExists" parameterType="TraderDTO" resultType="TraderDTO">

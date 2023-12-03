@@ -1,19 +1,25 @@
 package kopo.poly.service.impl;
 
+import kopo.poly.dto.CustomerDTO;
+import kopo.poly.dto.MailDTO;
 import kopo.poly.dto.TraderDTO;
 import kopo.poly.persistance.mapper.ITraderMapper;
+import kopo.poly.service.IMailService;
 import kopo.poly.service.ITraderService;
+import kopo.poly.util.CmmUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class TraderService implements ITraderService {
     private final ITraderMapper traderMapper;
+    private final IMailService mailService;
 
     /* 상인 회원가입 코드 */
     @Override
@@ -24,6 +30,62 @@ public class TraderService implements ITraderService {
         TraderDTO rDTO = Optional.ofNullable(traderMapper.getLogin(pDTO)).orElseGet(TraderDTO::new);
 
         log.info(this.getClass().getName() + ".getLogin Start!");
+        return rDTO;
+    }
+
+    /* 이메일 찾기 코드 */
+    @Override
+    public TraderDTO searchEmail(TraderDTO pDTO) throws Exception {
+        log.info(this.getClass().getName() + ".emailAuth Start!");
+
+        TraderDTO rDTO = traderMapper.getEmailExists(pDTO);
+
+
+        String existsYn = CmmUtil.nvl(rDTO.getExistsYn());
+
+        log.info("existsYn : " + existsYn);
+
+
+            int authNumber = ThreadLocalRandom.current().nextInt(100000,1000000);
+
+            MailDTO dto = new MailDTO();
+
+            dto.setTitle("이메일 확인 인증번호 발송 메일");
+            dto.setContents("인증번호는 " + authNumber + " 입니다.");
+            dto.setToMail(CmmUtil.nvl(pDTO.getTraderEmail()));
+
+            mailService.doSendMail(dto);
+
+            dto = null;
+
+            rDTO.setAuthNumber(authNumber);
+
+            log.info("authNumber : " + authNumber);
+
+
+        log.info(this.getClass().getName() + ".emailAuth End!");
+
+        return rDTO;
+    }
+    @Override
+    public TraderDTO searchTraderId(TraderDTO pDTO) throws Exception {
+        log.info(this.getClass().getName() + ".searchTraderId Start!");
+
+        TraderDTO rDTO = traderMapper.getTraderId(pDTO);
+
+        log.info(this.getClass().getName() + ".searchTraderId End!");
+
+        return rDTO;
+    }
+
+    @Override
+    public TraderDTO searchTraderPw(TraderDTO pDTO) throws Exception {
+        log.info(this.getClass().getName() + ".searchTraderPw Start!");
+
+        TraderDTO rDTO = traderMapper.getTraderPw(pDTO);
+
+        log.info(this.getClass().getName() + ".searchTraderPw End!");
+
         return rDTO;
     }
 
