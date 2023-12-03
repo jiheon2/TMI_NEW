@@ -16,4 +16,9 @@ public interface ICustomerMapper {
     int updateCustomerPw(CustomerDTO pDTO) throws Exception; // 소비자 비밀번호 변경
     int pointReward(CustomerDTO pDTO) throws Exception; // 로그인 포인트 업데이트
     void resetReward() throws Exception; // 포인트 획득 여부 초기화
+    CustomerDTO getEmailExists(CustomerDTO pDTO) throws Exception; // 이메일 확인
+    CustomerDTO getCustomerId(CustomerDTO pDTO) throws Exception; // 아이디 보여주기
+    CustomerDTO getCustomerPw(CustomerDTO pDTO) throws Exception; // 비밀번호 보여주기
+
+
 }

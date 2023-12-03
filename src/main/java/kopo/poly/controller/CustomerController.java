@@ -10,10 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -492,6 +489,10 @@ public class CustomerController {
 
         try {
             String customerId = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+
+            if(customerId.isEmpty()) {
+                customerId = CmmUtil.nvl((String) session.getAttribute("NEW_PASSWORD"));
+            }
             String customerPw = CmmUtil.nvl(request.getParameter("customerPw"));
 
             log.info("customerId : " + customerId);
@@ -565,5 +566,124 @@ public class CustomerController {
 
         log.info(this.getClass().getName() + ".goodsMngInfo End!");
         return "/customer/single-product";
+    }
+    @GetMapping(value = "/findIdAndPw")
+    public String findIdAndPw(HttpSession session) {
+        session.setAttribute("NEW_PASSWORD", "");
+        session.removeAttribute("NEW_PASSWORD");
+        return "/customer/findIdAndPw";
+    }
+
+    @ResponseBody
+    @PostMapping(value = "searchEmail")
+    public CustomerDTO searchEmail(HttpServletRequest request) throws Exception {
+
+        log.info(this.getClass().getName() + ".searchEmail Start!");
+
+        String email = CmmUtil.nvl(request.getParameter("email")); // 회원아이디
+
+        log.info("email : " + email);
+
+        CustomerDTO pDTO = new CustomerDTO();
+        pDTO.setCustomerEmail(email);
+
+        // 입력된 이메일이 중복된 이메일인지 조회
+        CustomerDTO rDTO = Optional.ofNullable(customerService.searchEmail(pDTO)).orElseGet(CustomerDTO::new);
+
+        log.info(this.getClass().getName() + ".searchEmail End!");
+
+        return rDTO;
+    }
+    @ResponseBody
+    @PostMapping(value = "/showId")
+    public MsgDTO showId(HttpServletRequest request) throws Exception{
+
+        log.info(this.getClass().getName() + ".showId Start!");
+
+        int res = 0;
+        String msg = "";
+        MsgDTO dto = null;
+
+        String CustomerName = CmmUtil.nvl(request.getParameter("customerName")); // 이름
+        String email = CmmUtil.nvl(request.getParameter("customerEmailForId")); // 이메일
+
+
+        log.info("CustomerName : " + CustomerName);
+        log.info("email : " + email);
+
+
+        CustomerDTO pDTO = new CustomerDTO();
+        pDTO.setCustomerName(CustomerName);
+        pDTO.setCustomerEmail(email);
+
+        log.info(pDTO.toString());
+
+        CustomerDTO rDTO = Optional.ofNullable(customerService.searchCustomerId(pDTO)).orElseGet(CustomerDTO::new);
+
+        log.info(rDTO.toString());
+
+        if (rDTO.getCustomerId() == null) {
+            msg = "계정 정보가 맞지 않습니다";
+        } else {
+            msg = "고객님의 아이디는 " + rDTO.getCustomerId() + "입니다";
+        }
+
+        dto = new MsgDTO();
+        dto.setMsg(msg);
+        dto.setResult(res);
+
+        log.info(dto.toString());
+
+        log.info(this.getClass().getName() + ".showId End!");
+
+
+        return dto;
+    }
+
+    @GetMapping(value="newPw")
+    public String newPw() {
+        log.info(this.getClass().getName() + ".newPw Start!");
+
+        return "/customer/newPw";
+    }
+    @ResponseBody
+    @PostMapping(value = "newPwProd")
+    public MsgDTO newPwProd(HttpServletRequest request, HttpSession session) throws Exception {
+        log.info(this.getClass().getName() + ".newPwProd Start!");
+
+        int res = 0;
+        String msg = "";
+        MsgDTO dto = null;
+
+        CustomerDTO pDTO = null;
+
+        String customerId = CmmUtil.nvl(request.getParameter("customerId"));
+        String email = CmmUtil.nvl(request.getParameter("customerEmailForPw"));
+
+        log.info("customerId : " + customerId);
+        log.info("email : " + email);
+
+        pDTO = new CustomerDTO();
+
+        pDTO.setCustomerId(customerId);
+        pDTO.setCustomerEmail(email);
+
+        CustomerDTO rDTO = Optional.ofNullable(customerService.searchCustomerPw(pDTO)).orElseGet(CustomerDTO::new);
+
+        if (rDTO.getCustomerId() == null) {
+            msg = "계정 정보가 맞지 않습니다";
+        } else {
+            res = 1;
+            msg = "확인되었습니다";
+            session.setAttribute("NEW_PASSWORD", customerId);
+        }
+
+        dto = new MsgDTO();
+        dto.setMsg(msg);
+        dto.setResult(res);
+
+        log.info(this.getClass().getName() + ".newPwProd Start!");
+
+        return dto;
     }
 }

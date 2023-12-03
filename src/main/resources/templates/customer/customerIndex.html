@@ -27,6 +27,22 @@
     <!-- style CSS -->
     <link rel="stylesheet" href="/assets/css/style.css">
     <script src="https://kit.fontawesome.com/cb71939295.js" crossorigin="anonymous"></script>
+    <script src="/assets/js/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript">
+
+        // 함수 정의 추가
+        function doMarket(marketNumber) {
+            location.href = "/customer/shop?marketNumber=" + marketNumber;
+        }
+
+        function doGoods(goodsNumber) {
+            location.href = "/customer/single-product?goodsNumber=" + goodsNumber;
+        }
+
+        function doDetail(postNumber) {
+            location.href = "/post/postInfo?postNumber=" + postNumber;
+        }
+    </script>
 </head>
 
 <body>
@@ -126,7 +142,7 @@
                 <div class="best_product_slider owl-carousel">
                     <div class="single_product_item" th:each="dto : ${mList}">
                         <img th:src="${dto.marketImage}" alt="이 시장은 이미지가 없습니다">
-                        <div class="single_product_text">
+                        <div class="single_product_text" th:attr="onclick='doMarket(\'' + ${dto.marketNumber} + '\')'">
                             <h4>[[${dto.marketName}]]</h4>
                             <h3>[[${dto.marketLocation}]]</h3>
                         </div>
@@ -153,7 +169,7 @@
                 <div class="best_product_slider owl-carousel">
                     <div class="single_product_item" th:each="dto : ${gList}">
                         <img th:src="${dto.goodsImage}" alt="이 상품은 이미지가 없습니다">
-                        <div class="single_product_text">
+                        <div class="single_product_text" th:attr="onclick='doGoods(\'' + ${dto.goodsNumber} + '\')'">
                             <h4>[[${dto.goodsName}]]</h4>
                             <h3>[[${dto.price}]]</h3>
                             <h3>[[${dto.shopName}]]</h3>
@@ -181,7 +197,7 @@
                 <div class="best_product_slider owl-carousel">
                     <div class="single_product_item"  th:each="dto : ${pList}">
                         <img th:src="${dto.image}" alt="이 게시글에는 이미지가 없습니다">
-                        <div class="single_product_text">
+                        <div class="single_product_text" th:attr="onclick='doDetail(\'' + ${dto.postNumber} + '\')'">
                             <h4>[[${dto.title}]]</h4>
                             <h3>[[${dto.readCount}]]</h3>
                         </div>
@@ -193,7 +209,6 @@
 </section>
 <!-- Best 게시글 End -->
 
-<script src="/assets/js/jquery-3.6.0.min.js"></script>
 <!-- jquery plugins here-->
 <script src="/assets/js/jquery-1.12.1.min.js"></script>
 <!-- popper js -->

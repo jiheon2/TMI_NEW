@@ -36,6 +36,7 @@
     <script src="/assets/js/jquery-3.6.0.min.js"></script>
     <script type="text/javascript">
         let customerIdCheck = "Y";
+        let emailAuthNumber = "";
         $(document).ready(function() {
             let f = document.getElementById("register-form");
 
@@ -68,6 +69,35 @@
                     }
                 }
             })
+        }
+        function emailExists() {
+            let f = document.getElementById("register-form");
+            if (f.email.value === "") {
+                alert("이메일을 입력하세요.");
+                return;
+            }
+
+            // Ajax 호출해서 회원가입하기
+            $.ajax({
+                    url: "/customer/searchEmail",
+                    type: "post", // 전송방식은 Post
+                    dataType: "JSON", // 전송 결과는 JSON으로 받기
+                    data: {email : f.email.value}, // form 태그 내 input 등 객체를 자동으로 전송할 형태로 변경하기
+                    success: function (json) { // 호출이 성공했다면..
+
+                        if (json.existsYn === "N") {
+
+                            alert("이메일로 인증번호가 발송되었습니다. \n받은 메일의 인증번호를 입력하기 바랍니다.");
+                            emailAuthNumber = json.authNumber;
+
+                        } else {
+                            alert("이메일로 인증번호가 발송되었습니다. \n받은 메일의 인증번호를 입력하기 바랍니다.");
+                            f.customerEmailForId.focus();
+
+                        }
+                    }
+                }
+            )
         }
 
         function doSubmit(f) {

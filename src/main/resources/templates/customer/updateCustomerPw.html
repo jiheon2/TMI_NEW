@@ -48,7 +48,7 @@
     <script type="text/javascript">
         $(document).ready(function() {
             $("#change").on("click", function() {
-                updateCustomerPw()
+                changePw()
             })
             $("#cancel").on("click", function() {
                 cancel()
@@ -56,13 +56,13 @@
 
             function changePw() {
                 $.ajax({
-                    url: "/customer/pwChange",
+                    url: "/customer/updatePw",
                     type: "post", // 전송방식은 Post
                     dataType: "JSON", // 전송 결과는 JSON으로 받기
                     data: $("#f").serialize(), // form 태그 내 input 등 객체를 자동으로 전송할 형태로 변경하기
                     success: function(json) { // 호출이 성공했다면..
 
-                        if (json.result === 1) { // 수정 성공
+                        if (json.result == 1) { // 수정 성공
                             alert(json.msg); // 메시지 띄우기
                             location.href = "/customer/login"; // 로그인 페이지 이동
 

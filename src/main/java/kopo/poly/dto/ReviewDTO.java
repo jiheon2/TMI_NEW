@@ -19,5 +19,6 @@ public class ReviewDTO {
     private String customerId;
     private String traderId;
     private String countScore;
+    private String customerName;
 
 }
