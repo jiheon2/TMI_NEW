@@ -167,7 +167,6 @@ public class GoodsController {
         int res = 0;
         String msg = "";
         MsgDTO dto = null;
-
         GoodsDTO pDTO = null;
 
         try {
@@ -207,7 +206,6 @@ public class GoodsController {
             res = goodsService.updateGoods(pDTO);
 
             log.info("res : " + res);
-
 
             msg = "수정하였습니다";
         } catch (Exception e) {

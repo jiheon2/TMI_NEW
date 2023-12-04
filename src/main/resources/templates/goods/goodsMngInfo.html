@@ -85,7 +85,7 @@
                             <div id="carouselExampleSlidesOnly" class="carousel slide" data-bs-ride="carousel">
                                 <div class="carousel-inner">
                                     <div class="carousel-item active" th:if="${not #strings.isEmpty(rDTO.goodsImage)}">
-                                        <img th:src="${rDTO.goodsImage}" class="d-block w-100" style="height:380px">
+                                        <img th:src="${rDTO.goodsImage}" class="d-block w-100" style="height:380px; object-fit: contain">
                                     </div>
                                 </div>
                             </div>

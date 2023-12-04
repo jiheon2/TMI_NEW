@@ -46,4 +46,19 @@
                        #{goodsName}, NOW(), #{score}, #{contents}, #{customerId}, #{traderId}, #{goodsNumber}
                )
     </insert>
+
+    <!-- 소비자 리뷰 목록 조회 -->
+    <select id="getCustomerReviewList" parameterType="ReviewDTO" resultType="ReviewDTO">
+        SELECT CONTENTS,
+               CUSTOMER_ID,
+               GOODS_NUMBER,
+               GOODS_NAME,
+               REG_DT,
+               REVIEW_NUMBER,
+               SCORE,
+               TRADER_ID
+        FROM REVIEW
+        WHERE #{customerId} = CUSTOMER_ID
+        ORDER BY REVIEW_NUMBER ASC
+    </select>
 </mapper>

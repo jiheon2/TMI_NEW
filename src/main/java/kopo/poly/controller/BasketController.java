@@ -91,7 +91,7 @@ public class BasketController {
     }
     @ResponseBody
     @PostMapping(value = "insertPayment")
-    public MsgDTO insertBasket(HttpServletRequest request) throws Exception {
+    public MsgDTO insertBasket(@RequestBody Map<String, Object> requestData) throws Exception {
         log.info(this.getClass().getName() + ".insertPayment Start!");
 
         // 성공이면 1, 실패면 0
@@ -103,28 +103,29 @@ public class BasketController {
 
         try {
 
-            String applyNum = CmmUtil.nvl(request.getParameter("applyNum"));
-            String bankName = CmmUtil.nvl(request.getParameter("bankName"));
-            String buyerAddr = CmmUtil.nvl(request.getParameter("buyerAddr"));
-            String buyerEmail = CmmUtil.nvl(request.getParameter("buyerEmail"));
-            String buyerPostcode = CmmUtil.nvl(request.getParameter("buyerPostcode"));
-            String buyerTel = CmmUtil.nvl(request.getParameter("buyerTel"));
-            String cardName = CmmUtil.nvl(request.getParameter("cardName"));
-            String cardNumber = CmmUtil.nvl(request.getParameter("cardNumber"));
-            String cardQuote = CmmUtil.nvl(request.getParameter("cardQuote"));
-            String currency = CmmUtil.nvl(request.getParameter("currency"));
-            String customData = CmmUtil.nvl(request.getParameter("customData"));
-            String impUid = CmmUtil.nvl(request.getParameter("impUid"));
-            String name = CmmUtil.nvl(request.getParameter("name"));
-            String paidAmount = CmmUtil.nvl(request.getParameter("paidAmount"));
-            String paidAt = CmmUtil.nvl(request.getParameter("paidAt"));
-            String payMethod = CmmUtil.nvl(request.getParameter("payMethod"));
-            String pgProvider = CmmUtil.nvl(request.getParameter("pgProvider"));
-            String pgTid = CmmUtil.nvl(request.getParameter("pgTid"));
-            String pgType = CmmUtil.nvl(request.getParameter("pgType"));
-            String reciptUrl = CmmUtil.nvl(request.getParameter("reciptUrl"));
-            String status = CmmUtil.nvl(request.getParameter("status"));
-            String success = CmmUtil.nvl(request.getParameter("success"));
+
+            String applyNum = (String) requestData.get("applyNum");
+            String bankName = (String) requestData.get("bankName");
+            String buyerAddr = (String) requestData.get("buyerAddr");
+            String buyerEmail = (String) requestData.get("buyerEmail");
+            String buyerPostcode = (String) requestData.get("buyerPostcode");
+            String buyerTel = (String) requestData.get("buyerTel");
+            String cardName = (String) requestData.get("cardName");
+            String cardNumber = (String) requestData.get("cardNumber");
+            String cardQuote = (String) requestData.get("cardQuote");
+            String currency = (String) requestData.get("currency");
+            String customData = (String) requestData.get("customData");
+            String impUid = (String) requestData.get("impUid");
+            String name = (String) requestData.get("name");
+            String paidAmount = requestData.get("paidAmount").toString();
+            String paidAt = requestData.get("paidAt").toString();
+            String payMethod = (String) requestData.get("payMethod");
+            String pgProvider = (String) requestData.get("pgProvider");
+            String pgTid = (String) requestData.get("pgTid");
+            String pgType = (String) requestData.get("pgType");
+            String reciptUrl = (String) requestData.get("reciptUrl");
+            String status = (String) requestData.get("status");
+            String success = requestData.get("success").toString();
 
             pDTO = new PaymentDTO();
 
@@ -160,14 +161,10 @@ public class BasketController {
             if (res == 1) {
 
                 BasketDTO pDTO1 = new BasketDTO();
-                String basketNumbers = request.getParameter("basketNumbers");
-                log.info(basketNumbers);
-                String[] splitStr = basketNumbers.split(",");
-                List<String> rList = new ArrayList<>();
-                for(int i=0; i<splitStr.length; i++){
-                    rList.add(splitStr[i]);
-                }
-                for (String seq : rList) {
+                List<String> basketNumbers = (List<String>) requestData.get("basketNumbers");
+                log.info(basketNumbers.toString());
+
+                for (String seq : basketNumbers) {
                     pDTO1.setBasketNumber(seq);
 
                     res = basketService.deleteBuy(pDTO1);
@@ -207,13 +204,13 @@ public class BasketController {
             log.info("checkboxes : " + checkboxes);
 
             BasketDTO pDTO = new BasketDTO();
-                for (String seq : checkboxes) {
-                    pDTO.setBasketNumber(seq);
-                    pDTO.setCustomerId(id);
+            for (String seq : checkboxes) {
+                pDTO.setBasketNumber(seq);
+                pDTO.setCustomerId(id);
 
-                    basketService.deleteBuy(pDTO);
-                }
-                msg = "삭제되었습니다.";
+                basketService.deleteBuy(pDTO);
+            }
+            msg = "삭제되었습니다.";
 
             res = 1;
         } catch (Exception e) {

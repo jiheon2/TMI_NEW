@@ -96,7 +96,7 @@ public class CommentController {
 
     @ResponseBody
     @PostMapping(value = "/commentUpdate")
-    public MsgDTO postUpdate(HttpSession session, HttpServletRequest request) {
+    public MsgDTO commentUpdate(HttpSession session, HttpServletRequest request) {
 
         log.info(this.getClass().getName() + ".commentUpdate Start!");
 

@@ -55,4 +55,12 @@ public class ReviewService implements IReviewService {
         log.info(this.getClass().getName() + ".InsertReview start!");
         reviewMapper.insertReview(pDTO);
     }
+
+    @Override
+    public List<ReviewDTO> getCustomerReviewList(ReviewDTO pDTO) throws Exception {
+
+        log.info(this.getClass().getName() + ".getCustomerReviewList start");
+
+        return reviewMapper.getCustomerReviewList(pDTO);
+    }
 }

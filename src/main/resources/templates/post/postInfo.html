@@ -25,29 +25,18 @@
     <link rel="stylesheet" href="/assets/css/flaticon.css">
     <link rel="stylesheet" href="/assets/css/themify-icons.css">
     <!-- font awesome CSS -->
-    <link rel="stylesheet" href="/assets/css/magnific-popup.css">
+    <link rel="stylesheet" href="/assets/css/font.css">
     <!-- swiper CSS -->
     <link rel="stylesheet" href="/assets/css/slick.css">
     <link rel="stylesheet" href="/assets/css/price_rangs.css">
     <!-- style CSS -->
     <link rel="stylesheet" href="/assets/css/style.css">
     <script src="https://kit.fontawesome.com/cb71939295.js" crossorigin="anonymous"></script>
-
     <link rel="apple-touch-icon" href="/img/apple-icon.png">
     <link rel="shortcut icon" type="image/x-icon" href="/img/favicon.ico">
-
     <link rel="stylesheet" href="/assets/css/notice/bootstrap.min.css">
-    <link rel="stylesheet" href="/assets/css/notice/templatemo.css">
+<!--    <link rel="stylesheet" href="/assets/css/notice/templatemo.css">-->
     <link rel="stylesheet" href="/assets/css/notice/css.css">
-
-    <!-- Load fonts style after rendering the layout styles -->
-    <link rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;700;900&display=swap">
-    <link rel="stylesheet" href="/assets/css/notice/fontawesome.min.css">
-    <link rel="stylesheet"
-          href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/assets/css/notice/font-awesome.min.css">
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/assets/css/notice/all.min.css">
 
     <script th:inline="javascript">
         // Controller에서 받은 세션에 저장된 값
@@ -203,19 +192,27 @@
                 <a id="btnEdit" onclick="doEdit()" type="button">수정</a>
                 <a id="btnDelete" onclick="doDelete()" type="button">삭제</a>
             </div>
-            <div>
-                <label>댓글쓰기</label>
-                <textarea></textarea>
-                <button type="button">등록</button>
-            </div>
+            <br/>
+            <section class="section">
+                <div class="row">
+                    <div class="col">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="form-group mb-3">
+                                    <label for="exampleFormControlTextarea1" class="form-label" style="font-size: 16px">댓글</label>
+                                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" style="font-size: 14px"></textarea>
+                                </div>
+                                <button class="btn btn-primary" type="submit" style="float: right; font-size: 16px">등록</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
             <div class="comments-area">
                 <h4>05 Comments</h4>
                 <div class="comment-list">
                     <div class="single-comment justify-content-between d-flex">
                         <div class="user justify-content-between d-flex">
-                            <div class="thumb">
-                                <img src="img/comment/comment_1.png" alt="">
-                            </div>
                             <div class="desc">
                                 <p class="comment">
                                     Multiply sea night grass fourth day sea lesser rule open subdue female fill which

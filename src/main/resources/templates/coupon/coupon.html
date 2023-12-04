@@ -92,9 +92,9 @@
                 </div>
                 <div style="font-size: 20px">
                     <br>
-                    <div>포인트 : <a href="/customer/customerInfo" style="font-size: 20px">보유포인트</a></div>
+                    <div>포인트 : <a href="/customer/customerInfo" style="font-size: 20px">[[${tDTO.point}]]</a></div>
                     <br>
-                    <div>쿠폰 : <a href="/customer/customerInfo" style="font-size: 20px"></a></div>
+                    <div>쿠폰 : <a href="/customer/customerInfo" style="font-size: 20px">[[${rDTO.couponCount}]]</a></div>
                     <br>
                 </div>
                 <div>
@@ -264,23 +264,6 @@
             ctx.restore();
         }
     }
-
-    // const rotate = () => {
-    //     $c.style.transform = `initial`;
-    //     $c.style.transition = `initial`;
-    //
-    //     setTimeout(() => {
-    //
-    //         const ran = Math.floor(Math.random() * product.length);
-    //         const arc = 360 / product.length;
-    //         const rotate = (ran * arc) + 3600 + (arc * 3) - (arc / 4);
-    //
-    //         $c.style.transform = `rotate(-${rotate}deg)`;
-    //         $c.style.transition = `2s`;
-    //
-    //         setTimeout(() => alert(`축하합니다! ${product[ran]}입니다!`), 2000);
-    //     }, 1);
-    // };
 
     const rotate = () => {
         $c.style.transform = `initial`;

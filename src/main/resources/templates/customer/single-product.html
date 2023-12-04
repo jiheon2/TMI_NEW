@@ -80,140 +80,15 @@
             console.log("traderId : " + traderId)
             console.log("customerId : " + customerId)
 
-            $("#writeReview").on("click", function () {
-                writeReview(f)
-            })
-            $("#doBasket").on("click", function () {
-                doBasket()
-            })
-            $("#changeLike").on("click", function () {
-                changeLike()
-            })
-            $("#btnChat").on("click", function () {
-                dochat()
-            })
-
-            function writeReview(f) {
-                if (customerId === "") {
-                    alert("로그인 하세요")
-                    location.href = "/customer/login";
+            $(this).find('i.fa-star').each(function (index) {
+                if (index < score) {
+                    $(this).addClass(' style="color: #ffffff;');
+                } else {
+                    $(this).removeClass(' style="color: #ffffff;');
                 }
-                if (f.rating.rate == 0) {
-                    f.rating.focus()
-                    return;
-                }
-
-                // 모든 체크된 별점을 가져오기
-                const checkedRatings = document.querySelectorAll("input[name='rating']:checked");
-
-                // 마지막으로 체크된 별점 값 가져오기
-                const selectedRating = checkedRatings.length > 0 ? checkedRatings[checkedRatings.length - 1].value : null;
-
-                var reviewContents = f.contents.value.trim();
-                console.log(selectedRating)
-                console.log(reviewContents)
-                $.ajax({
-                    url: "/review/insertReview",
-                    type: "post", // 전송방식은 Post
-                    dataType: "JSON", // 전송 결과는 JSON으로 받기
-                    data: {
-                        rating: selectedRating,
-                        contents: reviewContents,
-                        traderId: traderId,
-                        goodsName: goodsName,
-                        goodsNumber: goodsNumber,
-                    },
-                    success: function (json) {
-
-                        if (json.result === 1) {
-                            alert(json.msg);
-                            location.href = "/customer/single-product?goodsNumber=" + goodsNumber;
-
-                        } else {
-                            alert(json.msg);
-                        }
-
-                    }
-                })
-            }
-
-            <!--    장바구니에 담기-->
-            function doBasket() {
-                if (customerId === "") {
-                    alert("로그인 하세요")
-                    location.href = "/customer/login";
-                }
-
-                var quantity = document.getElementById("quantity").value;
-                console.log(quantity)
-
-                $.ajax({
-                    url: "/basket/doBasket",
-                    type: "post", // 전송방식은 Post
-                    dataType: "JSON", // 전송 결과는 JSON으로 받기
-                    data: {
-                        quantity: quantity,
-                        price: price,
-                        goodsName: goodsName,
-                        goodsNumber: goodsNumber,
-                        goodsImage: goodsImage
-                    },
-                    success: function (json) {
-
-                        if (json.result === 1) {
-                            alert(json.msg);
-
-                        } else {
-                            alert(json.msg);
-                        }
-
-                    }
-                })
-            }
-
-            <!--    찜목록에 담기-->
-            function changeLike() {
-                if (customerId === "") {
-                    alert("로그인 하세요")
-                    location.href = "/customer/login";
-                }
-                $.ajax({
-                    url: "/wishlist/doWishlist",
-                    type: "post", // 전송방식은 Post
-                    dataType: "JSON", // 전송 결과는 JSON으로 받기
-                    data: {
-                        shopName: shopName,
-                        price: price,
-                        goodsName: goodsName,
-                        goodsNumber: goodsNumber,
-                        goodsImage: goodsImage
-                    },
-                    success: function (json) {
-
-                        if (json.result === 1) {
-                            alert(json.msg);
-
-                        } else {
-                            alert(json.msg);
-                        }
-
-                    }
-                })
-            }
+            });
         })
-    </script>
-    <script type="text/javascript">
-        document.addEventListener("DOMContentLoaded", function () {
-            var modal = document.getElementById('reservationModal');
 
-            document.getElementById('openReservationModal').onclick = function () {
-                document.getElementById('reservationModal').style.display = 'flex';
-            }
-
-            document.getElementById('closeReservationModal').onclick = function () {
-                document.getElementById('reservationModal').style.display = 'none';
-            }
-        });
     </script>
 </head>
 
