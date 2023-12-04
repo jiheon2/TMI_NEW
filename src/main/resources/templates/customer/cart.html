@@ -207,6 +207,21 @@
             }
         })
     </script>
+    <script>
+        $(document).ready(function () {
+            // "all" 체크박스 클릭 이벤트 핸들러
+            $('#all').on('change', function () {
+                // 모든 개별 체크박스 상태를 "all" 체크박스와 동일하게 설정
+                $('.individual-checkbox').prop('checked', $(this).prop('checked'));
+            });
+
+            // 개별 체크박스 클릭 이벤트 핸들러
+            $('.individual-checkbox').on('change', function () {
+                // 모든 개별 체크박스가 선택되어 있으면 "all" 체크박스도 선택, 그렇지 않으면 해제
+                $('#all').prop('checked', $('.individual-checkbox:checked').length === $('.individual-checkbox').length);
+            });
+        });
+    </script>
 </head>
 
 <body>
@@ -258,7 +273,7 @@
                 <table class="table">
                     <thead>
                     <tr>
-                        <th scope="col"><input type="checkbox"></th>
+                        <th scope="col"><input id="all" type="checkbox"></th>
                         <th scope="col">이미지</th>
                         <th scope="col">상품명</th>
                         <th scope="col">가격</th>

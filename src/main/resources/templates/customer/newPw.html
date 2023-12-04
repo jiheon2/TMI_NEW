@@ -56,27 +56,20 @@
             })
 
             function changePw(f) {
-                console.log(f.customerPw.value)
-                console.log(f.re_npw.value)
-                if (f.pw.value === "") {
-                    alert("현재 비밀번호를 입력하세요");
-                    f.pw.focus();
-                    return
-                }
                 if (f.customerPw.value === "") {
-                    alert("새 비밀번호를 입력하세요");
-                    f.customerPw.focus();
+                    alert("비밀번호를 입력하세요");
+                    f.npw.focus();
                     return
                 }
                 if (f.re_npw.value === "") {
-                    alert("새 비밀번호를 확인해주세요");
+                    alert("비밀번호를 입력하세요");
                     f.re_npw.focus();
                     return
                 }
 
                 if (f.re_npw.value !== f.customerPw.value) {
-                    alert("새 비밀번호가 일치하지 않습니다");
-                    f.customerPw.focus();
+                    alert("비밀번호가 일치하지 않습니다");
+                    f.npw.focus();
                     return
                 }
                 $.ajax({
@@ -86,7 +79,7 @@
                     data: $("#f").serialize(), // form 태그 내 input 등 객체를 자동으로 전송할 형태로 변경하기
                     success: function(json) { // 호출이 성공했다면..
 
-                        if (json.result == 1) { // 수정 성공
+                        if (json.result === 1) { // 수정 성공
                             alert(json.msg); // 메시지 띄우기
                             location.href = "/customer/login"; // 로그인 페이지 이동
 
@@ -98,7 +91,7 @@
             }
 
             function cancel() {
-                location.href = "/customer/customerInfo";
+                location.href = "/customer/login";
             }
         })
     </script>
@@ -123,11 +116,6 @@
     </div>
 </section>
 <!-- breadcrumb end-->
-
-<!-- navigation -->
-<div th:replace="customerNav.html"></div>
-<!-- ---------- -->
-
 <br />
 <div class="page-heading">
     <div class="page-title">
@@ -146,12 +134,6 @@
                         <form id="f" class="form form-horizontal">
                             <div class="form-body">
                                 <div class="row" style="text-align: center">
-                                    <div class="col-md-4">
-                                        <label>현재 비밀번호</label>
-                                    </div>
-                                    <div class="col-md-8 form-group">
-                                        <input type="password" class="form-control" id="pw" name="pw" />
-                                    </div>
                                     <div class="col-md-4">
                                         <label>새 비밀번호</label>
                                     </div>

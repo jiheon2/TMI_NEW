@@ -51,33 +51,29 @@
 
             var emailAuthNumberId = "";
             var emailAuthNumberPw = "";
-            var checkEmailId = "N";
-            var checkEmailPw = "N";
-
 
             function btnIdEmail() {
                 let f = document.getElementById("findIdForm");
-                if (f.customerEmailForId.value === "") {
+                if (f.traderEmailForId.value === "") {
                     alert("이메일을 입력하세요.");
                     return;
                 }
 
                 // Ajax 호출해서 회원가입하기
                 $.ajax({
-                        url: "/customer/searchEmail",
+                        url: "/trader/searchEmail",
                         type: "post", // 전송방식은 Post
                         dataType: "JSON", // 전송 결과는 JSON으로 받기
-                        data: {email : f.customerEmailForId.value}, // form 태그 내 input 등 객체를 자동으로 전송할 형태로 변경하기
+                        data: {email : f.traderEmailForId.value}, // form 태그 내 input 등 객체를 자동으로 전송할 형태로 변경하기
                         success: function (json) { // 호출이 성공했다면..
 
                             if (json.existsYn === "N") {
                                 alert("존재하지 않는 이메일입니다");
-                                f.customerEmailForId.focus();
+                                f.traderEmailForId.focus();
 
                             } else {
                                 alert("이메일로 인증번호가 발송되었습니다. \n받은 메일의 인증번호를 입력하기 바랍니다.");
                                 emailAuthNumberId = json.authNumber;
-                                checkEmailId = "Y";
 
                             }
                         }
@@ -86,26 +82,27 @@
             }
             function btnPwEmail() {
                 let f = document.getElementById("findPwForm");
-                if (f.customerEmailForPw.value === "") {
+                if (f.traderEmailForPw.value === "") {
                     alert("이메일을 입력하세요.");
                     return;
                 }
 
                 // Ajax 호출해서 회원가입하기
                 $.ajax({
-                        url: "/customer/searchEmail",
+                        url: "/trader/searchEmail",
                         type: "post", // 전송방식은 Post
                         dataType: "JSON", // 전송 결과는 JSON으로 받기
-                        data: {email : f.customerEmailForPw.value}, // form 태그 내 input 등 객체를 자동으로 전송할 형태로 변경하기
+                        data: {email : f.traderEmailForPw.value}, // form 태그 내 input 등 객체를 자동으로 전송할 형태로 변경하기
                         success: function (json) { // 호출이 성공했다면..
 
                             if (json.existsYn === "N") {
                                 alert("존재하지 않는 이메일입니다");
-                                f.customerEmailForPw.focus();
+                                f.traderEmailForPw.focus();
+
                             } else {
                                 alert("이메일로 인증번호가 발송되었습니다. \n받은 메일의 인증번호를 입력하기 바랍니다.");
                                 emailAuthNumberPw = json.authNumber;
-                                checkEmailPw = "Y";
+
                             }
                         }
                     }
@@ -114,18 +111,12 @@
 
             function btnFindId() {
                 let f = document.getElementById("findIdForm");
-                if (f.customerName.value === "") {
+                if (f.traderName.value === "") {
                     alert("이름을 입력하세요.");
-                    f.customerName.focus();
                     return;
                 }
-                if (f.customerEmailForId.value === "") {
+                if (f.traderEmailForId.value === "") {
                     alert("이메일을 입력하세요.");
-                    f.customerEmailForId.focus();
-                    return;
-                }
-                if (checkEmailId !== "Y") {
-                    alert("이메일 인증을 해주세요.");
                     return;
                 }
                 if (f.authNumberId.value != emailAuthNumberId) {
@@ -136,31 +127,25 @@
 
                 // Ajax 호출해서 회원가입하기
                 $.ajax({
-                        url: "/customer/showId",
+                        url: "/trader/showId",
                         type: "post", // 전송방식은 Post
                         dataType: "JSON", // 전송 결과는 JSON으로 받기
                         data: $("#findIdForm").serialize(), // form 태그 내 input 등 객체를 자동으로 전송할 형태로 변경하기
                         success: function (json) { // 호출이 성공했다면..
-                                alert(json.msg)
-                            location.href="/customer/findIdAndPw"
+                            alert(json.msg)
+                            location.href="/trader/findIdAndPw"
                         }
                     }
                 )
             }
             function btnFindPw() {
                 let f = document.getElementById("findPwForm");
-                if (f.customerId.value === "") {
+                if (f.traderId.value === "") {
                     alert("아이디를 입력하세요.");
-                    f.customerId.focus();
                     return;
                 }
-                if (f.customerEmailForPw.value === "") {
+                if (f.traderEmailForPw.value === "") {
                     alert("이메일을 입력하세요.");
-                    f.customerEmailForPw.focus();
-                    return;
-                }
-                if (checkEmailPw !== "Y") {
-                    alert("이메일 인증을 해주세요.");
                     return;
                 }
                 if (f.authNumberPw.value != emailAuthNumberPw) {
@@ -171,14 +156,14 @@
 
                 // Ajax 호출해서 회원가입하기
                 $.ajax({
-                        url: "/customer/newPwProd",
+                        url: "/trader/newPwProd",
                         type: "POST", // 전송방식은 Post
                         dataType: "JSON", // 전송 결과는 JSON으로 받기
                         data: $("#findPwForm").serialize(), // form 태그 내 input 등 객체를 자동으로 전송할 형태로 변경하기
                         success: function (json) { // 호출이 성공했다면..
                             console.log(json)
                             if(json.result === 1) {
-                                window.location.href="/customer/newPw"
+                                window.location.href="/trader/newPw"
                             }else{
                                 alert(json.msg)
                             }
@@ -197,7 +182,7 @@
         <div class="row align-items-center">
             <div class="col-lg-12">
                 <nav class="navbar navbar-expand-lg navbar-light">
-                    <a class="navbar-brand" href="customer/customerIndex"> <img src="/assets/images/bird/logo2.png" alt="logo" style="width: 100px" , height="50px"></a>
+                    <a class="navbar-brand" href="trader/traderIndex"> <img src="/assets/images/bird/logo2.png" alt="logo" style="width: 100px" , height="50px"></a>
                 </nav>
             </div>
         </div>
@@ -232,16 +217,16 @@
                     <h2 class="form-title">ID 찾기</h2>
                     <form class="register-form" id="findIdForm">
                         <div class="form-group">
-                            <label for="customerName"><i class="zmdi zmdi-account material-icons-name"></i></label>
-                            <input type="text" name="customerName" id="customerName" placeholder="이름" />
+                            <label for="traderName"><i class="zmdi zmdi-account material-icons-name"></i></label>
+                            <input type="text" name="traderName" id="traderName" placeholder="이름" />
                         </div>
                         <div class="form-group" style="display: flex">
                             <label><i class="zmdi zmdi-phone"></i></label>
-                            <input type="text" name="customerEmailForId" id="customerEmailForId" placeholder="이메일"  style="width: 78%" />&nbsp;&nbsp;
+                            <input type="text" name="traderEmailForId" id="traderEmailForId" placeholder="이메일"  style="width: 78%" />&nbsp;&nbsp;
                             <button class="btn btn-primary" type="button" name="btnIdEmail" id="btnIdEmail" style="width: 20%; border: 0px">확인</button>
                         </div>
                         <div class="form-group">
-                            <label for="customerName"><i class="zmdi zmdi-phone"></i></label>
+                            <label for="traderName"><i class="zmdi zmdi-phone"></i></label>
                             <input type="text" name="authNumberId" id="authNumberId" placeholder="인증번호" />
                         </div>
                         <div class="col-sm-12 d-flex justify-content-end">
@@ -255,12 +240,12 @@
                     <h2 class="form-title">PW 찾기</h2>
                     <form class="register-form" id="findPwForm">
                         <div class="form-group">
-                            <label for="customerName"><i class="zmdi zmdi-account material-icons-name"></i></label>
-                            <input type="text" name="customerId" id="customerId" placeholder="ID" />
+                            <label for="traderName"><i class="zmdi zmdi-account material-icons-name"></i></label>
+                            <input type="text" name="traderId" id="traderId" placeholder="ID" />
                         </div>
                         <div class="form-group" style="display: flex">
                             <label><i class="zmdi zmdi-phone"></i></label>
-                            <input type="text" name="customerEmailForPw" id="customerEmailForPw" placeholder="이메일"  style="width: 78%" />&nbsp;&nbsp;
+                            <input type="text" name="traderEmailForPw" id="traderEmailForPw" placeholder="이메일"  style="width: 78%" />&nbsp;&nbsp;
                             <button class="btn btn-primary" type="button" name="btnPwEmail" id="btnPwEmail" style="width: 20%; border: 0px">확인</button>
                         </div>
                         <div class="form-group">

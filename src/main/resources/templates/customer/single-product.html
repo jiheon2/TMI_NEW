@@ -358,7 +358,7 @@
                                         <img src="/assets/images/product/single-product/review-1.png" alt=""/>
                                     </div>
                                     <div class="media-body">
-                                        <h4>소비자Id</h4>
+                                        <h4>[[${dto.customerName}]]</h4>
                                         <div th:each="i:${dto.score}">
                                                 <span th:each="j : ${#numbers.sequence(1, i)}">
                                                <i class="fa-solid fa-star" style="color: #fff700;"></i>

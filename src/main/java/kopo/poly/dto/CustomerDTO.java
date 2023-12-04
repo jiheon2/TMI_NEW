@@ -19,4 +19,5 @@ public class CustomerDTO {
     private String existsYn;
     private String point;
     private int reward;
+    private int authNumber;
 }

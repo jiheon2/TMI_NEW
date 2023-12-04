@@ -9,6 +9,26 @@
         FROM CUSTOMER
         WHERE CUSTOMER_ID = #{customerId}
     </select>
+    <!-- 소비자 이메일 중복 확인 쿼리 -->
+    <select id="getEmailExists" parameterType="CustomerDTO" resultType="CustomerDTO">
+        SELECT IF(COUNT(1) = 0, 'N', 'Y')  AS EXISTS_YN
+        FROM CUSTOMER
+        WHERE CUSTOMER_EMAIL = #{customerEmail}
+    </select>
+    <!-- 아이디 찾기 아이디 가져오기 쿼리 -->
+    <select id="getCustomerId" parameterType="CustomerDTO" resultType="CustomerDTO">
+        SELECT CUSTOMER_ID
+        FROM CUSTOMER
+        WHERE  CUSTOMER_EMAIL = #{customerEmail}
+        AND CUSTOMER_NAME = #{customerName}
+    </select>
+    <!-- 비밀번호 찾기 아이디 가져오기 쿼리 -->
+    <select id="getCustomerPw" parameterType="CustomerDTO" resultType="CustomerDTO">
+        SELECT CUSTOMER_ID
+        FROM CUSTOMER
+        WHERE  CUSTOMER_EMAIL = #{customerEmail}
+          AND CUSTOMER_ID = #{customerId}
+    </select>
 
     <!-- 소비자 회원가입 쿼리 -->
     <insert id="insertCustomer" parameterType="CustomerDTO">

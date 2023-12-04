@@ -1,5 +1,6 @@
 package kopo.poly.service;
 
+import kopo.poly.dto.CustomerDTO;
 import kopo.poly.dto.TraderDTO;
 
 public interface ITraderService {
@@ -16,5 +17,8 @@ public interface ITraderService {
     TraderDTO getBusinessNumberExists(TraderDTO pDTO) throws Exception; // 사업자등록번호 중복확인
 
     TraderDTO getTraderIdExists(TraderDTO pDTO) throws Exception; // ID 중복확인
+    TraderDTO searchEmail(TraderDTO pDTO) throws Exception; // 이메일 찾기
+    TraderDTO searchTraderId(TraderDTO pDTO) throws Exception; // 아이디 변경
+    TraderDTO searchTraderPw(TraderDTO pDTO) throws Exception; // 비밀번호 변경
 
 }
