@@ -216,7 +216,7 @@ public class CustomerController {
             String customerPn = CmmUtil.nvl(request.getParameter("phoneNumber"));
             String customerName = CmmUtil.nvl(request.getParameter("customerName"));
             String customerEmail = CmmUtil.nvl(request.getParameter("customerEmail"));
-            
+
             log.info("customerId : " + customerId);
             log.info("customerPw : " + customerPw);
             log.info("customerPn : " + customerPn);
@@ -411,6 +411,7 @@ public class CustomerController {
 
         CustomerDTO rDTO = Optional.ofNullable(customerService.getCustomerInfo(pDTO)).orElseGet(CustomerDTO::new);
 
+
         model.addAttribute("rDTO", rDTO);
 
         log.info(this.getClass().getName() + ".updateCustomerPw End!");
@@ -482,10 +483,12 @@ public class CustomerController {
 
         // 성공이면 1, 실패면 0
         int res = 0;
+        int check = 1;
         String msg = "";
         MsgDTO dto = null;
 
         CustomerDTO pDTO = null;
+        CustomerDTO rDTO = null;
 
         try {
             String customerId = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
@@ -495,23 +498,49 @@ public class CustomerController {
             }
             String customerPw = CmmUtil.nvl(request.getParameter("customerPw"));
 
+            String pw = CmmUtil.nvl(request.getParameter("pw"));
+
             log.info("customerId : " + customerId);
             log.info("customerPw : " + customerPw);
+            log.info("pw :" + pw);
 
             pDTO = new CustomerDTO();
+            rDTO = new CustomerDTO();
 
-            pDTO.setCustomerId(customerId);
-            pDTO.setCustomerPw(EncryptUtil.encHashSHA256(customerPw));
-            log.info(pDTO.toString());
+            if(! pw.isEmpty()) {
+                pDTO.setCustomerId(customerId);
+                pDTO.setCustomerPw(EncryptUtil.encHashSHA256(pw));
+                log.info(pDTO.toString());
+                rDTO = customerService.getLogin(pDTO);
+                log.info(rDTO.toString());
+                try {
+                    log.info(rDTO.getCustomerId());
+                    if (rDTO.getCustomerId() != null) {
+                        check = 1;
+                    } else {
+                        check = 0;
+                        msg = "현재 비밀번호가 틀렸습니다";
+                    }
+                }catch (Exception e) {
+                    log.info("1");
+                }
+            }
+            log.info(pw);
+            log.info("check: " + check);
+            if(pw.isEmpty() || check == 1) {
+                pDTO.setCustomerId(customerId);
+                pDTO.setCustomerPw(EncryptUtil.encHashSHA256(customerPw));
+                log.info(pDTO.toString());
 
-            res = customerService.updateCustomerPw(pDTO);
+                res = customerService.updateCustomerPw(pDTO);
 
-            log.info("res : " + res);
+                log.info("res : " + res);
 
-            if (res == 1) {
-                msg = "수정되었습니다";
-            } else {
-                msg = "오류로 인해 회원가입에 실패하였습니다";
+                if (res == 1) {
+                    msg = "수정되었습니다";
+                } else {
+                    msg = "오류로 인해 비밀번호 변경에 실패하였습니다";
+                }
             }
         } catch (Exception e) {
             msg = "실패하였습니다 : " + e;
@@ -532,14 +561,12 @@ public class CustomerController {
         log.info(this.getClass().getName() + ".goodsMngInfo Start!");
 
         String goodsNumber = request.getParameter("goodsNumber");
-        String market = request.getParameter("market");
         log.info("goodsNumber : " + goodsNumber);
-        log.info("market : " + market);
 
         GoodsDTO pDTO = new GoodsDTO();
         pDTO.setGoodsNumber(goodsNumber);
         GoodsDTO gDTO = Optional.ofNullable(goodsService.getGoodsInfo(pDTO)).orElseGet(GoodsDTO::new);
-        List<GoodsDTO> gList = Optional.ofNullable(reservationService.getPopularGoods(market)).orElseGet(ArrayList::new);
+        List<GoodsDTO> gList = Optional.ofNullable(reservationService.getPopularGoods("")).orElseGet(ArrayList::new);
 
         ReviewDTO pDTO2 = new ReviewDTO();
         pDTO2.setGoodsNumber(goodsNumber);

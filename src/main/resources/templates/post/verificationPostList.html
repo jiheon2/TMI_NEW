@@ -189,7 +189,7 @@
                         </div>
 
                         <div class="blog_details" th:attr="onclick='doDetail(\'' + ${dto.postNumber} + '\')'">
-                            <a class="d-inline-block" href="single-blog.html">
+                            <a class="d-inline-block">
                                 <h2>[[${dto.title}]]</h2>
                             </a>
                             <p th:if="${#strings.length(dto.contents) > 20}"

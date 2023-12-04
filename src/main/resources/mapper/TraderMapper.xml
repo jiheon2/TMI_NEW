@@ -48,7 +48,7 @@
         UPDATE TRADER
         SET TRADER_NAME = #{traderName},
             PHONE_NUMBER = #{phoneNumber},
-            EMAIL = #{email},
+            TRADER_EMAIL = #{traderEmail},
             ACCOUNT = #{account},
             BANK = #{bank}
             TRADER_NOTICE = #{traderNotice}
@@ -72,7 +72,7 @@
 
     <!-- 상인정보 조회 쿼리 -->
     <select id="getTraderInfo" parameterType="TraderDTO" resultType="TraderDTO">
-        SELECT TRADER_ID, TRADER_NAME, PHONE_NUMBER, BUSINESS_NUMBER, EMAIL, SHOP_CODE, ACCOUNT, BANK, TRADER_NOTICE
+        SELECT TRADER_ID, TRADER_NAME, PHONE_NUMBER, BUSINESS_NUMBER, TRADER_EMAIL, SHOP_CODE, ACCOUNT, BANK, TRADER_NOTICE
         FROM TRADER
         WHERE TRADER_ID = #{traderId}
     </select>

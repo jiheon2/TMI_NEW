@@ -47,14 +47,31 @@
     <script src="https://kit.fontawesome.com/cb71939295.js" crossorigin="anonymous"></script>
     <script type="text/javascript">
         $(document).ready(function() {
+            let f = document.getElementById("f");
             $("#change").on("click", function() {
-                changePw()
+                changePw(f)
             })
             $("#cancel").on("click", function() {
                 cancel()
             })
 
-            function changePw() {
+            function changePw(f) {
+                if (f.customerPw.value === "") {
+                    alert("비밀번호를 입력하세요");
+                    f.npw.focus();
+                    return
+                }
+                if (f.re_npw.value === "") {
+                    alert("비밀번호를 입력하세요");
+                    f.re_npw.focus();
+                    return
+                }
+
+                if (f.re_npw.value !== f.customerPw.value) {
+                    alert("비밀번호가 일치하지 않습니다");
+                    f.npw.focus();
+                    return
+                }
                 $.ajax({
                     url: "/customer/updatePw",
                     type: "post", // 전송방식은 Post
@@ -121,7 +138,7 @@
                                         <label>새 비밀번호</label>
                                     </div>
                                     <div class="col-md-8 form-group">
-                                        <input type="password" class="form-control" id="npw" name="npw" />
+                                        <input type="password" class="form-control" id="customerPw" name="customerPw" />
                                     </div>
                                     <div class="col-md-4">
                                         <label>새 비밀번호 확인</label>

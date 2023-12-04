@@ -17,5 +17,4 @@ public interface ICustomerService {
     CustomerDTO searchEmail(CustomerDTO pDTO) throws Exception; // 이메일 찾기
     CustomerDTO searchCustomerId(CustomerDTO pDTO) throws Exception; // 아이디 변경
     CustomerDTO searchCustomerPw(CustomerDTO pDTO) throws Exception; // 비밀번호 변경
-
 }

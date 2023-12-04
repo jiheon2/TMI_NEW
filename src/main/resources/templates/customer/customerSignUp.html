@@ -37,6 +37,7 @@
     <script type="text/javascript">
         let customerIdCheck = "Y";
         let emailAuthNumber = "";
+        let checkEmail = "N";
         $(document).ready(function() {
             let f = document.getElementById("register-form");
 
@@ -92,6 +93,7 @@
 
                             alert("이메일로 인증번호가 발송되었습니다. \n받은 메일의 인증번호를 입력하기 바랍니다.");
                             emailAuthNumber = json.authNumber;
+                            checkEmail = "Y";
 
                         } else {
                             alert("이미 있는 이메일입니다");
@@ -109,8 +111,17 @@
                 f.customerId.focus();
                 return
             }
-
+            if (checkEmail !== "Y") {
+                alert("이메일 인증을 해주세요");
+                return
+            }
+            if (emailAuthNumber != f.authNumber.value) {
+                alert("인증번호가 일치하지 않습니다");
+                f.authNumber.focus();
+                return
+            }
             if (customerIdCheck !== "N") {
+                alert("아이디 중복 확인을 해주세요");
                 return
             }
             if (f.customerPw.value === "") {

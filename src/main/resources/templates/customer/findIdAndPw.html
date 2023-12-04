@@ -51,6 +51,9 @@
 
             var emailAuthNumberId = "";
             var emailAuthNumberPw = "";
+            var checkEmailId = "N";
+            var checkEmailPw = "N";
+
 
             function btnIdEmail() {
                 let f = document.getElementById("findIdForm");
@@ -74,6 +77,7 @@
                             } else {
                                 alert("이메일로 인증번호가 발송되었습니다. \n받은 메일의 인증번호를 입력하기 바랍니다.");
                                 emailAuthNumberId = json.authNumber;
+                                checkEmailId = "Y";
 
                             }
                         }
@@ -101,6 +105,7 @@
                             } else {
                                 alert("이메일로 인증번호가 발송되었습니다. \n받은 메일의 인증번호를 입력하기 바랍니다.");
                                 emailAuthNumberPw = json.authNumber;
+                                checkEmailPw = "Y";
                             }
                         }
                     }
@@ -111,10 +116,16 @@
                 let f = document.getElementById("findIdForm");
                 if (f.customerName.value === "") {
                     alert("이름을 입력하세요.");
+                    f.customerName.focus();
                     return;
                 }
                 if (f.customerEmailForId.value === "") {
                     alert("이메일을 입력하세요.");
+                    f.customerEmailForId.focus();
+                    return;
+                }
+                if (checkEmailId !== "Y") {
+                    alert("이메일 인증을 해주세요.");
                     return;
                 }
                 if (f.authNumberId.value != emailAuthNumberId) {
@@ -140,10 +151,16 @@
                 let f = document.getElementById("findPwForm");
                 if (f.customerId.value === "") {
                     alert("아이디를 입력하세요.");
+                    f.customerId.focus();
                     return;
                 }
                 if (f.customerEmailForPw.value === "") {
                     alert("이메일을 입력하세요.");
+                    f.customerEmailForPw.focus();
+                    return;
+                }
+                if (checkEmailPw !== "Y") {
+                    alert("이메일 인증을 해주세요.");
                     return;
                 }
                 if (f.authNumberPw.value != emailAuthNumberPw) {
