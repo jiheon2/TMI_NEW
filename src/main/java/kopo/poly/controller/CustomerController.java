@@ -163,6 +163,31 @@ public class CustomerController {
         log.info(this.getClass().getName() + ".cart End!");
         return "/customer/cart";
     }
+    // 소비자 찜목록 이동코드
+    @GetMapping(value = "/wishList")
+    public String wishList(HttpSession session, ModelMap model) throws Exception {
+        log.info(this.getClass().getName() + ".wishList Start!");
+
+        String customerId = (String) session.getAttribute("SS_ID");
+
+        WishListDTO pDTO = new WishListDTO();
+
+        pDTO.setCustomerId(customerId);
+
+        List<WishListDTO> rList = Optional.ofNullable(basketService.getBasketList(pDTO)).orElseGet(ArrayList::new);
+        CustomerDTO pDTO1 = new CustomerDTO();
+        pDTO1.setCustomerId(customerId);
+        CustomerDTO rDTO = Optional.ofNullable(customerService.getCustomerInfo(pDTO1)).orElseGet(CustomerDTO::new);
+
+        log.info(rList.toString());
+        log.info(rDTO.toString());
+
+        model.addAttribute("rList", rList);
+        model.addAttribute("rDTO", rDTO);
+
+        log.info(this.getClass().getName() + ".wishList End!");
+        return "/customer/wishList";
+    }
 
     // 소비자 회원가입페이지 이동코드
     // 구현완료(11/13)

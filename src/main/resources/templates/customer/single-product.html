@@ -27,33 +27,31 @@
     <link rel="stylesheet" href="/assets/css/reservationModal.css">
     <script src="/assets/js/jquery-3.6.0.min.js"></script>
     <script src="https://kit.fontawesome.com/cb71939295.js" crossorigin="anonymous"></script>
-
     <!--    별점 체크-->
     <script>
 
         //별점 마킹 모듈 프로토타입으로 생성
-        function Rating() {
-        };
+        function Rating(){};
         Rating.prototype.rate = 0;
-        Rating.prototype.setRate = function (newrate) {
+        Rating.prototype.setRate = function(newrate){
             //별점 마킹 - 클릭한 별 이하 모든 별 체크 처리
             this.rate = newrate;
             let items = document.querySelectorAll('.rate_radio');
-            items.forEach(function (item, idx) {
-                if (idx < newrate) {
+            items.forEach(function(item, idx){
+                if(idx < newrate){
                     item.checked = true;
-                } else {
+                }else{
                     item.checked = false;
                 }
             });
         }
         let rating = new Rating();//별점 인스턴스 생성
 
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function(){
             //별점선택 이벤트 리스너
-            document.querySelector('.rating').addEventListener('click', function (e) {
+            document.querySelector('.rating').addEventListener('click',function(e){
                 let elem = e.target;
-                if (elem.classList.contains('rate_radio')) {
+                if(elem.classList.contains('rate_radio')){
                     rating.setRate(parseInt(elem.value));
                 }
             })
@@ -72,7 +70,7 @@
         const goodsImage = /*[[${gDTO.goodsImage}]]*/ '';
         const shopName = /*[[${gDTO.shopName}]]*/ '';
 
-        $(document).ready(function () {
+        $(document).ready(function() {
             let f = document.getElementById("f");
 
             console.log("goodsNumber : " + goodsNumber)
@@ -80,15 +78,121 @@
             console.log("traderId : " + traderId)
             console.log("customerId : " + customerId)
 
-            $(this).find('i.fa-star').each(function (index) {
-                if (index < score) {
-                    $(this).addClass(' style="color: #ffffff;');
-                } else {
-                    $(this).removeClass(' style="color: #ffffff;');
+            $("#writeReview").on("click", function () {
+                writeReview(f)
+            })
+            $("#doBasket").on("click", function () {
+                doBasket()
+            })
+            $("#changeLike").on("click", function () {
+                changeLike()
+            })
+            function writeReview(f) {
+                if(customerId === "") {
+                    alert("로그인 하세요")
+                    location.href="/customer/login";
                 }
-            });
-        })
+                if(f.rating.rate == 0){
+                    f.rating.focus()
+                    return;
+                }
 
+                // 모든 체크된 별점을 가져오기
+                const checkedRatings = document.querySelectorAll("input[name='rating']:checked");
+
+                // 마지막으로 체크된 별점 값 가져오기
+                const selectedRating = checkedRatings.length > 0 ? checkedRatings[checkedRatings.length - 1].value : null;
+
+                var reviewContents = f.contents.value.trim();
+                console.log(selectedRating)
+                console.log(reviewContents)
+                $.ajax({
+                    url: "/review/insertReview",
+                    type: "post", // 전송방식은 Post
+                    dataType: "JSON", // 전송 결과는 JSON으로 받기
+                    data: { rating : selectedRating,
+                        contents : reviewContents,
+                        traderId  : traderId,
+                        goodsName : goodsName,
+                        goodsNumber: goodsNumber,
+                        customerId : customerId
+                    },
+                    success: function (json) {
+
+                        if (json.result === 1) {
+                            alert(json.msg);
+                            location.href = "/customer/single-product?goodsNumber=" + goodsNumber;
+
+                        } else {
+                            alert(json.msg);
+                        }
+
+                    }
+                })
+            }
+            <!--    장바구니에 담기-->
+            function doBasket() {
+                if(customerId === "") {
+                    alert("로그인 하세요")
+                    location.href="/customer/login";
+                }
+
+                var quantity = document.getElementById("quantity").value;
+                console.log(quantity)
+
+                $.ajax({
+                    url: "/basket/doBasket",
+                    type: "post", // 전송방식은 Post
+                    dataType: "JSON", // 전송 결과는 JSON으로 받기
+                    data: {
+                        quantity : quantity,
+                        price : price,
+                        goodsName : goodsName,
+                        goodsNumber: goodsNumber,
+                        goodsImage : goodsImage
+                    },
+                    success: function (json) {
+
+                        if (json.result === 1) {
+                            alert(json.msg);
+
+                        } else {
+                            alert(json.msg);
+                        }
+
+                    }
+                })
+            }
+            <!--    찜목록에 담기-->
+            function changeLike() {
+                if(customerId === "") {
+                    alert("로그인 하세요")
+                    location.href="/customer/login";
+                }
+                $.ajax({
+                    url: "/wishlist/doWishlist",
+                    type: "post", // 전송방식은 Post
+                    dataType: "JSON", // 전송 결과는 JSON으로 받기
+                    data: {
+                        shopName : shopName,
+                        price : price,
+                        goodsName : goodsName,
+                        goodsNumber: goodsNumber,
+                        goodsImage : goodsImage
+                    },
+                    success: function (json) {
+
+                        if (json.result === 1) {
+                            alert(json.msg);
+
+                        } else {
+                            alert(json.msg);
+                        }
+
+                    }
+                })
+            }
+        })
     </script>
 </head>
 
