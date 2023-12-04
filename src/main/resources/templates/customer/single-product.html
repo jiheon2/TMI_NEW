@@ -155,7 +155,6 @@
 
                         if (json.result === 1) {
                             alert(json.msg);
-
                         } else {
                             alert(json.msg);
                         }
@@ -458,9 +457,9 @@
                         <div class="review_list" th:each="dto:${rDTO}">
                             <div class="review_item">
                                 <div class="media">
-                                    <div class="d-flex">
-                                        <img src="/assets/images/product/single-product/review-1.png" alt=""/>
-                                    </div>
+<!--                                    <div class="d-flex">-->
+<!--                                        <img src="/assets/images/product/single-product/review-1.png" alt=""/>-->
+<!--                                    </div>-->
                                     <div class="media-body">
                                         <h4>[[${dto.customerName}]]</h4>
                                         <div th:each="i:${dto.score}">

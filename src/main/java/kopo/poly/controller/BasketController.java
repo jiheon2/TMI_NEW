@@ -49,6 +49,15 @@ public class BasketController {
             String goodsName = CmmUtil.nvl(request.getParameter("goodsName"));
             String goodsNumber = CmmUtil.nvl(request.getParameter("goodsNumber"));
             String goodsImage = CmmUtil.nvl(request.getParameter("goodsImage"));
+            String type =  CmmUtil.nvl((String) session.getAttribute("SS_TYPE"));
+            if(!type.equals("Customer") || customerId == null) {
+                session.invalidate();
+                msg="소비자 로그인이 필요한 서비스입니다";
+                res = 2;
+                dto.setResult(res);
+                dto.setMsg(msg);
+                return  dto;
+            }
 
             log.info("customerId : " + customerId);
             log.info("quantity : " + quantity);

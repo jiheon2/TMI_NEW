@@ -9,11 +9,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @Slf4j
@@ -42,6 +45,15 @@ public class WishlistController {
             String goodsName = CmmUtil.nvl(request.getParameter("goodsName"));
             String shopName = CmmUtil.nvl(request.getParameter("shopName"));
             String goodsImage = CmmUtil.nvl(request.getParameter("goodsImage"));
+            String type =  CmmUtil.nvl((String) session.getAttribute("SS_TYPE"));
+            if(!type.equals("Customer") || customerId == null) {
+                session.invalidate();
+                msg="소비자 로그인이 필요한 서비스입니다";
+                res = 2;
+                dto.setResult(res);
+                dto.setMsg(msg);
+                return  dto;
+            }
 
             log.info("customerId : " + customerId);
             log.info("shopName : " + shopName);
@@ -80,5 +92,42 @@ public class WishlistController {
         }
         return dto;
     }
+    @ResponseBody
+    @PostMapping(value = "deleteWish")
+    public MsgDTO deleteWish(HttpSession session,@RequestBody Map<String, Object> requestData) {
+        log.info(this.getClass().getName() + ".deleteWish Start!");
 
+        String msg = "";
+        int res = 0;
+        MsgDTO dto = null;
+
+        try {
+            String id = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+            List<String> checkboxes = (List<String>) requestData.get("selectedSeqs");
+            log.info("id : " + id);
+            log.info("checkboxes : " + checkboxes);
+
+            WishListDTO pDTO = new WishListDTO();
+            for (String seq : checkboxes) {
+                pDTO.setWishlistNumber(seq);
+                pDTO.setCustomerId(id);
+
+                wishlistService.deleteWish(pDTO);
+            }
+            msg = "삭제되었습니다.";
+
+            res = 1;
+        } catch (Exception e) {
+            msg = "실패하였습니다. : " + e.getMessage();
+            log.info(e.toString());
+            e.printStackTrace();
+        } finally {
+            dto = new MsgDTO();
+            dto.setResult(res);
+            dto.setMsg(msg);
+            log.info(this.getClass().getName() + ".deleteWish End!");
+        }
+
+        return dto;
+    }
 }

@@ -41,6 +41,7 @@ public class ReservationService implements IReservationService {
     public List<GoodsDTO> getPopularGoods(String market) throws Exception {
 
         log.info(this.getClass().getName() + ".getPopularGoods Start!");
+        log.info(market);
 
         return reservationMapper.getPopularGoods(market);
     }

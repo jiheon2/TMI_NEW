@@ -8,4 +8,18 @@
         INSERT INTO WISHLIST (WISHLIST_NUMBER, CUSTOMER_ID, GOODS_NUMBER,SHOP_NAME, GOODS_NAME, GOODS_IMAGE)
         VALUES ((SELECT IFNULL(MAX(A.BASKET_NUMBER), 0) + 1 FROM BASKET A), #{customerId}, #{goodsNumber}, #{shopName}, #{goodsName}, #{goodsImage})
     </insert>
+    <!-- 찜 목록 조회 -->
+    <select id="getWishList" parameterType="WishListDTO" resultType="WishListDTO">
+        SELECT W.WISHLIST_NUMBER, W.CUSTOMER_ID, W.GOODS_NUMBER, W.SHOP_NAME, W.GOODS_NAME, W.GOODS_IMAGE, G.GOODS_NAME, G.PRICE
+        FROM WISHLIST W
+        JOIN GOODS G ON W.GOODS_NUMBER = G.GOODS_NUMBER
+        WHERE W.CUSTOMER_ID = #{customerId}
+        ORDER BY W.WISHLIST_NUMBER DESC
+    </select>
+    <!--  찜 삭제  -->
+    <delete id="deleteWish" parameterType="WishListDTO">
+        DELETE
+        FROM WISHLIST
+        WHERE WISHLIST_NUMBER = #{wishlistNumber}
+    </delete>
 </mapper>

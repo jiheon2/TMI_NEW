@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @Slf4j
 @Controller
@@ -26,13 +27,23 @@ public class CouponController {
         log.info("coupon start!");
 
         String customerId = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+        String type =  CmmUtil.nvl((String) session.getAttribute("SS_TYPE"));
+        if(!type.equals("Customer") || customerId == null) {
+            session.invalidate();
+            return  "/customer/login";
+        }
 
         CouponDTO pDTO = new CouponDTO();
         pDTO.setCustomerId(customerId);
 
+        CustomerDTO cDTO = new CustomerDTO();
+        cDTO.setCustomerId(customerId);
+
         CouponDTO rDTO = couponService.getCouponCount(pDTO);
+        CustomerDTO tDTO = couponService.getPoint(cDTO);
 
         model.addAttribute("rDTO", rDTO);
+        model.addAttribute("tDTO", tDTO);
 
         return "/coupon/coupon";
     }
@@ -42,6 +53,11 @@ public class CouponController {
         log.info("buyCoupon start");
 
         String customerId = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+        String type = (String) session.getAttribute("SS_TYPE");
+        if(!type.equals("Customer")) {
+            session.invalidate();
+            return  "/customer/login";
+        }
 
         log.info("customerId : " + customerId);
         log.info("point : " + point);
@@ -92,5 +108,26 @@ public class CouponController {
         couponService.roulettePoint(pDTO);
 
         return "/coupon/coupon";
+    }
+
+    @GetMapping(value = "/couponInfo")
+    public String getCouponCount(HttpSession session, Model model) throws Exception {
+        log.info("getCustomerCouponCount start");
+
+        String customerId = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+        String type =  CmmUtil.nvl((String) session.getAttribute("SS_TYPE"));
+        if(!type.equals("Customer") || customerId == null) {
+            session.invalidate();
+            return  "/customer/login";
+        }
+
+        CouponDTO pDTO = new CouponDTO();
+        pDTO.setCustomerId(customerId);
+
+        List<CouponDTO> rList = couponService.getCustomerCouponCount(pDTO);
+
+        model.addAttribute("rList", rList);
+
+        return "/coupon/couponInfo";
     }
 }

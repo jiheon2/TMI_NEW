@@ -69,5 +69,4 @@ public class GoodsService implements IGoodsService {
         log.info(this.getClass().getName() + ".goodsMsgDelete start!");
         goodsMapper.goodsInfoDelete(pDTO);
     }
-
 }

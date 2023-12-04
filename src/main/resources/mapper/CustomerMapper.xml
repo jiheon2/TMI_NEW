@@ -78,4 +78,10 @@
         UPDATE CUSTOMER
         SET REWARD = 0
     </update>
+
+    <select id="customerInfoForReservation" parameterType="CustomerDTO" resultType="CustomerDTO">
+        SELECT *
+        FROM CUSTOMER
+        WHERE #{phoneNumber} = PHONE_NUMBER
+    </select>
 </mapper>

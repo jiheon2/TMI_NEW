@@ -38,7 +38,7 @@
                         initialView: 'dayGridMonth',
                         expandRows: true, // 화면에 맞게 높이 재설정
                         headerToolbar: {
-                            left: 'dayGridMonth listWeek',
+                            left: 'dayGridMonth',
                             center: 'title',
                             right: 'prev,next today'
                         },
@@ -81,7 +81,7 @@
                                             var reservationNumber = reservation.reservationNumber;
                                             var html = `
                                            <a href="#" onclick="openUpdateInfoModal(${reservation.reservationNumber})">
-                                            <div class="form-group" style="font-size: 20px; color: black">${i+1}번 예약일정</div>
+                                            <div class="form-group" style="font-size: 20px; color: black">${i + 1}번 예약일정</div>
                                             <div class="form-group" style="display: none; font-size: 20px; color: black">예약번호: ${reservation.reservationNumber}</div>
                                             <div class="form-group" style="font-size: 20px; color: black">예약자: ${reservation.customerName}</div>
                                             <div class="form-group" style="font-size: 20px; color: black">예약 내용: ${reservation.reservationContents}</div>
@@ -97,9 +97,10 @@
 
                                         $("#updateInfoModal").on("click", function () {
                                             $("#updateModal").modal("show");
+
                                         })
 
-                                        $('#deleteCalendar').on('click', function() {
+                                        $('#deleteCalendar').on('click', function () {
                                             deleteReservation(reservationNumber)
                                         })
                                     },
@@ -149,11 +150,14 @@
             function closeAddModal() {
                 $('#addModal').modal('hide'); // 모달 1 숨기기
             }
+
             function closeInfoModal() {
                 $('#infoModal').modal('hide'); // 모달 1 숨기기
             }
+
             function closeUpdateModal() {
                 $('#updateModal').modal('hide'); // 모달 1 숨기기
+                $('#infoModal').modal('show');
             }
 
             function addCalendar(f1) {
@@ -195,8 +199,11 @@
 
         function openUpdateInfoModal(reservationNumberInput) {
             document.getElementById('updateReservationNumber').value = reservationNumberInput;
+
             $("#updateModal").modal("show");
+            $("#infoModal").modal("hide");
         }
+
         function updateReservationInfo(f2, reservationNumberInput) {
             if (f2.updateCustomerName.value === "") {
                 alert("예약자를 입력하시기 바랍니다.");
@@ -242,17 +249,17 @@
                 data: {
                     reservationNumber: reservationNumber
                 },
-                success: function(response) {
+                success: function (response) {
                     // 서버로부터의 응답 처리
                     if (response.result === 1) {
                         // 성공적으로 삭제된 경우
                         alert(response.msg);
-                        location.href="/reservation/reservMng"
+                        location.href = "/reservation/reservMng"
                     } else {
                         alert(response.msg);
                     }
                 },
-                error: function(xhr, status, error) {
+                error: function (xhr, status, error) {
                     // Ajax 요청 실패 시 처리
                     console.error('Error:', error);
                 }
@@ -287,12 +294,19 @@
                         <div class="modal-body">
                             <div class="form-group">
                                 <label class="col-form-label" style="display: none">예약번호</label>
-                                <input type="text" style="display: none" class="form-control" id="reservationNumber" name="reservationNumber">
+                                <input type="text" style="display: none" class="form-control" id="reservationNumber"
+                                       name="reservationNumber">
                                 <label class="col-form-label">예약자</label>
                                 <input type="text" class="form-control" id="customerName" name="customerName">
+                                <label class="col-form-label">예약자 휴대폰번호</label>
+                                <input type="text" class="form-control" id="customerPhoneNumber" name="customerPhoneNumber">
                                 <label class="col-form-label">예약내용</label>
                                 <input type="text" class="form-control" id="reservationContents"
                                        name="reservationContents">
+                                <label class="col-form-label">예약상품</label>
+                                <select name="goodsNumber" id="goodsNumber" required size="10" th:each="dto : ${rList}">
+                                    <option th:value="${dto.goodsNumber}">[[${dto.goodsName}]]</option>
+                                </select>
                                 <label class="col-form-label">가격</label>
                                 <input type="text" class="form-control" id="reservationPrice" name="reservationPrice">
                                 <label class="col-form-label">예약일</label>
@@ -342,16 +356,19 @@
                     <div class="modal-body">
                         <div class="form-group">
                             <label class="col-form-label" style="display: none">예약번호</label>
-                            <input type="text" style="display: none" class="form-control" id="updateReservationNumber" name="updateReservationNumber">
+                            <input type="text" style="display: none" class="form-control" id="updateReservationNumber"
+                                   name="updateReservationNumber">
                             <label class="col-form-label">예약자</label>
                             <input type="text" class="form-control" id="updateCustomerName" name="updateCustomerName">
                             <label class="col-form-label">예약내용</label>
                             <input type="text" class="form-control" id="updateReservationContents"
                                    name="updateReservationContents">
                             <label class="col-form-label">가격</label>
-                            <input type="text" class="form-control" id="updateReservationPrice" name="updateReservationPrice">
+                            <input type="text" class="form-control" id="updateReservationPrice"
+                                   name="updateReservationPrice">
                             <label class="col-form-label">예약일</label>
-                            <input type="date" class="form-control" id="selectedNewDateInput" name="selectedNewDateInput">
+                            <input type="date" class="form-control" id="selectedNewDateInput"
+                                   name="selectedNewDateInput">
                         </div>
                     </div>
                 </form>

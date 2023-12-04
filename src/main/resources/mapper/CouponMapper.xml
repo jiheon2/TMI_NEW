@@ -22,4 +22,15 @@
         FROM COUPON
         WHERE CUSTOMER_ID = #{customerId}
     </select>
+    <select id="getPoint" parameterType="CustomerDTO">
+        SELECT POINT
+        FROM CUSTOMER
+        WHERE CUSTOMER_ID = #{customerId}
+    </select>
+    <select id="getCustomerCouponCount" parameterType="CouponDTO">
+        SELECT COUPON_NAME, COUNT(*) AS couponCount
+        FROM COUPON
+        WHERE CUSTOMER_ID = #{customerId}
+        GROUP BY COUPON_NAME
+    </select>
 </mapper>

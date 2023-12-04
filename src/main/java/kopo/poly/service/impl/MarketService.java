@@ -73,6 +73,7 @@ public class MarketService implements IMarketService {
 
         List<Map<String, Object>> list = (List<Map<String, Object>>) rMap.get("row");
 
+        marketMapper.deleteMarket();
 
         for (Map<String, Object> market : list) {
             MarketDTO rDTO = new MarketDTO();
@@ -82,10 +83,6 @@ public class MarketService implements IMarketService {
 
             log.info("name : " + name);
             log.info("addr : " + addr);
-
-            if(marketMapper.checkMarket(addr) > 0){
-                continue;
-            }
 
             rDTO.setMarketName(name);
             rDTO.setMarketLocation(addr);

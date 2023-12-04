@@ -38,11 +38,16 @@ public class ChatController {
     }
 
     @PostMapping(value="chatroom")
-    public String chatroom(HttpServletRequest request, Model model) {
+    public String chatroom(HttpServletRequest request, Model model, HttpSession session) {
         log.info(this.getClass().getName() + ".chatroom Start!");
 
         String roomName = CmmUtil.nvl(request.getParameter("marketName"));
         String userName = CmmUtil.nvl(request.getParameter("userName"));
+        String type = (String) session.getAttribute("SS_TYPE");
+        if(!type.equals("Customer")) {
+            session.invalidate();
+            return  "/customer/login";
+        }
 
         log.info("roomName : " + roomName);
         log.info("userName : " + userName);

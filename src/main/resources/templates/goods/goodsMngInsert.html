@@ -102,13 +102,13 @@
                                 <div id="carouselExampleSlidesOnly" class="carousel slide" data-bs-ride="carousel">
                                     <div class="carousel-inner">
                                         <div class="carousel-item active" th:if="${not #strings.isEmpty(rDTO.goodsImage)}">
-                                            <img th:src="${rDTO.goodsImage}" class="d-block w-100" style="height:380px">
+                                            <img th:src="${rDTO.goodsImage}" class="d-block w-100" style="height:380px; object-fit: contain">
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-6 mb-1 mx-auto" style="width: 80%">
+                                <div class="col-md-6 mb-1 mx-auto" style="width: 100%">
                                     <fieldset>
-                                        <div class="input-group">
+                                        <div class="form-group">
                                             <input type="file" name="fileUpload" class="form-control" id="fileUpload" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
                                         </div>
                                     </fieldset>
@@ -119,7 +119,7 @@
                                 <div class="form-group">
                                     <input type="text" class="form-control" id="goodsType" name="goodsType" placeholder="상품 유형" th:value="${rDTO.goodsType}">
                                 </div>
-                                <div class="card-body">
+                                <div class="form-group">
                                     <div class="form-floating">
                                         <textarea class="form-control" placeholder="상품 설명을 써주세요" id="goodsDescription" name="goodsDescription" style="height: 250px" th:field="*{rDTO.goodsDescription}" th:text="${rDTO.goodsDescription}"></textarea>
                                     </div>

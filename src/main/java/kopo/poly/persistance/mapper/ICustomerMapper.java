@@ -20,5 +20,5 @@ public interface ICustomerMapper {
     CustomerDTO getCustomerId(CustomerDTO pDTO) throws Exception; // 아이디 보여주기
     CustomerDTO getCustomerPw(CustomerDTO pDTO) throws Exception; // 비밀번호 보여주기
 
-
+    CustomerDTO customerInfoForReservation(CustomerDTO pDTO) throws Exception;
 }

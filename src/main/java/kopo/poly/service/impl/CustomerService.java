@@ -184,4 +184,11 @@ public class CustomerService implements ICustomerService {
         log.info("resetReward start");
         customerMapper.resetReward();
     }
+
+    @Override
+    public CustomerDTO customerInfoForReservation(CustomerDTO pDTO) throws Exception {
+        log.info("customerInfoForReservation Start");
+
+        return customerMapper.customerInfoForReservation(pDTO);
+    }
 }

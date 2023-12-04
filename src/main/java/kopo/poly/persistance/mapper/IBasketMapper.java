@@ -11,8 +11,6 @@ import java.util.List;
 public interface IBasketMapper {
     int addBasket(BasketDTO pDTO) throws Exception; // 장바구니에 담기
     List<BasketDTO> getBasketList(BasketDTO pDTO) throws Exception; // 장바구니 목록 조회
-    int upBasketCount(BasketDTO pDTO) throws Exception; // 장바구니 수량 증가
-    int downBasketCount(BasketDTO pDTO) throws Exception; // 장바구니 수량 감소
     int insertPayment(PaymentDTO pDTO) throws Exception; // 결제목록 담기
     int deleteBuy(BasketDTO pDTO) throws Exception; // 장바구니 삭제
 }

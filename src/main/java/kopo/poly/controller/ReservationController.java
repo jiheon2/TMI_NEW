@@ -1,8 +1,7 @@
 package kopo.poly.controller;
 
-import kopo.poly.dto.MsgDTO;
-import kopo.poly.dto.ReservationDTO;
-import kopo.poly.service.IReservationService;
+import kopo.poly.dto.*;
+import kopo.poly.service.*;
 import kopo.poly.util.CmmUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
@@ -29,12 +28,25 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class ReservationController {
     private final IReservationService reservationService;
+    private final ITraderService traderService;
+    private final IGoodsService goodsService;
+    private final IShopService shopService;
+    private final ICustomerService customerService;
 
     // 예약 페이지 이동코드
     // 구현중
     @GetMapping(value = "/reservation/reservMng")
-    public String reservMng() throws Exception {
+    public String reservMng(HttpSession session, Model model) throws Exception {
         log.info(this.getClass().getName() + ".reservMng Start!");
+
+        String traderId = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+
+        GoodsDTO pDTO = new GoodsDTO();
+        pDTO.setTraderId(traderId);
+
+        List<GoodsDTO> rList = goodsService.getGoodsList(pDTO);
+
+        model.addAttribute("rList", rList);
 
         return "/reservation/reservMng";
     }
@@ -99,25 +111,52 @@ public class ReservationController {
         int res = 0;
         MsgDTO dto = null;
 
+
         try {
-            String traderName = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+            String traderId = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
             String customerName = CmmUtil.nvl(request.getParameter("customerName"));
             String reservationContents = CmmUtil.nvl(request.getParameter("reservationContents"));
             String reservationPrice = CmmUtil.nvl(request.getParameter("reservationPrice"));
             String reservationDate = CmmUtil.nvl(request.getParameter("selectedDateInput"));
+            String customerPhoneNumber = CmmUtil.nvl(request.getParameter("customerPhoneNumber"));
+            String goodsNumber = CmmUtil.nvl(request.getParameter("goodsName"));
 
-            log.info("traderName : " + traderName);
+            log.info("traderName : " + traderId);
             log.info("customerName : " + customerName);
             log.info("reservationContents : " + reservationContents);
             log.info("reservationPrice : " + reservationPrice);
             log.info("reservationDate : " + reservationDate);
+            log.info("customerPhoneNumber : " + customerPhoneNumber);
+
+            TraderDTO tDTO = new TraderDTO();
+            tDTO.setTraderId(traderId);
+            TraderDTO traderInfo = traderService.getTraderInfo(tDTO);
+
+            GoodsDTO gDTO = new GoodsDTO();
+            gDTO.setTraderId(goodsNumber);
+            GoodsDTO goodsInfo = goodsService.getGoodsInfo(gDTO);
+
+            ShopDTO sDTO = new ShopDTO();
+            sDTO.setTraderId(traderId);
+            ShopDTO shopInfo = shopService.getShopInfo(sDTO);
+
+            CustomerDTO cDTO = new CustomerDTO();
+            cDTO.setPhoneNumber(customerPhoneNumber);
+            CustomerDTO customerInfo = customerService.getCustomerInfo(cDTO);
 
             ReservationDTO pDTO = new ReservationDTO();
-            pDTO.setTraderName(traderName);
+            pDTO.setTraderId(traderId);
+            pDTO.setTraderName(traderInfo.getTraderName());
             pDTO.setCustomerName(customerName);
             pDTO.setReservationContents(reservationContents);
             pDTO.setReservationPrice(reservationPrice);
             pDTO.setReservationDate(reservationDate);
+            pDTO.setGoodsNumber(goodsNumber);
+            pDTO.setGoodsName(goodsInfo.getGoodsName());
+            pDTO.setMarketNumber(shopInfo.getMarketNumber());
+            pDTO.setShopNumber(shopInfo.getShopNumber());
+            pDTO.setCustomerId(customerInfo.getCustomerId());
+            pDTO.setCustomerPhoneNumber(customerPhoneNumber);
 
             reservationService.insertReservationInfo(pDTO);
             msg = "등록되었습니다";

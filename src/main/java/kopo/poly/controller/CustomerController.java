@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,6 +34,8 @@ public class CustomerController {
     private final ITraderService traderService;
     private final IPostService postService;
     private final IReservationService reservationService;
+    private final ICouponService couponService;
+    private final IWishlistService wishlistService;
 
     @GetMapping(value = "/login")
     public String login(HttpSession session) {
@@ -144,6 +147,11 @@ public class CustomerController {
         log.info(this.getClass().getName() + ".cart Start!");
 
         String customerId = (String) session.getAttribute("SS_ID");
+        String type =  CmmUtil.nvl((String) session.getAttribute("SS_TYPE"));
+        if(!type.equals("Customer") || customerId == null) {
+            session.invalidate();
+            return  "/customer/login";
+        }
 
         BasketDTO pDTO = new BasketDTO();
 
@@ -163,18 +171,24 @@ public class CustomerController {
         log.info(this.getClass().getName() + ".cart End!");
         return "/customer/cart";
     }
-    // 소비자 찜목록 이동코드
     @GetMapping(value = "/wishList")
     public String wishList(HttpSession session, ModelMap model) throws Exception {
         log.info(this.getClass().getName() + ".wishList Start!");
 
         String customerId = (String) session.getAttribute("SS_ID");
+        String type =  CmmUtil.nvl((String) session.getAttribute("SS_TYPE"));
+        if(!type.equals("Customer") || customerId == null) {
+            session.invalidate();
+            return  "/customer/login";
+        }
+        log.info(customerId);
 
         WishListDTO pDTO = new WishListDTO();
 
         pDTO.setCustomerId(customerId);
+        log.info(pDTO.toString());
 
-        List<WishListDTO> rList = Optional.ofNullable(basketService.getBasketList(pDTO)).orElseGet(ArrayList::new);
+        List<WishListDTO> rList = Optional.ofNullable(wishlistService.getWishList(pDTO)).orElseGet(ArrayList::new);
         CustomerDTO pDTO1 = new CustomerDTO();
         pDTO1.setCustomerId(customerId);
         CustomerDTO rDTO = Optional.ofNullable(customerService.getCustomerInfo(pDTO1)).orElseGet(CustomerDTO::new);
@@ -189,11 +203,13 @@ public class CustomerController {
         return "/customer/wishList";
     }
 
+
     // 소비자 회원가입페이지 이동코드
     // 구현완료(11/13)
     @GetMapping(value = "/customerSignUp")
     public String customerSignUp() {
         log.info(this.getClass().getName() + "customerSignUp");
+
         return "/customer/customerSignUp";
     }
 
@@ -383,18 +399,17 @@ public class CustomerController {
         log.info(this.getClass().getName() + ".customerLogin");
 
         String customerId = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
-        String type = CmmUtil.nvl((String) session.getAttribute("Customer"));
-
-        String url = "/customer/customerInfo";
-        if (customerId.equals(null)) {
-            url = "/customer/login";
+        String type =  CmmUtil.nvl((String) session.getAttribute("SS_TYPE"));
+        if(!type.equals("Customer") || customerId == null) {
+            session.invalidate();
+            return  "/customer/login";
         }
 
         CustomerDTO pDTO = new CustomerDTO();
         pDTO.setCustomerId(customerId);
         CustomerDTO rDTO = Optional.ofNullable(customerService.getCustomerInfo(pDTO)).orElseGet(CustomerDTO::new);
         model.addAttribute("rDTO", rDTO);
-        return url;
+        return "/customer/customerInfo";
 
     }
 
@@ -405,6 +420,11 @@ public class CustomerController {
         log.info(this.getClass().getName() + ".updateCustomerInfo start!");
 
         String customerId = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+        String type =  CmmUtil.nvl((String) session.getAttribute("SS_TYPE"));
+        if(!type.equals("Customer") || customerId == null) {
+            session.invalidate();
+            return  "/customer/login";
+        }
 
         log.info(customerId);
 
@@ -427,6 +447,11 @@ public class CustomerController {
         log.info(this.getClass().getName() + ".updateCustomerPw start!");
 
         String customerId = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+        String type =  CmmUtil.nvl((String) session.getAttribute("SS_TYPE"));
+        if(!type.equals("Customer") || customerId == null) {
+            session.invalidate();
+            return  "/customer/login";
+        }
 
         log.info(customerId);
 
@@ -435,7 +460,6 @@ public class CustomerController {
         pDTO.setCustomerId(customerId);
 
         CustomerDTO rDTO = Optional.ofNullable(customerService.getCustomerInfo(pDTO)).orElseGet(CustomerDTO::new);
-
 
         model.addAttribute("rDTO", rDTO);
 
@@ -591,7 +615,7 @@ public class CustomerController {
         GoodsDTO pDTO = new GoodsDTO();
         pDTO.setGoodsNumber(goodsNumber);
         GoodsDTO gDTO = Optional.ofNullable(goodsService.getGoodsInfo(pDTO)).orElseGet(GoodsDTO::new);
-        List<GoodsDTO> gList = Optional.ofNullable(reservationService.getPopularGoods("")).orElseGet(ArrayList::new);
+        List<GoodsDTO> gList = Optional.ofNullable(reservationService.getPopularGoods(gDTO.getMarketNumber())).orElseGet(ArrayList::new);
 
         ReviewDTO pDTO2 = new ReviewDTO();
         pDTO2.setGoodsNumber(goodsNumber);
@@ -646,6 +670,7 @@ public class CustomerController {
 
         return rDTO;
     }
+
     @ResponseBody
     @PostMapping(value = "/showId")
     public MsgDTO showId(HttpServletRequest request) throws Exception{
@@ -698,6 +723,7 @@ public class CustomerController {
 
         return "/customer/newPw";
     }
+
     @ResponseBody
     @PostMapping(value = "newPwProd")
     public MsgDTO newPwProd(HttpServletRequest request, HttpSession session) throws Exception {
@@ -737,5 +763,40 @@ public class CustomerController {
         log.info(this.getClass().getName() + ".newPwProd Start!");
 
         return dto;
+    }
+
+    @GetMapping(value = "/reviewList")
+    public String getReviewList(HttpSession session, Model model,  @RequestParam(defaultValue = "1") int page) throws Exception {
+        log.info("getReviewList start");
+
+        String customerId = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+
+        ReviewDTO pDTO = new ReviewDTO();
+        pDTO.setCustomerId(customerId);
+
+        List<ReviewDTO> rList = Optional.ofNullable(reviewService.getCustomerReviewList(pDTO)).orElseGet(ArrayList::new);
+
+        // 페이지당 보여줄 아이템 개수 정의
+        int itemsPerPage = 3;
+
+        // 페이지네이션을 위해 전체 아이템 개수 구하기
+        int totalItems = rList.size();
+
+        // 전체 페이지 개수 계산
+        int totalPages = (int) Math.ceil((double) totalItems / itemsPerPage);
+
+        // 현재 페이지에 해당하는 아이템들만 선택하여 rList에 할당
+        int fromIndex = (page - 1) * itemsPerPage;
+        int toIndex = Math.min(fromIndex + itemsPerPage, totalItems);
+        rList = rList.subList(fromIndex, toIndex);
+
+        model.addAttribute("rList", rList);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
+
+        log.info(this.getClass().getName() + ".페이지 번호 : " + page);
+        log.info("getReviewList End");
+
+        return "/customer/reviewList";
     }
 }
