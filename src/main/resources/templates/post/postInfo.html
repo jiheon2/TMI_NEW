@@ -244,21 +244,18 @@
             <div class="comments-area">
                 <h4>[[${rDTO.total}]] 개의 댓글</h4>
                 <div class="comment-list">
-                    <div class="single-comment justify-content-between d-flex">
-                        <div class="user justify-content-between d-flex">
-                            <div class="desc" th:each="dto : ${cList}">
+                    <div class="single-comment" th:each="dto : ${cList}">
+                        <div class="user">
+                            <div class="desc">
                                 <p class="comment">
                                    [[${dto.contents}]]
                                 </p>
-                                <div class="d-flex justify-content-between">
-                                    <div class="d-flex align-items-center">
+                                <div>
+                                    <div style="display: flex">
                                         <h5>
                                             <a href="#">[[${dto.customerId}]]</a>
                                         </h5>
                                         <p class="date">[[${dto.regDt}]] </p>
-                                    </div>
-                                    <div class="reply-btn">
-                                        <a href="#" class="btn-reply text-uppercase">reply</a>
                                     </div>
                                 </div>
                             </div>
