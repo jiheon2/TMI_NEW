@@ -28,11 +28,11 @@ public class GoodsService implements IGoodsService {
     }
     /* 상품 목록 조회 */
     @Override
-    public List<GoodsDTO> getGoodsAll(GoodsDTO pDTO) throws Exception {
+    public List<GoodsDTO> getGoodsAll() throws Exception {
 
         log.info(this.getClass().getName() + ".getGoodsAll start!");
 
-        return goodsMapper.getGoodsAll(pDTO);
+        return goodsMapper.getGoodsAll();
     }
 
     /* 상품 정보 조회 */

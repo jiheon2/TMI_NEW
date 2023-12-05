@@ -199,10 +199,4 @@ public class CustomerService implements ICustomerService {
         customerMapper.rotate(pDTO);
     }
 
-    @Override
-    public CustomerDTO customerInfoForReservation(CustomerDTO pDTO) throws Exception {
-        log.info("customerInfoForReservation Start");
-
-        return customerMapper.customerInfoForReservation(pDTO);
-    }
 }
