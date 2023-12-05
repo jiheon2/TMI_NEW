@@ -41,7 +41,6 @@ public class ReservationService implements IReservationService {
     public List<GoodsDTO> getPopularGoods(String market) throws Exception {
 
         log.info(this.getClass().getName() + ".getPopularGoods Start!");
-        log.info(market);
 
         return reservationMapper.getPopularGoods(market);
     }
@@ -104,5 +103,24 @@ public class ReservationService implements IReservationService {
         log.info(this.getClass().getName() + ".getTodayReservationList");
 
         return reservationMapper.getTodayReservationList(pDTO);
+    }
+
+    @Override
+    public List<ReservationDTO> goodsBuyInfo(ReservationDTO pDTO) throws Exception {
+
+        log.info(this.getClass().getName() + ".goodsBuyInfo start!");
+
+        return reservationMapper.goodsBuyInfo(pDTO);
+    }
+
+    @Override
+    public void deleteBuy(ReservationDTO pDTO) throws Exception {
+        log.info(this.getClass().getName() + ".deleteBuy start!");
+        reservationMapper.deleteBuy(pDTO);
+    }
+    @Override
+    public void acceptBuy(ReservationDTO pDTO) throws Exception {
+        log.info(this.getClass().getName() + ".deleteBuy start!");
+        reservationMapper.acceptBuy(pDTO);
     }
 }

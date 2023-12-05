@@ -1,6 +1,7 @@
 package kopo.poly.controller;
 
 import kopo.poly.dto.*;
+import kopo.poly.service.IReservationService;
 import kopo.poly.service.IShopService;
 import kopo.poly.service.ITraderService;
 import kopo.poly.util.CmmUtil;
@@ -28,6 +29,7 @@ public class TraderController {
 
     private final ITraderService traderService;
     private final IShopService shopService;
+    private final IReservationService reservationService;
 
     /*
         로그인 페이지 코드
@@ -88,7 +90,6 @@ public class TraderController {
                 log.info("1");
 
                 session.setAttribute("SS_ID", CmmUtil.nvl(rDTO.getTraderId()));
-                session.setAttribute("SS_TYPE", "v");
 
             } else {
                 msg = "아이디와 비밀번호가 올바르지 않습니다.";
@@ -262,7 +263,7 @@ public class TraderController {
         ReservationDTO pDTO2 = new ReservationDTO();
         pDTO2.setTraderId(traderId);
         pDTO2.setState("1");
-        List<ReservationDTO> rList = Optional.ofNullable(shopService.goodsBuyInfo(pDTO2)).orElseGet(ArrayList::new);
+        List<ReservationDTO> rList = Optional.ofNullable(reservationService.goodsBuyInfo(pDTO2)).orElseGet(ArrayList::new);
 
         log.info("rList : " + rList.toString());
 

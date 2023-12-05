@@ -19,4 +19,7 @@ public interface IReservationService {
     void updateReservationInfo(ReservationDTO pDTO) throws Exception; // 예약 수정 쿼리
     void updateReservationState(ReservationDTO pDTO) throws Exception; // 예약 상태 변경 쿼리
     void deleteReservationInfo(ReservationDTO pDTO) throws Exception; // 예약 정보 삭제 쿼리
+    List<ReservationDTO> goodsBuyInfo(ReservationDTO pDTO) throws Exception; //예약 정보 확인
+    void deleteBuy(ReservationDTO pDTO) throws Exception;
+    void acceptBuy(ReservationDTO pDTO) throws Exception;
 }

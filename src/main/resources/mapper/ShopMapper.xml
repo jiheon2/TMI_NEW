@@ -3,17 +3,6 @@
 
 <!-- JAVA와 연결할 Mapper 파일 설정 -->
 <mapper namespace="kopo.poly.persistance.mapper.IShopMapper">
-
-    <select id="goodsBuyInfo" parameterType="ReservationDTO" resultType="ReservationDTO">
-        SELECT R.RESERVATION_NUMBER, R.TRADER_NAME, R.CUSTOMER_NAME, R.RESERVATION_CONTENTS, R.RESERVATION_PRICE, R.RESERVATION_DATE, R.GOODS_NUMBER,
-               R.MARKET_NUMBER, R.SHOP_NUMBER, R.TRADER_ID, R.CUSTOMER_ID, G.GOODS_NAME
-        FROM RESERVATION R
-        JOIN GOODS G ON G.GOODS_NUMBER = R.GOODS_NUMBER
-        WHERE R.TRADER_ID = #{traderId}
-        AND R.STATE = #{state}
-        ORDER BY R.RESERVATION_NUMBER DESC
-    </select>
-
     <!-- 리뷰 개수 조회 쿼리 -->
     <select id="getReviewCount"  parameterType="ShopDTO" resultType="java.lang.String">
         SELECT COUNT(*)
@@ -37,39 +26,9 @@
           AND DATE(RESERVATION_DATE) = CURDATE()
     </select>
 
-    <!--
-    <select id="getDateCount"  parameterType="ShopDTO" resultType="ShopDTO">
-        SELECT DATE(DATE) AS date, COUNT(*) AS dateCount
-        FROM RESERVATION
-        WHERE STATE = "1"
-        AND TID = #{tid}
-        GROUP BY DATE
-    </select>
-    -->
-
-    <select id="getReserveStop"  parameterType="ShopDTO" resultType="java.lang.String">
-        SELECT COUNT(*)
-        FROM RESERVATION
-        WHERE TRADER_ID = #{traderId}
-          AND STATE = "0"
-          AND DATE(RESERVATION_DATE) = CURDATE()
-    </select>
-    <delete id="deleteBuy" parameterType="ReservationDTO">
-        DELETE FROM RESERVATION
-        WHERE RESERVATION_NUMBER = #{reservationNumber}
-          AND TRADER_ID = #{traderId}
-    </delete>
-    <update id="acceptBuy" parameterType="ReservationDTO">
-        UPDATE RESERVATION
-        SET state = 1
-        WHERE TRADER_ID = #{traderId}
-          AND RESERVATION_NUMBER = #{reservationNumber}
-    </update>
-
-
     <!-- 상점 정보 조회 쿼리 -->
     <select id="getShopInfo" parameterType="ShopDTO" resultType="ShopDTO">
-        SELECT SHOP_NAME, SHOP_DESCRIPTION, IMAGE, MARKET_NAME, TRADER_NAME
+        SELECT SHOP_NAME, SHOP_DESCRIPTION, IMAGE, MARKET_NAME, TRADER_NAME, SHOP_NUMBER, MARKET_NUMBER
         FROM SHOP
         WHERE TRADER_ID = #{traderId}
     </select>
@@ -96,5 +55,13 @@
         FROM SHOP
         WHERE MARKET_NUMBER = #{marketNumber}
         ORDER BY SHOP_NUMBER
+    </select>
+
+    <select id="getReserveStop"  parameterType="ShopDTO" resultType="java.lang.String">
+        SELECT COUNT(*)
+        FROM RESERVATION
+        WHERE TRADER_ID = #{traderId}
+          AND STATE = "0"
+          AND DATE(RESERVATION_DATE) = CURDATE()
     </select>
 </mapper>

@@ -142,8 +142,10 @@
             <div class="col-lg-12">
                 <div class="best_product_slider owl-carousel">
                     <div class="single_product_item" th:each="dto : ${mList}">
-                        <img th:src="${dto.marketImage}" alt="이 시장은 이미지가 없습니다">
-                        <div class="single_product_text" th:attr="onclick='doMarket(\'' + ${dto.marketNumber} + '\')'">
+                        <div class="goodsImage">
+                            <img th:src="${dto.marketImage}" alt="이 시장은 이미지가 없습니다">
+                        </div>
+                        <div class="single_product_text">
                             <h4>[[${dto.marketName}]]</h4>
                             <h3>[[${dto.marketLocation}]]</h3>
                         </div>
@@ -169,8 +171,10 @@
             <div class="col-lg-12">
                 <div class="best_product_slider owl-carousel">
                     <div class="single_product_item" th:each="dto : ${gList}">
-                        <img th:src="${dto.goodsImage}" alt="이 상품은 이미지가 없습니다">
-                        <div class="single_product_text" th:attr="onclick='doGoods(\'' + ${dto.goodsNumber} + '\')'">
+                        <div class="goodsImage">
+                            <img th:src="${dto.goodsImage}" alt="이 상품은 이미지가 없습니다">
+                        </div>
+                        <div class="single_product_text">
                             <h4>[[${dto.goodsName}]]</h4>
                             <h3>[[${dto.price}]]</h3>
                             <h3>[[${dto.shopName}]]</h3>
@@ -196,9 +200,11 @@
         <div class="row align-items-center justify-content-between">
             <div class="col-lg-12">
                 <div class="best_product_slider owl-carousel">
-                    <div class="single_product_item"  th:each="dto : ${pList}">
-                        <img th:src="${dto.image}" alt="이 게시글에는 이미지가 없습니다">
-                        <div class="single_product_text" th:attr="onclick='doDetail(\'' + ${dto.postNumber} + '\')'">
+                    <div class="single_product_item" th:each="dto : ${pList}">
+                        <div class="goodsImage">
+                            <img th:src="${dto.image}" alt="이 게시글에는 이미지가 없습니다">
+                        </div>
+                        <div class="single_product_text">
                             <h4>[[${dto.title}]]</h4>
                             <h3>[[${dto.readCount}]]</h3>
                         </div>
@@ -209,6 +215,8 @@
     </div>
 </section>
 <!-- Best 게시글 End -->
+
+<script src="/assets/js/jquery-3.6.0.min.js"></script>
 <!-- popper js -->
 <script src="/assets/js/popper.min.js"></script>
 <!-- bootstrap js -->

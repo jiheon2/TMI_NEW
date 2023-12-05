@@ -11,6 +11,7 @@ import org.json.JSONObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -119,21 +120,15 @@ public class ReservationController {
             String reservationPrice = CmmUtil.nvl(request.getParameter("reservationPrice"));
             String reservationDate = CmmUtil.nvl(request.getParameter("selectedDateInput"));
             String customerPhoneNumber = CmmUtil.nvl(request.getParameter("customerPhoneNumber"));
-            String goodsNumber = CmmUtil.nvl(request.getParameter("goodsName"));
-
-            log.info("traderName : " + traderId);
-            log.info("customerName : " + customerName);
-            log.info("reservationContents : " + reservationContents);
-            log.info("reservationPrice : " + reservationPrice);
-            log.info("reservationDate : " + reservationDate);
-            log.info("customerPhoneNumber : " + customerPhoneNumber);
+            String goodsNumber = CmmUtil.nvl(request.getParameter("goodsNumber"));
+            String state = CmmUtil.nvl(request.getParameter("state"));
 
             TraderDTO tDTO = new TraderDTO();
             tDTO.setTraderId(traderId);
             TraderDTO traderInfo = traderService.getTraderInfo(tDTO);
 
             GoodsDTO gDTO = new GoodsDTO();
-            gDTO.setTraderId(goodsNumber);
+            gDTO.setGoodsNumber(goodsNumber);
             GoodsDTO goodsInfo = goodsService.getGoodsInfo(gDTO);
 
             ShopDTO sDTO = new ShopDTO();
@@ -142,7 +137,21 @@ public class ReservationController {
 
             CustomerDTO cDTO = new CustomerDTO();
             cDTO.setPhoneNumber(customerPhoneNumber);
-            CustomerDTO customerInfo = customerService.getCustomerInfo(cDTO);
+            CustomerDTO customerInfo = customerService.customerInfoForReservation(cDTO);
+
+            log.info("traderId : " + traderId);
+            log.info("customerName : " + customerName);
+            log.info("reservationContents : " + reservationContents);
+            log.info("reservationPrice : " + reservationPrice);
+            log.info("reservationDate : " + reservationDate);
+            log.info("customerPhoneNumber : " + customerPhoneNumber);
+            log.info("traderName : " + traderInfo.getTraderName());
+            log.info("goodsNumber : " + goodsNumber);
+            log.info("goodsName : " + goodsInfo.getGoodsName());
+            log.info("marketNumber : " + shopInfo.getMarketNumber());
+            log.info("shopNumber : " + shopInfo.getShopNumber());
+            log.info("customerId : " + customerInfo.getCustomerId());
+            log.info("state : " + state);
 
             ReservationDTO pDTO = new ReservationDTO();
             pDTO.setTraderId(traderId);
@@ -157,11 +166,107 @@ public class ReservationController {
             pDTO.setShopNumber(shopInfo.getShopNumber());
             pDTO.setCustomerId(customerInfo.getCustomerId());
             pDTO.setCustomerPhoneNumber(customerPhoneNumber);
+            pDTO.setState(state);
 
-            reservationService.insertReservationInfo(pDTO);
-            msg = "등록되었습니다";
-            res = 1;
+            if (!customerName.equals(customerInfo.getCustomerName())) {
+                msg = "소비자 정보가 일치하지 않습니다";
+            } else if (!customerPhoneNumber.equals(customerInfo.getPhoneNumber())) {
+                msg = "소비자 정보가 일치하지 않습니다";
+            } else {
+                reservationService.insertReservationInfo(pDTO);
+                msg = "등록되었습니다";
+                res = 1;
+            }
+        } catch (Exception e) {
+            msg = "실패하였습니다 : " + e.getMessage();
+            log.info(e.toString());
+            e.printStackTrace();
+        } finally {
+            dto = new MsgDTO();
+            dto.setMsg(msg);
+            dto.setResult(res);
+            log.info(dto.toString());
+            log.info(this.getClass().getName() + ".insertReservationInfo End!");
+        }
 
+        return dto;
+    }
+
+    @ResponseBody
+    @PostMapping(value = "/reservation/insertCustomerReservationInfo")
+    public MsgDTO insertCustomerReservationInfo(HttpServletRequest request, HttpSession session) throws Exception {
+
+        log.info(this.getClass().getName() + ".insertReservationInfo Start!");
+
+        String msg = "";
+        int res = 0;
+        MsgDTO dto = null;
+
+        try {
+            String customerId = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+            String traderId = CmmUtil.nvl(request.getParameter("traderId"));
+            String customerName = CmmUtil.nvl(request.getParameter("customerName"));
+            String reservationContents = CmmUtil.nvl(request.getParameter("reservationContents"));
+            String reservationPrice = CmmUtil.nvl(request.getParameter("reservationPrice"));
+            String reservationDate = CmmUtil.nvl(request.getParameter("reservationDate"));
+            String customerPhoneNumber = CmmUtil.nvl(request.getParameter("customerPhoneNumber"));
+            String goodsNumber = CmmUtil.nvl(request.getParameter("goodsNumber"));
+            String state = CmmUtil.nvl(request.getParameter("state"));
+
+            TraderDTO tDTO = new TraderDTO();
+            tDTO.setTraderId(traderId);
+            TraderDTO traderInfo = traderService.getTraderInfo(tDTO);
+
+            GoodsDTO gDTO = new GoodsDTO();
+            gDTO.setGoodsNumber(goodsNumber);
+            GoodsDTO goodsInfo = goodsService.getGoodsInfo(gDTO);
+
+            ShopDTO sDTO = new ShopDTO();
+            sDTO.setTraderId(traderId);
+            ShopDTO shopInfo = shopService.getShopInfo(sDTO);
+
+            CustomerDTO cDTO = new CustomerDTO();
+            cDTO.setPhoneNumber(customerPhoneNumber);
+            CustomerDTO customerInfo = customerService.customerInfoForReservation(cDTO);
+
+            log.info("traderId : " + traderId);
+            log.info("customerName : " + customerName);
+            log.info("reservationContents : " + reservationContents);
+            log.info("reservationPrice : " + reservationPrice);
+            log.info("reservationDate : " + reservationDate);
+            log.info("customerPhoneNumber : " + customerPhoneNumber);
+            log.info("traderName : " + traderInfo.getTraderName());
+            log.info("goodsNumber : " + goodsNumber);
+            log.info("goodsName : " + goodsInfo.getGoodsName());
+            log.info("marketNumber : " + shopInfo.getMarketNumber());
+            log.info("shopNumber : " + shopInfo.getShopNumber());
+            log.info("customerId : " + customerId);
+            log.info("state : " + state);
+
+            ReservationDTO pDTO = new ReservationDTO();
+            pDTO.setTraderId(traderId);
+            pDTO.setTraderName(traderInfo.getTraderName());
+            pDTO.setCustomerName(customerName);
+            pDTO.setReservationContents(reservationContents);
+            pDTO.setReservationPrice(reservationPrice);
+            pDTO.setReservationDate(reservationDate);
+            pDTO.setGoodsNumber(goodsNumber);
+            pDTO.setGoodsName(goodsInfo.getGoodsName());
+            pDTO.setMarketNumber(shopInfo.getMarketNumber());
+            pDTO.setShopNumber(shopInfo.getShopNumber());
+            pDTO.setCustomerId(customerId);
+            pDTO.setCustomerPhoneNumber(customerPhoneNumber);
+            pDTO.setState(state);
+
+            if (!customerName.equals(customerInfo.getCustomerName())) {
+                msg = "소비자 정보가 일치하지 않습니다";
+            } else if (!customerPhoneNumber.equals(customerInfo.getPhoneNumber())) {
+                msg = "소비자 정보가 일치하지 않습니다";
+            } else {
+                reservationService.insertReservationInfo(pDTO);
+                msg = "등록되었습니다";
+                res = 1;
+            }
         } catch (Exception e) {
             msg = "실패하였습니다 : " + e.getMessage();
             log.info(e.toString());
@@ -189,26 +294,32 @@ public class ReservationController {
 
         try {
             String traderName = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
-            String customerName = CmmUtil.nvl(request.getParameter("updateCustomerName"));
             String reservationContents = CmmUtil.nvl(request.getParameter("updateReservationContents"));
             String reservationPrice = CmmUtil.nvl(request.getParameter("updateReservationPrice"));
             String reservationDate = CmmUtil.nvl(request.getParameter("selectedNewDateInput"));
             String reservationNumber = CmmUtil.nvl(request.getParameter("updateReservationNumber"));
+            String goodsNumber = CmmUtil.nvl(request.getParameter("updateGoodsNumber"));
+
+            GoodsDTO gDTO = new GoodsDTO();
+            gDTO.setGoodsNumber(goodsNumber);
+            GoodsDTO goodsInfo = goodsService.getGoodsInfo(gDTO);
 
             log.info("traderName : " + traderName);
-            log.info("customerName : " + customerName);
             log.info("reservationContents : " + reservationContents);
             log.info("reservationPrice : " + reservationPrice);
             log.info("reservationDate : " + reservationDate);
             log.info("reservationNumber : " + reservationNumber);
+            log.info("goodsNumber : " + goodsNumber);
+            log.info("goodsName : " + goodsInfo.getGoodsName());
 
             ReservationDTO pDTO = new ReservationDTO();
             pDTO.setTraderName(traderName);
-            pDTO.setCustomerName(customerName);
             pDTO.setReservationContents(reservationContents);
             pDTO.setReservationPrice(reservationPrice);
             pDTO.setReservationDate(reservationDate);
             pDTO.setReservationNumber(reservationNumber);
+            pDTO.setGoodsNumber(goodsNumber);
+            pDTO.setGoodsName(goodsInfo.getGoodsName());
 
             reservationService.updateReservationInfo(pDTO);
             msg = "등록되었습니다";
@@ -266,6 +377,75 @@ public class ReservationController {
             dto.setMsg(msg);
             log.info(this.getClass().getName() + ".reservationDelete End!");
         }
+        return dto;
+    }
+
+    @GetMapping(value = "/goods/goodsBuyInfo")
+    public String goodsBuyInfo(ModelMap model, HttpSession session) throws Exception {
+
+        log.info(this.getClass().getName() + ".goodsBuyInfo Start!");
+
+        String id = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+
+        ReservationDTO pDTO = new ReservationDTO();
+        pDTO.setTraderId(id);
+        pDTO.setState("0");
+        List<ReservationDTO> rList = reservationService.goodsBuyInfo(pDTO);
+        if (rList == null) rList = new ArrayList<>();
+
+        model.addAttribute("rList", rList);
+
+        log.info(this.getClass().getName() + ".goodsBuyInfo End!");
+
+        return "/goods/goodsBuyInfo";
+    }
+    @ResponseBody
+    @PostMapping(value = "/goods/acceptBuy")
+    public MsgDTO acceptBuy(HttpSession session,@RequestBody Map<String, Object> requestData) {
+        log.info(this.getClass().getName() + ".acceptBuy Start!");
+
+        String msg = "";
+        int res = 0;
+        MsgDTO dto = null;
+
+        try {
+            String id = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+            String want = (String) requestData.get("want");
+            List<String> checkboxes = (List<String>) requestData.get("selectedSeqs");
+            log.info(want);
+            log.info("id : " + id);
+            log.info("checkboxes : " + checkboxes);
+            ReservationDTO pDTO = new ReservationDTO();
+            if (want.equals("delete")) {
+                for (String seq : checkboxes) {
+                    pDTO.setReservationNumber(seq);
+                    pDTO.setTraderId(id);
+
+                    reservationService.deleteBuy(pDTO);
+                }
+                msg = "삭제되었습니다.";
+            } else {
+                for (String seq : checkboxes) {
+                    pDTO.setReservationNumber(seq);
+                    pDTO.setTraderId(id);
+
+                    reservationService.acceptBuy(pDTO);
+                }
+                msg = "수락하였습니다.";
+            }
+
+            res = 1;
+        } catch (Exception e) {
+            msg = "실패하였습니다. : " + e.getMessage();
+            log.info(e.toString());
+            e.printStackTrace();
+        } finally {
+            dto = new MsgDTO();
+            dto.setResult(res);
+            dto.setMsg(msg);
+            log.info(this.getClass().getName() + ".deleteBuy End!");
+        }
+
         return dto;
     }
 }
