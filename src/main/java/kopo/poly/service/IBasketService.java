@@ -12,6 +12,8 @@ public interface IBasketService {
     List<PaymentDTO> getPayment(PaymentDTO pDTO) throws Exception; // 결제목록 보기
     List<BasketDTO> getBasketList(BasketDTO pDTO) throws Exception; // 장바구니 목록 조회
     int insertPayment(PaymentDTO pDTO) throws Exception; // 결제목록 담기
+    PaymentDTO paymentInfo(PaymentDTO pDTO) throws Exception; //결제내역 상세보기
+
     int deleteBuy(BasketDTO pDTO) throws Exception; // 장바구니 삭제
 
 }

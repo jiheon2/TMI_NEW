@@ -9,6 +9,7 @@ import lombok.ToString;
 @Setter
 @ToString
 public class PaymentDTO {
+    private String customerId;
     private String applyNum;
     private String bankName;
     private String buyerAddr;

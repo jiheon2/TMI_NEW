@@ -171,30 +171,7 @@ public class CustomerController {
         log.info(this.getClass().getName() + ".cart End!");
         return "/customer/cart";
     }
-    // 소비자 장바구니 이동코드
-    @GetMapping(value = "/payment")
-    public String payment(HttpSession session, ModelMap model) throws Exception {
-        log.info(this.getClass().getName() + ".payment Start!");
 
-        String customerId = (String) session.getAttribute("SS_ID");
-        String type =  CmmUtil.nvl((String) session.getAttribute("SS_TYPE"));
-        if(!type.equals("Customer") || customerId == null) {
-            session.invalidate();
-            return  "/customer/login";
-        }
-
-        BasketDTO pDTO = new BasketDTO();
-
-        pDTO.setCustomerId(customerId);
-
-        List<BasketDTO> rList = Optional.ofNullable(basketService.getBasketList(pDTO)).orElseGet(ArrayList::new);
-        log.info(rList.toString());
-
-        model.addAttribute("rList", rList);
-
-        log.info(this.getClass().getName() + ".payment End!");
-        return "/customer/payment";
-    }
     // 소비자 장바구니 이동코드
     @GetMapping(value = "/allGoodsInfo")
     public String allGoodsInfo(ModelMap model) throws Exception {
@@ -217,6 +194,29 @@ public class CustomerController {
         model.addAttribute("rList", rList);
         log.info(this.getClass().getName() + ".allGoodsInfo End!");
         return "/goods/allGoodsInfo";
+    }
+    // 소비자 장바구니 이동코드
+    @GetMapping(value = "/paymentList")
+    public String paymentList(ModelMap model) throws Exception {
+        log.info(this.getClass().getName() + ".paymentList Start!");
+        GoodsDTO pDTO = new GoodsDTO();
+
+
+        List<GoodsDTO> rList = Optional.ofNullable(goodsService.getGoodsAll()).orElseGet(ArrayList::new);
+
+        log.info(rList.toString());
+        String goodsCount;
+        if (!rList.isEmpty()) {
+            GoodsDTO firstGoods = rList.get(0);
+            goodsCount = firstGoods.getGoodsCount();
+        } else {
+            goodsCount = "0";
+        }
+
+        model.addAttribute("goodsCount", goodsCount);
+        model.addAttribute("rList", rList);
+        log.info(this.getClass().getName() + ".allGoodsInfo End!");
+        return "/payment/paymentList";
     }
     @GetMapping(value = "/wishList")
     public String wishList(HttpSession session, ModelMap model) throws Exception {

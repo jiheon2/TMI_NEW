@@ -102,9 +102,10 @@ public class BasketController {
     }
     @ResponseBody
     @PostMapping(value = "insertPayment")
-    public MsgDTO insertBasket(@RequestBody Map<String, Object> requestData) throws Exception {
+    public MsgDTO insertBasket(@RequestBody Map<String, Object> requestData, HttpSession session) throws Exception {
         log.info(this.getClass().getName() + ".insertPayment Start!");
 
+        String customerId = (String) session.getAttribute("SS_ID");
         // 성공이면 1, 실패면 0
         int res = 0;
         String msg = "";
@@ -113,7 +114,6 @@ public class BasketController {
         PaymentDTO pDTO = null;
 
         try {
-
 
             String applyNum = (String) requestData.get("applyNum");
             String bankName = (String) requestData.get("bankName");
@@ -129,7 +129,7 @@ public class BasketController {
             String impUid = (String) requestData.get("impUid");
             String name = (String) requestData.get("name");
             String paidAmount = requestData.get("paidAmount").toString();
-            Long paidAt = (Long) requestData.get("paidAt");
+            String paidAt = requestData.get("paidAt").toString();
             String payMethod = (String) requestData.get("payMethod");
             String pgProvider = (String) requestData.get("pgProvider");
             String pgTid = (String) requestData.get("pgTid");
@@ -138,14 +138,14 @@ public class BasketController {
             String status = (String) requestData.get("status");
             String success = requestData.get("success").toString();
 
-
-            Date date = new Date(paidAt * 1000);  // Unix timestamp는 밀리초가 아니라 초 단위이므로 1000을 곱해줍니다.
+            Date date = new Date(Long.parseLong(paidAt) * 1000);  // Unix timestamp는 밀리초가 아니라 초 단위이므로 1000을 곱해줍니다.
 
             SimpleDateFormat dateFormat = new SimpleDateFormat("yy/MM/dd HH:mm:ss");
             String formattedDate = dateFormat.format(date);
 
             pDTO = new PaymentDTO();
 
+            pDTO.setCustomerId(customerId);
             pDTO.setApplyNum(applyNum);
             pDTO.setBankName(bankName);
             pDTO.setBuyerAddr(buyerAddr);

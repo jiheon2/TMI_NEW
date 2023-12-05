@@ -222,6 +222,12 @@
             });
         });
     </script>
+    <script type="text/javascript">
+        //상품 보러가기
+        function doDetail(goodsNumber) {
+            location.href = "/customer/single-product?goodsNumber=" + goodsNumber;
+        }
+    </script>
 </head>
 
 <body>
@@ -290,7 +296,7 @@
                             </div>
                         </td>
                         <td>
-                            <div class="media-body" >
+                            <div class="media-body" th:attr="onclick='doDetail(\'' + ${dto.goodsNumber} + '\')'">
                                 <p>[[${dto.goodsName}]]</p>
                             </div>
 

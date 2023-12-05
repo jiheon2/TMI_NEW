@@ -23,8 +23,15 @@ import java.util.Set;
 public class ChatController {
     private final IMarketService marketService;
     @GetMapping(value="intro")
-    public String intro(Model model) throws Exception {
+    public String intro(Model model, HttpSession session) throws Exception {
         log.info(this.getClass().getName() + ".intro Start!");
+
+        String customerId = (String) session.getAttribute("SS_ID");
+        String type =  CmmUtil.nvl((String) session.getAttribute("SS_TYPE"));
+        if(!type.equals("Customer") || customerId == null) {
+            session.invalidate();
+            return  "/customer/login";
+        }
 
         List<MarketDTO> rList = marketService.getMarketName();
 
@@ -43,8 +50,9 @@ public class ChatController {
 
         String roomName = CmmUtil.nvl(request.getParameter("marketName"));
         String userName = CmmUtil.nvl(request.getParameter("userName"));
-        String type = (String) session.getAttribute("SS_TYPE");
-        if(!type.equals("Customer")) {
+        String customerId = (String) session.getAttribute("SS_ID");
+        String type =  CmmUtil.nvl((String) session.getAttribute("SS_TYPE"));
+        if(!type.equals("Customer") || customerId == null) {
             session.invalidate();
             return  "/customer/login";
         }

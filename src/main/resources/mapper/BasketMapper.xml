@@ -20,6 +20,7 @@
     <!--  결제목록 담기  -->
     <insert id="insertPayment" parameterType="PaymentDTO">
         INSERT INTO PAYMENT (
+            customer_id,
             apply_num,
             bank_name,
             buyer_addr,
@@ -44,6 +45,7 @@
             success
         )
         VALUES (
+                   #{customerId},
                    #{applyNum},
                    #{bankName},
                    #{buyerAddr},
@@ -75,6 +77,13 @@
         WHERE CUSTOMER_ID = #{customerId}
     </select>
 
+    <!--  결제목록 보기  -->
+    <select id="paymentInfo" parameterType="PaymentDTO">
+        SELECT apply_num, customer_Id, name, buyer_email, buyer_tel,paid_at, paid_amount, pay_method
+        FROM PAYMENT
+        WHERE apply_num = #{applyNum}
+        AND CUSTOMER_ID = #{customerId}
+    </select>
 
     <!--  장바구니 삭제  -->
     <delete id="deleteBuy" parameterType="BasketDTO">
