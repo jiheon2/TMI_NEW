@@ -46,7 +46,7 @@
 
     <!-- 소비자 정보 조회 쿼리 -->
     <select id="getCustomerInfo" parameterType="CustomerDTO" resultType="CustomerDTO">
-        SELECT CUSTOMER_NAME, PHONE_NUMBER, CUSTOMER_EMAIL, POINT
+        SELECT CUSTOMER_NAME, PHONE_NUMBER, CUSTOMER_EMAIL, POINT, ROTATE
         FROM CUSTOMER
         WHERE CUSTOMER_ID = #{customerId}
     </select>
@@ -74,8 +74,20 @@
         WHERE CUSTOMER_ID = #{customerId}
     </update>
 
-    <update id="resetReward">
+    <update id="rotate" parameterType="CustomerDTO">
         UPDATE CUSTOMER
-        SET REWARD = 0
+        SET ROTATE = 1
+        WHERE CUSTOMER_ID = #{customerId}
     </update>
+
+    <update id="resetRewardAndRotate">
+        UPDATE CUSTOMER
+        SET REWARD = 0, ROTATE = 0
+    </update>
+
+    <select id="customerInfoForReservation" parameterType="CustomerDTO" resultType="CustomerDTO">
+        SELECT *
+        FROM CUSTOMER
+        WHERE #{phoneNumber} = PHONE_NUMBER
+    </select>
 </mapper>

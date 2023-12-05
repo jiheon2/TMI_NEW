@@ -104,4 +104,23 @@ public class ReservationService implements IReservationService {
 
         return reservationMapper.getTodayReservationList(pDTO);
     }
+
+    @Override
+    public List<ReservationDTO> goodsBuyInfo(ReservationDTO pDTO) throws Exception {
+
+        log.info(this.getClass().getName() + ".goodsBuyInfo start!");
+
+        return reservationMapper.goodsBuyInfo(pDTO);
+    }
+
+    @Override
+    public void deleteBuy(ReservationDTO pDTO) throws Exception {
+        log.info(this.getClass().getName() + ".deleteBuy start!");
+        reservationMapper.deleteBuy(pDTO);
+    }
+    @Override
+    public void acceptBuy(ReservationDTO pDTO) throws Exception {
+        log.info(this.getClass().getName() + ".deleteBuy start!");
+        reservationMapper.acceptBuy(pDTO);
+    }
 }

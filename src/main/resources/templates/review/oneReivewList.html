@@ -105,63 +105,63 @@
         </footer>
     </div>
 </div>
-    <!-- jQuery 라이브러리 추가 -->
-    <script src="/assets/js/jquery-3.6.0.min.js"></script>
-    <script src="/assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
-    <script src="/assets/js/bootstrap.bundle.min.js"></script>
+<!-- jQuery 라이브러리 추가 -->
+<script src="/assets/js/jquery-3.6.0.min.js"></script>
+<script src="/assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+<script src="/assets/js/bootstrap.bundle.min.js"></script>
 
-    <script src="/assets/js/extensions/sweetalert2.js"></script>
-    <script src="/assets/vendors/sweetalert2/sweetalert2.all.min.js"></script>
+<script src="/assets/js/extensions/sweetalert2.js"></script>
+<script src="/assets/vendors/sweetalert2/sweetalert2.all.min.js"></script>
 <script src="/assets/js/move.js"></script>
-    <script src="/assets/js/main.js"></script>
-    <script type="text/javascript">
-        const id = /*[[${session.SS_ID}]]*/ '';
+<script src="/assets/js/main.js"></script>
+<script type="text/javascript">
+    const id = /*[[${session.SS_ID}]]*/ '';
 
 
-        $(document).ready(function () {
-            $("#btnDelete").on("click", function () {
-                doDelete();
-            })
-        });
+    $(document).ready(function () {
+        $("#btnDelete").on("click", function () {
+            doDelete();
+        })
+    });
 
-        function doDelete() {
-            var selectedSeqs = []; // 선택된 체크박스 값들을 저장할 배열
+    function doDelete() {
+        var selectedSeqs = []; // 선택된 체크박스 값들을 저장할 배열
 
-            // 모든 체크박스 엘리먼트를 선택
-            var checkboxes = document.getElementsByName("choose");
+        // 모든 체크박스 엘리먼트를 선택
+        var checkboxes = document.getElementsByName("choose");
 
-            console.log(checkboxes);
-            for (var i = 0; i < checkboxes.length; i++) {
-                if (checkboxes[i].checked) {
-                    selectedSeqs.push(checkboxes[i].value);
-                    console.log("Checkbox " + i + "의 value 값: " + checkboxes[i].value);
-                }
+        console.log(checkboxes);
+        for (var i = 0; i < checkboxes.length; i++) {
+            if (checkboxes[i].checked) {
+                selectedSeqs.push(checkboxes[i].value);
+                console.log("Checkbox " + i + "의 value 값: " + checkboxes[i].value);
             }
-            console.log(selectedSeqs);
-
-
-
-                if (confirm("선택한 리뷰들을 전부 삭제하시겠습니까?")) {
-                    $.ajax({
-                            url: "/review/deleteReview",
-                            type: "post", // 전송방식은 Post
-                            dataType: "JSON", // 전송 결과는 JSON으로 받기
-                            contentType: "application/json; charset=utf-8",
-                            data: JSON.stringify(selectedSeqs), // JSON 데이터로 변환
-                            success: function (json) {
-
-                                if (json.result === 1) { // 로그인 성공
-                                    alert(json.msg); // 메시지 띄우기
-                                    location.reload();
-                                } else { // 로그인 실패
-                                    alert(json.msg); // 메시지 띄우기
-                                }
-
-                            }
-                        }
-                    )
-                }
-
         }
-    </script>
+        console.log(selectedSeqs);
+
+
+
+        if (confirm("선택한 리뷰들을 전부 삭제하시겠습니까?")) {
+            $.ajax({
+                    url: "/review/deleteReview",
+                    type: "post", // 전송방식은 Post
+                    dataType: "JSON", // 전송 결과는 JSON으로 받기
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify(selectedSeqs), // JSON 데이터로 변환
+                    success: function (json) {
+
+                        if (json.result === 1) { // 로그인 성공
+                            alert(json.msg); // 메시지 띄우기
+                            location.reload();
+                        } else { // 로그인 실패
+                            alert(json.msg); // 메시지 띄우기
+                        }
+
+                    }
+                }
+            )
+        }
+
+    }
+</script>
 </body></html>

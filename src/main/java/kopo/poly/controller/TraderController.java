@@ -1,6 +1,7 @@
 package kopo.poly.controller;
 
 import kopo.poly.dto.*;
+import kopo.poly.service.IReservationService;
 import kopo.poly.service.IShopService;
 import kopo.poly.service.ITraderService;
 import kopo.poly.util.CmmUtil;
@@ -28,6 +29,7 @@ public class TraderController {
 
     private final ITraderService traderService;
     private final IShopService shopService;
+    private final IReservationService reservationService;
 
     /*
         로그인 페이지 코드
@@ -243,6 +245,11 @@ public class TraderController {
         log.info(this.getClass().getName() + ".traderIndex Start!");
 
         String traderId = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+        String type =  CmmUtil.nvl((String) session.getAttribute("SS_TYPE"));
+        // if(!type.equals("trader") || traderId == null) {
+//            session.invalidate();
+//            return  "/trader/login";
+//        }
 
         TraderDTO rDTO = new TraderDTO();
         rDTO.setTraderId(traderId);
@@ -256,7 +263,7 @@ public class TraderController {
         ReservationDTO pDTO2 = new ReservationDTO();
         pDTO2.setTraderId(traderId);
         pDTO2.setState("1");
-        List<ReservationDTO> rList = Optional.ofNullable(shopService.goodsBuyInfo(pDTO2)).orElseGet(ArrayList::new);
+        List<ReservationDTO> rList = Optional.ofNullable(reservationService.goodsBuyInfo(pDTO2)).orElseGet(ArrayList::new);
 
         log.info("rList : " + rList.toString());
 
@@ -277,6 +284,11 @@ public class TraderController {
         log.info(this.getClass().getName() + ".traderInfo start!");
 
         String traderId = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+        String type =  CmmUtil.nvl((String) session.getAttribute("SS_TYPE"));
+        // if(!type.equals("trader") || traderId == null) {
+//            session.invalidate();
+//            return  "/trader/login";
+//        }
 
         log.info(traderId);
 
@@ -299,6 +311,11 @@ public class TraderController {
         log.info(this.getClass().getName() + ".updateTraderInfo start!");
 
         String traderId = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+        String type =  CmmUtil.nvl((String) session.getAttribute("SS_TYPE"));
+        // if(!type.equals("trader") || traderId == null) {
+//            session.invalidate();
+//            return  "/trader/login";
+//        }
 
         log.info(traderId);
 
@@ -321,6 +338,11 @@ public class TraderController {
         log.info(this.getClass().getName() + ".updateTraderPw start!");
 
         String traderId = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+        String type =  CmmUtil.nvl((String) session.getAttribute("SS_TYPE"));
+        // if(!type.equals("trader") || traderId == null) {
+//            session.invalidate();
+//            return  "/trader/login";
+//        }
 
         log.info(traderId);
 
@@ -463,8 +485,15 @@ public class TraderController {
     // 고객센터 페이지 이동코드
     // 구현완료(10/30)
     @GetMapping(value = "/customerService")
-    public String customerService() {
+    public String customerService(HttpSession session) {
         log.info("start!");
+
+        String traderId = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+        String type =  CmmUtil.nvl((String) session.getAttribute("SS_TYPE"));
+        // if(!type.equals("trader") || traderId == null) {
+//            session.invalidate();
+//            return  "/trader/login";
+//        }
 
         return "/trader/customerService";
     }
@@ -535,8 +564,15 @@ public class TraderController {
     }
 
     @GetMapping(value="newPw")
-    public String newPw() {
+    public String newPw(HttpSession session) {
         log.info(this.getClass().getName() + ".newPw Start!");
+
+        String traderId = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+        String type =  CmmUtil.nvl((String) session.getAttribute("SS_TYPE"));
+        // if(!type.equals("trader") || traderId == null) {
+//            session.invalidate();
+//            return  "/trader/login";
+//        }
 
         return "/trader/newPw";
     }

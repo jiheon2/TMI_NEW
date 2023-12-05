@@ -15,4 +15,5 @@ public class WishListDTO {
     private String shopName;
     private String goodsImage;
     private String customerId;
+    private String price;
 }

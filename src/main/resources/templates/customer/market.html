@@ -69,46 +69,45 @@
         }
     </script>
     <script th:inline="javascript">
-            const rList = /*[[${rList}]]*/ '';
+        const rList = /*[[${rList}]]*/ '';
 
-            console.log(rList);
+        console.log(rList);
 
-            // 검색 기능 구현
-            function searchShop() {
-                var searchInput = document.getElementById("searchInput").value.toLowerCase();
-                var filteredGoods = rList.filter(function(item) {
-                    return item.shopName.toLowerCase().includes(searchInput);
-                });
-                console.log(filteredGoods);
-                displayShop(filteredGoods);
-            }
+        // 검색 기능 구현
+        function searchShop() {
+            var searchInput = document.getElementById("searchInput").value.toLowerCase();
+            var filteredGoods = rList.filter(function(item) {
+                return item.shopName.toLowerCase().includes(searchInput);
+            });
+            console.log(filteredGoods);
+            displayShop(filteredGoods);
+        }
 
-            // 검색 결과를 화면에 보여주는 함수
-            function displayShop(goods) {
-                console.log("displayShop start");
-                var resultsList = document.getElementById("resultsList");
-                resultsList.innerHTML = ""; // 이전 결과 초기화
+        // 검색 결과를 화면에 보여주는 함수
+        function displayShop(goods) {
+            console.log("displayShop start");
+            var resultsList = document.getElementById("resultsList");
+            resultsList.innerHTML = ""; // 이전 결과 초기화
 
-                console.log(goods);
+            console.log(goods);
 
-                goods.forEach(function(item) {
-                    var div = document.createElement("div");
-                    div.className = "col-lg-4 col-sm-6";
-                    div.innerHTML = `
+            goods.forEach(function(item) {
+                var div = document.createElement("div");
+                div.className = "col-lg-4 col-sm-6";
+                div.innerHTML = `
                     <div class="single_product_item">
                         <div class="goodsImage">
                             <img src="${item.image}" alt="">
                         </div>
                         <div class="single_product_text">
                             <h4>${item.shopName}</h4>
-                            <a onclick="goGoods(${item.shopNumber})" class="add_cart">상점 보러가기<i class="ti-heart"></i></a>
+                            <a onclick="goShop(${item.shopNumber})" class="add_cart">상점 보러가기<i class="ti-heart"></i></a>
                         </div>
                     </div>
                 `;
-                    resultsList.appendChild(div);
-                });
-
-            }
+                resultsList.appendChild(div);
+            });
+        }
     </script>
 </head>
 

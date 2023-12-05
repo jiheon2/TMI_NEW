@@ -283,7 +283,7 @@
                     </thead>
                     <tbody>
                     <tr th:each="dto : ${rList}">
-                        <td><input type="checkbox" name="choose" th:value="${dto.basketNumber}"></td>
+                        <td><input type="checkbox" class="individual-checkbox" name="choose" th:value="${dto.basketNumber}"></td>
                         <td>
                             <div class="goodsImage">
                                 <img th:src="${dto.goodsImage}" alt=""/>

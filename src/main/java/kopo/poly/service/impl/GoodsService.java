@@ -69,4 +69,10 @@ public class GoodsService implements IGoodsService {
         log.info(this.getClass().getName() + ".goodsMsgDelete start!");
         goodsMapper.goodsInfoDelete(pDTO);
     }
+
+    @Override
+    public List<GoodsDTO> getAllGoodsInfo() throws Exception {
+        log.info(this.getClass().getName() + ".getAllGoodsInfo start");
+        return goodsMapper.getAllGoodsInfo();
+    }
 }

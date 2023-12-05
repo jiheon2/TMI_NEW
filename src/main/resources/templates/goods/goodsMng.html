@@ -87,7 +87,7 @@
                                 </li>
                                 <!-- 현재 페이지 주변에 페이지 번호 링크 표시 -->
                                 <li class="page-item" th:each="pageNumber : ${#numbers.sequence(1, totalPages)}" th:class="${pageNumber == currentPage ? 'active' : ''}">
-                                    <a class="page-link" th:href="@{/goods/goodsMng(page=${pageNumber})}" th:text="${pageNumber}"></a>
+                                    <a class="page-link" th:href="@{/goods/goodsMng(page=${pageNumber})}" th:text="${pageNumber}" style="font-size: 12.25px"></a>
                                 </li>
                                 <!-- 다음 페이지로 이동하는 링크 -->
                                 <li class="page-item" th:if="${currentPage < totalPages}">
@@ -106,16 +106,6 @@
             </div>
         </section>
     </div>
-    <footer>
-        <div class="footer clearfix mb-0 text-muted">
-            <div class="float-start">
-                <p>2021 &copy; Mazer</p>
-            </div>
-            <div class="float-end">
-                <p>Crafted with <span class="text-danger"><i class="bi bi-heart"></i></span> by <a href="http://ahmadsaugi.com">A. Saugi</a></p>
-            </div>
-        </div>
-    </footer>
 </div>
     <!-- jQuery 라이브러리 추가 -->
     <script src="/assets/js/jquery-3.6.0.min.js"></script>

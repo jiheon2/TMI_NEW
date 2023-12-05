@@ -50,7 +50,7 @@
             PHONE_NUMBER = #{phoneNumber},
             TRADER_EMAIL = #{traderEmail},
             ACCOUNT = #{account},
-            BANK = #{bank}
+            BANK = #{bank},
             TRADER_NOTICE = #{traderNotice}
         WHERE TRADER_ID = #{traderId}
     </update>

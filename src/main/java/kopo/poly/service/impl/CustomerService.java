@@ -180,8 +180,22 @@ public class CustomerService implements ICustomerService {
     }
 
     @Override
-    public void resetReward() throws Exception {
+    public void resetRewardAndRotate() throws Exception {
         log.info("resetReward start");
-        customerMapper.resetReward();
+        customerMapper.resetRewardAndRotate();
+    }
+
+    @Override
+    public CustomerDTO customerInfoForReservation(CustomerDTO pDTO) throws Exception {
+        log.info("customerInfoForReservation Start");
+
+        return customerMapper.customerInfoForReservation(pDTO);
+    }
+
+    @Override
+    public void rotate(CustomerDTO pDTO) throws Exception {
+        log.info("rotate start");
+
+        customerMapper.rotate(pDTO);
     }
 }

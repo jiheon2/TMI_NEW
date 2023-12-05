@@ -70,9 +70,9 @@
     </insert>
 
     <!--  장바구니 삭제  -->
-    <insert id="deleteBuy" parameterType="BasketDTO">
+    <delete id="deleteBuy" parameterType="BasketDTO">
         DELETE
         FROM BASKET
         WHERE BASKET_NUMBER = #{basketNumber}
-    </insert>
+    </delete>
 </mapper>

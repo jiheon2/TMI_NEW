@@ -41,6 +41,63 @@
         })
     })
 </script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#btnDelete").on("click", function () {
+            deleteWish();
+        })
+
+        function deleteWish() {
+            var selectedSeqs = []; // 선택된 체크박스 값들을 저장할 배열
+
+            // 모든 체크박스 엘리먼트를 선택
+            var checkboxes = document.getElementsByName("choose");
+
+            console.log(checkboxes);
+            for (var i = 0; i < checkboxes.length; i++) {
+                if (checkboxes[i].checked) {
+                    selectedSeqs.push(checkboxes[i].value);
+                    console.log("Checkbox " + i + "의 value 값: " + checkboxes[i].value);
+                }
+            }
+
+            var dataToSend = {
+                selectedSeqs: selectedSeqs
+            };
+
+            $.ajax({
+                url: "/wishlist/deleteWish",
+                type: "post",
+                dataType: "JSON",
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify(dataToSend), // JSON 데이터로 변환
+                success: function (json) {
+                    if (json.result === 1) {
+                        alert(json.msg);
+                        location.reload();
+                    } else {
+                        alert(json.msg);
+                    }
+                }
+            });
+        }
+    })
+</script>
+<script>
+    $(document).ready(function () {
+        // "all" 체크박스 클릭 이벤트 핸들러
+        $('#all').on('change', function () {
+            // 모든 개별 체크박스 상태를 "all" 체크박스와 동일하게 설정
+            $('.individual-checkbox').prop('checked', $(this).prop('checked'));
+        });
+
+        // 개별 체크박스 클릭 이벤트 핸들러
+        $('.individual-checkbox').on('change', function () {
+            // 모든 개별 체크박스가 선택되어 있으면 "all" 체크박스도 선택, 그렇지 않으면 해제
+            $('#all').prop('checked', $('.individual-checkbox:checked').length === $('.individual-checkbox').length);
+        });
+    });
+</script>
 <body>
 <!--::header part start::-->
 <header class="main_menu home_menu">
@@ -90,15 +147,15 @@
                 <table class="table">
                     <thead>
                     <tr>
-                        <th scope="col"><input type="checkbox"></th>
+                        <th scope="col"><input id="all" type="checkbox"></th>
                         <th scope="col">이미지</th>
                         <th scope="col">상품명</th>
                         <th scope="col">가격</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="dto : ${rList}">
-                        <td><input type="checkbox"></td>
+                    <tr th:each="dto : ${rList}" th:onclick="'window.location.href = \'/customer/single-product?goodsNumber=\' + ${dto.goodsNumber}'">>
+                        <td><input type="checkbox" class="individual-checkbox" name="choose" th:value="${dto.wishlistNumber}"></td>
                         <td>
                             <div class="goodsImage">
                                 <img th:src="${dto.goodsImage}" alt=""/>

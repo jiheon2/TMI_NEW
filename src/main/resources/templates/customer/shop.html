@@ -25,7 +25,7 @@
     <!-- style CSS -->
     <link rel="stylesheet" href="/assets/css/style.css">
     <script type="text/javascript">
-        document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener("DOMContentLoaded", function () {
             // JavaScript를 사용하여 드롭다운 토글링
             $(document).ready(function () {
                 $('.dropdown-toggle').on('click', function () {
@@ -43,7 +43,7 @@
 
     <!-- 스크립트 추가 -->
     <script th:inline="javascript">
-        document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener("DOMContentLoaded", function () {
             const rList = /*[[${rList}]]*/ '';
 
             console.log(rList);
@@ -92,38 +92,38 @@
         // 상세보기
         function goGoods(goodsNumber) {
             var market = /*[[${market}]]*/ '';
-            location.href = "/customer/single-product?goodsNumber=" + goodsNumber + "&market=" + market;
+            location.href = "/customer/single-product?goodsNumber=" + goodsNumber;
         }
     </script>
 
 
     <script th:inline="javascript">
-            const rList = /*[[${rList}]]*/ '';
-            console.log(rList)
+        const rList = /*[[${rList}]]*/ '';
+        console.log(rList)
 
-            // 검색 기능 구현
-            function searchGoods() {
-                var searchInput = document.getElementById("searchInput").value.toLowerCase();
-                var filteredGoods = rList.filter(function (item) {
-                    return item.goodsName.toLowerCase().includes(searchInput);
-                });
-                console.log(filteredGoods)
-                displayGoods(filteredGoods);
-            }
+        // 검색 기능 구현
+        function searchGoods() {
+            var searchInput = document.getElementById("searchInput").value.toLowerCase();
+            var filteredGoods = rList.filter(function (item) {
+                return item.goodsName.toLowerCase().includes(searchInput);
+            });
+            console.log(filteredGoods)
+            displayGoods(filteredGoods);
+        }
 
 
-            // 검색 결과를 화면에 보여주는 함수
-            function displayGoods(goods) {
-                console.log("displayGoods start")
-                var resultsList = document.getElementById("resultsList");
-                resultsList.innerHTML = ""; // 이전 결과 초기화
+        // 검색 결과를 화면에 보여주는 함수
+        function displayGoods(goods) {
+            console.log("displayGoods start")
+            var resultsList = document.getElementById("resultsList");
+            resultsList.innerHTML = ""; // 이전 결과 초기화
 
-                console.log(goods)
+            console.log(goods)
 
-                goods.forEach(function (item) {
-                    var div = document.createElement("div");
-                    div.className = "col-lg-4 col-sm-6";
-                    div.innerHTML = `
+            goods.forEach(function (item) {
+                var div = document.createElement("div");
+                div.className = "col-lg-4 col-sm-6";
+                div.innerHTML = `
                     <div class="single_product_item">
                         <div class="goodsImage">
                             <img src="${item.goodsImage}" alt="">
@@ -135,10 +135,10 @@
                         </div>
                     </div>
                 `;
-                    resultsList.appendChild(div);
-                });
+                resultsList.appendChild(div);
+            });
 
-            }
+        }
     </script>
 </head>
 
@@ -235,34 +235,7 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="row align-items-center latest_product_inner" id="resultsList"></div>
-
-                    <div class="col-lg-12">
-                        <div class="pageination">
-                            <nav aria-label="Page navigation example">
-                                <ul class="pagination justify-content-center">
-                                    <li class="page-item">
-                                        <a class="page-link" href="#" aria-label="Previous">
-                                            <i class="ti-angle-double-left"></i>
-                                        </a>
-                                    </li>
-                                    <li class="page-item"><a class="page-link" href="#">1</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">4</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">5</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">6</a></li>
-                                    <li class="page-item">
-                                        <a class="page-link" href="#" aria-label="Next">
-                                            <i class="ti-angle-double-right"></i>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </nav>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
@@ -283,7 +256,9 @@
             <div class="col-lg-12">
                 <div class="best_product_slider owl-carousel">
                     <div class="single_product_item" th:each="dto : ${sList}">
-                        <img class="goodsImage" th:src="${dto.image}" alt="이 상점은 이미지가 없어요">
+                        <div class="goodsImage">
+                            <img th:src="${dto.image}" alt="이 상점은 이미지가 없어요">
+                        </div>
                         <div class="single_product_text">
                             <h4>[[${dto.shopName}]]</h4>
                             <h3>[[${dto.marketName}]]</h3>

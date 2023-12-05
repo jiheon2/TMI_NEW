@@ -81,11 +81,11 @@
                                             var reservationNumber = reservation.reservationNumber;
                                             var html = `
                                            <a href="#" onclick="openUpdateInfoModal(${reservation.reservationNumber})">
-                                            <div class="form-group" style="font-size: 20px; color: black">${i + 1}번 예약일정</div>
-                                            <div class="form-group" style="display: none; font-size: 20px; color: black">예약번호: ${reservation.reservationNumber}</div>
-                                            <div class="form-group" style="font-size: 20px; color: black">예약자: ${reservation.customerName}</div>
-                                            <div class="form-group" style="font-size: 20px; color: black">예약 내용: ${reservation.reservationContents}</div>
-                                            <div class="form-group" style="font-size: 20px; color: black">가격: ${reservation.reservationPrice}</div>
+                                            <div class="form-group" style="font-size: 20px; color: black; ${reservation.state === 2 ? 'display: none;' : ''}">${i + 1}번 예약일정</div>
+                                            <div class="form-group" style="display: none; font-size: 20px; color: black; ${reservation.state === 2 ? 'display: none;' : ''}">예약번호: ${reservation.reservationNumber}</div>
+                                            <div class="form-group" style="font-size: 20px; color: black; ${reservation.state === 2 ? 'display: none;' : ''}">예약자: ${reservation.customerName}</div>
+                                            <div class="form-group" style="font-size: 20px; color: black; ${reservation.state === 2 ? 'display: none;' : ''}">예약 내용: ${reservation.reservationContents}</div>
+                                            <div class="form-group" style="font-size: 20px; color: black; ${reservation.state === 2 ? 'display: none;' : ''}">가격: ${reservation.reservationPrice}</div>
                                             <hr/>
                                            </a>`;
 
@@ -205,11 +205,6 @@
         }
 
         function updateReservationInfo(f2, reservationNumberInput) {
-            if (f2.updateCustomerName.value === "") {
-                alert("예약자를 입력하시기 바랍니다.");
-                f2.updateCustomerName.focus();
-                return;
-            }
             if (f2.updateReservationContents.value === "") {
                 alert("예약내용을 입력하시기 바랍니다.");
                 f2.updateReservationContents.focus();
@@ -296,11 +291,24 @@
                                 <label class="col-form-label" style="display: none">예약번호</label>
                                 <input type="text" style="display: none" class="form-control" id="reservationNumber"
                                        name="reservationNumber">
+                                <label class="col-form-label" style="display: none">상태</label>
+                                <input type="text" style="display: none" class="form-control" id="state"
+                                       name="state" value="1">
                                 <label class="col-form-label">예약자</label>
                                 <input type="text" class="form-control" id="customerName" name="customerName">
+                                <label class="col-form-label">예약자 휴대폰번호</label>
+                                <input type="text" class="form-control" id="customerPhoneNumber"
+                                       name="customerPhoneNumber">
                                 <label class="col-form-label">예약내용</label>
                                 <input type="text" class="form-control" id="reservationContents"
                                        name="reservationContents">
+                                <label class="col-form-label">예약상품</label>
+                                <select name="goodsNumber" id="goodsNumber" required size="3"
+                                        style="display: block; width: 30%">
+                                    <th:block th:each="dto : ${rList}">
+                                        <option th:value="${dto.goodsNumber}">[[${dto.goodsName}]]</option>
+                                    </th:block>
+                                </select>
                                 <label class="col-form-label">가격</label>
                                 <input type="text" class="form-control" id="reservationPrice" name="reservationPrice">
                                 <label class="col-form-label">예약일</label>
@@ -327,7 +335,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <div id="reservationInfo" style="overflow: scroll"></div>
+                        <div id="reservationInfo" style="overflow-y: scroll"></div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-warning" id="addNewCalendar">추가</button>
@@ -344,7 +352,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">예약일정</h5>
+                    <h5 class="modal-title">예약내용변경</h5>
                 </div>
                 <form id="updateForm" name="updateForm">
                     <div class="modal-body">
@@ -352,8 +360,13 @@
                             <label class="col-form-label" style="display: none">예약번호</label>
                             <input type="text" style="display: none" class="form-control" id="updateReservationNumber"
                                    name="updateReservationNumber">
-                            <label class="col-form-label">예약자</label>
-                            <input type="text" class="form-control" id="updateCustomerName" name="updateCustomerName">
+                            <label class="col-form-label">예약상품</label>
+                            <select name="updateGoodsNumber" id="updateGoodsNumber" required size="3"
+                                    style="display: block; width: 30%">
+                                <th:block th:each="dto : ${rList}">
+                                    <option th:value="${dto.goodsNumber}">[[${dto.goodsName}]]</option>
+                                </th:block>
+                            </select>
                             <label class="col-form-label">예약내용</label>
                             <input type="text" class="form-control" id="updateReservationContents"
                                    name="updateReservationContents">

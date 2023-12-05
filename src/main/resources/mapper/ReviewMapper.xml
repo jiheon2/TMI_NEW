@@ -20,17 +20,24 @@
         ORDER BY R.REVIEW_NUMBER ASC
     </select>
     <select id="oneReviewList" parameterType="ReviewDTO" resultType="ReviewDTO">
-        SELECT CONTENTS, CUSTOMER_ID, GOODS_NUMBER, REG_DT, REVIEW_NUMBER, SCORE, TRADER_ID
-        FROM REVIEW
-        WHERE GOODS_NUMBER = #{goodsNumber}
-        ORDER BY REG_DT, REVIEW_NUMBER ASC
+        SELECT R.CONTENTS, R.CUSTOMER_ID, R.GOODS_NUMBER, R.REG_DT, R.REVIEW_NUMBER, R.SCORE, R.TRADER_ID, C.CUSTOMER_NAME
+        FROM REVIEW R
+                 JOIN CUSTOMER C ON R.CUSTOMER_ID = C.CUSTOMER_ID
+        WHERE R.GOODS_NUMBER = #{goodsNumber}
+        ORDER BY R.REG_DT, R.REVIEW_NUMBER ASC
     </select>
     <select id="getScore" parameterType="ReviewDTO" resultType="ReviewDTO">
-        SELECT SCORE, COUNT(*) AS countScore
-        FROM REVIEW
-        WHERE GOODS_NUMBER =#{goodsNumber}
-        GROUP BY SCORE
-        ORDER BY SCORE ASC;
+        SELECT S.SCORE, COUNT(R.SCORE) AS countScore
+        FROM (
+                 SELECT 1 AS SCORE
+                 UNION SELECT 2
+                 UNION SELECT 3
+                 UNION SELECT 4
+                 UNION SELECT 5
+             ) S
+                 LEFT JOIN REVIEW R ON S.SCORE = R.SCORE AND R.GOODS_NUMBER = #{goodsNumber}
+        GROUP BY S.SCORE
+        ORDER BY S.SCORE ASC;
     </select>
 
     <!-- 리뷰 삭제 쿼리 -->

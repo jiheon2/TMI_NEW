@@ -3,13 +3,16 @@ package kopo.poly.controller;
 import kopo.poly.dto.GoodsDTO;
 import kopo.poly.dto.MsgDTO;
 import kopo.poly.dto.ReservationDTO;
+import kopo.poly.dto.ShopDTO;
 import kopo.poly.service.IFileService;
 import kopo.poly.service.IGoodsService;
+import kopo.poly.service.IReservationService;
 import kopo.poly.service.IShopService;
 import kopo.poly.util.CmmUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,6 +30,7 @@ import java.util.Optional;
 public class GoodsController {
     private final IGoodsService goodsService;
     private final IFileService fileService;
+    private final IReservationService reservationService;
     private final IShopService shopService;
 
     /*
@@ -243,13 +247,16 @@ public class GoodsController {
             String price = CmmUtil.nvl(request.getParameter("price"));
             String goodsDescription = CmmUtil.nvl(request.getParameter("goodsDescription"));
             String goodsType = CmmUtil.nvl(request.getParameter("goodsType"));
-            String goodsNumber = CmmUtil.nvl(request.getParameter("goodsNumber"));
+
+            ShopDTO sDTO = new ShopDTO();
+            sDTO.setTraderId(traderId);
+            ShopDTO shopInfo = shopService.getShopInfo(sDTO);
 
             log.info("price:" + price);
             log.info("goodsDescription:" + goodsDescription);
             log.info("goodsName : " + goodsName);
             log.info("goodsType : " + goodsType);
-            log.info("goodsNumber : " + goodsNumber);
+            log.info("shopNumber : " + shopInfo.getShopNumber());
 
             pDTO = new GoodsDTO();
 
@@ -258,7 +265,7 @@ public class GoodsController {
             pDTO.setGoodsType(goodsType);
             pDTO.setTraderId(traderId);
             pDTO.setGoodsName(goodsName);
-            pDTO.setGoodsNumber(goodsNumber);
+            pDTO.setShopNumber(shopInfo.getShopNumber());
             pDTO.setGoodsImage("");
 
             if (!mf.isEmpty()) {
@@ -332,72 +339,33 @@ public class GoodsController {
 
         return dto;
     }
-    @GetMapping(value = "/goods/goodsBuyInfo")
-    public String goodsBuyInfo(ModelMap model, HttpSession session) throws Exception {
 
-        log.info(this.getClass().getName() + ".goodsBuyInfo Start!");
+    @GetMapping(value = "/goods/allGoodsInfo")
+    public String getAllGoodsInfo(Model model, @RequestParam(defaultValue = "1") int page) throws Exception {
+        log.info("getAllgoodsInfo start");
 
-        String id = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+        List<GoodsDTO> rList = goodsService.getAllGoodsInfo();
 
-        ReservationDTO pDTO = new ReservationDTO();
-        pDTO.setTraderId(id);
-        pDTO.setState("0");
-        List<ReservationDTO> rList = shopService.goodsBuyInfo(pDTO);
-        if (rList == null) rList = new ArrayList<>();
+        // 페이지당 보여줄 아이템 개수 정의
+        int itemsPerPage = 16;
+
+        // 페이지네이션을 위해 전체 아이템 개수 구하기
+        int totalItems = rList.size();
+
+        // 전체 페이지 개수 계산
+        int totalPages = (int) Math.ceil((double) totalItems / itemsPerPage);
+
+        // 현재 페이지에 해당하는 아이템들만 선택하여 rList에 할당
+        int fromIndex = (page - 1) * itemsPerPage;
+        int toIndex = Math.min(fromIndex + itemsPerPage, totalItems);
+        rList = rList.subList(fromIndex, toIndex);
 
         model.addAttribute("rList", rList);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
 
-        log.info(this.getClass().getName() + ".goodsBuyInfo End!");
+        log.info("getAllGoodsInfo End");
 
-        return "/goods/goodsBuyInfo";
-    }
-    @ResponseBody
-    @PostMapping(value = "/goods/acceptBuy")
-    public MsgDTO acceptBuy(HttpSession session,@RequestBody Map<String, Object> requestData) {
-        log.info(this.getClass().getName() + ".acceptBuy Start!");
-
-        String msg = "";
-        int res = 0;
-        MsgDTO dto = null;
-
-        try {
-            String id = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
-            String want = (String) requestData.get("want");
-            List<String> checkboxes = (List<String>) requestData.get("selectedSeqs");
-            log.info(want);
-            log.info("id : " + id);
-            log.info("checkboxes : " + checkboxes);
-            ReservationDTO pDTO = new ReservationDTO();
-            if (want.equals("delete")) {
-                for (String seq : checkboxes) {
-                    pDTO.setReservationNumber(seq);
-                    pDTO.setTraderId(id);
-
-                    shopService.deleteBuy(pDTO);
-                }
-                msg = "삭제되었습니다.";
-            } else {
-                for (String seq : checkboxes) {
-                    pDTO.setReservationNumber(seq);
-                    pDTO.setTraderId(id);
-
-                    shopService.acceptBuy(pDTO);
-                }
-                msg = "수락하였습니다.";
-            }
-
-            res = 1;
-        } catch (Exception e) {
-            msg = "실패하였습니다. : " + e.getMessage();
-            log.info(e.toString());
-            e.printStackTrace();
-        } finally {
-            dto = new MsgDTO();
-            dto.setResult(res);
-            dto.setMsg(msg);
-            log.info(this.getClass().getName() + ".deleteBuy End!");
-        }
-
-        return dto;
+        return "/goods/allGoodsInfo";
     }
 }

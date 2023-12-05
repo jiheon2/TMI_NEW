@@ -32,13 +32,25 @@ public class CommentController {
         try {
             String customerId = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
             String contents = CmmUtil.nvl(request.getParameter("contents"));
+            String postNumber = CmmUtil.nvl(request.getParameter("postNumber"));
+            String type =  CmmUtil.nvl((String) session.getAttribute("SS_TYPE"));
+//            if(!type.equals("Customer") || customerId == null) {
+//                session.invalidate();
+//                msg="소비자 로그인이 필요한 서비스입니다";
+//                res = 2;
+//                dto.setResult(res);
+//                dto.setMsg(msg);
+//                return  dto;
+//            }
 
             log.info("customerId : " + customerId);
             log.info("contents : " + contents);
+            log.info("postNumber : " + postNumber);
 
             CommentDTO pDTO = new CommentDTO();
-            pDTO.setRegId(customerId);
+            pDTO.setCustomerId(customerId);
             pDTO.setContents(contents);
+            pDTO.setPostNumber(postNumber);
 
             commentService.insertComment(pDTO);
             msg = "댓글이 등록되었습니다.";
@@ -69,12 +81,21 @@ public class CommentController {
         try {
             String customerId = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
             String contents = CmmUtil.nvl(request.getParameter("contents"));
+            String type =  CmmUtil.nvl((String) session.getAttribute("SS_TYPE"));
+            if(!type.equals("Customer") || customerId == null) {
+                session.invalidate();
+                msg="소비자 로그인이 필요한 서비스입니다";
+                res = 2;
+                dto.setResult(res);
+                dto.setMsg(msg);
+                return  dto;
+            }
 
             log.info("customerId : " + customerId);
             log.info("contents : " + contents);
 
             CommentDTO pDTO = new CommentDTO();
-            pDTO.setRegId(customerId);
+            pDTO.setCustomerId(customerId);
             pDTO.setContents(contents);
 
             commentService.insertReply(pDTO);
@@ -105,16 +126,25 @@ public class CommentController {
         MsgDTO dto = null;
 
         try {
-            String customer_id = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+            String customerId = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
             String commentNumber = CmmUtil.nvl(request.getParameter("commentNumber"));
             String contents = CmmUtil.nvl(request.getParameter("contents"));
+            String type =  CmmUtil.nvl((String) session.getAttribute("SS_TYPE"));
+            if(!type.equals("Customer") || customerId == null) {
+                session.invalidate();
+                msg="소비자 로그인이 필요한 서비스입니다";
+                res = 2;
+                dto.setResult(res);
+                dto.setMsg(msg);
+                return  dto;
+            }
 
-            log.info("customer_id : " + customer_id);
+            log.info("customerId : " + customerId);
             log.info("commentNumber : " + commentNumber);
             log.info("contents : " + contents);
 
             CommentDTO pDTO = new CommentDTO();
-            pDTO.setRegId(customer_id);
+            pDTO.setCustomerId(customerId);
             pDTO.setCommentNumber(commentNumber);
             pDTO.setContents(contents);
 
@@ -148,12 +178,21 @@ public class CommentController {
         try {
             String customerId = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
             String commentNumber = CmmUtil.nvl(request.getParameter("commentNumber"));
+            String type =  CmmUtil.nvl((String) session.getAttribute("SS_TYPE"));
+            if(!type.equals("Customer") || customerId == null) {
+                session.invalidate();
+                msg="소비자 로그인이 필요한 서비스입니다";
+                res = 2;
+                dto.setResult(res);
+                dto.setMsg(msg);
+                return  dto;
+            }
 
             log.info("customerId : " + customerId);
             log.info("commentNumber : " + commentNumber);
 
             CommentDTO pDTO = new CommentDTO();
-            pDTO.setRegId(customerId);
+            pDTO.setCustomerId(customerId);
             pDTO.setCommentNumber(commentNumber);
 
             commentService.deleteComment(pDTO);
@@ -186,12 +225,21 @@ public class CommentController {
         try {
             String customerId = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
             String commentNumber = CmmUtil.nvl(request.getParameter("commentNumber"));
+            String type =  CmmUtil.nvl((String) session.getAttribute("SS_TYPE"));
+            if(!type.equals("Customer") || customerId == null) {
+                session.invalidate();
+                msg="소비자 로그인이 필요한 서비스입니다";
+                res = 2;
+                dto.setResult(res);
+                dto.setMsg(msg);
+                return  dto;
+            }
 
             log.info("customerId : " + customerId);
             log.info("commentNumber : " + commentNumber);
 
             CommentDTO pDTO = new CommentDTO();
-            pDTO.setRegId(customerId);
+            pDTO.setCustomerId(customerId);
             pDTO.setCommentNumber(commentNumber);
 
             commentService.updateCommentForDeletion(pDTO);
