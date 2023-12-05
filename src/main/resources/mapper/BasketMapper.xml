@@ -68,6 +68,13 @@
                    #{success}
                )
     </insert>
+    <!--  결제목록 보기  -->
+    <select id="getPayment" parameterType="PaymentDTO">
+        SELECT apply_num, buyer_email, name, paid_amount, currency,paid_at
+        FROM PAYMENT
+        WHERE CUSTOMER_ID = #{customerId}
+    </select>
+
 
     <!--  장바구니 삭제  -->
     <delete id="deleteBuy" parameterType="BasketDTO">

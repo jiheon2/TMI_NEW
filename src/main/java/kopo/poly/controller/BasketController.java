@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -127,7 +129,7 @@ public class BasketController {
             String impUid = (String) requestData.get("impUid");
             String name = (String) requestData.get("name");
             String paidAmount = requestData.get("paidAmount").toString();
-            String paidAt = requestData.get("paidAt").toString();
+            Long paidAt = (Long) requestData.get("paidAt");
             String payMethod = (String) requestData.get("payMethod");
             String pgProvider = (String) requestData.get("pgProvider");
             String pgTid = (String) requestData.get("pgTid");
@@ -135,6 +137,12 @@ public class BasketController {
             String reciptUrl = (String) requestData.get("reciptUrl");
             String status = (String) requestData.get("status");
             String success = requestData.get("success").toString();
+
+
+            Date date = new Date(paidAt * 1000);  // Unix timestamp는 밀리초가 아니라 초 단위이므로 1000을 곱해줍니다.
+
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yy/MM/dd HH:mm:ss");
+            String formattedDate = dateFormat.format(date);
 
             pDTO = new PaymentDTO();
 
@@ -155,7 +163,7 @@ public class BasketController {
             pDTO.setPayMethod(payMethod);
             pDTO.setPgProvider(pgProvider);
             pDTO.setPgTid(pgTid);
-            pDTO.setPaidAt(paidAt);
+            pDTO.setPaidAt(formattedDate);
             pDTO.setPgType(pgType);
             pDTO.setReciptUrl(reciptUrl);
             pDTO.setStatus(status);
