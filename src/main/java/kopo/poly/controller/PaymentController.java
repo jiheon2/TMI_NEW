@@ -1,76 +1,38 @@
 package kopo.poly.controller;
 
-import kopo.poly.dto.BasketDTO;
-import kopo.poly.dto.MsgDTO;
-import kopo.poly.dto.PaymentDTO;
-import kopo.poly.service.IBasketService;
-import kopo.poly.util.CmmUtil;
+import com.siot.IamportRestClient.IamportClient;
+import com.siot.IamportRestClient.exception.IamportResponseException;
+import com.siot.IamportRestClient.response.IamportResponse;
+import com.siot.IamportRestClient.response.Payment;
+import kopo.poly.service.impl.ReservationService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.io.IOException;
+import java.util.Locale;
 
 @Controller
-@Slf4j
 @RequestMapping(value = "/payment")
-@RequiredArgsConstructor
 public class PaymentController {
 
-    private final IBasketService basketService;
+    private IamportClient api;
 
-
-    @GetMapping(value = "/paymentInfo")
-    public String paymentInfo(HttpSession session, ModelMap model, HttpServletRequest request) throws Exception {
-        log.info(this.getClass().getName() + ".paymentInfo Start!");
-
-        String customerId = (String) session.getAttribute("SS_ID");
-        String type =  CmmUtil.nvl((String) session.getAttribute("SS_TYPE"));
-        String applyNum = CmmUtil.nvl(request.getParameter("applyNum"));
-        if(!type.equals("Customer") || customerId == null) {
-            session.invalidate();
-            return  "/customer/login";
-        }
-
-        PaymentDTO pDTO = new PaymentDTO();
-
-        pDTO.setApplyNum(applyNum);
-        pDTO.setCustomerId(customerId);
-
-        PaymentDTO rDTO = Optional.ofNullable(basketService.paymentInfo(pDTO)).orElseGet(PaymentDTO::new);
-        log.info(rDTO.toString());
-
-        model.addAttribute("rDTO", rDTO);
-
-        log.info(this.getClass().getName() + ".paymentInfo End!");
-        return "/payment/paymentInfo";
+    public PaymentController() {
+        // REST API 키와 REST API secret 를 아래처럼 순서대로 입력한다.
+        this.api = new IamportClient("5363763608747886","bCAy2v5dq0keucR0S6kxrp9Q7qRof3dHxhrO039chBMU1QX7glKCZL59v1REewqI5McodxHTFXvl1QVW");
     }
-    @GetMapping(value = "/paymentList")
-    public String paymentList(HttpSession session, ModelMap model) throws Exception {
-        log.info(this.getClass().getName() + ".paymentList Start!");
 
-        String customerId = (String) session.getAttribute("SS_ID");
-        String type =  CmmUtil.nvl((String) session.getAttribute("SS_TYPE"));
-        if(!type.equals("Customer") || customerId == null) {
-            session.invalidate();
-            return  "/customer/login";
-        }
-
-        PaymentDTO pDTO = new PaymentDTO();
-
-        pDTO.setCustomerId(customerId);
-
-        List<PaymentDTO> rList = Optional.ofNullable(basketService.getPayment(pDTO)).orElseGet(ArrayList::new);
-        log.info(rList.toString());
-
-        model.addAttribute("rList", rList);
-
-        log.info(this.getClass().getName() + ".paymentList End!");
-        return "/payment/paymentList";
+    @ResponseBody
+    @RequestMapping(value="/validate/{imp_uid}")
+    public IamportResponse<Payment> paymentByImpUid(
+            Model model
+            , Locale locale
+            , HttpSession session
+            , @PathVariable(value= "imp_uid") String imp_uid) throws IamportResponseException, IOException
+    {
+        return api.paymentByImpUid(imp_uid);
     }
 }

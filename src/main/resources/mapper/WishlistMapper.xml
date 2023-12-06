@@ -20,6 +20,13 @@
     <delete id="deleteWish" parameterType="WishListDTO">
         DELETE
         FROM WISHLIST
-        WHERE WISHLIST_NUMBER = #{wishlistNumber}
+        WHERE 1=1
+        <if test="wishlistNumber neq null and wishlistNumber neq ''">
+            and WISHLIST_NUMBER = #{wishlistNumber}
+        </if>
+        <if test="goodsNumber neq null and goodsNumber neq ''">
+            and goods_number = #{goodsNumber}
+        </if>
+        and customer_id = #{customerId}
     </delete>
 </mapper>

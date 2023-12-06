@@ -77,6 +77,8 @@ public class WishlistController {
 
             if (res == 1) {
                 msg = "찜목록에 담았습니다";
+            } else if (res == 2) {
+                msg = "찜목록에서 삭제했습니다";
             } else {
                 msg = "오류로 인해 실패하였습니다";
             }

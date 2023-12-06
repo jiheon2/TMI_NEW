@@ -16,9 +16,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.swing.text.html.Option;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Controller
 @Slf4j
@@ -161,10 +160,16 @@ public class CustomerController {
         CustomerDTO pDTO1 = new CustomerDTO();
         pDTO1.setCustomerId(customerId);
         CustomerDTO rDTO = Optional.ofNullable(customerService.getCustomerInfo(pDTO1)).orElseGet(CustomerDTO::new);
+        Date today = new Date();
+        Locale currentLocale = new Locale("KOREAN", "KOREA");
+        String pattern = "yyyyMMddHHmmss"; //hhmmss로 시간,분,초만 뽑기도 가능
+        SimpleDateFormat formatter = new SimpleDateFormat(pattern, currentLocale);
+        System.out.println(formatter.format(today));
 
         log.info(rList.toString());
         log.info(rDTO.toString());
 
+        model.addAttribute("date", formatter.format(today));
         model.addAttribute("rList", rList);
         model.addAttribute("rDTO", rDTO);
 
