@@ -574,13 +574,6 @@ public class TraderController {
     public String newPw(HttpSession session) {
         log.info(this.getClass().getName() + ".newPw Start!");
 
-        String traderId = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
-        String type =  CmmUtil.nvl((String) session.getAttribute("SS_TYPE"));
-        if(!type.equals("Trader") || traderId == null) {
-            session.invalidate();
-            return  "/trader/login";
-        }
-
         return "/trader/newPw";
     }
     @ResponseBody
