@@ -125,6 +125,12 @@ public class TraderController {
         log.info(this.getClass().getName() + "traderSignUp");
         return "/trader/traderSignUp";
     }
+    @GetMapping(value = "/findIdAndPw")
+    public String findIdAndPw(HttpSession session) {
+        session.setAttribute("NEW_PASSWORD", "");
+        session.removeAttribute("NEW_PASSWORD");
+        return "/trader/findIdAndPw";
+    }
 
     // 회원가입 시 ID 중복 확인 코드
     // 구현완료(11/10)

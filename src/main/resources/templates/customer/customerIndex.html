@@ -32,14 +32,14 @@
 
         // 함수 정의 추가
         function doMarket(marketNumber) {
-            location.href = "/customer/shop?marketNumber=" + marketNumber;
+            location.href = "/customer/market?marketNumber=" + marketNumber;
         }
 
         function doGoods(goodsNumber) {
             location.href = "/customer/single-product?goodsNumber=" + goodsNumber;
         }
 
-        function doDetail(postNumber) {
+        function doPost(postNumber) {
             location.href = "/post/postInfo?postNumber=" + postNumber;
         }
     </script>
@@ -141,7 +141,7 @@
         <div class="row align-items-center justify-content-between">
             <div class="col-lg-12">
                 <div class="best_product_slider owl-carousel">
-                    <div class="single_product_item" th:each="dto : ${mList}">
+                    <div class="single_product_item" th:each="dto : ${mList}"  th:attr="onclick='doMarket(\'' + ${dto.marketNumber} + '\')'">
                         <div class="goodsImage">
                             <img th:src="${dto.marketImage}" alt="이 시장은 이미지가 없습니다">
                         </div>
@@ -170,7 +170,7 @@
         <div class="row align-items-center justify-content-between">
             <div class="col-lg-12">
                 <div class="best_product_slider owl-carousel">
-                    <div class="single_product_item" th:each="dto : ${gList}">
+                    <div class="single_product_item" th:each="dto : ${gList}"  th:attr="onclick='doGoods(\'' + ${dto.goodsNumber} + '\')'">
                         <div class="goodsImage">
                             <img th:src="${dto.goodsImage}" alt="이 상품은 이미지가 없습니다">
                         </div>
@@ -200,7 +200,7 @@
         <div class="row align-items-center justify-content-between">
             <div class="col-lg-12">
                 <div class="best_product_slider owl-carousel">
-                    <div class="single_product_item" th:each="dto : ${pList}">
+                    <div class="single_product_item" th:each="dto : ${pList}"  th:attr="onclick='doPost(\'' + ${dto.postNumber} + '\')'">
                         <div class="goodsImage">
                             <img th:src="${dto.image}" alt="이 게시글에는 이미지가 없습니다">
                         </div>
