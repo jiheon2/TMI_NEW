@@ -74,10 +74,13 @@
                             var basketNumbers = rList.map(function(basket) {
                                 return basket.basketNumber;
                             });
+                            var coupon = $("#coupon option:selected").data("coupon-id");
+                            console.log(coupon)
                             console.log(basketNumbers)
                             console.log(rsp);
 
                             var dataToSend = {
+                                coupon : coupon,
                                 basketNumbers: basketNumbers,
                                 applyNum : rsp.apply_num,
                                 bankName : rsp.bank_name,
@@ -153,6 +156,12 @@
                 // 쿠폰 할인액을 총액에서 차감
                 var couponDiscount = parseFloat($("#coupon").val());
                 totalAmount -= couponDiscount;
+
+                // 쿠폰 선택 변경 이벤트에 대한 리스너 추가 (change 이벤트 사용)
+                $("#coupon").on("change", function () {
+                    console.log("Coupon changed!");
+                    calculateTotalAmount();
+                });
 
                 // 전체 총액으로 결과 업데이트
                 $("#result").text("₩" + totalAmount.toLocaleString());
@@ -340,8 +349,10 @@
                 <div style="float: right; display: flex">
                     <div>
                         <select style="margin-left: 5px" id="coupon">
-                            <option selected value="0">쿠폰을 선택해주세요</option>
-                            <option th:each="dto : ${cList}" th:id="${dto.couponNumber}" th:value="${dto.discountRate}">[[${dto.couponName}]]/[[${dto.couponCount}]]개</option>
+                            <option selected value="0" data-coupon-id="0">쿠폰을 선택해주세요</option>
+                            <option th:each="dto : ${cList}" th:data-coupon-id="${dto.couponNumber}" th:value="${dto.discountRate}">
+                                [[${dto.couponName}]]/[[${dto.couponCount}]]개
+                            </option>
                         </select>
                     </div>
                     <button class="btn btn-primary" id="btnPayment" style="margin-left: 10px">결제</button>

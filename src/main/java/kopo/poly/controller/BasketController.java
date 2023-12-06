@@ -114,7 +114,7 @@ public class BasketController {
 
         try {
 
-            String coupon = (String) requestData.get("coupon");
+            String coupon = requestData.get("coupon").toString();
             if (!coupon.equals("0")) {
                 CouponDTO cDTO = new CouponDTO();
                 cDTO.setCouponNumber(coupon);
