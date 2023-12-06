@@ -12,4 +12,5 @@ public interface ICouponService {
     CouponDTO getCouponCount(CouponDTO pDTO) throws Exception;
     CustomerDTO getPoint(CustomerDTO cDTO) throws Exception;
     List<CouponDTO> getCustomerCouponCount(CouponDTO pDTO) throws Exception;
+    int deleteCoupon(CouponDTO pDTO) throws Exception;
 }

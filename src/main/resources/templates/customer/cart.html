@@ -213,6 +213,10 @@
                     totalAmount += rowTotal;
                 });
 
+                // 쿠폰 할인액을 총액에서 차감
+                var couponDiscount = parseFloat($("#coupon").val());
+                totalAmount -= couponDiscount;
+
                 // 전체 총액으로 결과 업데이트
                 $("#result").text("₩" + totalAmount.toLocaleString());
             }
@@ -223,9 +227,16 @@
                 calculateTotalAmount();
             });
 
+            // 쿠폰 선택 변경 이벤트에 대한 리스너 추가 (change 이벤트 사용)
+            $("#coupon").on("change", function () {
+                console.log("Coupon changed!");
+                calculateTotalAmount();
+            });
+
             // 페이지 로드 시 초기 계산 수행
             calculateTotalAmount();
         });
+
     </script>
     <script type="text/javascript">
         $(document).ready(function () {
@@ -351,7 +362,8 @@
                     </thead>
                     <tbody>
                     <tr th:each="dto : ${rList}">
-                        <td><input type="checkbox" class="individual-checkbox" name="choose" th:value="${dto.basketNumber}"></td>
+                        <td><input type="checkbox" class="individual-checkbox" name="choose"
+                                   th:value="${dto.basketNumber}"></td>
                         <td>
                             <div class="goodsImage">
                                 <img th:src="${dto.goodsImage}" alt=""/>
@@ -382,12 +394,20 @@
                     </tbody>
                 </table>
                 <div style="float: right; display: flex">
-                    <i class="fa-solid" style="font-family: BMJUA,serif; font-size: 20px; color: #222222; margin: 10px"> 결제 금액 : </i><p id="result" style="font-size: 20px">
+                    <i class="fa-solid" style="font-family: BMJUA,serif; font-size: 20px; color: #222222; margin: 10px">
+                        결제 금액 : </i>
+                    <p id="result" style="font-size: 20px">
                 </div>
                 <br/>
                 <br/>
-                <div style="float: right">
-                    <button class="btn btn-primary" id="btnPayment">결제</button>
+                <div style="float: right; display: flex">
+                    <div>
+                        <select style="margin-left: 5px" id="coupon">
+                            <option selected value="0">쿠폰을 선택해주세요</option>
+                            <option th:each="dto : ${cList}" th:id="${dto.couponNumber}" th:value="${dto.discountRate}">[[${dto.couponName}]]/[[${dto.couponCount}]]개</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary" id="btnPayment" style="margin-left: 10px">결제</button>
                     <button class="btn btn-light-secondary me-1 mb-1" id="btnDelete">삭제</button>
                 </div>
             </div>

@@ -160,6 +160,10 @@ public class CustomerController {
         CustomerDTO pDTO1 = new CustomerDTO();
         pDTO1.setCustomerId(customerId);
         CustomerDTO rDTO = Optional.ofNullable(customerService.getCustomerInfo(pDTO1)).orElseGet(CustomerDTO::new);
+        CouponDTO pDTO2 = new CouponDTO();
+        pDTO2.setCustomerId(customerId);
+        List<CouponDTO> cList = Optional.ofNullable(couponService.getCustomerCouponCount(pDTO2)).orElseGet(ArrayList::new);
+
         Date today = new Date();
         Locale currentLocale = new Locale("KOREAN", "KOREA");
         String pattern = "yyyyMMddHHmmss"; //hhmmss로 시간,분,초만 뽑기도 가능
@@ -168,10 +172,12 @@ public class CustomerController {
 
         log.info(rList.toString());
         log.info(rDTO.toString());
+        log.info(cList.toString());
 
         model.addAttribute("date", formatter.format(today));
         model.addAttribute("rList", rList);
         model.addAttribute("rDTO", rDTO);
+        model.addAttribute("cList", cList);
 
         log.info(this.getClass().getName() + ".cart End!");
         return "/customer/cart";
@@ -658,7 +664,7 @@ public class CustomerController {
 
     // 상품 상세정보 조회페이지 이동코드
     @GetMapping(value = "/single-product")
-    public String singleProduct(HttpServletRequest request, ModelMap model, HttpSession session) throws Exception {
+    public String singleProduct(HttpServletRequest request, ModelMap model,  @RequestParam(defaultValue = "1") int page, HttpSession session) throws Exception {
         log.info(this.getClass().getName() + ".goodsMngInfo Start!");
 
         String goodsNumber = request.getParameter("goodsNumber");
@@ -686,11 +692,30 @@ public class CustomerController {
         log.info("gList : " + gList.toString());
         log.info("tDTO : " + tDTO.toString());
 
+        // 페이지당 보여줄 아이템 개수 정의
+        int itemsPerPage = 3;
+
+        // 페이지네이션을 위해 전체 아이템 개수 구하기
+        int totalItems = rDTO.size();
+
+        // 전체 페이지 개수 계산
+        int totalPages = (int) Math.ceil((double) totalItems / itemsPerPage);
+
+        // 현재 페이지에 해당하는 아이템들만 선택하여 rList에 할당
+        int fromIndex = (page - 1) * itemsPerPage;
+        int toIndex = Math.min(fromIndex + itemsPerPage, totalItems);
+        rDTO = rDTO.subList(fromIndex, toIndex);
+
+        log.info(this.getClass().getName() + ".페이지 번호 : " + page);
+
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
         model.addAttribute("cDTO", cDTO);
         model.addAttribute("rDTO", rDTO);
         model.addAttribute("gDTO", gDTO);
         model.addAttribute("gList", gList);
         model.addAttribute("tDTO", tDTO);
+        model.addAttribute("goodsNumber", goodsNumber);
 
         log.info(this.getClass().getName() + ".goodsMngInfo End!");
         return "/customer/single-product";
@@ -850,5 +875,35 @@ public class CustomerController {
         log.info("getReviewList End");
 
         return "/customer/reviewList";
+    }
+
+    @ResponseBody
+    @PostMapping(value = "/rotate")
+    public MsgDTO rotate(HttpSession session) throws Exception {
+        log.info("rotate start");
+
+        String msg = "";
+        int res = 0;
+
+        String customerId = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+
+        log.info("customerId : " + customerId);
+
+        CustomerDTO pDTO = new CustomerDTO();
+        pDTO.setCustomerId(customerId);
+
+        if (!(customerId == null)) {
+            customerService.rotate(pDTO);
+            res = 1;
+            msg = "오늘의 룰렛을 돌렸습니다.";
+        } else {
+            msg = "로그인 해주시길 바랍니다.";
+        }
+
+        MsgDTO dto = new MsgDTO();
+        dto.setResult(res);
+        dto.setMsg(msg);
+
+        return dto;
     }
 }

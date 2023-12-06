@@ -1,10 +1,8 @@
 package kopo.poly.controller;
 
-import kopo.poly.dto.BasketDTO;
-import kopo.poly.dto.MsgDTO;
-import kopo.poly.dto.PaymentDTO;
-import kopo.poly.dto.ReservationDTO;
+import kopo.poly.dto.*;
 import kopo.poly.service.IBasketService;
+import kopo.poly.service.ICouponService;
 import kopo.poly.util.CmmUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +27,7 @@ import java.util.Map;
 public class BasketController {
 
     private final IBasketService basketService;
+    private final ICouponService couponService;
 
     // 장바구니 담기
     // 구현완료(11/21)
@@ -115,6 +114,12 @@ public class BasketController {
 
         try {
 
+            String coupon = (String) requestData.get("coupon");
+            if (!coupon.equals("0")) {
+                CouponDTO cDTO = new CouponDTO();
+                cDTO.setCouponNumber(coupon);
+                res = couponService.deleteCoupon(cDTO);
+            }
             String applyNum = (String) requestData.get("applyNum");
             String bankName = (String) requestData.get("bankName");
             String buyerAddr = (String) requestData.get("buyerAddr");

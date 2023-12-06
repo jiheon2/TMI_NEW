@@ -64,4 +64,14 @@ public class CouponService implements ICouponService {
 
         return couponMapper.getCustomerCouponCount(pDTO);
     }
+    @Override
+    public int deleteCoupon(CouponDTO pDTO) throws Exception {
+        log.info("deleteCoupon start!");
+
+        int res = 0;
+
+        couponMapper.deleteCoupon(pDTO);
+
+        return res;
+    }
 }
