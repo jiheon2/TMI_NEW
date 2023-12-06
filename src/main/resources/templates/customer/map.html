@@ -169,6 +169,7 @@
                 infoWindows[i].close();
             } else {
                 map.setCenter(markers[i].getPosition());
+                console.log(markers[i].getPosition());
                 infoWindows[i].open(map, markers[i]);
             }
 
@@ -237,6 +238,7 @@
             (function (index) {
                 listItem.onclick = function () {
                     var marketNumber = listData[index].marketNumber - 1;
+                    map.setCenter(markers[marketNumber].getPosition());
                     infoWindows[marketNumber].open(map, markers[marketNumber]);
                     let buttonId = 'customButton_' + marketNumber;
                     let buttonElement = document.getElementById(buttonId);
@@ -251,6 +253,7 @@
 
                         if (buttonElement) {
                             buttonElement.addEventListener('click', function () {
+                                marketNumber = marketNumber + 1;
                                 // 각 버튼을 클릭할 때의 동작을 여기에 정의
                                 location.href = "/customer/market?marketNumber=" + marketNumber;
                             });
@@ -268,6 +271,7 @@
         var modal = document.getElementById("searchModal");
         // 모달에 CSS 클래스 추가
         modal.classList.add('afterSearchModal'); // .modal 클래스 추가
+
     }
 
     document.getElementById("searchMarket").onclick = function () {

@@ -20,9 +20,9 @@
         ORDER BY R.REVIEW_NUMBER ASC
     </select>
     <select id="oneReviewList" parameterType="ReviewDTO" resultType="ReviewDTO">
-        SELECT R.CONTENTS, R.CUSTOMER_ID, R.GOODS_NUMBER, R.REG_DT, R.REVIEW_NUMBER, R.SCORE, R.TRADER_ID, C.CUSTOMER_NAME
+        SELECT R.CONTENTS, R.CUSTOMER_ID, R.GOODS_NUMBER, R.REG_DT, R.REVIEW_NUMBER, R.SCORE, R.TRADER_ID,
+        (select c.customer_name from CUSTOMER c where R.customer_id = c.customer_id) as customer_id
         FROM REVIEW R
-                 JOIN CUSTOMER C ON R.CUSTOMER_ID = C.CUSTOMER_ID
         WHERE R.GOODS_NUMBER = #{goodsNumber}
         ORDER BY R.REG_DT, R.REVIEW_NUMBER ASC
     </select>

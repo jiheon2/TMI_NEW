@@ -27,12 +27,19 @@
     <link rel="stylesheet" href="/assets/css/reservationModal.css">
     <script src="/assets/js/jquery-3.6.0.min.js"></script>
     <script src="https://kit.fontawesome.com/cb71939295.js" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+        // 상세보기
+        function doGoods(goodsNumber) {
+            location.href = "/customer/single-product?goodsNumber=" + goodsNumber;
+        }
+    </script>
 
     <!--    별점 체크-->
     <script>
 
         //별점 마킹 모듈 프로토타입으로 생성
-        function Rating(){};
+        function Rating() {
+        };
         Rating.prototype.rate = 0;
         Rating.prototype.setRate = function (newrate) {
             //별점 마킹 - 클릭한 별 이하 모든 별 체크 처리
@@ -59,6 +66,8 @@
         });
 
     </script>
+
+
 
     <!--    리뷰 작성-->
     <script th:inline="javascript">
@@ -121,7 +130,7 @@
                         traderId: traderId,
                         goodsName: goodsName,
                         goodsNumber: goodsNumber,
-                        customerId : customerId
+                        customerId: customerId
                     },
                     success: function (json) {
 
@@ -136,6 +145,7 @@
                     }
                 })
             }
+
             <!--    장바구니에 담기-->
             function doBasket() {
                 if (customerId === "") {
@@ -555,24 +565,23 @@
                             </div>
                         </div>
                         <br>
-                        <div class="review_list" th:each="dto:${rDTO}">
-                            <div class="review_item">
+                        <div class="review_list">
+                            <div class="review_item" th:each="dto:${rDTO}">
                                 <div class="media">
                                     <div class="d-flex">
                                         <img src="/assets/images/product/single-product/review-1.png" alt=""/>
                                     </div>
                                     <div class="media-body">
-                                        <h4>[[${dto.customerName}]]</h4>
+                                        <h4 th:text="${dto.customerName}">Customer Name</h4>
                                         <div th:each="i:${dto.score}">
-                                                <span th:each="j : ${#numbers.sequence(1, i)}">
-                                               <i class="fa-solid fa-star" style="color: #fff700;"></i>
-                                              </span>
+                    <span th:each="j : ${#numbers.sequence(1, i)}">
+                        <i class="fa-solid fa-star" style="color: #fff700;"></i>
+                    </span>
                                         </div>
                                     </div>
                                 </div>
                                 <br>
-                                <div style="white-space: pre-line" th:text="${dto.contents}">
-                                </div>
+                                <div style="white-space: pre-line" th:text="${dto.contents}"></div>
                                 <hr>
                             </div>
                         </div>
@@ -642,6 +651,8 @@
                         <div class="single_product_text">
                             <h4>[[${dto.goodsName}]]</h4>
                             <h3>[[${dto.price}]]원</h3>
+                            <a th:attr="onclick='doGoods(\'' + ${dto.goodsNumber} + '\')'" class="add_cart">물건 사러가기<i
+                                    class="ti-heart"></i></a>
                         </div>
                     </div>
                 </div>

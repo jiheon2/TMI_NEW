@@ -51,6 +51,8 @@
 
             var emailAuthNumberId = "";
             var emailAuthNumberPw = "";
+            var checkEmailId = "N";
+            var checkEmailPw = "N";
 
             function btnIdEmail() {
                 let f = document.getElementById("findIdForm");
@@ -74,7 +76,7 @@
                             } else {
                                 alert("이메일로 인증번호가 발송되었습니다. \n받은 메일의 인증번호를 입력하기 바랍니다.");
                                 emailAuthNumberId = json.authNumber;
-
+                                checkEmailId = "Y";
                             }
                         }
                     }
@@ -102,7 +104,7 @@
                             } else {
                                 alert("이메일로 인증번호가 발송되었습니다. \n받은 메일의 인증번호를 입력하기 바랍니다.");
                                 emailAuthNumberPw = json.authNumber;
-
+                                checkEmailPw = "Y";
                             }
                         }
                     }
@@ -117,6 +119,10 @@
                 }
                 if (f.traderEmailForId.value === "") {
                     alert("이메일을 입력하세요.");
+                    return;
+                }
+                if (checkEmailId !== "Y") {
+                    alert("이메일 인증을 해주세요.");
                     return;
                 }
                 if (f.authNumberId.value != emailAuthNumberId) {
@@ -146,6 +152,10 @@
                 }
                 if (f.traderEmailForPw.value === "") {
                     alert("이메일을 입력하세요.");
+                    return;
+                }
+                if (checkEmailPw !== "Y") {
+                    alert("이메일 인증을 해주세요.");
                     return;
                 }
                 if (f.authNumberPw.value != emailAuthNumberPw) {
@@ -182,7 +192,7 @@
         <div class="row align-items-center">
             <div class="col-lg-12">
                 <nav class="navbar navbar-expand-lg navbar-light">
-                    <a class="navbar-brand" href="trader/traderIndex"> <img src="/assets/images/bird/logo2.png" alt="logo" style="width: 100px" , height="50px"></a>
+                    <a class="navbar-brand" href="/trader/traderIndex"> <img src="/assets/images/bird/logo2.png" alt="logo" style="width: 100px" , height="50px"></a>
                 </nav>
             </div>
         </div>
@@ -261,8 +271,8 @@
                 </div>
                 <div class="signup-image" style="text-align: center">
                     <figure><img src="/assets/images/bird/bird2.png" alt="sing up image"></figure>
-                    <button type="button" id="cancel"
-                            class="btn btn-light-secondary me-1 mb-1">취소
+                    <button type="button" class="btn btn-light-secondary me-1 mb-1">
+                        <a href="/customer/login">취소</a>
                     </button>
                 </div>
             </div>
