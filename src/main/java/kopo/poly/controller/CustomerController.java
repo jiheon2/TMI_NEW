@@ -7,7 +7,6 @@ import kopo.poly.util.CmmUtil;
 import kopo.poly.util.EncryptUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.checkerframework.checker.units.qual.C;
 import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,9 +16,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.swing.text.html.Option;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Controller
 @Slf4j
@@ -162,15 +160,74 @@ public class CustomerController {
         CustomerDTO pDTO1 = new CustomerDTO();
         pDTO1.setCustomerId(customerId);
         CustomerDTO rDTO = Optional.ofNullable(customerService.getCustomerInfo(pDTO1)).orElseGet(CustomerDTO::new);
+        CouponDTO pDTO2 = new CouponDTO();
+        pDTO2.setCustomerId(customerId);
+        List<CouponDTO> cList = Optional.ofNullable(couponService.getCustomerCouponCount(pDTO2)).orElseGet(ArrayList::new);
+
+        Date today = new Date();
+        Locale currentLocale = new Locale("KOREAN", "KOREA");
+        String pattern = "yyyyMMddHHmmss"; //hhmmss로 시간,분,초만 뽑기도 가능
+        SimpleDateFormat formatter = new SimpleDateFormat(pattern, currentLocale);
+        System.out.println(formatter.format(today));
 
         log.info(rList.toString());
         log.info(rDTO.toString());
+        log.info(cList.toString());
 
+        model.addAttribute("date", formatter.format(today));
         model.addAttribute("rList", rList);
         model.addAttribute("rDTO", rDTO);
+        model.addAttribute("cList", cList);
 
         log.info(this.getClass().getName() + ".cart End!");
         return "/customer/cart";
+    }
+
+    // 소비자 장바구니 이동코드
+    @GetMapping(value = "/allGoodsInfo")
+    public String allGoodsInfo(ModelMap model) throws Exception {
+        log.info(this.getClass().getName() + ".allGoodsInfo Start!");
+        GoodsDTO pDTO = new GoodsDTO();
+
+
+        List<GoodsDTO> rList = Optional.ofNullable(goodsService.getGoodsAll()).orElseGet(ArrayList::new);
+
+        log.info(rList.toString());
+        String goodsCount;
+        if (!rList.isEmpty()) {
+            GoodsDTO firstGoods = rList.get(0);
+            goodsCount = firstGoods.getGoodsCount();
+        } else {
+            goodsCount = "0";
+        }
+
+        model.addAttribute("goodsCount", goodsCount);
+        model.addAttribute("rList", rList);
+        log.info(this.getClass().getName() + ".allGoodsInfo End!");
+        return "/goods/allGoodsInfo";
+    }
+    // 소비자 장바구니 이동코드
+    @GetMapping(value = "/paymentList")
+    public String paymentList(ModelMap model) throws Exception {
+        log.info(this.getClass().getName() + ".paymentList Start!");
+        GoodsDTO pDTO = new GoodsDTO();
+
+
+        List<GoodsDTO> rList = Optional.ofNullable(goodsService.getGoodsAll()).orElseGet(ArrayList::new);
+
+        log.info(rList.toString());
+        String goodsCount;
+        if (!rList.isEmpty()) {
+            GoodsDTO firstGoods = rList.get(0);
+            goodsCount = firstGoods.getGoodsCount();
+        } else {
+            goodsCount = "0";
+        }
+
+        model.addAttribute("goodsCount", goodsCount);
+        model.addAttribute("rList", rList);
+        log.info(this.getClass().getName() + ".allGoodsInfo End!");
+        return "/payment/paymentList";
     }
     @GetMapping(value = "/wishList")
     public String wishList(HttpSession session, ModelMap model) throws Exception {
@@ -636,23 +693,23 @@ public class CustomerController {
         log.info("tDTO : " + tDTO.toString());
 
         // 페이지당 보여줄 아이템 개수 정의
-        int itemsPerPage = 3;
+       // int itemsPerPage = 3;
 
         // 페이지네이션을 위해 전체 아이템 개수 구하기
-        int totalItems = rDTO.size();
+       // int totalItems = rDTO.size();
 
         // 전체 페이지 개수 계산
-        int totalPages = (int) Math.ceil((double) totalItems / itemsPerPage);
-
+       // int totalPages = (int) Math.ceil((double) totalItems / itemsPerPage);
+//
         // 현재 페이지에 해당하는 아이템들만 선택하여 rList에 할당
-        int fromIndex = (page - 1) * itemsPerPage;
-        int toIndex = Math.min(fromIndex + itemsPerPage, totalItems);
-        rDTO = rDTO.subList(fromIndex, toIndex);
+       // int fromIndex = (page - 1) * itemsPerPage;
+    //    int toIndex = Math.min(fromIndex + itemsPerPage, totalItems);
+     //   rDTO = rDTO.subList(fromIndex, toIndex);
 
-        log.info(this.getClass().getName() + ".페이지 번호 : " + page);
+      //  log.info(this.getClass().getName() + ".페이지 번호 : " + page);
 
-        model.addAttribute("currentPage", page);
-        model.addAttribute("totalPages", totalPages);
+    //    model.addAttribute("currentPage", page);
+     //   model.addAttribute("totalPages", totalPages);
         model.addAttribute("cDTO", cDTO);
         model.addAttribute("rDTO", rDTO);
         model.addAttribute("gDTO", gDTO);

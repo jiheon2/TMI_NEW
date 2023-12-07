@@ -2,6 +2,7 @@ package kopo.poly.chat;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kopo.poly.dto.ChatDTO;
+import kopo.poly.service.IMongoService;
 import kopo.poly.util.CmmUtil;
 import kopo.poly.util.DateUtil;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,8 @@ public class ChatHandler extends TextWebSocketHandler {
 
     // 채팅룸 조회하기 위해 사용
     public static Map<String, String> roomInfo = Collections.synchronizedMap(new LinkedHashMap<>());
+
+    private final IMongoService mongoService;
 
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
@@ -54,6 +57,10 @@ public class ChatHandler extends TextWebSocketHandler {
         String json = new ObjectMapper().writeValueAsString(cDTO);
 
         log.info("json : " + json);
+
+        cDTO.setRoomHash(roomNameHash);
+        cDTO.setRoomName(roomName);
+        mongoService.insertChat(cDTO);
 
         // 웹소켓에 접속된 모든 사용자 검색
         clients.forEach(s -> {

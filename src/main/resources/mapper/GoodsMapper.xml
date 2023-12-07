@@ -20,6 +20,14 @@
         </if>
         ORDER BY G.GOODS_NUMBER DESC
     </select>
+    <select id="getGoodsAll" resultType="GoodsDTO">
+        SELECT G.GOODS_NAME, G.PRICE, G.GOODS_TYPE, G.GOODS_NUMBER, G.GOODS_IMAGE, G.TRADER_ID, G.SHOP_NUMBER,
+        S.SHOP_NAME,
+        (SELECT COUNT(*) FROM GOODS) AS GOODS_COUNT
+        FROM GOODS G
+        JOIN SHOP S ON G.SHOP_NUMBER = S.SHOP_NUMBER
+        ORDER BY G.GOODS_NUMBER DESC
+    </select>
 
     <!-- 상품 정보 조회 쿼리 -->
     <select id="getGoodsInfo" parameterType="GoodsDTO" resultType="GoodsDTO">

@@ -36,11 +36,16 @@
     <script src="/assets/js/jquery-3.6.0.min.js"></script>
     <script type="text/javascript">
         let customerIdCheck = "Y";
+        let emailAuthNumber = "";
+        let checkEmail = "N";
         $(document).ready(function() {
             let f = document.getElementById("register-form");
 
             $("#btnId").on("click", function() {
                 idExists(f)
+            })
+            $("#btnEmail").on("click", function() {
+                emailExists(f)
             })
             $("#btnSend").on("click", function() {
                 doSubmit(f)
@@ -69,6 +74,36 @@
                 }
             })
         }
+        function emailExists() {
+            let f = document.getElementById("register-form");
+            if (f.customerEmail.value === "") {
+                alert("이메일을 입력하세요.");
+                return;
+            }
+
+            // Ajax 호출해서 회원가입하기
+            $.ajax({
+                    url: "/customer/searchEmail",
+                    type: "post", // 전송방식은 Post
+                    dataType: "JSON", // 전송 결과는 JSON으로 받기
+                    data: {email : f.customerEmail.value}, // form 태그 내 input 등 객체를 자동으로 전송할 형태로 변경하기
+                    success: function (json) { // 호출이 성공했다면..
+
+                        if (json.existsYn === "N") {
+
+                            alert("이메일로 인증번호가 발송되었습니다. \n받은 메일의 인증번호를 입력하기 바랍니다.");
+                            emailAuthNumber = json.authNumber;
+                            checkEmail = "Y";
+
+                        } else {
+                            alert("이미 있는 이메일입니다");
+                            f.customerEmail.focus();
+
+                        }
+                    }
+                }
+            )
+        }
 
         function doSubmit(f) {
             if (f.customerId.value === "") {
@@ -76,8 +111,18 @@
                 f.customerId.focus();
                 return
             }
+            if (checkEmail !== "Y") {
+                alert("이메일 인증을 해주세요");
+                return
+            }
+            if (emailAuthNumber != f.authNumber.value) {
+                alert("인증번호가 일치하지 않습니다");
+                f.authNumber.focus();
+                return
+            }
 
             if (customerIdCheck !== "N") {
+                alert("아이디 중복 확인을 해주세요");
                 return
             }
             if (f.customerPw.value === "") {
@@ -190,14 +235,19 @@
                             <input type="tel" name="phoneNumber" id="phoneNumber" placeholder="핸드폰 번호" />
                         </div>
                         <div class="form-group">
-                            <label for="phoneNumber"><i class="zmdi zmdi-phone"></i></label>
+                            <label for="customerEmail"><i class="zmdi zmdi-phone"></i></label>
                             <input type="text" name="customerEmail" id="customerEmail" placeholder="이메일" />
+                            <button class="btn btn-primary" type="button" name="btnEmail" id="btnEmail" style="width: 20%; border: 0px">인증</button>
+                        </div>
+                        <div class="form-group">
+                            <label for="authNumber"><i class="zmdi zmdi-phone"></i></label>
+                            <input type="text" name="authNumber" id="authNumber" placeholder="인증번호" />
                         </div>
                     </form>
                 </div>
                 <div class="signup-image" style="text-align: center">
                     <figure><img src="/assets/images/bird/bird2.png" alt="sing up image"></figure>
-                    <a href="/login" class="signup-image-link">이미 회원이라면?</a>
+                    <a href="/customer/login" class="signup-image-link">이미 회원이라면?</a>
                     <div class="form-group form-button">
                         <input type="button" name="btnSend" id="btnSend" class="form-submit" value="회원가입" />
                     </div>

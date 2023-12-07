@@ -46,14 +46,14 @@ public class WishlistController {
             String shopName = CmmUtil.nvl(request.getParameter("shopName"));
             String goodsImage = CmmUtil.nvl(request.getParameter("goodsImage"));
             String type =  CmmUtil.nvl((String) session.getAttribute("SS_TYPE"));
-//            if(!type.equals("Customer") || customerId == null) {
-//                session.invalidate();
-//                msg="소비자 로그인이 필요한 서비스입니다";
-//                res = 2;
-//                dto.setResult(res);
-//                dto.setMsg(msg);
-//                return  dto;
-//            }
+            if(!type.equals("Customer") || customerId == null) {
+                session.invalidate();
+                msg="소비자 로그인이 필요한 서비스입니다";
+                res = 2;
+                dto.setResult(res);
+                dto.setMsg(msg);
+                return  dto;
+            }
 
             log.info("customerId : " + customerId);
             log.info("shopName : " + shopName);
@@ -77,6 +77,8 @@ public class WishlistController {
 
             if (res == 1) {
                 msg = "찜목록에 담았습니다";
+            } else if (res == 2) {
+                msg = "찜목록에서 삭제했습니다";
             } else {
                 msg = "오류로 인해 실패하였습니다";
             }

@@ -3,7 +3,6 @@ package kopo.poly.controller;
 import kopo.poly.dto.GoodsDTO;
 import kopo.poly.dto.MsgDTO;
 import kopo.poly.dto.ReservationDTO;
-import kopo.poly.dto.ShopDTO;
 import kopo.poly.service.IFileService;
 import kopo.poly.service.IGoodsService;
 import kopo.poly.service.IReservationService;
@@ -31,7 +30,6 @@ public class GoodsController {
     private final IGoodsService goodsService;
     private final IFileService fileService;
     private final IReservationService reservationService;
-    private final IShopService shopService;
 
     /*
         상품 정보 관리 페이지 접속 코드
@@ -247,16 +245,13 @@ public class GoodsController {
             String price = CmmUtil.nvl(request.getParameter("price"));
             String goodsDescription = CmmUtil.nvl(request.getParameter("goodsDescription"));
             String goodsType = CmmUtil.nvl(request.getParameter("goodsType"));
-
-            ShopDTO sDTO = new ShopDTO();
-            sDTO.setTraderId(traderId);
-            ShopDTO shopInfo = shopService.getShopInfo(sDTO);
+            String goodsNumber = CmmUtil.nvl(request.getParameter("goodsNumber"));
 
             log.info("price:" + price);
             log.info("goodsDescription:" + goodsDescription);
             log.info("goodsName : " + goodsName);
             log.info("goodsType : " + goodsType);
-            log.info("shopNumber : " + shopInfo.getShopNumber());
+            log.info("goodsNumber : " + goodsNumber);
 
             pDTO = new GoodsDTO();
 
@@ -265,7 +260,7 @@ public class GoodsController {
             pDTO.setGoodsType(goodsType);
             pDTO.setTraderId(traderId);
             pDTO.setGoodsName(goodsName);
-            pDTO.setShopNumber(shopInfo.getShopNumber());
+            pDTO.setGoodsNumber(goodsNumber);
             pDTO.setGoodsImage("");
 
             if (!mf.isEmpty()) {

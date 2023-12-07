@@ -16,14 +16,14 @@
         WHERE TRADER_EMAIL = #{traderEmail}
     </select>
     <!-- 아이디 찾기 아이디 가져오기 쿼리 -->
-    <select id="getCustomerId" parameterType="TraderDTO" resultType="TraderDTO">
+    <select id="getTraderId" parameterType="TraderDTO" resultType="TraderDTO">
         SELECT TRADER_ID
         FROM TRADER
         WHERE  TRADER_EMAIL = #{traderEmail}
           AND TRADER_NAME = #{traderName}
     </select>
     <!-- 비밀번호 찾기 아이디 가져오기 쿼리 -->
-    <select id="getCustomerPw" parameterType="TraderDTO" resultType="TraderDTO">
+    <select id="getTraderPw" parameterType="TraderDTO" resultType="TraderDTO">
         SELECT TRADER_ID
         FROM TRADER
         WHERE  TRADER_EMAIL = #{traderEmail}
@@ -39,8 +39,8 @@
 
     <!-- 상인 회원가입 쿼리 -->
     <insert id="insertTrader" parameterType="TraderDTO">
-        INSERT INTO TRADER (TRADER_ID, TRADER_PW, BUSINESS_NUMBER, TRADER_NAME, PHONE_NUMBER, EMAIL, SHOP_CODE, ACCOUNT, BANK, TRADER_NOTICE)
-        VALUES (#{traderId}, #{traderPw}, #{businessNumber}, #{traderName}, #{phoneNumber}, #{email}, #{shopCode}, #{account}, #{bank}, #{traderNotice})
+        INSERT INTO TRADER (TRADER_ID, TRADER_PW, BUSINESS_NUMBER, TRADER_NAME, PHONE_NUMBER, TRADER_EMAIL, SHOP_CODE, ACCOUNT, BANK, TRADER_NOTICE)
+        VALUES (#{traderId}, #{traderPw}, #{businessNumber}, #{traderName}, #{phoneNumber}, #{traderEmail}, #{shopCode}, #{account}, #{bank}, #{traderNotice})
     </insert>
 
     <!-- 상인 정보 변경 쿼리 -->

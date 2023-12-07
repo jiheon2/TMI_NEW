@@ -57,7 +57,7 @@ public class CustomerService implements ICustomerService {
 
         log.info("existsYn : " + existsYn);
 
-        if (existsYn.equals("Y")) {
+//        if (existsYn.equals("Y")) {
             int authNumber = ThreadLocalRandom.current().nextInt(100000,1000000);
 
             MailDTO dto = new MailDTO();
@@ -73,7 +73,7 @@ public class CustomerService implements ICustomerService {
             rDTO.setAuthNumber(authNumber);
 
             log.info("authNumber : " + authNumber);
-        }
+//        }
 
         log.info(this.getClass().getName() + ".emailAuth End!");
 
@@ -198,4 +198,5 @@ public class CustomerService implements ICustomerService {
 
         customerMapper.rotate(pDTO);
     }
+
 }

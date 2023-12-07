@@ -28,7 +28,7 @@
     <script src="/assets/js/jquery-3.6.0.min.js"></script>
 
     <script th:inline="javascript">
-        document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener("DOMContentLoaded", function () {
             const rList = /*[[${rList}]]*/ '';
 
             console.log(rList);
@@ -42,7 +42,7 @@
 
                 console.log(goods);
 
-                goods.forEach(function(item) {
+                goods.forEach(function (item) {
                     var div = document.createElement("div");
                     div.className = "col-lg-4 col-sm-6";
                     div.innerHTML = `
@@ -76,7 +76,7 @@
         // 검색 기능 구현
         function searchShop() {
             var searchInput = document.getElementById("searchInput").value.toLowerCase();
-            var filteredGoods = rList.filter(function(item) {
+            var filteredGoods = rList.filter(function (item) {
                 return item.shopName.toLowerCase().includes(searchInput);
             });
             console.log(filteredGoods);
@@ -91,7 +91,7 @@
 
             console.log(goods);
 
-            goods.forEach(function(item) {
+            goods.forEach(function (item) {
                 var div = document.createElement("div");
                 div.className = "col-lg-4 col-sm-6";
                 div.innerHTML = `
@@ -107,6 +107,7 @@
                 `;
                 resultsList.appendChild(div);
             });
+
         }
     </script>
 </head>
@@ -118,7 +119,9 @@
         <div class="row align-items-center">
             <div class="col-lg-12">
                 <nav class="navbar navbar-expand-lg navbar-light">
-                    <a class="navbar-brand" href="/customer/customerIndex"><img src="/assets/images/bird/logo2.png" alt="logo" style="width: 100px" , height="50px"></a>
+                    <a class="navbar-brand" href="/customer/customerIndex"><img src="/assets/images/bird/logo2.png"
+                                                                                alt="logo" style="width: 100px" ,
+                                                                                height="50px"></a>
                 </nav>
             </div>
         </div>
@@ -160,14 +163,6 @@
                                 <p><span>[[${shopCount}]] </span> 상점 개수</p>
                             </div>
                             <div class="single_product_menu d-flex">
-                                <h5>상점 유형 : </h5>
-                                <select>
-                                    <option data-display="전체">과일</option>
-                                    <option value="1">의류</option>
-                                    <option value="2">기타</option>
-                                </select>
-                            </div>
-                            <div class="single_product_menu d-flex">
                                 <div class="input-group">
                                     <input type="text" id="searchInput" class="form-control" placeholder="상점 검색"
                                            aria-describedby="inputGroupPrepend" oninput="searchShop()">
@@ -179,10 +174,7 @@
                         </div>
                     </div>
                 </div>
-
-                <div class="row align-items-center latest_product_inner">
-                    <div class="row align-items-center latest_product_inner" id="resultsList"></div>
-                </div>
+                <div class="row align-items-center latest_product_inner" id="resultsList"></div>
             </div>
         </div>
     </div>

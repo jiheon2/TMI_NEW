@@ -77,6 +77,8 @@
         let businessCheck = "N";
         let businessNumberCheck = "Y";
         let bn;
+        let emailAuthNumber = "";
+        let checkEmail = "N";
         $(document).ready(function() {
             let f = document.getElementById("register-form");
 
@@ -206,6 +208,7 @@
 
                             alert("이메일로 인증번호가 발송되었습니다. \n받은 메일의 인증번호를 입력하기 바랍니다.");
                             emailAuthNumber = json.authNumber;
+                            checkEmail = "Y";
 
                         } else {
                             alert("이미 있는 이메일입니다");
@@ -223,7 +226,15 @@
                 f.traderId.focus();
                 return
             }
-
+            if (checkEmail !== "Y") {
+                alert("이메일 인증을 해주세요");
+                return
+            }
+            if (emailAuthNumber != f.authNumber.value) {
+                alert("인증번호가 일치하지 않습니다");
+                f.authNumber.focus();
+                return
+            }
             if (idCheck !== "N") {
                 alert("아이디 중복 확인을하세요")
                 return
@@ -496,8 +507,8 @@
                         <ul id="list" style="display: none;"></ul>
                         <div class="form-group">
                             <label for="traderEmail"><i class="zmdi zmdi-email"></i></label>
-                            <input type="email" name="traderEmail" id="traderEmail" placeholder="이메일" style="width: 80%" />
-                            <button class="btn btn-primary" type="button" name="btnEmail" id="btnEmail" style="width: 18    %; border: 0px">인증</button>
+                            <input type="email" name="traderEmail" id="traderEmail" placeholder="이메일" />
+                            <button class="btn btn-primary" type="button" name="btnEmail" id="btnEmail" style="width: 20%; border: 0px">인증</button>
                         </div>
                         <div class="form-group">
                             <label for="authNumber"><i class="zmdi zmdi-phone"></i></label>
@@ -523,6 +534,7 @@
                 </div>
                 <div class="signup-image" style="text-align: center">
                     <figure><img src="/assets/images/bird/bird2.png" alt="sing up image"></figure>
+                    <a href="/trader/login" class="signup-image-link">이미 회원이라면?</a>
                     <div class="form-group form-button">
                         <input type="button" name="btnSend" id="btnSend" class="form-submit" value="회원가입" />
                     </div>

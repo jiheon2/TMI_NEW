@@ -8,6 +8,8 @@ import java.util.List;
 @Mapper
 public interface IGoodsMapper {
     List<GoodsDTO> getGoodsList(GoodsDTO pDTO) throws Exception; // 상품 목록 조회
+    List<GoodsDTO> getGoodsAll() throws Exception; // 상품 전체 조회
+
     GoodsDTO getGoodsInfo(GoodsDTO pDTO) throws Exception; // 상품 정보 조회
     int updateGoods(GoodsDTO pDTO) throws Exception; // 상품 정보 수정
     int insertGoods(GoodsDTO pDTO) throws Exception; // 상품 등록

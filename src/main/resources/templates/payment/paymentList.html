@@ -31,6 +31,12 @@
     <!--    <link rel="stylesheet" href="/assets/css/notice/templatemo.css">-->
     <link rel="stylesheet" href="/assets/css/notice/css.css">
     <script src="https://kit.fontawesome.com/cb71939295.js" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+        //상세보기 이동
+        function doDetail(applyNum) {
+            location.href = "/payment/paymentInfo?applyNum=" + applyNum;
+        }
+    </script>
 </head>
 
 <body>
@@ -84,46 +90,52 @@
     <div class="board_wrap">
         <div class="board_list_wrap">
             <div class="board_list">
-                <div class="top">
-                    <div class="paymentNumber" style="width: 15%">결제번호</div>
-                    <div class="productName" style="width: 15%">상품명</div>
-                    <div class="price" style="width: 15%">금액</div>
-                    <div class="date" style="width: 15%">결제일</div>
-                </div>
-                <div>
-                    <div class="paymentNumber" th:attr="onclick='doDetail(\'' + 결제번호 + '\')'"
-                         style="width: 15%">
-                        결제번호
-                    </div>
-                    <div class="productName" style="width: 15%">상품명</div>
-                    <div class="price" style="width: 15%">금액</div>
-                    <div class="date" style="width: 15%">결제일</div>
+                <div class="top" th:each="dto : ${rList}">
+                    <div class="paymentNumber" style="width: 15%">[[${dto.applyNum}]]</div>
+                    <div class="productName" style="width: 15%" th:attr="onclick='doDetail(\'' + ${dto.applyNum} + '\')'">[[${dto.name}]]</div>
+                    <div class="price" style="width: 15%">[[${dto.paidAmount}]]</div>
+                    <div class="date" style="width: 15%">[[${dto.paidAt}]]</div>
                 </div>
             </div>
             <br/>
             <!-- 페이지네이션 영역-->
-            <div style="display: flex">
-                <div class="mx-auto">
+<!--                          -->
+            <div style="display: flex; margin-left: 30%;">
+                <div class="pagination">
                     <ul class="pagination pagination-primary" id="pagination">
                         <li class="page-item">
-                            <a class="page-link" th:href="@{/payment.paymentList?page=1}">&laquo;</a>
+                            <a class="page-link" th:href="@{/payment/paymentList?page=1}">&laquo;</a>
                         </li>
                         <!-- 이전 페이지로 이동하는 링크 -->
                         <li class="page-item" th:if="${currentPage > 1}">
-                            <a class="page-link" th:href="@{/review/reviewList(page=${currentPage - 1})}">&lt;</a>
+                            <a class="page-link"
+                               th:href="@{/payment/paymentList(page=${currentPage - 1})}">&lt;</a>
                         </li>
                         <!-- 현재 페이지 주변에 페이지 번호 링크 표시 -->
-                        <li class="page-item" th:each="pageNumber : ${#numbers.sequence(1, totalPages)}"
-                            th:class="${pageNumber == currentPage ? 'active' : ''}">
-                            <a class="page-link" th:href="@{/payment.paymentList(page=${pageNumber})}"
-                               th:text="${pageNumber}"></a>
-                        </li>
+                        <th:block th:if="${currentPage + 9 <= totalPages}">
+                            <li class="page-item"
+                                th:each="pageNumber : ${#numbers.sequence(currentPage, currentPage + 9)}"
+                                th:class="${pageNumber == currentPage ? 'active' : ''}">
+                                <a class="page-link" th:href="@{/payment/paymentList(page=${pageNumber})}"
+                                   th:text="${pageNumber}"></a>
+                            </li>
+                        </th:block>
+                        <!-- 페이지 번호가 totalPages를 초과하는 경우 -->
+                        <th:block th:if="${currentPage + 9 > totalPages}">
+                            <li class="page-item"
+                                th:each="pageNumber : ${#numbers.sequence(currentPage, totalPages)}"
+                                th:class="${pageNumber == currentPage ? 'active' : ''}">
+                                <a class="page-link" th:href="@{/payment/paymentList(page=${pageNumber})}"
+                                   th:text="${pageNumber}"></a>
+                            </li>
+                        </th:block>
                         <!-- 다음 페이지로 이동하는 링크 -->
                         <li class="page-item" th:if="${currentPage < totalPages}">
-                            <a class="page-link" th:href="@{/payment.paymentList(page=${currentPage + 1})}">&gt;</a>
+                            <a class="page-link"
+                               th:href="@{/payment/paymentList(page=${currentPage + 1})}">&gt;</a>
                         </li>
                         <li class="page-item">
-                            <a class="page-link" th:href="@{/payment.paymentList(page=${totalPages})}">&raquo;</a>
+                            <a class="page-link" th:href="@{/payment/paymentList(page=${totalPages})}">&raquo;</a>
                         </li>
                     </ul>
                 </div>

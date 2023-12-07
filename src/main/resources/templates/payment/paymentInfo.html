@@ -101,25 +101,25 @@
                                     <div class="col-12">
                                         <div class="form-group">
                                             <label for="traderId">주문번호</label>
-                                            <div id="traderId" class="form-control">주문번호</div>
+                                            <div id="traderId" class="form-control">[[${rDTO.applyNum}]]</div>
                                         </div>
                                     </div>
                                     <div class="col-12">
                                         <div class="form-group">
                                             <label for="traderPhoneNumber">구매자</label>
-                                            <div id="traderPhoneNumber" class="form-control">구매자이름</div>
+                                            <div id="traderPhoneNumber" class="form-control">[[${rDTO.customerId}]]</div>
                                         </div>
                                     </div>
                                     <div class="col-12">
                                         <div class="form-group">
                                             <label for="traderShop">구매자 이메일</label>
-                                            <div id="traderShop" class="form-control">구매자 이메일</div>
+                                            <div id="traderShop" class="form-control">[[${rDTO.buyerEmail}]]</div>
                                         </div>
                                     </div>
                                     <div class="col-12">
                                         <div class="form-group">
                                             <label for="traderNotice">구매자 전화번호</label>
-                                            <div id="traderNotice" class="form-control">구매자 전화번호</div>
+                                            <div id="traderNotice" class="form-control">[[${rDTO.buyerTel}]]</div>
                                         </div>
                                     </div>
                                 </div>
@@ -138,19 +138,19 @@
                         <div class="col-12">
                             <div class="form-group">
                                 <label for="goodsName">상품명</label>
-                                <div id="goodsName" class="form-control">상품명</div>
+                                <div id="goodsName" class="form-control">[[${rDTO.name}]]</div>
                             </div>
                         </div>
                         <div class="col-12">
                             <div class="form-group">
                                 <label for="goodsPrice">상품가격</label>
-                                <div id="goodsPrice" class="form-control">상품가격</div>
+                                <div id="goodsPrice" class="form-control">[[${rDTO.paidAmount}]]</div>
                             </div>
                         </div>
                         <div class="col-12">
                             <div class="form-group">
                                 <label for="goodsDescription">결제방식</label>
-                                <div id="goodsDescription" class="form-control">결제방식</div>
+                                <div id="goodsDescription" class="form-control">[[${rDTO.payMethod}]]</div>
                             </div>
                         </div>
                     </div>

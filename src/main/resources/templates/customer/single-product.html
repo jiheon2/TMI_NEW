@@ -27,6 +27,12 @@
     <link rel="stylesheet" href="/assets/css/reservationModal.css">
     <script src="/assets/js/jquery-3.6.0.min.js"></script>
     <script src="https://kit.fontawesome.com/cb71939295.js" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+        // 상세보기
+        function doGoods(goodsNumber) {
+            location.href = "/customer/single-product?goodsNumber=" + goodsNumber;
+        }
+    </script>
 
     <!--    별점 체크-->
     <script>
@@ -60,6 +66,8 @@
         });
 
     </script>
+
+
 
     <!--    리뷰 작성-->
     <script th:inline="javascript">
@@ -307,8 +315,10 @@
         <div class="row s_product_inner justify-content-between">
             <div class="col-lg-7 col-xl-7">
                 <div class="product_slider_img">
-                    <div>
-                        <img th:src="${gDTO.goodsImage}"/>
+                    <div id="vertical">
+                        <div data-thumb="img/product/single-product/product_1.png">
+                            <img th:src="${gDTO.goodsImage}"/>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -333,7 +343,7 @@
                         <a href="#" id="changeLike" class="like_us"> <i class="ti-heart"></i> </a>
                     </div>
                     <div class="card_area d-flex justify-content-between align-items-center">
-                        <button type="button" class="btn-success" id="openReservationModal">상품 예약하기</button>
+                        <button type="button" class="btn-success" id="openReservationModal">상품 문의하기</button>
                     </div>
                 </div>
             </div>
@@ -555,55 +565,25 @@
                             </div>
                         </div>
                         <br>
-                        <div class="review_list" th:each="dto:${rDTO}">
-                            <div class="review_item">
+                        <div class="review_list">
+                            <div class="review_item" th:each="dto:${rDTO}">
                                 <div class="media">
+                                    <div class="d-flex">
+                                        <img src="/assets/images/product/single-product/review-1.png" alt=""/>
+                                    </div>
                                     <div class="media-body">
-                                        <h4>[[${dto.customerName}]]</h4>
+                                        <h4 th:text="${dto.customerName}">Customer Name</h4>
                                         <div th:each="i:${dto.score}">
-                                                <span th:each="j : ${#numbers.sequence(1, i)}">
-                                               <i class="fa-solid fa-star" style="color: #fff700;"></i>
-                                              </span>
+                    <span th:each="j : ${#numbers.sequence(1, i)}">
+                        <i class="fa-solid fa-star" style="color: #fff700;"></i>
+                    </span>
                                         </div>
                                     </div>
                                 </div>
                                 <br>
-                                <div style="white-space: pre-line" th:text="${dto.contents}">
-                                </div>
+                                <div style="white-space: pre-line" th:text="${dto.contents}"></div>
                                 <hr>
                             </div>
-                        </div>
-                    </div>
-                    <!-- 페이지네이션 영역-->
-                    <div style="display: flex; margin-left: 50%">
-                        <div class="mx-auto">
-                            <th:block th:with="goodsNumber=${goodsNumber}">
-                                <ul class="pagination pagination-primary" id="pagination">
-                                    <li class="page-item">
-                                        <a class="page-link"
-                                           th:href="@{/customer/single-product(goodsNumber=${goodsNumber}, page=1)}">&laquo;</a>
-                                    </li>
-                                    <!-- 이전 페이지로 이동하는 링크 -->
-                                    <li class="page-item" th:if="${currentPage > 1}">
-                                        <a class="page-link"
-                                           th:href="@{/customer/single-product(goodsNumber=${goodsNumber}, page=${currentPage - 1})}">&lt;</a>
-                                    </li>
-                                    <!-- 현재 페이지 주변에 페이지 번호 링크 표시 -->
-                                    <li class="page-item" th:each="pageNumber : ${#numbers.sequence(1, totalPages)}"
-                                        th:class="${pageNumber == currentPage ? 'active' : ''}">
-                                        <a class="page-link" th:href="@{/customer/single-product(goodsNumber=${goodsNumber}, page=${pageNumber})}"
-                                           th:text="${pageNumber}"></a>
-                                    </li>
-                                    <!-- 다음 페이지로 이동하는 링크 -->
-                                    <li class="page-item" th:if="${currentPage < totalPages}">
-                                        <a class="page-link"
-                                           th:href="@{/customer/single-product(goodsNumber=${goodsNumber}, page=${currentPage + 1})}">&gt;</a>
-                                    </li>
-                                    <li class="page-item">
-                                        <a class="page-link" th:href="@{/customer/single-product(goodsNumber=${goodsNumber}, page=${totalPages})}">&raquo;</a>
-                                    </li>
-                                </ul>
-                            </th:block>
                         </div>
                     </div>
                     <br>
@@ -667,12 +647,12 @@
             <div class="col-lg-12">
                 <div class="best_product_slider owl-carousel">
                     <div class="single_product_item" th:each="dto : ${gList}">
-                        <div class="goodsImage">
-                            <img th:src="${dto.goodsImage}" alt="">
-                        </div>
+                        <img th:src="${dto.goodsImage}" alt="">
                         <div class="single_product_text">
                             <h4>[[${dto.goodsName}]]</h4>
                             <h3>[[${dto.price}]]원</h3>
+                            <a th:attr="onclick='doGoods(\'' + ${dto.goodsNumber} + '\')'" class="add_cart">물건 사러가기<i
+                                    class="ti-heart"></i></a>
                         </div>
                     </div>
                 </div>

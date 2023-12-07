@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface ICustomerMapper {
+
     int insertCustomer(CustomerDTO pDTO) throws Exception; // 소비자 회원가입
 
     CustomerDTO getLogin(CustomerDTO pDTO) throws Exception; // 로그인 정보 확인

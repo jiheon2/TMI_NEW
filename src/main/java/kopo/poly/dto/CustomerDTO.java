@@ -20,5 +20,4 @@ public class CustomerDTO {
     private String point;
     private int reward;
     private int authNumber;
-    private int rotate;
 }

@@ -76,27 +76,46 @@
                         </div>
                         <br/>
                         <!-- 페이지네이션 영역-->
-                        <div class="mx-auto">
-                            <ul class="pagination pagination-primary" id="pagination">
-                                <li class="page-item">
-                                    <a class="page-link" th:href="@{/goods/goodsMng?page=1}">&laquo;</a>
-                                </li>
-                                <!-- 이전 페이지로 이동하는 링크 -->
-                                <li class="page-item" th:if="${currentPage > 1}">
-                                    <a class="page-link" th:href="@{/goods/goodsMng(page=${currentPage - 1})}">&lt;</a>
-                                </li>
-                                <!-- 현재 페이지 주변에 페이지 번호 링크 표시 -->
-                                <li class="page-item" th:each="pageNumber : ${#numbers.sequence(1, totalPages)}" th:class="${pageNumber == currentPage ? 'active' : ''}">
-                                    <a class="page-link" th:href="@{/goods/goodsMng(page=${pageNumber})}" th:text="${pageNumber}" style="font-size: 12.25px"></a>
-                                </li>
-                                <!-- 다음 페이지로 이동하는 링크 -->
-                                <li class="page-item" th:if="${currentPage < totalPages}">
-                                    <a class="page-link" th:href="@{/goods/goodsMng(page=${currentPage + 1})}">&gt;</a>
-                                </li>
-                                <li class="page-item">
-                                    <a class="page-link" th:href="@{/goods/goodsMng(page=${totalPages})}">&raquo;</a>
-                                </li>
-                            </ul>
+                        <!-- 페이지 번호를 표시하는 부분 -->
+                        <div style="display: flex; margin-left: 30%;">
+                            <div class="pagination">
+                                <ul class="pagination pagination-primary" id="pagination">
+                                    <li class="page-item">
+                                        <a class="page-link" th:href="@{/goods/goodsMng?page=1}">&laquo;</a>
+                                    </li>
+                                    <!-- 이전 페이지로 이동하는 링크 -->
+                                    <li class="page-item" th:if="${currentPage > 1}">
+                                        <a class="page-link"
+                                           th:href="@{/goods/goodsMng(page=${currentPage - 1})}">&lt;</a>
+                                    </li>
+                                    <!-- 현재 페이지 주변에 페이지 번호 링크 표시 -->
+                                    <th:block th:if="${currentPage + 9 <= totalPages}">
+                                        <li class="page-item"
+                                            th:each="pageNumber : ${#numbers.sequence(currentPage, currentPage + 9)}"
+                                            th:class="${pageNumber == currentPage ? 'active' : ''}">
+                                            <a class="page-link" th:href="@{/goods/goodsMng(page=${pageNumber})}"
+                                               th:text="${pageNumber}"></a>
+                                        </li>
+                                    </th:block>
+                                    <!-- 페이지 번호가 totalPages를 초과하는 경우 -->
+                                    <th:block th:if="${currentPage + 9 > totalPages}">
+                                        <li class="page-item"
+                                            th:each="pageNumber : ${#numbers.sequence(currentPage, totalPages)}"
+                                            th:class="${pageNumber == currentPage ? 'active' : ''}">
+                                            <a class="page-link" th:href="@{/goods/goodsMng(page=${pageNumber})}"
+                                               th:text="${pageNumber}"></a>
+                                        </li>
+                                    </th:block>
+                                    <!-- 다음 페이지로 이동하는 링크 -->
+                                    <li class="page-item" th:if="${currentPage < totalPages}">
+                                        <a class="page-link"
+                                           th:href="@{/goods/goodsMng(page=${currentPage + 1})}">&gt;</a>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link" th:href="@{/goods/goodsMng(page=${totalPages})}">&raquo;</a>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>

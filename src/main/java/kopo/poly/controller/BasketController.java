@@ -1,10 +1,8 @@
 package kopo.poly.controller;
 
-import kopo.poly.dto.BasketDTO;
-import kopo.poly.dto.MsgDTO;
-import kopo.poly.dto.PaymentDTO;
-import kopo.poly.dto.ReservationDTO;
+import kopo.poly.dto.*;
 import kopo.poly.service.IBasketService;
+import kopo.poly.service.ICouponService;
 import kopo.poly.util.CmmUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +14,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -27,6 +27,7 @@ import java.util.Map;
 public class BasketController {
 
     private final IBasketService basketService;
+    private final ICouponService couponService;
 
     // 장바구니 담기
     // 구현완료(11/21)
@@ -100,9 +101,10 @@ public class BasketController {
     }
     @ResponseBody
     @PostMapping(value = "insertPayment")
-    public MsgDTO insertBasket(@RequestBody Map<String, Object> requestData) throws Exception {
+    public MsgDTO insertBasket(@RequestBody Map<String, Object> requestData, HttpSession session) throws Exception {
         log.info(this.getClass().getName() + ".insertPayment Start!");
 
+        String customerId = (String) session.getAttribute("SS_ID");
         // 성공이면 1, 실패면 0
         int res = 0;
         String msg = "";
@@ -112,7 +114,12 @@ public class BasketController {
 
         try {
 
-
+            String coupon = requestData.get("coupon").toString();
+            if (!coupon.equals("0")) {
+                CouponDTO cDTO = new CouponDTO();
+                cDTO.setCouponNumber(coupon);
+                res = couponService.deleteCoupon(cDTO);
+            }
             String applyNum = (String) requestData.get("applyNum");
             String bankName = (String) requestData.get("bankName");
             String buyerAddr = (String) requestData.get("buyerAddr");
@@ -136,8 +143,14 @@ public class BasketController {
             String status = (String) requestData.get("status");
             String success = requestData.get("success").toString();
 
+            Date date = new Date(Long.parseLong(paidAt) * 1000);  // Unix timestamp는 밀리초가 아니라 초 단위이므로 1000을 곱해줍니다.
+
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yy/MM/dd HH:mm:ss");
+            String formattedDate = dateFormat.format(date);
+
             pDTO = new PaymentDTO();
 
+            pDTO.setCustomerId(customerId);
             pDTO.setApplyNum(applyNum);
             pDTO.setBankName(bankName);
             pDTO.setBuyerAddr(buyerAddr);
@@ -155,7 +168,7 @@ public class BasketController {
             pDTO.setPayMethod(payMethod);
             pDTO.setPgProvider(pgProvider);
             pDTO.setPgTid(pgTid);
-            pDTO.setPaidAt(paidAt);
+            pDTO.setPaidAt(formattedDate);
             pDTO.setPgType(pgType);
             pDTO.setReciptUrl(reciptUrl);
             pDTO.setStatus(status);
