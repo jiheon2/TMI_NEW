@@ -31,7 +31,7 @@ public class ChatController {
 
         String customerId = (String) session.getAttribute("SS_ID");
         String type =  CmmUtil.nvl((String) session.getAttribute("SS_TYPE"));
-        if(!type.equals("Customer") || customerId == null) {
+        if(customerId == null) {
             session.invalidate();
             return  "/customer/login";
         }
