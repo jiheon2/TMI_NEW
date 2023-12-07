@@ -5,6 +5,7 @@ import kopo.poly.dto.*;
 import kopo.poly.service.IFileService;
 import kopo.poly.service.IMarketService;
 import kopo.poly.service.IShopService;
+import kopo.poly.service.ITraderService;
 import kopo.poly.util.CmmUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +28,7 @@ public class ShopController {
 
     private final IShopService shopService;
     private final IFileService fileService;
+    private final ITraderService traderService;
 
     // 상점 정보 페이지 이동코드
     // 상인 정보 없을 시 로그인페이지로 리턴 구현하기
@@ -94,6 +96,13 @@ public class ShopController {
         if (traderId.equals(null)) {
             url = "/trader/login";
         }
+
+        TraderDTO pDTO = new TraderDTO();
+        pDTO.setTraderId(traderId);
+
+        TraderDTO cDTO = Optional.ofNullable(traderService.getTraderInfo(pDTO)).orElseGet(TraderDTO::new);
+
+        model.addAttribute("cDTO", cDTO);
 
         log.info(this.getClass().getName() + ".insertShopInfo End!");
 

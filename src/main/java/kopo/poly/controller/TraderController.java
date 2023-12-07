@@ -197,6 +197,12 @@ public class TraderController {
             String email = CmmUtil.nvl(request.getParameter("email"));
             String shopCode = CmmUtil.nvl(request.getParameter("shopCode"));
 
+            String[] result = shopCode.split("\\[");
+            String marketName = result[0];
+            String marketLocation = result[1].replace("]", "");
+
+
+
             log.info("traderId : " + traderId);
             log.info("traderPw : " + traderPw);
             log.info("businessNumber : " + businessNumber);
@@ -205,7 +211,7 @@ public class TraderController {
             log.info("account : " + account);
             log.info("bank : " + bank);
             log.info("email : " + email);
-            log.info("shopCode : " + shopCode);
+            log.info("shopCode : " + result);
 
             pDTO = new TraderDTO();
 
@@ -217,7 +223,7 @@ public class TraderController {
             pDTO.setBank(bank);
             pDTO.setAccount(account);
             pDTO.setTraderEmail(email);
-            pDTO.setShopCode(shopCode);
+            pDTO.setShopCode(result);
 
             log.info(pDTO.toString());
 

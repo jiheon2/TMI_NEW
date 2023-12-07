@@ -44,8 +44,8 @@
 
     <!-- 상점 정보 등록 쿼리 -->
     <insert id="insertShop" parameterType="ShopDTO">
-        INSERT INTO SHOP (SHOP_NAME, SHOP_DESCRIPTION, IMAGE, MARKET_NAME, TRADER_ID, TRADER_NAME)
-        VALUES (#{shopName}, #{shopDescription}, #{image}, #{marketName}, #{traderId}, #{traderName})
+        INSERT INTO SHOP (SHOP_NAME, SHOP_DESCRIPTION, IMAGE, MARKET_NAME, TRADER_ID, TRADER_NAME, market_number)
+        VALUES (#{shopName}, #{shopDescription}, #{image}, #{marketName}, #{traderId}, #{traderName}, #{marketNumber})
     </insert>
 
     <!-- 상점 목록 조회 쿼리 -->
