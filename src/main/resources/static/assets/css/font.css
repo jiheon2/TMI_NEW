@@ -6,19 +6,20 @@
 }
 * {
     font-family: 'BMJUA';
+    font-size: 14px;
 }
 
-body {
+.body {
     font-family: 'BMJUA';    
     font-size: 130%;
 }
 
-div  {
+.div  {
     font-family: 'BMJUA';
     font-size: 100%;
 }
 
-section  {
+.section  {
     font-family: 'BMJUA';    
     font-size: 100%;
 }

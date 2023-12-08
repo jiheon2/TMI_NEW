@@ -43,6 +43,20 @@ public class BasketService implements IBasketService {
         return basketMapper.getBasketList(pDTO);
     }
     @Override
+    public List<PaymentDTO> getPayment(PaymentDTO pDTO) throws Exception {
+
+        log.info(this.getClass().getName() + ".getPayment start!");
+
+        return basketMapper.getPayment(pDTO);
+    }
+    @Override
+    public PaymentDTO paymentInfo(PaymentDTO pDTO) throws Exception {
+
+        log.info(this.getClass().getName() + ".getPayment start!");
+
+        return basketMapper.paymentInfo(pDTO);
+    }
+    @Override
     public int insertPayment(PaymentDTO pDTO) throws Exception {
         log.info(this.getClass().getName() + ".insertPayment Start!");
 

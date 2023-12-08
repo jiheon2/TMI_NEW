@@ -9,18 +9,15 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.swing.text.html.Option;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Controller
 @Slf4j
@@ -36,6 +33,8 @@ public class CustomerController {
     private final ITraderService traderService;
     private final IPostService postService;
     private final IReservationService reservationService;
+    private final ICouponService couponService;
+    private final IWishlistService wishlistService;
 
     @GetMapping(value = "/login")
     public String login(HttpSession session) {
@@ -147,12 +146,107 @@ public class CustomerController {
         log.info(this.getClass().getName() + ".cart Start!");
 
         String customerId = (String) session.getAttribute("SS_ID");
+        String type =  CmmUtil.nvl((String) session.getAttribute("SS_TYPE"));
+        if(!type.equals("Customer") || customerId == null) {
+            session.invalidate();
+            return  "/customer/login";
+        }
 
         BasketDTO pDTO = new BasketDTO();
 
         pDTO.setCustomerId(customerId);
 
         List<BasketDTO> rList = Optional.ofNullable(basketService.getBasketList(pDTO)).orElseGet(ArrayList::new);
+        CustomerDTO pDTO1 = new CustomerDTO();
+        pDTO1.setCustomerId(customerId);
+        CustomerDTO rDTO = Optional.ofNullable(customerService.getCustomerInfo(pDTO1)).orElseGet(CustomerDTO::new);
+        CouponDTO pDTO2 = new CouponDTO();
+        pDTO2.setCustomerId(customerId);
+        List<CouponDTO> cList = Optional.ofNullable(couponService.getCustomerCouponCount(pDTO2)).orElseGet(ArrayList::new);
+
+        Date today = new Date();
+        Locale currentLocale = new Locale("KOREAN", "KOREA");
+        String pattern = "yyyyMMddHHmmss"; //hhmmss로 시간,분,초만 뽑기도 가능
+        SimpleDateFormat formatter = new SimpleDateFormat(pattern, currentLocale);
+        System.out.println(formatter.format(today));
+
+        log.info(rList.toString());
+        log.info(rDTO.toString());
+        log.info(cList.toString());
+
+        model.addAttribute("date", formatter.format(today));
+        model.addAttribute("rList", rList);
+        model.addAttribute("rDTO", rDTO);
+        model.addAttribute("cList", cList);
+
+        log.info(this.getClass().getName() + ".cart End!");
+        return "/customer/cart";
+    }
+
+    // 소비자 장바구니 이동코드
+    @GetMapping(value = "/allGoodsInfo")
+    public String allGoodsInfo(ModelMap model) throws Exception {
+        log.info(this.getClass().getName() + ".allGoodsInfo Start!");
+        GoodsDTO pDTO = new GoodsDTO();
+
+
+        List<GoodsDTO> rList = Optional.ofNullable(goodsService.getGoodsAll()).orElseGet(ArrayList::new);
+
+        log.info(rList.toString());
+        String goodsCount;
+        if (!rList.isEmpty()) {
+            GoodsDTO firstGoods = rList.get(0);
+            goodsCount = firstGoods.getGoodsCount();
+        } else {
+            goodsCount = "0";
+        }
+
+        model.addAttribute("goodsCount", goodsCount);
+        model.addAttribute("rList", rList);
+        log.info(this.getClass().getName() + ".allGoodsInfo End!");
+        return "/goods/allGoodsInfo";
+    }
+    // 소비자 장바구니 이동코드
+    @GetMapping(value = "/paymentList")
+    public String paymentList(ModelMap model) throws Exception {
+        log.info(this.getClass().getName() + ".paymentList Start!");
+        GoodsDTO pDTO = new GoodsDTO();
+
+
+        List<GoodsDTO> rList = Optional.ofNullable(goodsService.getGoodsAll()).orElseGet(ArrayList::new);
+
+        log.info(rList.toString());
+        String goodsCount;
+        if (!rList.isEmpty()) {
+            GoodsDTO firstGoods = rList.get(0);
+            goodsCount = firstGoods.getGoodsCount();
+        } else {
+            goodsCount = "0";
+        }
+
+        model.addAttribute("goodsCount", goodsCount);
+        model.addAttribute("rList", rList);
+        log.info(this.getClass().getName() + ".allGoodsInfo End!");
+        return "/payment/paymentList";
+    }
+    @GetMapping(value = "/wishList")
+    public String wishList(HttpSession session, ModelMap model) throws Exception {
+        log.info(this.getClass().getName() + ".wishList Start!");
+
+        String customerId = (String) session.getAttribute("SS_ID");
+        String type =  CmmUtil.nvl((String) session.getAttribute("SS_TYPE"));
+        if(!type.equals("Customer") || customerId == null) {
+            session.invalidate();
+            return  "/customer/login";
+        }
+        log.info(customerId);
+
+        WishListDTO pDTO = new WishListDTO();
+
+        pDTO.setCustomerId(customerId);
+        log.info(pDTO.toString());
+
+        List<WishListDTO> rList = Optional.ofNullable(wishlistService.getWishList(pDTO)).orElseGet(ArrayList::new);
         CustomerDTO pDTO1 = new CustomerDTO();
         pDTO1.setCustomerId(customerId);
         CustomerDTO rDTO = Optional.ofNullable(customerService.getCustomerInfo(pDTO1)).orElseGet(CustomerDTO::new);
@@ -163,8 +257,8 @@ public class CustomerController {
         model.addAttribute("rList", rList);
         model.addAttribute("rDTO", rDTO);
 
-        log.info(this.getClass().getName() + ".cart End!");
-        return "/customer/cart";
+        log.info(this.getClass().getName() + ".wishList End!");
+        return "/customer/wishList";
     }
 
 
@@ -363,18 +457,17 @@ public class CustomerController {
         log.info(this.getClass().getName() + ".customerLogin");
 
         String customerId = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
-        String type = CmmUtil.nvl((String) session.getAttribute("Customer"));
-
-        String url = "/customer/customerInfo";
-        if (customerId.equals(null)) {
-            url = "/customer/login";
+        String type =  CmmUtil.nvl((String) session.getAttribute("SS_TYPE"));
+        if(!type.equals("Customer") || customerId == null) {
+            session.invalidate();
+            return  "/customer/login";
         }
 
         CustomerDTO pDTO = new CustomerDTO();
         pDTO.setCustomerId(customerId);
         CustomerDTO rDTO = Optional.ofNullable(customerService.getCustomerInfo(pDTO)).orElseGet(CustomerDTO::new);
         model.addAttribute("rDTO", rDTO);
-        return url;
+        return "/customer/customerInfo";
 
     }
 
@@ -385,6 +478,11 @@ public class CustomerController {
         log.info(this.getClass().getName() + ".updateCustomerInfo start!");
 
         String customerId = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+        String type =  CmmUtil.nvl((String) session.getAttribute("SS_TYPE"));
+        if(!type.equals("Customer") || customerId == null) {
+            session.invalidate();
+            return  "/customer/login";
+        }
 
         log.info(customerId);
 
@@ -407,6 +505,11 @@ public class CustomerController {
         log.info(this.getClass().getName() + ".updateCustomerPw start!");
 
         String customerId = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+        String type =  CmmUtil.nvl((String) session.getAttribute("SS_TYPE"));
+        if(!type.equals("Customer") || customerId == null) {
+            session.invalidate();
+            return  "/customer/login";
+        }
 
         log.info(customerId);
 
@@ -487,32 +590,64 @@ public class CustomerController {
 
         // 성공이면 1, 실패면 0
         int res = 0;
+        int check = 1;
         String msg = "";
         MsgDTO dto = null;
 
         CustomerDTO pDTO = null;
+        CustomerDTO rDTO = null;
 
         try {
             String customerId = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+
+            if(customerId.isEmpty()) {
+                customerId = CmmUtil.nvl((String) session.getAttribute("NEW_PASSWORD"));
+            }
             String customerPw = CmmUtil.nvl(request.getParameter("customerPw"));
+
+            String pw = CmmUtil.nvl(request.getParameter("pw"));
 
             log.info("customerId : " + customerId);
             log.info("customerPw : " + customerPw);
+            log.info("pw :" + pw);
 
             pDTO = new CustomerDTO();
+            rDTO = new CustomerDTO();
 
-            pDTO.setCustomerId(customerId);
-            pDTO.setCustomerPw(EncryptUtil.encHashSHA256(customerPw));
-            log.info(pDTO.toString());
+            if(! pw.isEmpty()) {
+                pDTO.setCustomerId(customerId);
+                pDTO.setCustomerPw(EncryptUtil.encHashSHA256(pw));
+                log.info(pDTO.toString());
+                rDTO = customerService.getLogin(pDTO);
+                log.info(rDTO.toString());
+                try {
+                    log.info(rDTO.getCustomerId());
+                    if (rDTO.getCustomerId() != null) {
+                        check = 1;
+                    } else {
+                        check = 0;
+                        msg = "현재 비밀번호가 틀렸습니다";
+                    }
+                }catch (Exception e) {
+                    log.info("1");
+                }
+            }
+            log.info(pw);
+            log.info("check: " + check);
+            if(pw.isEmpty() || check == 1) {
+                pDTO.setCustomerId(customerId);
+                pDTO.setCustomerPw(EncryptUtil.encHashSHA256(customerPw));
+                log.info(pDTO.toString());
 
-            res = customerService.updateCustomerPw(pDTO);
+                res = customerService.updateCustomerPw(pDTO);
 
-            log.info("res : " + res);
+                log.info("res : " + res);
 
-            if (res == 1) {
-                msg = "수정되었습니다";
-            } else {
-                msg = "오류로 인해 회원가입에 실패하였습니다";
+                if (res == 1) {
+                    msg = "수정되었습니다";
+                } else {
+                    msg = "오류로 인해 비밀번호 변경에 실패하였습니다";
+                }
             }
         } catch (Exception e) {
             msg = "실패하였습니다 : " + e;
@@ -529,18 +664,16 @@ public class CustomerController {
 
     // 상품 상세정보 조회페이지 이동코드
     @GetMapping(value = "/single-product")
-    public String singleProduct(HttpServletRequest request, ModelMap model, HttpSession session) throws Exception {
+    public String singleProduct(HttpServletRequest request, ModelMap model,  @RequestParam(defaultValue = "1") int page, HttpSession session) throws Exception {
         log.info(this.getClass().getName() + ".goodsMngInfo Start!");
 
         String goodsNumber = request.getParameter("goodsNumber");
-        String market = request.getParameter("market");
         log.info("goodsNumber : " + goodsNumber);
-        log.info("market : " + market);
 
         GoodsDTO pDTO = new GoodsDTO();
         pDTO.setGoodsNumber(goodsNumber);
         GoodsDTO gDTO = Optional.ofNullable(goodsService.getGoodsInfo(pDTO)).orElseGet(GoodsDTO::new);
-        List<GoodsDTO> gList = Optional.ofNullable(reservationService.getPopularGoods(market)).orElseGet(ArrayList::new);
+        List<GoodsDTO> gList = Optional.ofNullable(reservationService.getPopularGoods(gDTO.getMarketNumber())).orElseGet(ArrayList::new);
 
         ReviewDTO pDTO2 = new ReviewDTO();
         pDTO2.setGoodsNumber(goodsNumber);
@@ -559,13 +692,220 @@ public class CustomerController {
         log.info("gList : " + gList.toString());
         log.info("tDTO : " + tDTO.toString());
 
+        // 페이지당 보여줄 아이템 개수 정의
+       // int itemsPerPage = 3;
+
+        // 페이지네이션을 위해 전체 아이템 개수 구하기
+       // int totalItems = rDTO.size();
+
+        // 전체 페이지 개수 계산
+       // int totalPages = (int) Math.ceil((double) totalItems / itemsPerPage);
+//
+        // 현재 페이지에 해당하는 아이템들만 선택하여 rList에 할당
+       // int fromIndex = (page - 1) * itemsPerPage;
+    //    int toIndex = Math.min(fromIndex + itemsPerPage, totalItems);
+     //   rDTO = rDTO.subList(fromIndex, toIndex);
+
+      //  log.info(this.getClass().getName() + ".페이지 번호 : " + page);
+
+    //    model.addAttribute("currentPage", page);
+     //   model.addAttribute("totalPages", totalPages);
         model.addAttribute("cDTO", cDTO);
         model.addAttribute("rDTO", rDTO);
         model.addAttribute("gDTO", gDTO);
         model.addAttribute("gList", gList);
         model.addAttribute("tDTO", tDTO);
+        model.addAttribute("goodsNumber", goodsNumber);
 
         log.info(this.getClass().getName() + ".goodsMngInfo End!");
         return "/customer/single-product";
+    }
+    @GetMapping(value = "/findIdAndPw")
+    public String findIdAndPw(HttpSession session) {
+        session.setAttribute("NEW_PASSWORD", "");
+        session.removeAttribute("NEW_PASSWORD");
+        return "/customer/findIdAndPw";
+    }
+
+    @ResponseBody
+    @PostMapping(value = "searchEmail")
+    public CustomerDTO searchEmail(HttpServletRequest request) throws Exception {
+
+        log.info(this.getClass().getName() + ".searchEmail Start!");
+
+        String email = CmmUtil.nvl(request.getParameter("email")); // 회원아이디
+
+        log.info("email : " + email);
+
+        CustomerDTO pDTO = new CustomerDTO();
+        pDTO.setCustomerEmail(email);
+
+        // 입력된 이메일이 중복된 이메일인지 조회
+        CustomerDTO rDTO = Optional.ofNullable(customerService.searchEmail(pDTO)).orElseGet(CustomerDTO::new);
+
+        log.info(this.getClass().getName() + ".searchEmail End!");
+
+        return rDTO;
+    }
+
+    @ResponseBody
+    @PostMapping(value = "/showId")
+    public MsgDTO showId(HttpServletRequest request) throws Exception{
+
+        log.info(this.getClass().getName() + ".showId Start!");
+
+        int res = 0;
+        String msg = "";
+        MsgDTO dto = null;
+
+        String CustomerName = CmmUtil.nvl(request.getParameter("customerName")); // 이름
+        String email = CmmUtil.nvl(request.getParameter("customerEmailForId")); // 이메일
+
+
+        log.info("CustomerName : " + CustomerName);
+        log.info("email : " + email);
+
+
+        CustomerDTO pDTO = new CustomerDTO();
+        pDTO.setCustomerName(CustomerName);
+        pDTO.setCustomerEmail(email);
+
+        log.info(pDTO.toString());
+
+        CustomerDTO rDTO = Optional.ofNullable(customerService.searchCustomerId(pDTO)).orElseGet(CustomerDTO::new);
+
+        log.info(rDTO.toString());
+
+        if (rDTO.getCustomerId() == null) {
+            msg = "계정 정보가 맞지 않습니다";
+        } else {
+            msg = "고객님의 아이디는 " + rDTO.getCustomerId() + "입니다";
+        }
+
+        dto = new MsgDTO();
+        dto.setMsg(msg);
+        dto.setResult(res);
+
+        log.info(dto.toString());
+
+        log.info(this.getClass().getName() + ".showId End!");
+
+
+        return dto;
+    }
+
+    @GetMapping(value="newPw")
+    public String newPw() {
+        log.info(this.getClass().getName() + ".newPw Start!");
+
+
+
+        return "/customer/newPw";
+    }
+
+    @ResponseBody
+    @PostMapping(value = "newPwProd")
+    public MsgDTO newPwProd(HttpServletRequest request, HttpSession session) throws Exception {
+        log.info(this.getClass().getName() + ".newPwProd Start!");
+
+        int res = 0;
+        String msg = "";
+        MsgDTO dto = null;
+
+        CustomerDTO pDTO = null;
+
+        String customerId = CmmUtil.nvl(request.getParameter("customerId"));
+        String email = CmmUtil.nvl(request.getParameter("customerEmailForPw"));
+
+        log.info("customerId : " + customerId);
+        log.info("email : " + email);
+
+        pDTO = new CustomerDTO();
+
+        pDTO.setCustomerId(customerId);
+        pDTO.setCustomerEmail(email);
+
+        CustomerDTO rDTO = Optional.ofNullable(customerService.searchCustomerPw(pDTO)).orElseGet(CustomerDTO::new);
+
+        if (rDTO.getCustomerId() == null) {
+            msg = "계정 정보가 맞지 않습니다";
+        } else {
+            res = 1;
+            msg = "확인되었습니다";
+            session.setAttribute("NEW_PASSWORD", customerId);
+        }
+
+        dto = new MsgDTO();
+        dto.setMsg(msg);
+        dto.setResult(res);
+
+        log.info(this.getClass().getName() + ".newPwProd Start!");
+
+        return dto;
+    }
+
+    @GetMapping(value = "/reviewList")
+    public String getReviewList(HttpSession session, Model model,  @RequestParam(defaultValue = "1") int page) throws Exception {
+        log.info("getReviewList start");
+
+        String customerId = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+
+        ReviewDTO pDTO = new ReviewDTO();
+        pDTO.setCustomerId(customerId);
+
+        List<ReviewDTO> rList = Optional.ofNullable(reviewService.getCustomerReviewList(pDTO)).orElseGet(ArrayList::new);
+
+        // 페이지당 보여줄 아이템 개수 정의
+        int itemsPerPage = 3;
+
+        // 페이지네이션을 위해 전체 아이템 개수 구하기
+        int totalItems = rList.size();
+
+        // 전체 페이지 개수 계산
+        int totalPages = (int) Math.ceil((double) totalItems / itemsPerPage);
+
+        // 현재 페이지에 해당하는 아이템들만 선택하여 rList에 할당
+        int fromIndex = (page - 1) * itemsPerPage;
+        int toIndex = Math.min(fromIndex + itemsPerPage, totalItems);
+        rList = rList.subList(fromIndex, toIndex);
+
+        model.addAttribute("rList", rList);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
+
+        log.info(this.getClass().getName() + ".페이지 번호 : " + page);
+        log.info("getReviewList End");
+
+        return "/customer/reviewList";
+    }
+
+    @ResponseBody
+    @PostMapping(value = "/rotate")
+    public MsgDTO rotate(HttpSession session) throws Exception {
+        log.info("rotate start");
+
+        String msg = "";
+        int res = 0;
+
+        String customerId = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+
+        log.info("customerId : " + customerId);
+
+        CustomerDTO pDTO = new CustomerDTO();
+        pDTO.setCustomerId(customerId);
+
+        if (!(customerId == null)) {
+            customerService.rotate(pDTO);
+            res = 1;
+            msg = "오늘의 룰렛을 돌렸습니다.";
+        } else {
+            msg = "로그인 해주시길 바랍니다.";
+        }
+
+        MsgDTO dto = new MsgDTO();
+        dto.setResult(res);
+        dto.setMsg(msg);
+
+        return dto;
     }
 }

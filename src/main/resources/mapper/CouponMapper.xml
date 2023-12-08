@@ -9,8 +9,8 @@
         WHERE CUSTOMER_ID = #{customerId}
     </update>
     <insert id="updateCoupon" parameterType="CouponDTO">
-        INSERT INTO COUPON (CUSTOMER_ID, COUPON_NAME, DISCOUNT_RATE, STATEMENT)
-        VALUES (#{customerId}, #{couponName}, #{discountRate}, 0)
+        INSERT INTO COUPON (CUSTOMER_ID, COUPON_NAME, DISCOUNT_RATE)
+        VALUES (#{customerId}, #{couponName}, #{discountRate})
     </insert>
     <update id="roulettePoint" parameterType="CustomerDTO">
         UPDATE CUSTOMER
@@ -22,4 +22,19 @@
         FROM COUPON
         WHERE CUSTOMER_ID = #{customerId}
     </select>
+    <select id="getPoint" parameterType="CustomerDTO">
+        SELECT POINT
+        FROM CUSTOMER
+        WHERE CUSTOMER_ID = #{customerId}
+    </select>
+    <select id="getCustomerCouponCount" parameterType="CouponDTO">
+        SELECT COUPON_NAME, COUNT(*) AS couponCount, coupon_number, customer_id, discount_rate
+        FROM COUPON
+        WHERE CUSTOMER_ID = #{customerId}
+        GROUP BY COUPON_NAME
+    </select>
+    <delete id="deleteCoupon" parameterType="CouponDTO">
+        DELETE FROM COUPON
+        WHERE COUPON_NUMBER = #{couponNumber}
+    </delete>
 </mapper>

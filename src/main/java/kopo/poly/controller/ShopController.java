@@ -5,6 +5,7 @@ import kopo.poly.dto.*;
 import kopo.poly.service.IFileService;
 import kopo.poly.service.IMarketService;
 import kopo.poly.service.IShopService;
+import kopo.poly.service.ITraderService;
 import kopo.poly.util.CmmUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +28,7 @@ public class ShopController {
 
     private final IShopService shopService;
     private final IFileService fileService;
+    private final ITraderService traderService;
 
     // 상점 정보 페이지 이동코드
     // 상인 정보 없을 시 로그인페이지로 리턴 구현하기
@@ -94,6 +96,13 @@ public class ShopController {
         if (traderId.equals(null)) {
             url = "/trader/login";
         }
+
+        TraderDTO pDTO = new TraderDTO();
+        pDTO.setTraderId(traderId);
+
+        TraderDTO cDTO = Optional.ofNullable(traderService.getTraderInfo(pDTO)).orElseGet(TraderDTO::new);
+
+        model.addAttribute("cDTO", cDTO);
 
         log.info(this.getClass().getName() + ".insertShopInfo End!");
 
@@ -240,76 +249,4 @@ public class ShopController {
         }
         return dto;
     }
-
-
-//    @GetMapping(value = "/trader/goodsBuyInfo")
-//    public String goodsBuyInfo(ModelMap model, HttpSession session) throws Exception {
-//
-//        log.info(this.getClass().getName() + ".goodsBuyInfo Start!");
-//
-//        String id = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
-//
-//        ReserveDTO pDTO = new ReserveDTO();
-//        pDTO.setTraderId(id);
-//        pDTO.setState("0");
-//        List<ReserveDTO> rList = shopService.goodsBuyInfo(pDTO);
-//        if (rList == null) rList = new ArrayList<>();
-//
-//        model.addAttribute("rList", rList);
-//
-//        log.info(this.getClass().getName() + ".goodsBuyInfo End!");
-//
-//        return "/trader/goodsBuyInfo";
-//    }
-
-//    @ResponseBody
-//    @PostMapping(value = "/trader/acceptBuy")
-//    public MsgDTO acceptBuy(HttpSession session,@RequestBody Map<String, Object> requestData) {
-//        log.info(this.getClass().getName() + ".acceptBuy Start!");
-//
-//        String msg = "";
-//        int res = 0;
-//        MsgDTO dto = null;
-//
-//        try {
-//            String id = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
-//            String want = (String) requestData.get("want");
-//            List<String> checkboxes = (List<String>) requestData.get("selectedSeqs");
-//            log.info(want);
-//            log.info("id : " + id);
-//            log.info("checkboxes : " + checkboxes);
-//            ReserveDTO pDTO = new ReserveDTO();
-//            if (want.equals("delete")) {
-//                for (String seq : checkboxes) {
-//                    pDTO.setSeq(seq);
-//                    pDTO.setTraderId(id);
-//
-//                    shopService.deleteBuy(pDTO);
-//                }
-//                msg = "삭제되었습니다.";
-//            } else {
-//                for (String seq : checkboxes) {
-//                    pDTO.setSeq(seq);
-//                    pDTO.setTraderId(id);
-//
-//                    shopService.acceptBuy(pDTO);
-//                }
-//                msg = "수락하였습니다.";
-//            }
-//
-//            res = 1;
-//        } catch (Exception e) {
-//            msg = "실패하였습니다. : " + e.getMessage();
-//            log.info(e.toString());
-//            e.printStackTrace();
-//        } finally {
-//            dto = new MsgDTO();
-//            dto.setResult(res);
-//            dto.setMsg(msg);
-//            log.info(this.getClass().getName() + ".deleteBuy End!");
-//        }
-//
-//        return dto;
-//    }
-
 }

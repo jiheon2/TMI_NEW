@@ -23,4 +23,5 @@ public class ReservationDTO {
     private String marketNumber;
     private String shopNumber;
     private String goodsName;
+    private String customerPhoneNumber;
 }

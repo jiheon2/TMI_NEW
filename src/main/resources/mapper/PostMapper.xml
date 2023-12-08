@@ -39,10 +39,13 @@
 
     <!-- 게시글 정보 조회 쿼리 -->
     <select id="getPostInfo" resultType="PostDTO">
-        SELECT POST_NUMBER, TITLE, READ_COUNT, CUSTOMER_ID,
-               CONTENTS, IMAGE, DATE_FORMAT(REG_DT, '%Y/%m/%d %H:%i:%s') AS REG_DT
-        FROM POST
-        WHERE POST_NUMBER = #{postNumber}
+        SELECT P.POST_NUMBER, P.TITLE, P.READ_COUNT, P.CUSTOMER_ID,
+               P.CONTENTS, P.IMAGE, DATE_FORMAT(P.REG_DT, '%Y/%m/%d %H:%i:%s') AS REG_DT,
+               COUNT(C.COMMENT_NUMBER) as total
+        FROM POST P
+                 LEFT JOIN COMMENT C ON P.POST_NUMBER = C.POST_NUMBER
+        WHERE P.POST_NUMBER = #{postNumber}
+        GROUP BY P.POST_NUMBER, P.TITLE, P.READ_COUNT, P.CUSTOMER_ID, P.CONTENTS, P.IMAGE, P.REG_DT;
     </select>
 
     <!-- 게시글 번호 조회 쿼리 -->

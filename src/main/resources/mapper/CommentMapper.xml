@@ -6,14 +6,14 @@
 
     <!-- 댓글 추가 -->
     <insert id="insertComment" parameterType="CommentDTO">
-        INSERT INTO comment (post_number, depth, customer_id, contents, reg_dt)
-        VALUES (#{postNumber}, 0, #{customerId}, #{contents}, Now())
+        INSERT INTO COMMENT (comment_number, post_number, depth, customer_id, contents, reg_dt)
+        VALUES ( (SELECT IFNULL(MAX(A.comment_number),0)+1 FROM COMMENT A),#{postNumber}, 0, #{customerId}, #{contents}, Now())
     </insert>
 
     <!-- 대댓글 추가 -->
     <insert id="insertReply" parameterType="CommentDTO">
         INSERT INTO COMMENT (post_number, depth, customer_id, contents, reg_dt)
-        VALUES (#{postNumber}, 1, #{customerId}, #{contents}, Now())
+        VALUES ((SELECT IFNULL(MAX(A.comment_number),0)+1 FROM COMMENT A), #{postNumber}, 1, #{customerId}, #{contents}, Now())
     </insert>
 
     <!-- 댓글 수정 -->
@@ -42,8 +42,9 @@
     <select id="getCommentList" parameterType="CommentDTO" resultType="CommentDTO">
         SELECT *
         FROM COMMENT
-        WHERE COMMENT_NUMBER = #{commentNumber}
-        ORDER BY depth ASC, comment_number ASC
+        WHERE POST_NUMBER = #{postNumber}
+        AND DEPTH = 0
+        ORDER BY  comment_number ASC
     </select>
 
 </mapper>

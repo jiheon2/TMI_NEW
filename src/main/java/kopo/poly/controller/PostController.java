@@ -1,7 +1,9 @@
 package kopo.poly.controller;
 
+import kopo.poly.dto.CommentDTO;
 import kopo.poly.dto.MsgDTO;
 import kopo.poly.dto.PostDTO;
+import kopo.poly.service.ICommentService;
 import kopo.poly.service.IFileService;
 import kopo.poly.service.IPostService;
 import kopo.poly.util.CmmUtil;
@@ -28,6 +30,7 @@ import java.util.Optional;
 public class PostController {
     private final IPostService postService;
     private final IFileService fileService;
+    private final ICommentService commentService;
 
     //GET 방식은 데이터 조회, POST 방식에서 새로운 데이터 추가.
 
@@ -152,7 +155,12 @@ public class PostController {
         PostDTO rDTO = Optional.ofNullable(postService.getPostInfo(pDTO))
                 .orElseGet(PostDTO::new);
 
+        CommentDTO cDTO = new CommentDTO();
+        cDTO.setPostNumber(postNumber);
+        List<CommentDTO> cList = Optional.ofNullable(commentService.getCommentList(cDTO)).orElseGet(ArrayList::new);
+
         model.addAttribute("rDTO", rDTO);
+        model.addAttribute("cList", cList);
 
         log.info(this.getClass().getName() + ".postInfo End!");
 

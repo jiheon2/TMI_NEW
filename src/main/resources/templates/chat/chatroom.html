@@ -11,60 +11,88 @@
     <link rel="stylesheet" href="/assets/css/bootstrap.css">
     <link rel="stylesheet" href="/assets/css/font.css">
     <link rel="stylesheet" href="/assets/vendors/iconly/bold.css">
-
     <link rel="stylesheet" href="/assets/vendors/perfect-scrollbar/perfect-scrollbar.css">
     <link rel="stylesheet" href="/assets/vendors/bootstrap-icons/bootstrap-icons.css">
     <link rel="stylesheet" href="/assets/css/app.css">
+    <link rel="stylesheet" href="/assets/css/widgets/chat.css">
 </head>
 
 <body>
 <div id="app">
-    <div id="main">
+    <div id="main" style="margin-right: 300px">
         <div class="page-heading">
             <div class="page-title">
                 <div class="row">
                     <div class="col-12 col-md-6 order-md-1 order-last">
                         <div class="page-heading">
-                            <h3>채팅</h3>
+                            <h3>[[${roomName}]]</h3>
                         </div>
                     </div>
                     <div class="col-12 col-md-6 order-md-2 order-first">
                         <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                             <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="/trader/traderIndex">Dashboard</a></li>
+                                <li class="breadcrumb-item"><a href="/chat/intro">채팅방 목록</a></li>
                             </ol>
                         </nav>
                     </div>
                 </div>
             </div>
+<!--            <section class="section">-->
+<!--                <div class="row">-->
+<!--                    <div class="col-12">-->
+<!--                        <div class="card">-->
+<!--                            <div class="card-header">-->
+<!--                                <div class="card-title">-->
+<!--                                    <div class="divTableHeading">-->
+<!--                                        <div class="divTableRow">-->
+<!--                                            <div class="divTableHead">대화 내용</div>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                    <div class="divTableBody">-->
+<!--                                        <div class="divTableRow">-->
+<!--                                            <div class="divTableCell" id="chat"></div>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <div class="card-body">-->
+<!--                                <div class="divTable minimalistBlack">-->
+<!--                                    <div class="divTableBody">-->
+<!--                                        <div class="divTableRow">-->
+<!--                                            <div class="divTableCell">전달할 메시지</div>-->
+<!--                                            <div class="divTableCell">-->
+<!--                                                <input type="text" id="msg">-->
+<!--                                                <button id="btnSend">메시지 전송</button>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </section>-->
             <section class="section">
                 <div class="row">
-                    <div class="col-12">
+                    <div class="col-md-6">
                         <div class="card">
                             <div class="card-header">
-                                <div class="card-title">
-                                    <div class="divTableHeading">
-                                        <div class="divTableRow">
-                                            <div class="divTableHead">대화 내용</div>
-                                        </div>
-                                    </div>
-                                    <div class="divTableBody">
-                                        <div class="divTableRow">
-                                            <div class="divTableCell" id="chat"></div>
-                                        </div>
+                                <div class="media d-flex align-items-center">
+                                    <div class="name flex-grow-1">
+                                        <h6 class="mb-0">채팅</h6>
                                     </div>
                                 </div>
                             </div>
-                            <div class="card-body">
-                                <div class="divTable minimalistBlack">
-                                    <div class="divTableBody">
-                                        <div class="divTableRow">
-                                            <div class="divTableCell">전달할 메시지</div>
-                                            <div class="divTableCell">
-                                                <input type="text" id="msg">
-                                                <button id="btnSend">메시지 전송</button>
-                                            </div>
-                                        </div>
+                            <div class="card-body pt-4 bg-grey">
+                                <div class="chat-content" id="chat" style="max-height: 700px; overflow-y: scroll">
+
+                                </div>
+                            </div>
+                            <div class="card-footer" style="padding: 5px">
+                                <div class="message-form d-flex flex-direction-column align-items-center">
+                                    <div class="d-flex flex-grow-1 ms-4">
+                                        <input type="text" id="msg" class="form-control" placeholder="채팅을 입력 해 주세요." style="width: 80%; margin-right: 10px">
+                                        <button class="btn btn-success" id="btnSend">입력</button>
                                     </div>
                                 </div>
                             </div>
@@ -73,16 +101,6 @@
                 </div>
             </section>
         </div>
-        <footer>
-            <div class="footer clearfix mb-0 text-muted">
-                <div class="float-start">
-                    <p>2021 &copy; Mazer</p>
-                </div>
-                <div class="float-end">
-                    <p>Crafted with <span class="text-danger"><i class="bi bi-heart"></i></span> by <a href="http://ahmadsaugi.com">A. Saugi</a></p>
-                </div>
-            </div>
-        </footer>
     </div>
 </div>
 <!-- JS -->
@@ -160,36 +178,27 @@
             // 웹소켓으로부터 받은 데이터를 JSON 구조로 변환하기
             let data = JSON.parse(msg.data);
 
-            if (data.name === userName) { // 내가 발송한 채팅 메시지는 파란색 글씩
-                $("#chat").append("<div>");
-                $("#chat").append("<span style='color: blue'><b>[보낸 사람] : </b></span>");
-                $("#chat").append("<span style='color: blue'> 나 </span>");
-                $("#chat").append("<span style='color: blue'><b>[발송 메시지] : </b></span>");
-                $("#chat").append("<span style='color: blue'>" + data.msg + " </span>");
-                $("#chat").append("<span style='color: blue'><b>[발송시간] : </b></span>");
-                $("#chat").append("<span style='color: blue'>" + data.date + " </span>");
-                $("#chat").append("</div>");
+            let myChatContent = "<div class='chat'>" +
+                "<div class='chat-body'>" +
+                "<div class='chat-message'>" + data.msg +
+                "<div style='font-size: 12px'>" + data.name + "/" + data.date + "</div>" +
+                "</div>" +
+                "</div>" +
+                "</div>";
 
-            } else if (data.name === "관리자") { // 관리자가 발송한 채팅 메시지는 빨간색 글씩
-                $("#chat").append("<div>");
-                $("#chat").append("<span style='color: red'><b>[보낸 사람] : </b></span>");
-                $("#chat").append("<span style='color: red'>" + data.name + "</span>");
-                $("#chat").append("<span style='color: red'><b>[발송 메시지] : </b></span>");
-                $("#chat").append("<span style='color: red'>" + data.msg + " </span>");
-                $("#chat").append("<span style='color: red'><b>[발송시간] : </b></span>");
-                $("#chat").append("<span style='color: red'>" + data.date + " </span>");
-                $("#chat").append("</div>");
+            let otherChatContent = "<div class='chat chat-left'>" +
+                "<div class='chat-body'>" +
+                "<div class='chat-message'>" + data.msg +
+                "<div style='font-size: 12px'>" + data.name + "/" + data.date + "</div>" +
+                "</div>" +
+                "</div>" +
+                "</div>";
+
+            if (data.name === userName) { // 내가 발송한 채팅 메시지는 파란색 글씩
+                $("#chat").append(myChatContent);
 
             } else {
-                $("#chat").append("<div>"); // 그 외 채팅참여자들이 발송한 채팅 메시지는 검정색
-                $("#chat").append("<span><b>[보낸 사람] : </b></span>");
-                $("#chat").append("<span>" + data.name + " </span>");
-                $("#chat").append("<span><b>[수신 메시지] : </b></span>");
-                $("#chat").append("<span>" + data.msg + " </span>");
-                $("#chat").append("<span><b>[발송시간] : </b></span>");
-                $("#chat").append("<span>" + data.date + " </span>");
-                $("#chat").append("</div>");
-
+                $("#chat").append(otherChatContent);
             }
         }
 

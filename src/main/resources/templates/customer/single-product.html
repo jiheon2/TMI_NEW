@@ -27,6 +27,12 @@
     <link rel="stylesheet" href="/assets/css/reservationModal.css">
     <script src="/assets/js/jquery-3.6.0.min.js"></script>
     <script src="https://kit.fontawesome.com/cb71939295.js" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+        // 상세보기
+        function doGoods(goodsNumber) {
+            location.href = "/customer/single-product?goodsNumber=" + goodsNumber;
+        }
+    </script>
 
     <!--    별점 체크-->
     <script>
@@ -60,6 +66,8 @@
         });
 
     </script>
+
+
 
     <!--    리뷰 작성-->
     <script th:inline="javascript">
@@ -122,6 +130,7 @@
                         traderId: traderId,
                         goodsName: goodsName,
                         goodsNumber: goodsNumber,
+                        customerId: customerId
                     },
                     success: function (json) {
 
@@ -162,7 +171,6 @@
 
                         if (json.result === 1) {
                             alert(json.msg);
-
                         } else {
                             alert(json.msg);
                         }
@@ -213,6 +221,51 @@
             document.getElementById('closeReservationModal').onclick = function () {
                 document.getElementById('reservationModal').style.display = 'none';
             }
+        });
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#doReservation").on("click", function (event) {
+                event.preventDefault(); // 기본 이벤트 동작을 막음 (페이지 새로고침 등)
+
+                // 여기에 예약 정보를 가져와서 서버로 보내는 로직을 작성하세요
+                var traderId = $("#traderId").text();
+                var customerName = $("#customerName").val();
+                var reservationContents = $("#reservationContents").val();
+                var reservationPrice = $("#reservationPrice").val();
+                var reservationDate = $("#reservationDate").val();
+                var customerPhoneNumber = $("#customerPhoneNumber").val();
+                var goodsNumber = $("#goodsNumber").val();
+                var state = $("#state").val();
+
+                $.ajax({
+                    url: "/reservation/insertCustomerReservationInfo",
+                    type: "POST",
+                    data: {
+                        traderId: traderId,
+                        customerName: customerName,
+                        reservationContents: reservationContents,
+                        reservationPrice: reservationPrice,
+                        reservationDate: reservationDate,
+                        customerPhoneNumber: customerPhoneNumber,
+                        goodsNumber: goodsNumber,
+                        state: state
+                    },
+                    success: function (response) {
+                        // 서버로부터의 응답을 이용하여 처리하는 로직을 작성하세요
+                        if (response.result === 1) {
+                            alert(response.msg); // 성공 메시지 표시
+                            location.reload(); // 페이지 새로고침 또는 원하는 동작 수행
+                        } else {
+                            alert(response.msg); // 실패 메시지 표시
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        // 에러 발생 시 처리하는 로직을 작성하세요
+                        console.error(error); // 에러 메시지 출력 또는 처리
+                    }
+                });
+            });
         });
     </script>
 </head>
@@ -388,32 +441,68 @@
             </div>
             <div class="card-content">
                 <div class="card-body">
-                    <form id="reservation" class="form form-vertical">
+                    <form id="insertForm" class="form form-vertical">
                         <div class="form-body">
                             <div class="row">
-                                <div class="col-12">
+                                <div class="col-12" style="display: none">
                                     <div class="form-group">
-                                        <label for="reservationName">예약자명</label>
-                                        <input type="text" id="reservationName" class="form-control"
-                                               name="reservationName" placeholder="예약자명">
+                                        <label for="traderId">상인ID</label>
+                                        <input type="text" class="form-control"
+                                               name="traderId" th:value="${tDTO.traderId}">
+                                    </div>
+                                </div>
+                                <div class="col-12" style="display: none">
+                                    <div class="form-group">
+                                        <label for="goodsNumber">상품번호</label>
+                                        <input type="text" class="form-control" id="goodsNumber"
+                                               name="goodsNumber" th:value="${gDTO.goodsNumber}">
+                                    </div>
+                                </div>
+                                <div class="col-12" style="display: none">
+                                    <div class="form-group">
+                                        <label for="reservationPrice">상품가격</label>
+                                        <input type="text" class="form-control" id="reservationPrice"
+                                               name="reservationPrice" th:value="${gDTO.price}">
+                                    </div>
+                                </div>
+                                <div class="col-12" style="display: none">
+                                    <div class="form-group">
+                                        <label for="state">상태</label>
+                                        <input type="text" id="state" class="form-control"
+                                               name="state" value="0">
                                     </div>
                                 </div>
                                 <div class="col-12">
                                     <div class="form-group">
-                                        <label for="reservationPhoneNumber">휴대폰번호</label>
-                                        <input type="text" id="reservationPhoneNumber" class="form-control"
-                                               name="reservationPhoneNumber" placeholder="휴대폰번호">
+                                        <label for="customerName">예약자명</label>
+                                        <input type="text" id="customerName" class="form-control"
+                                               name="customerName" placeholder="예약자명">
                                     </div>
                                 </div>
                                 <div class="col-12">
                                     <div class="form-group">
-                                        <label for="reservationInfo">예약내용</label>
-                                        <textarea type="text" id="reservationInfo" class="form-control"
-                                                  name="reservationInfo" placeholder="예약내용"></textarea>
+                                        <label for="customerPhoneNumber">휴대폰번호</label>
+                                        <input type="text" id="customerPhoneNumber" class="form-control"
+                                               name="customerPhoneNumber" placeholder="휴대폰번호">
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label for="reservationContents">예약내용</label>
+                                        <textarea type="text" id="reservationContents" class="form-control"
+                                                  name="reservationContents" placeholder="예약내용"></textarea>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label for="reservationDate">예약일</label>
+                                        <input type="date" id="reservationDate" class="form-control"
+                                               name="reservationDate">
                                     </div>
                                 </div>
                                 <div class="col-12 d-flex justify-content-end">
-                                    <button type="submit" class="btn btn-primary me-1 mb-1">예약신청</button>
+                                    <button type="submit" class="btn btn-primary me-1 mb-1" id="doReservation">예약신청
+                                    </button>
                                     <button type="reset"
                                             class="btn btn-light-secondary me-1 mb-1">다시작성
                                     </button>
@@ -476,24 +565,23 @@
                             </div>
                         </div>
                         <br>
-                        <div class="review_list" th:each="dto:${rDTO}">
-                            <div class="review_item">
+                        <div class="review_list">
+                            <div class="review_item" th:each="dto:${rDTO}">
                                 <div class="media">
                                     <div class="d-flex">
                                         <img src="/assets/images/product/single-product/review-1.png" alt=""/>
                                     </div>
                                     <div class="media-body">
-                                        <h4>소비자Id</h4>
+                                        <h4 th:text="${dto.customerName}">Customer Name</h4>
                                         <div th:each="i:${dto.score}">
-                                                <span th:each="j : ${#numbers.sequence(1, i)}">
-                                               <i class="fa-solid fa-star" style="color: #fff700;"></i>
-                                              </span>
+                    <span th:each="j : ${#numbers.sequence(1, i)}">
+                        <i class="fa-solid fa-star" style="color: #fff700;"></i>
+                    </span>
                                         </div>
                                     </div>
                                 </div>
                                 <br>
-                                <div style="white-space: pre-line" th:text="${dto.contents}">
-                                </div>
+                                <div style="white-space: pre-line" th:text="${dto.contents}"></div>
                                 <hr>
                             </div>
                         </div>
@@ -563,6 +651,8 @@
                         <div class="single_product_text">
                             <h4>[[${dto.goodsName}]]</h4>
                             <h3>[[${dto.price}]]원</h3>
+                            <a th:attr="onclick='doGoods(\'' + ${dto.goodsNumber} + '\')'" class="add_cart">물건 사러가기<i
+                                    class="ti-heart"></i></a>
                         </div>
                     </div>
                 </div>

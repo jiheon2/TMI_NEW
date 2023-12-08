@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -47,5 +49,29 @@ public class CouponService implements ICouponService {
         log.info("getCouponCount start");
 
         return couponMapper.getCouponCount(pDTO);
+    }
+
+    @Override
+    public CustomerDTO getPoint(CustomerDTO cDTO) throws Exception {
+        log.info("getPoint start");
+
+        return couponMapper.getPoint(cDTO);
+    }
+
+    @Override
+    public List<CouponDTO> getCustomerCouponCount(CouponDTO pDTO) throws Exception {
+        log.info("getCustomerCouponCount start");
+
+        return couponMapper.getCustomerCouponCount(pDTO);
+    }
+    @Override
+    public int deleteCoupon(CouponDTO pDTO) throws Exception {
+        log.info("deleteCoupon start!");
+
+        int res = 0;
+
+        couponMapper.deleteCoupon(pDTO);
+
+        return res;
     }
 }

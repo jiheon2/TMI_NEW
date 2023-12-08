@@ -1,10 +1,8 @@
 package kopo.poly.controller;
 
-import kopo.poly.dto.BasketDTO;
-import kopo.poly.dto.MsgDTO;
-import kopo.poly.dto.PaymentDTO;
-import kopo.poly.dto.ReservationDTO;
+import kopo.poly.dto.*;
 import kopo.poly.service.IBasketService;
+import kopo.poly.service.ICouponService;
 import kopo.poly.util.CmmUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +14,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -27,6 +27,7 @@ import java.util.Map;
 public class BasketController {
 
     private final IBasketService basketService;
+    private final ICouponService couponService;
 
     // 장바구니 담기
     // 구현완료(11/21)
@@ -49,6 +50,15 @@ public class BasketController {
             String goodsName = CmmUtil.nvl(request.getParameter("goodsName"));
             String goodsNumber = CmmUtil.nvl(request.getParameter("goodsNumber"));
             String goodsImage = CmmUtil.nvl(request.getParameter("goodsImage"));
+            String type =  CmmUtil.nvl((String) session.getAttribute("SS_TYPE"));
+            if(!type.equals("Customer") || customerId == null) {
+                session.invalidate();
+                msg="소비자 로그인이 필요한 서비스입니다";
+                res = 2;
+                dto.setResult(res);
+                dto.setMsg(msg);
+                return  dto;
+            }
 
             log.info("customerId : " + customerId);
             log.info("quantity : " + quantity);
@@ -91,9 +101,10 @@ public class BasketController {
     }
     @ResponseBody
     @PostMapping(value = "insertPayment")
-    public MsgDTO insertBasket(HttpServletRequest request) throws Exception {
+    public MsgDTO insertBasket(@RequestBody Map<String, Object> requestData, HttpSession session) throws Exception {
         log.info(this.getClass().getName() + ".insertPayment Start!");
 
+        String customerId = (String) session.getAttribute("SS_ID");
         // 성공이면 1, 실패면 0
         int res = 0;
         String msg = "";
@@ -103,31 +114,43 @@ public class BasketController {
 
         try {
 
-            String applyNum = CmmUtil.nvl(request.getParameter("applyNum"));
-            String bankName = CmmUtil.nvl(request.getParameter("bankName"));
-            String buyerAddr = CmmUtil.nvl(request.getParameter("buyerAddr"));
-            String buyerEmail = CmmUtil.nvl(request.getParameter("buyerEmail"));
-            String buyerPostcode = CmmUtil.nvl(request.getParameter("buyerPostcode"));
-            String buyerTel = CmmUtil.nvl(request.getParameter("buyerTel"));
-            String cardName = CmmUtil.nvl(request.getParameter("cardName"));
-            String cardNumber = CmmUtil.nvl(request.getParameter("cardNumber"));
-            String cardQuote = CmmUtil.nvl(request.getParameter("cardQuote"));
-            String currency = CmmUtil.nvl(request.getParameter("currency"));
-            String customData = CmmUtil.nvl(request.getParameter("customData"));
-            String impUid = CmmUtil.nvl(request.getParameter("impUid"));
-            String name = CmmUtil.nvl(request.getParameter("name"));
-            String paidAmount = CmmUtil.nvl(request.getParameter("paidAmount"));
-            String paidAt = CmmUtil.nvl(request.getParameter("paidAt"));
-            String payMethod = CmmUtil.nvl(request.getParameter("payMethod"));
-            String pgProvider = CmmUtil.nvl(request.getParameter("pgProvider"));
-            String pgTid = CmmUtil.nvl(request.getParameter("pgTid"));
-            String pgType = CmmUtil.nvl(request.getParameter("pgType"));
-            String reciptUrl = CmmUtil.nvl(request.getParameter("reciptUrl"));
-            String status = CmmUtil.nvl(request.getParameter("status"));
-            String success = CmmUtil.nvl(request.getParameter("success"));
+            String coupon = requestData.get("coupon").toString();
+            if (!coupon.equals("0")) {
+                CouponDTO cDTO = new CouponDTO();
+                cDTO.setCouponNumber(coupon);
+                res = couponService.deleteCoupon(cDTO);
+            }
+            String applyNum = (String) requestData.get("applyNum");
+            String bankName = (String) requestData.get("bankName");
+            String buyerAddr = (String) requestData.get("buyerAddr");
+            String buyerEmail = (String) requestData.get("buyerEmail");
+            String buyerPostcode = (String) requestData.get("buyerPostcode");
+            String buyerTel = (String) requestData.get("buyerTel");
+            String cardName = (String) requestData.get("cardName");
+            String cardNumber = (String) requestData.get("cardNumber");
+            String cardQuote = (String) requestData.get("cardQuote");
+            String currency = (String) requestData.get("currency");
+            String customData = (String) requestData.get("customData");
+            String impUid = (String) requestData.get("impUid");
+            String name = (String) requestData.get("name");
+            String paidAmount = requestData.get("paidAmount").toString();
+            String paidAt = requestData.get("paidAt").toString();
+            String payMethod = (String) requestData.get("payMethod");
+            String pgProvider = (String) requestData.get("pgProvider");
+            String pgTid = (String) requestData.get("pgTid");
+            String pgType = (String) requestData.get("pgType");
+            String reciptUrl = (String) requestData.get("reciptUrl");
+            String status = (String) requestData.get("status");
+            String success = requestData.get("success").toString();
+
+            Date date = new Date(Long.parseLong(paidAt) * 1000);  // Unix timestamp는 밀리초가 아니라 초 단위이므로 1000을 곱해줍니다.
+
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yy/MM/dd HH:mm:ss");
+            String formattedDate = dateFormat.format(date);
 
             pDTO = new PaymentDTO();
 
+            pDTO.setCustomerId(customerId);
             pDTO.setApplyNum(applyNum);
             pDTO.setBankName(bankName);
             pDTO.setBuyerAddr(buyerAddr);
@@ -145,7 +168,7 @@ public class BasketController {
             pDTO.setPayMethod(payMethod);
             pDTO.setPgProvider(pgProvider);
             pDTO.setPgTid(pgTid);
-            pDTO.setPaidAt(paidAt);
+            pDTO.setPaidAt(formattedDate);
             pDTO.setPgType(pgType);
             pDTO.setReciptUrl(reciptUrl);
             pDTO.setStatus(status);
@@ -160,14 +183,10 @@ public class BasketController {
             if (res == 1) {
 
                 BasketDTO pDTO1 = new BasketDTO();
-                String basketNumbers = request.getParameter("basketNumbers");
-                log.info(basketNumbers);
-                String[] splitStr = basketNumbers.split(",");
-                List<String> rList = new ArrayList<>();
-                for(int i=0; i<splitStr.length; i++){
-                    rList.add(splitStr[i]);
-                }
-                for (String seq : rList) {
+                List<String> basketNumbers = (List<String>) requestData.get("basketNumbers");
+                log.info(basketNumbers.toString());
+
+                for (String seq : basketNumbers) {
                     pDTO1.setBasketNumber(seq);
 
                     res = basketService.deleteBuy(pDTO1);
@@ -207,13 +226,13 @@ public class BasketController {
             log.info("checkboxes : " + checkboxes);
 
             BasketDTO pDTO = new BasketDTO();
-                for (String seq : checkboxes) {
-                    pDTO.setBasketNumber(seq);
-                    pDTO.setCustomerId(id);
+            for (String seq : checkboxes) {
+                pDTO.setBasketNumber(seq);
+                pDTO.setCustomerId(id);
 
-                    basketService.deleteBuy(pDTO);
-                }
-                msg = "삭제되었습니다.";
+                basketService.deleteBuy(pDTO);
+            }
+            msg = "삭제되었습니다.";
 
             res = 1;
         } catch (Exception e) {

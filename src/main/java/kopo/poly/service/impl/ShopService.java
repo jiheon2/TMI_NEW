@@ -15,13 +15,6 @@ import java.util.Optional;
 @Service
 public class ShopService implements IShopService {
     private final IShopMapper shopMapper;
-    @Override
-    public List<ReservationDTO> goodsBuyInfo(ReservationDTO pDTO) throws Exception {
-
-        log.info(this.getClass().getName() + ".goodsBuyInfo start!");
-
-        return shopMapper.goodsBuyInfo(pDTO);
-    }
 
     @Override
     public ShopDTO getCount(ShopDTO pDTO) throws Exception {
@@ -41,16 +34,7 @@ public class ShopService implements IShopService {
     }
 
 
-    @Override
-    public void deleteBuy(ReservationDTO pDTO) throws Exception {
-        log.info(this.getClass().getName() + ".deleteBuy start!");
-        shopMapper.deleteBuy(pDTO);
-    }
-    @Override
-    public void acceptBuy(ReservationDTO pDTO) throws Exception {
-        log.info(this.getClass().getName() + ".deleteBuy start!");
-        shopMapper.acceptBuy(pDTO);
-    }
+
 
     /* 상점정보 조회 코드 */
     @Override

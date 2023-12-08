@@ -26,6 +26,14 @@ public class GoodsService implements IGoodsService {
 
         return goodsMapper.getGoodsList(pDTO);
     }
+    /* 상품 목록 조회 */
+    @Override
+    public List<GoodsDTO> getGoodsAll() throws Exception {
+
+        log.info(this.getClass().getName() + ".getGoodsAll start!");
+
+        return goodsMapper.getGoodsAll();
+    }
 
     /* 상품 정보 조회 */
     @Override
@@ -68,5 +76,11 @@ public class GoodsService implements IGoodsService {
     public void goodsInfoDelete(GoodsDTO pDTO) throws Exception {
         log.info(this.getClass().getName() + ".goodsMsgDelete start!");
         goodsMapper.goodsInfoDelete(pDTO);
+    }
+
+    @Override
+    public List<GoodsDTO> getAllGoodsInfo() throws Exception {
+        log.info(this.getClass().getName() + ".getAllGoodsInfo start");
+        return goodsMapper.getAllGoodsInfo();
     }
 }
