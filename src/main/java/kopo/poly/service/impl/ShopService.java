@@ -15,20 +15,7 @@ import java.util.Optional;
 @Service
 public class ShopService implements IShopService {
     private final IShopMapper shopMapper;
-    @Override
-    public List<ReserveDTO> goodsBuyInfo(ReserveDTO pDTO) throws Exception {
 
-        log.info(this.getClass().getName() + ".goodsBuyInfo start!");
-
-        return shopMapper.goodsBuyInfo(pDTO);
-    }
-    @Override
-    public List<ShopDTO> getCalender(ShopDTO pDTO) throws Exception {
-
-        log.info(this.getClass().getName() + ".getCalender start!");
-
-        return shopMapper.getDateCount(pDTO);
-    }
     @Override
     public ShopDTO getCount(ShopDTO pDTO) throws Exception {
         log.info(this.getClass().getName() + ".getReviewCount Start!");
@@ -46,60 +33,13 @@ public class ShopService implements IShopService {
         return rDTO;
     }
 
-    @Override
-    public ProductDTO getGoodsInfo(ProductDTO pDTO) throws Exception {
-        log.info(this.getClass().getName() + ".getGoodsInfo Start!");
 
 
-        ProductDTO rDTO = Optional.ofNullable(shopMapper.getGoodsInfo(pDTO)).orElseGet(ProductDTO::new);
 
-        log.info(this.getClass().getName() + ".getGoodsInfo Start!");
-
-        return rDTO;
-    }
-    @Override
-    public void deleteBuy(ReserveDTO pDTO) throws Exception {
-        log.info(this.getClass().getName() + ".deleteBuy start!");
-        shopMapper.deleteBuy(pDTO);
-    }
-    @Override
-    public void acceptBuy(ReserveDTO pDTO) throws Exception {
-        log.info(this.getClass().getName() + ".deleteBuy start!");
-        shopMapper.acceptBuy(pDTO);
-    }
-    @Override
-    public List<ProductDTO> getGoodsList(ProductDTO pDTO) throws Exception {
-
-        log.info(this.getClass().getName() + ".getGoodsList start!");
-
-        return shopMapper.getGoodsList(pDTO);
-    }
-
-    @Override
-    public int changeGoods(ProductDTO pDTO) throws Exception {
-        int result = 0;
-        int res = 0;
-        log.info("수정 시작");
-        result = shopMapper.changeGoods(pDTO);
-        if(result == 0) {
-            log.info("인설트 시작");
-            result = shopMapper.insertGoods(pDTO);
-        }
-
-        if (result > 0) {
-            res = 1;
-        }
-        return res;
-    }
-    @Override
-    public void goodsMsgDelete(ProductDTO pDTO) throws Exception {
-        log.info(this.getClass().getName() + ".goodsMsgDelete start!");
-        shopMapper.goodsMsgDelete(pDTO);
-    }
+    /* 상점정보 조회 코드 */
     @Override
     public ShopDTO getShopInfo(ShopDTO pDTO) throws Exception {
         log.info(this.getClass().getName() + ".getShopInfo Start!");
-
 
         ShopDTO rDTO = Optional.ofNullable(shopMapper.getShopInfo(pDTO)).orElseGet(ShopDTO::new);
 
@@ -108,21 +48,36 @@ public class ShopService implements IShopService {
         return rDTO;
     }
 
-    @Override
-    public int changeShop(ShopDTO pDTO) throws Exception {
-        int result = 0;
-        int res = 0;
-            log.info("수정 시작");
-            result = shopMapper.changeShop(pDTO);
-            if(result == 0) {
-                log.info("인설트 시작");
-                result = shopMapper.insertShop(pDTO);
-            }
 
-        if (result > 0) {
-            res = 1;
-        }
+    /* 상점정보 등록 코드 */
+    @Override
+    public int insertShopInfo(ShopDTO pDTO) throws Exception {
+        int res = 0;
+
+        log.info("인설트 시작");
+
+        res = shopMapper.insertShop(pDTO);
+
         return res;
     }
 
+    /* 상점 정보 수정 코드 */
+    @Override
+    public int updateShopInfo(ShopDTO pDTO) throws Exception {
+        int res = 0;
+
+        log.info("수정 시작");
+        res = shopMapper.updateShop(pDTO);
+
+        return res;
+    }
+
+    /* 상점 정보 목록 조회 */
+    @Override
+    public List<ShopDTO> getShopList(ShopDTO pDTO) throws Exception {
+
+        log.info(this.getClass().getName() + ".getShopList Start!");
+
+        return shopMapper.getShopList(pDTO);
+    }
 }

@@ -2,545 +2,758 @@
 <html lang="zxx">
 
 <head>
-  <!-- Required meta tags -->
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>aranoz</title>
-  <link rel="icon" href="/assets/images/favicon.png">
-  <!-- Bootstrap CSS -->
-  <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
-  <!-- animate CSS -->
-  <link rel="stylesheet" href="/assets/css/animate.css">
-  <!-- owl carousel CSS -->
-  <link rel="stylesheet" href="/assets/css/owl.carousel.min.css">
-  <link rel="stylesheet" href="/assets/css/lightslider.min.css">
-  <!-- font awesome CSS -->
-  <link rel="stylesheet" href="/assets/css/all.css">
-  <!-- flaticon CSS -->
-  <link rel="stylesheet" href="/assets/css/flaticon.css">
-  <link rel="stylesheet" href="/assets/css/themify-icons.css">
-  <!-- font awesome CSS -->
-  <link rel="stylesheet" href="/assets/css/magnific-popup.css">
-  <!-- style CSS -->
-  <link rel="stylesheet" href="/assets/css/style.css">
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>aranoz</title>
+    <link rel="stylesheet" href="/assets/css/global.css">
+    <link rel="icon" href="/assets/images/favicon.png">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+    <!-- animate CSS -->
+    <link rel="stylesheet" href="/assets/css/animate.css">
+    <!-- owl carousel CSS -->
+    <link rel="stylesheet" href="/assets/css/owl.carousel.min.css">
+    <link rel="stylesheet" href="/assets/css/lightslider.min.css">
+    <!-- font awesome CSS -->
+    <link rel="stylesheet" href="/assets/css/all.css">
+    <!-- flaticon CSS -->
+    <link rel="stylesheet" href="/assets/css/flaticon.css">
+    <link rel="stylesheet" href="/assets/css/themify-icons.css">
+    <!-- font awesome CSS -->
+    <link rel="stylesheet" href="/assets/css/magnific-popup.css">
+    <!-- style CSS -->
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/reservationModal.css">
+    <script src="/assets/js/jquery-3.6.0.min.js"></script>
     <script src="https://kit.fontawesome.com/cb71939295.js" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+        // 상세보기
+        function doGoods(goodsNumber) {
+            location.href = "/customer/single-product?goodsNumber=" + goodsNumber;
+        }
+    </script>
+
+    <!--    별점 체크-->
+    <script>
+
+        //별점 마킹 모듈 프로토타입으로 생성
+        function Rating() {
+        };
+        Rating.prototype.rate = 0;
+        Rating.prototype.setRate = function (newrate) {
+            //별점 마킹 - 클릭한 별 이하 모든 별 체크 처리
+            this.rate = newrate;
+            let items = document.querySelectorAll('.rate_radio');
+            items.forEach(function (item, idx) {
+                if (idx < newrate) {
+                    item.checked = true;
+                } else {
+                    item.checked = false;
+                }
+            });
+        }
+        let rating = new Rating();//별점 인스턴스 생성
+
+        document.addEventListener('DOMContentLoaded', function () {
+            //별점선택 이벤트 리스너
+            document.querySelector('.rating').addEventListener('click', function (e) {
+                let elem = e.target;
+                if (elem.classList.contains('rate_radio')) {
+                    rating.setRate(parseInt(elem.value));
+                }
+            })
+        });
+
+    </script>
+
+
+
+    <!--    리뷰 작성-->
+    <script th:inline="javascript">
+
+        const goodsNumber = /*[[${gDTO.goodsNumber}]]*/ '';
+        const goodsName = /*[[${gDTO.goodsName}]]*/ '';
+        const traderId = /*[[${gDTO.traderId}]]*/ '';
+        const customerId = /*[[${session.SS_ID}]]*/ '';
+        const price = /*[[${gDTO.price}]]*/ '';
+        const goodsImage = /*[[${gDTO.goodsImage}]]*/ '';
+        const shopName = /*[[${gDTO.shopName}]]*/ '';
+
+        $(document).ready(function () {
+            let f = document.getElementById("f");
+
+            console.log("goodsNumber : " + goodsNumber)
+            console.log("goodsName : " + goodsName)
+            console.log("traderId : " + traderId)
+            console.log("customerId : " + customerId)
+
+            $("#writeReview").on("click", function () {
+                writeReview(f)
+            })
+            $("#doBasket").on("click", function () {
+                doBasket()
+            })
+            $("#changeLike").on("click", function () {
+                changeLike()
+            })
+            $("#btnChat").on("click", function () {
+                dochat()
+            })
+
+            function writeReview(f) {
+                if (customerId === "") {
+                    alert("로그인 하세요")
+                    location.href = "/customer/login";
+                }
+                if (f.rating.rate == 0) {
+                    f.rating.focus()
+                    return;
+                }
+
+                // 모든 체크된 별점을 가져오기
+                const checkedRatings = document.querySelectorAll("input[name='rating']:checked");
+
+                // 마지막으로 체크된 별점 값 가져오기
+                const selectedRating = checkedRatings.length > 0 ? checkedRatings[checkedRatings.length - 1].value : null;
+
+                var reviewContents = f.contents.value.trim();
+                console.log(selectedRating)
+                console.log(reviewContents)
+                $.ajax({
+                    url: "/review/insertReview",
+                    type: "post", // 전송방식은 Post
+                    dataType: "JSON", // 전송 결과는 JSON으로 받기
+                    data: {
+                        rating: selectedRating,
+                        contents: reviewContents,
+                        traderId: traderId,
+                        goodsName: goodsName,
+                        goodsNumber: goodsNumber,
+                        customerId: customerId
+                    },
+                    success: function (json) {
+
+                        if (json.result === 1) {
+                            alert(json.msg);
+                            location.href = "/customer/single-product?goodsNumber=" + goodsNumber;
+
+                        } else {
+                            alert(json.msg);
+                        }
+
+                    }
+                })
+            }
+
+            <!--    장바구니에 담기-->
+            function doBasket() {
+                if (customerId === "") {
+                    alert("로그인 하세요")
+                    location.href = "/customer/login";
+                }
+
+                var quantity = document.getElementById("quantity").value;
+                console.log(quantity)
+
+                $.ajax({
+                    url: "/basket/doBasket",
+                    type: "post", // 전송방식은 Post
+                    dataType: "JSON", // 전송 결과는 JSON으로 받기
+                    data: {
+                        quantity: quantity,
+                        price: price,
+                        goodsName: goodsName,
+                        goodsNumber: goodsNumber,
+                        goodsImage: goodsImage
+                    },
+                    success: function (json) {
+
+                        if (json.result === 1) {
+                            alert(json.msg);
+                        } else {
+                            alert(json.msg);
+                        }
+
+                    }
+                })
+            }
+
+            <!--    찜목록에 담기-->
+            function changeLike() {
+                if (customerId === "") {
+                    alert("로그인 하세요")
+                    location.href = "/customer/login";
+                }
+                $.ajax({
+                    url: "/wishlist/doWishlist",
+                    type: "post", // 전송방식은 Post
+                    dataType: "JSON", // 전송 결과는 JSON으로 받기
+                    data: {
+                        shopName: shopName,
+                        price: price,
+                        goodsName: goodsName,
+                        goodsNumber: goodsNumber,
+                        goodsImage: goodsImage
+                    },
+                    success: function (json) {
+
+                        if (json.result === 1) {
+                            alert(json.msg);
+
+                        } else {
+                            alert(json.msg);
+                        }
+
+                    }
+                })
+            }
+        })
+    </script>
+    <script type="text/javascript">
+        document.addEventListener("DOMContentLoaded", function () {
+            var modal = document.getElementById('reservationModal');
+
+            document.getElementById('openReservationModal').onclick = function () {
+                document.getElementById('reservationModal').style.display = 'flex';
+            }
+
+            document.getElementById('closeReservationModal').onclick = function () {
+                document.getElementById('reservationModal').style.display = 'none';
+            }
+        });
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#doReservation").on("click", function (event) {
+                event.preventDefault(); // 기본 이벤트 동작을 막음 (페이지 새로고침 등)
+
+                // 여기에 예약 정보를 가져와서 서버로 보내는 로직을 작성하세요
+                var traderId = $("#traderId").text();
+                var customerName = $("#customerName").val();
+                var reservationContents = $("#reservationContents").val();
+                var reservationPrice = $("#reservationPrice").val();
+                var reservationDate = $("#reservationDate").val();
+                var customerPhoneNumber = $("#customerPhoneNumber").val();
+                var goodsNumber = $("#goodsNumber").val();
+                var state = $("#state").val();
+
+                $.ajax({
+                    url: "/reservation/insertCustomerReservationInfo",
+                    type: "POST",
+                    data: {
+                        traderId: traderId,
+                        customerName: customerName,
+                        reservationContents: reservationContents,
+                        reservationPrice: reservationPrice,
+                        reservationDate: reservationDate,
+                        customerPhoneNumber: customerPhoneNumber,
+                        goodsNumber: goodsNumber,
+                        state: state
+                    },
+                    success: function (response) {
+                        // 서버로부터의 응답을 이용하여 처리하는 로직을 작성하세요
+                        if (response.result === 1) {
+                            alert(response.msg); // 성공 메시지 표시
+                            location.reload(); // 페이지 새로고침 또는 원하는 동작 수행
+                        } else {
+                            alert(response.msg); // 실패 메시지 표시
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        // 에러 발생 시 처리하는 로직을 작성하세요
+                        console.error(error); // 에러 메시지 출력 또는 처리
+                    }
+                });
+            });
+        });
+    </script>
 </head>
 
 <body>
-   <!--::header part start::-->
-     <header class="main_menu home_menu">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-12">
-                    <nav class="navbar navbar-expand-lg navbar-light">
-                        <a class="navbar-brand" href="index"> <img src="/assets/images/logo.png" alt="logo"> </a>
+<header class="main_menu home_menu">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-12">
+                <nav class="navbar navbar-expand-lg navbar-light">
+                    <a class="navbar-brand" href="/customer/customerIndex"><img src="/assets/images/bird/logo2.png"
+                                                                                alt="logo" style="width: 100px" ,
+                                                                                height="50px"></a>
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+<!-- Header part end-->
 
-                        <div class="collapse navbar-collapse main-menu-item" id="navbarSupportedContent" style="height: 100px">
-                        </div>
-                        <div class="hearer_icon d-flex">
-                            <div>
-                                <a><i class="fa-solid fa-map-location-dot" style="font-size:25px"></i>
-                                </a>
-                            </div>
-                            <div>
-                                <a><i class="fa-solid fa-comments" style="font-size:25px"></i>
-                                </a>
-                            </div>
-                            <a href=""><i class="fa-solid fa-heart" style="font-size:25px"></i></a>
-
-                            <div class="dropdown cart">
-                                <a class="dropdown-toggle" href="#" id="navbarDropdown3" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fas fa-cart-plus" style="font-size:25px"></i>
-                                </a>
-                            </div>
-                            <a><i class="fa-solid fa-user" style="font-size:25px"></i>
-                            </a>
-                        </div>
-                    </nav>
+<!-- breadcrumb start-->
+<section class="breadcrumb" style="background-color: azure">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="breadcrumb_iner">
+                    <img src="/assets/images/bird/bird1.png" style="width: 400px">
+                    <div class="breadcrumb_iner_item">
+                        <h2>상품 정보</h2>
+                        <p>상품을 구매하세요!</p>
+                    </div>
                 </div>
             </div>
         </div>
-       
-    </header>
-    <!-- Header part end-->
-
-  <!-- breadcrumb start-->
-  <section class="breadcrumb breadcrumb_bg" style="background-image: url(img/%EC%83%89.png)">
-    <div class="container">
-      <div class="row justify-content-center" >
-        <div class="col-lg-8">
-          <div class="breadcrumb_iner">
-            <div class="breadcrumb_iner_item">
-              <h2>장바구니</h2>
-              <p>현재 예약하신 것들을 알려드립니다</p>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
-  </section>
-  <!-- breadcrumb start-->
-  <!--================End Home Banner Area =================-->
+</section>
+<!-- breadcrumb end-->
 
-  <!--================Single Product Area =================-->
-  <div class="product_image_area section_padding">
-    <div class="container">
-      <div class="row s_product_inner justify-content-between">
-        <div class="col-lg-7 col-xl-7">
-          <div class="product_slider_img">
-            <div id="vertical">
-              <div data-thumb="img/product/single-product/product_1.png">
-                <img src="/assets/images/product/single-product/product_1.png" />
-              </div>
-              <div data-thumb="img/product/single-product/product_1.png">
-                <img src="/assets/images/product/single-product/product_1.png" />
-              </div>
-              <div data-thumb="img/product/single-product/product_1.png">
-                <img src="/assets/images/product/single-product/product_1.png" />
-              </div>
-              <div data-thumb="img/product/single-product/product_1.png">
-                <img src="/assets/images/product/single-product/product_1.png" />
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-5 col-xl-4">
-          <div class="s_product_text">
-            <h5>previous <span>|</span> next</h5>
-            <h3>Faded SkyBlu Denim Jeans</h3>
-            <h2>$149.99</h2>
-            <ul class="list">
-              <li>
-                <a class="active" href="#">
-                  <span>Category</span> : Household</a>
-              </li>
-              <li>
-                <a href="#"> <span>Availibility</span> : In Stock</a>
-              </li>
-            </ul>
-            <p>
-              First replenish living. Creepeth image image. Creeping can't, won't called.
-              Two fruitful let days signs sea together all land fly subdue
-            </p>
-            <div class="card_area d-flex justify-content-between align-items-center">
-              <div class="product_count">
-                <span class="inumber-decrement"> <i class="ti-minus"></i></span>
-                <input class="input-number" type="text" value="1" min="0" max="10">
-                <span class="number-increment"> <i class="ti-plus"></i></span>
-              </div>
-              <a href="#" class="btn_3">add to cart</a>
-              <a href="#" class="like_us"> <i class="ti-heart"></i> </a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!--================End Single Product Area =================-->
+<!-- navigation -->
+<div th:replace="customerNav.html"></div>
+<!-- ---------- -->
 
-  <!--================Product Description Area =================-->
-  <section class="product_description_area">
+
+<!--================Single Product Area =================-->
+<div class="product_image_area section_padding">
     <div class="container">
-      <ul class="nav nav-tabs" id="myTab" role="tablist">
-        <li class="nav-item">
-          <a class="nav-link" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
-            aria-selected="true">Description</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile"
-            aria-selected="false">Specification</a>
-        </li>
-        
-        <li class="nav-item">
-          <a class="nav-link active" id="review-tab" data-toggle="tab" href="#review" role="tab" aria-controls="review"
-            aria-selected="false">Reviews</a>
-        </li>
-      </ul>
-      <div class="tab-content" id="myTabContent">
-        <div class="tab-pane fade" id="home" role="tabpanel" aria-labelledby="home-tab">
-          <p>
-            Beryl Cook is one of Britain’s most talented and amusing artists
-            .Beryl’s pictures feature women of all shapes and sizes enjoying
-            themselves .Born between the two world wars, Beryl Cook eventually
-            left Kendrick School in Reading at the age of 15, where she went
-            to secretarial school and then into an insurance office. After
-            moving to London and then Hampton, she eventually married her next
-            door neighbour from Reading, John Cook. He was an officer in the
-            Merchant Navy and after he left the sea in 1956, they bought a pub
-            for a year before John took a job in Southern Rhodesia with a
-            motor company. Beryl bought their young son a box of watercolours,
-            and when showing him how to use it, she decided that she herself
-            quite enjoyed painting. John subsequently bought her a child’s
-            painting set for her birthday and it was with this that she
-            produced her first significant work, a half-length portrait of a
-            dark-skinned lady with a vacant expression and large drooping
-            breasts. It was aptly named ‘Hangover’ by Beryl’s husband and
-          </p>
-          <p>
-            It is often frustrating to attempt to plan meals that are designed
-            for one. Despite this fact, we are seeing more and more recipe
-            books and Internet websites that are dedicated to the act of
-            cooking for one. Divorce and the death of spouses or grown
-            children leaving for college are all reasons that someone
-            accustomed to cooking for more than one would suddenly need to
-            learn how to adjust all the cooking practices utilized before into
-            a streamlined plan of cooking that is more efficient for one
-            person creating less
-          </p>
-        </div>
-        <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-          <div class="table-responsive">
-            <table class="table">
-              <tbody>
-                <tr>
-                  <td>
-                    <h5>Width</h5>
-                  </td>
-                  <td>
-                    <h5>128mm</h5>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <h5>Height</h5>
-                  </td>
-                  <td>
-                    <h5>508mm</h5>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <h5>Depth</h5>
-                  </td>
-                  <td>
-                    <h5>85mm</h5>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <h5>Weight</h5>
-                  </td>
-                  <td>
-                    <h5>52gm</h5>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <h5>Quality checking</h5>
-                  </td>
-                  <td>
-                    <h5>yes</h5>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <h5>Freshness Duration</h5>
-                  </td>
-                  <td>
-                    <h5>03days</h5>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <h5>When packeting</h5>
-                  </td>
-                  <td>
-                    <h5>Without touch of hand</h5>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <h5>Each Box contains</h5>
-                  </td>
-                  <td>
-                    <h5>60pcs</h5>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      
-        <div class="tab-pane fade show active" id="review" role="tabpanel" aria-labelledby="review-tab">
-          <div class="row">
-            <div class="col-lg-6">
-              <div class="row total_rate">
-                <div class="col-6">
-                  <div class="box_total">
-                    <h5>Overall</h5>
-                    <h4>4.0</h4>
-                    <h6>(03 Reviews)</h6>
-                  </div>
+        <div class="row s_product_inner justify-content-between">
+            <div class="col-lg-7 col-xl-7">
+                <div class="product_slider_img">
+                    <div id="vertical">
+                        <div data-thumb="img/product/single-product/product_1.png">
+                            <img th:src="${gDTO.goodsImage}"/>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-6">
-                  <div class="rating_list">
-                    <h3>Based on 3 Reviews</h3>
+            </div>
+            <div class="col-lg-5 col-xl-4">
+                <div class="s_product_text">
+                    <h3>[[${gDTO.goodsName}]]</h3>
+                    <br>
+                    <h2>[[${gDTO.price}]]원</h2>
                     <ul class="list">
-                      <li>
-                        <a href="#">5 Star
-                          <i class="fa fa-star"></i>
-                          <i class="fa fa-star"></i>
-                          <i class="fa fa-star"></i>
-                          <i class="fa fa-star"></i>
-                          <i class="fa fa-star"></i> 01</a>
-                      </li>
-                      <li>
-                        <a href="#">4 Star
-                          <i class="fa fa-star"></i>
-                          <i class="fa fa-star"></i>
-                          <i class="fa fa-star"></i>
-                          <i class="fa fa-star"></i>
-                          <i class="fa fa-star"></i> 01</a>
-                      </li>
-                      <li>
-                        <a href="#">3 Star
-                          <i class="fa fa-star"></i>
-                          <i class="fa fa-star"></i>
-                          <i class="fa fa-star"></i>
-                          <i class="fa fa-star"></i>
-                          <i class="fa fa-star"></i> 01</a>
-                      </li>
-                      <li>
-                        <a href="#">2 Star
-                          <i class="fa fa-star"></i>
-                          <i class="fa fa-star"></i>
-                          <i class="fa fa-star"></i>
-                          <i class="fa fa-star"></i>
-                          <i class="fa fa-star"></i> 01</a>
-                      </li>
-                      <li>
-                        <a href="#">1 Star
-                          <i class="fa fa-star"></i>
-                          <i class="fa fa-star"></i>
-                          <i class="fa fa-star"></i>
-                          <i class="fa fa-star"></i>
-                          <i class="fa fa-star"></i> 01</a>
-                      </li>
+                        <li>
+                            <a class="active" href="#">
+                                <span>카테고리</span> : [[${gDTO.goodsType}]]</a>
+                        </li>
                     </ul>
-                  </div>
+                    <div class="card_area d-flex justify-content-between align-items-center">
+                        <div class="product_count">
+                            <span class="inumber-decrement"> <i class="ti-minus"></i></span>
+                            <input class="input-number" id="quantity" type="text" value="1" min="0" max="10">
+                            <span class="number-increment"> <i class="ti-plus"></i></span>
+                        </div>
+                        <a href="#" id="doBasket" class="btn_3">장바구니에 담기</a>
+                        <a href="#" id="changeLike" class="like_us"> <i class="ti-heart"></i> </a>
+                    </div>
+                    <div class="card_area d-flex justify-content-between align-items-center">
+                        <button type="button" class="btn-success" id="openReservationModal">상품 문의하기</button>
+                    </div>
                 </div>
-              </div>
-              <div class="review_list">
-                <div class="review_item">
-                  <div class="media">
-                    <div class="d-flex">
-                      <img src="/assets/images/product/single-product/review-1.png" alt="" />
-                    </div>
-                    <div class="media-body">
-                      <h4>Blake Ruiz</h4>
-                      <i class="fa fa-star"></i>
-                      <i class="fa fa-star"></i>
-                      <i class="fa fa-star"></i>
-                      <i class="fa fa-star"></i>
-                      <i class="fa fa-star"></i>
-                    </div>
-                  </div>
-                  <p>
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-                    sed do eiusmod tempor incididunt ut labore et dolore magna
-                    aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-                    ullamco laboris nisi ut aliquip ex ea commodo
-                  </p>
-                </div>
-                <div class="review_item">
-                  <div class="media">
-                    <div class="d-flex">
-                      <img src="/assets/images/product/single-product/review-2.png" alt="" />
-                    </div>
-                    <div class="media-body">
-                      <h4>Blake Ruiz</h4>
-                      <i class="fa fa-star"></i>
-                      <i class="fa fa-star"></i>
-                      <i class="fa fa-star"></i>
-                      <i class="fa fa-star"></i>
-                      <i class="fa fa-star"></i>
-                    </div>
-                  </div>
-                  <p>
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-                    sed do eiusmod tempor incididunt ut labore et dolore magna
-                    aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-                    ullamco laboris nisi ut aliquip ex ea commodo
-                  </p>
-                </div>
-                <div class="review_item">
-                  <div class="media">
-                    <div class="d-flex">
-                      <img src="/assets/images/product/single-product/review-3.png" alt="" />
-                    </div>
-                    <div class="media-body">
-                      <h4>Blake Ruiz</h4>
-                      <i class="fa fa-star"></i>
-                      <i class="fa fa-star"></i>
-                      <i class="fa fa-star"></i>
-                      <i class="fa fa-star"></i>
-                      <i class="fa fa-star"></i>
-                    </div>
-                  </div>
-                  <p>
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-                    sed do eiusmod tempor incididunt ut labore et dolore magna
-                    aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-                    ullamco laboris nisi ut aliquip ex ea commodo
-                  </p>
-                </div>
-              </div>
             </div>
-            <div class="col-lg-6">
-              <div class="review_box">
-                <h4>Add a Review</h4>
-                <p>Your Rating:</p>
-                <ul class="list">
-                  <li>
-                    <a href="#">
-                      <i class="fa fa-star"></i>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#">
-                      <i class="fa fa-star"></i>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#">
-                      <i class="fa fa-star"></i>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#">
-                      <i class="fa fa-star"></i>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#">
-                      <i class="fa fa-star"></i>
-                    </a>
-                  </li>
-                </ul>
-                <p>Outstanding</p>
-                <form class="row contact_form" action="contact_process.php" method="post" novalidate="novalidate">
-                  <div class="col-md-12">
-                    <div class="form-group">
-                      <input type="text" class="form-control" name="name" placeholder="Your Full name" />
-                    </div>
-                  </div>
-                  <div class="col-md-12">
-                    <div class="form-group">
-                      <input type="email" class="form-control" name="email" placeholder="Email Address" />
-                    </div>
-                  </div>
-                  <div class="col-md-12">
-                    <div class="form-group">
-                      <input type="text" class="form-control" name="number" placeholder="Phone Number" />
-                    </div>
-                  </div>
-                  <div class="col-md-12">
-                    <div class="form-group">
-                      <textarea class="form-control" name="message" rows="1" placeholder="Review"></textarea>
-                    </div>
-                  </div>
-                  <div class="col-md-12 text-right">
-                    <button type="submit" value="submit" class="btn_3">
-                      Submit Now
-                    </button>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
         </div>
-      </div>
     </div>
-  </section>
-  <!--================End Product Description Area =================-->
+</div>
+<!--================End Single Product Area =================-->
 
-  <!-- product_list part start-->
-  <section class="product_list best_seller">
+<!-- 모달 창 -->
+<div class="modal" id="reservationModal">
+    <div class="modal_body">
+        <div style="display: flex; justify-content: space-between">
+            <h2>예약하기</h2>
+            <button class="btn btn-light" style="margin-bottom: 12px; background: none; border: none"
+                    id="closeReservationModal">x
+            </button>
+        </div>
+        <hr/>
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">상인 정보</h4>
+            </div>
+            <div class="card-content">
+                <div class="card-body">
+                    <form class="form form-vertical">
+                        <div class="form-body">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label for="traderId">판매자</label>
+                                        <div id="traderId" class="form-control">[[${tDTO.traderId}]]</div>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label for="traderPhoneNumber">판매자 전화번호</label>
+                                        <div id="traderPhoneNumber" class="form-control">[[${tDTO.phoneNumber}]]</div>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label for="traderShop">상점명</label>
+                                        <div id="traderShop" class="form-control" th:text="${gList[0].shopName}"></div>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label for="traderNotice">상인의 말</label>
+                                        <div id="traderNotice" class="form-control">[[${tDTO.traderNotice}]]</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="card">
+            <div class="card-header">
+                <h4>상품정보</h4>
+            </div>
+            <div class="card-body">
+                <div id="carouselExampleSlidesOnly" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner" style="margin-bottom: 3px">
+                        <div class="carousel-item active">
+                            <img th:src="${gDTO.getGoodsImage}" class="d-block w-100" alt="...">
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label for="goodsName">상품명</label>
+                            <div id="goodsName" class="form-control">[[${gDTO.goodsName}]]</div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label for="goodsPrice">상품가격</label>
+                            <div id="goodsPrice" class="form-control">[[${gDTO.price}]]</div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label for="goodsDescription">상품설명</label>
+                            <div id="goodsDescription" class="form-control">[[${gDTO.goodsDescription}]]</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">예약정보</h4>
+            </div>
+            <div class="card-content">
+                <div class="card-body">
+                    <form id="insertForm" class="form form-vertical">
+                        <div class="form-body">
+                            <div class="row">
+                                <div class="col-12" style="display: none">
+                                    <div class="form-group">
+                                        <label for="traderId">상인ID</label>
+                                        <input type="text" class="form-control"
+                                               name="traderId" th:value="${tDTO.traderId}">
+                                    </div>
+                                </div>
+                                <div class="col-12" style="display: none">
+                                    <div class="form-group">
+                                        <label for="goodsNumber">상품번호</label>
+                                        <input type="text" class="form-control" id="goodsNumber"
+                                               name="goodsNumber" th:value="${gDTO.goodsNumber}">
+                                    </div>
+                                </div>
+                                <div class="col-12" style="display: none">
+                                    <div class="form-group">
+                                        <label for="reservationPrice">상품가격</label>
+                                        <input type="text" class="form-control" id="reservationPrice"
+                                               name="reservationPrice" th:value="${gDTO.price}">
+                                    </div>
+                                </div>
+                                <div class="col-12" style="display: none">
+                                    <div class="form-group">
+                                        <label for="state">상태</label>
+                                        <input type="text" id="state" class="form-control"
+                                               name="state" value="0">
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label for="customerName">예약자명</label>
+                                        <input type="text" id="customerName" class="form-control"
+                                               name="customerName" placeholder="예약자명">
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label for="customerPhoneNumber">휴대폰번호</label>
+                                        <input type="text" id="customerPhoneNumber" class="form-control"
+                                               name="customerPhoneNumber" placeholder="휴대폰번호">
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label for="reservationContents">예약내용</label>
+                                        <textarea type="text" id="reservationContents" class="form-control"
+                                                  name="reservationContents" placeholder="예약내용"></textarea>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label for="reservationDate">예약일</label>
+                                        <input type="date" id="reservationDate" class="form-control"
+                                               name="reservationDate">
+                                    </div>
+                                </div>
+                                <div class="col-12 d-flex justify-content-end">
+                                    <button type="submit" class="btn btn-primary me-1 mb-1" id="doReservation">예약신청
+                                    </button>
+                                    <button type="reset"
+                                            class="btn btn-light-secondary me-1 mb-1">다시작성
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--================Product Description Area =================-->
+<section class="product_description_area">
     <div class="container">
-      <div class="row justify-content-center">
-        <div class="col-lg-12">
-          <div class="section_tittle text-center">
-            <h2>Best Sellers <span>shop</span></h2>
-          </div>
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
+                   aria-selected="true">상품설명</a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link active" id="review-tab" data-toggle="tab" href="#review" role="tab"
+                   aria-controls="review"
+                   aria-selected="false">리뷰</a>
+            </li>
+        </ul>
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade" id="home" role="tabpanel" aria-labelledby="home-tab">
+                <div>
+                    [[${gDTO.goodsDescription}]]
+                </div>
+            </div>
+
+            <div class="tab-pane fade show active" id="review" role="tabpanel" aria-labelledby="review-tab">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="row total_rate">
+                            <div class="col-6">
+                                <div class="box_total">
+                                    <h5>평점</h5>
+                                    <h4>[[${gDTO.avgScore}]]</h4>
+                                    <h3>( [[${gDTO.countScore}]] 개)</h3>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="rating_list">
+                                    <h3>리뷰 수</h3>
+                                    <ul class="list" th:each="dto, iterStat:${cDTO}">
+                                        <li>
+                                            <span>[[${dto.score}]] 점</span>
+                                            <span th:each="i : ${#numbers.sequence(1, iterStat.count)}">
+                                               <i class="fa-solid fa-star" style="color: #fff700;"></i>
+                                            </span>
+                                            <span>[[${dto.countScore}]]</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="review_list">
+                            <div class="review_item" th:each="dto:${rDTO}">
+                                <div class="media">
+                                    <div class="d-flex">
+                                        <img src="/assets/images/product/single-product/review-1.png" alt=""/>
+                                    </div>
+                                    <div class="media-body">
+                                        <h4 th:text="${dto.customerName}">Customer Name</h4>
+                                        <div th:each="i:${dto.score}">
+                    <span th:each="j : ${#numbers.sequence(1, i)}">
+                        <i class="fa-solid fa-star" style="color: #fff700;"></i>
+                    </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br>
+                                <div style="white-space: pre-line" th:text="${dto.contents}"></div>
+                                <hr>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="col-lg-6">
+                        <div class="review_box">
+                            <h4>리뷰 쓰기</h4>
+                            <form class="row contact_form" id="f" novalidate="novalidate">
+                                <div class="review_rating">
+                                    <div class="warning_msg">별점을 선택해 주세요.</div>
+                                    <div class="rating">
+                                        <!-- 해당 별점을 클릭하면 해당 별과 그 왼쪽의 모든 별의 체크박스에 checked 적용 -->
+                                        <input type="checkbox" name="rating" id="rating1" value="1" class="rate_radio"
+                                               title="1점">
+                                        <label for="rating1"></label>
+                                        <input type="checkbox" name="rating" id="rating2" value="2" class="rate_radio"
+                                               title="2점">
+                                        <label for="rating2"></label>
+                                        <input type="checkbox" name="rating" id="rating3" value="3" class="rate_radio"
+                                               title="3점">
+                                        <label for="rating3"></label>
+                                        <input type="checkbox" name="rating" id="rating4" value="4" class="rate_radio"
+                                               title="4점">
+                                        <label for="rating4"></label>
+                                        <input type="checkbox" name="rating" id="rating5" value="5" class="rate_radio"
+                                               title="5점">
+                                        <label for="rating5"></label>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <textarea class="form-control" id="contents" name="contents" rows="1"
+                                                  placeholder="리뷰" style="height: 150px"></textarea>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 text-right">
+                                    <button type="button" id="writeReview" value="submit" class="btn_3">
+                                        리뷰 쓰기
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="row align-items-center justify-content-between">
-        <div class="col-lg-12">
-          <div class="best_product_slider owl-carousel">
-            <div class="single_product_item">
-              <img src="/assets/images/product/product_1.png" alt="">
-              <div class="single_product_text">
-                <h4>Quartz Belt Watch</h4>
-                <h3>$150.00</h3>
-              </div>
-            </div>
-            <div class="single_product_item">
-              <img src="/assets/images/product/product_2.png" alt="">
-              <div class="single_product_text">
-                <h4>Quartz Belt Watch</h4>
-                <h3>$150.00</h3>
-              </div>
-            </div>
-            <div class="single_product_item">
-              <img src="/assets/images/product/product_3.png" alt="">
-              <div class="single_product_text">
-                <h4>Quartz Belt Watch</h4>
-                <h3>$150.00</h3>
-              </div>
-            </div>
-            <div class="single_product_item">
-              <img src="/assets/images/product/product_4.png" alt="">
-              <div class="single_product_text">
-                <h4>Quartz Belt Watch</h4>
-                <h3>$150.00</h3>
-              </div>
-            </div>
-            <div class="single_product_item">
-              <img src="/assets/images/product/product_5.png" alt="">
-              <div class="single_product_text">
-                <h4>Quartz Belt Watch</h4>
-                <h3>$150.00</h3>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
-  </section>
-  <!-- product_list part end-->
+</section>
+<!--================End Product Description Area =================-->
+
+<!-- product_list part start-->
+<section class="product_list best_seller">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-12">
+                <div class="section_tittle text-center">
+                    <h2>같은 시장의 상품 둘러보기</h2>
+                </div>
+            </div>
+        </div>
+        <div class="row align-items-center justify-content-between">
+            <div class="col-lg-12">
+                <div class="best_product_slider owl-carousel">
+                    <div class="single_product_item" th:each="dto : ${gList}">
+                        <img th:src="${dto.goodsImage}" alt="">
+                        <div class="single_product_text">
+                            <h4>[[${dto.goodsName}]]</h4>
+                            <h3>[[${dto.price}]]원</h3>
+                            <a th:attr="onclick='doGoods(\'' + ${dto.goodsNumber} + '\')'" class="add_cart">물건 사러가기<i
+                                    class="ti-heart"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- product_list part end-->
 
 
-   <script src="/assets/js/jquery-3.6.0.min.js"></script>
-  <!-- jquery plugins here-->
-  <!-- jquery -->
-  <script src="/assets/js/jquery-1.12.1.min.js"></script>
-  <!-- popper js -->
-  <script src="/assets/js/popper.min.js"></script>
-  <!-- bootstrap js -->
-  <script src="/assets/js/bootstrap.min.js"></script>
-  <!-- easing js -->
-  <script src="/assets/js/jquery.magnific-popup.js"></script>
-  <!-- swiper js -->
-  <script src="/assets/js/lightslider.min.js"></script>
-  <!-- swiper js -->
-  <script src="/assets/js/masonry.pkgd.js"></script>
-  <!-- particles js -->
-  <script src="/assets/js/owl.carousel.min.js"></script>
-  <script src="/assets/js/jquery.nice-select.min.js"></script>
-  <!-- slick js -->
-  <script src="/assets/js/slick.min.js"></script>
-  <script src="/assets/js/swiper.jquery.js"></script>
-  <script src="/assets/js/jquery.counterup.min.js"></script>
-  <script src="/assets/js/waypoints.min.js"></script>
-  <script src="/assets/js/contact.js"></script>
-  <script src="/assets/js/jquery.ajaxchimp.min.js"></script>
-  <script src="/assets/js/jquery.form.js"></script>
-  <script src="/assets/js/jquery.validate.min.js"></script>
-  <script src="/assets/js/mail-script.js"></script>
-  <script src="/assets/js/stellar.js"></script>
-  <!-- custom js -->
-  <script src="/assets/js/theme.js"></script>
-  <script src="/assets/js/custom.js"></script>
+<style>
+    .wrap {
+        max-width: 480px;
+        margin: 0 auto; /* 화면 가운데로 */
+        background-color: #fff;
+        height: 100%;
+        padding: 20px;
+        box-sizing: border-box;
+
+    }
+
+    .reviewform textarea {
+        width: 100%;
+        padding: 10px;
+        box-sizing: border-box;
+    }
+
+    .rating .rate_radio {
+        position: relative;
+        display: inline-block;
+        z-index: 20;
+        opacity: 0.001;
+        width: 60px;
+        height: 60px;
+        background-color: #fff;
+        cursor: pointer;
+        vertical-align: top;
+        display: none;
+    }
+
+    .rating .rate_radio + label {
+        position: relative;
+        display: inline-block;
+        margin-left: -4px;
+        z-index: 10;
+        width: 60px;
+        height: 60px;
+        background-image: url('/assets/images/starrate.png');
+        background-repeat: no-repeat;
+        background-size: 60px 60px;
+        cursor: pointer;
+        background-color: #f0f0f0;
+    }
+
+    .rating .rate_radio:checked + label {
+        background-color: #ff8;
+    }
+
+    .warning_msg {
+        display: none;
+        position: relative;
+        text-align: center;
+        background: #ffffff;
+        line-height: 26px;
+        width: 100%;
+        color: red;
+        padding: 10px;
+        box-sizing: border-box;
+        border: 1px solid #e0e0e0;
+    }
+</style>
+<!-- jquery plugins here-->
+<!-- jquery -->
+<script src="/assets/js/jquery-3.6.0.min.js"></script>
+<!-- popper js -->
+<script src="/assets/js/popper.min.js"></script>
+<!-- bootstrap js -->
+<script src="/assets/js/bootstrap.min.js"></script>
+<!-- easing js -->
+<script src="/assets/js/jquery.magnific-popup.js"></script>
+<!-- swiper js -->
+<script src="/assets/js/lightslider.min.js"></script>
+<!-- swiper js -->
+<script src="/assets/js/masonry.pkgd.js"></script>
+<!-- particles js -->
+<script src="/assets/js/owl.carousel.min.js"></script>
+<script src="/assets/js/jquery.nice-select.min.js"></script>
+<!-- slick js -->
+<script src="/assets/js/slick.min.js"></script>
+<script src="/assets/js/swiper.jquery.js"></script>
+<script src="/assets/js/jquery.counterup.min.js"></script>
+<script src="/assets/js/waypoints.min.js"></script>
+<script src="/assets/js/contact.js"></script>
+<script src="/assets/js/jquery.ajaxchimp.min.js"></script>
+<script src="/assets/js/jquery.form.js"></script>
+<script src="/assets/js/jquery.validate.min.js"></script>
+<script src="/assets/js/mail-script.js"></script>
+<script src="/assets/js/stellar.js"></script>
+<!-- custom js -->
+<script src="/assets/js/theme.js"></script>
+<script src="/assets/js/custom.js"></script>
 </body>
 
 </html>

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TMI - 상품 상세정보</title>
+    <link rel="stylesheet" href="/assets/css/global.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/bootstrap.css">
+    <link rel="stylesheet" href="/assets/css/font.css">
+    <link rel="stylesheet" href="/assets/vendors/perfect-scrollbar/perfect-scrollbar.css">
+    <link rel="stylesheet" href="/assets/vendors/bootstrap-icons/bootstrap-icons.css">
+    <link rel="stylesheet" href="/assets/css/app.css">
+    <link rel="shortcut icon" href="/assets/images/favicon.svg" type="image/x-icon">
+
+    <script type="text/javascript">
+
+        //상세보기 이동
+        function doEdit(element) {
+            var goodsNumber = element.getAttribute("data-goodsNumber");
+            location.href = "/goods/goodsMngUpdate?goodsNumber=" + goodsNumber;
+        }
+        function review(element) {
+            var goodsNumber = element.getAttribute("data-goodsNumber");
+            location.href = "/review/reviewMng?goodsNumber=" + goodsNumber;
+        }
+        //삭제하기
+        function doDelete(element) {
+            var goodsNumber = element.getAttribute("data-goodsNumber");
+            console.log(goodsNumber);
+
+                if (confirm("작성한 상품을 삭제하시겠습니까?")) {
+                    $.ajax({
+                            url: "/goods/goodsMngDelete",
+                            type: "post", // 전송방식은 Post
+                            dataType: "JSON", // 전송 결과는 JSON으로 받기
+                            data: {"goodsNumber": goodsNumber}, // form 태그 내 input 등 객체를 자동으로 전송할 형태로 변경하기
+                            success: function (json) { // /notice/noticeUpdate 호출이 성공했다면..
+
+                                if (json.result === 1) { // 로그인 성공
+                                    alert(json.msg); // 메시지 띄우기
+                                    location.href = "/goods/goodsMng"; // 로그인 성공 페이지 이동
+
+                                } else { // 로그인 실패
+                                    alert(json.msg); // 메시지 띄우기
+                                }
+
+                            }
+                        }
+                    )
+                }
+        }
+
+    </script>
+</head>
+
+<body>
+<div id="app">
+    <div th:replace="sidebar.html"></div>
+    <div id="main">
+        <header class="mb-3">
+            <a href="#" class="burger-btn d-block d-xl-none">
+                <i class="bi bi-justify fs-3"></i>
+            </a>
+        </header>
+
+        <div class="page-heading">
+            <div>
+                <div class="buttons" style="float: right"><a href="goodsMng" class="btn btn-primary">목록</a></div>
+                <div class="page-title">
+                    <div class="row">
+                        <div class="col-12 col-md-6 order-md-1 order-last mx-auto text-center">
+                            <h3>상품 정보</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-4 col-md-6 col-sm-12 mx-auto">
+                    <div class="card">
+                        <div class="card-content" style="padding: 10px">
+                            <div class="card-body">
+                                <h4 class="card-title" style="text-align: center">[[${rDTO.goodsName}]]</h4>
+                            </div>
+                            <div id="carouselExampleSlidesOnly" class="carousel slide" data-bs-ride="carousel">
+                                <div class="carousel-inner">
+                                    <div class="carousel-item active" th:if="${not #strings.isEmpty(rDTO.goodsImage)}">
+                                        <img th:src="${rDTO.goodsImage}" class="d-block w-100" style="height:380px; object-fit: contain">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-body">
+                                <label>가격</label>
+                                <div class="form-control">
+                                    [[${rDTO.price}]]
+                                </div>
+                                <label>상품유형</label>
+                                <div class="form-control">
+                                    [[${rDTO.goodsType}]]
+                                </div>
+                                <label>상품설명</label>
+                                <div class="form-control">
+                                    [[${rDTO.goodsDescription}]]
+                                </div>
+                                <br>
+                                <div class="buttons" style="float: right"><a th:attr="data-goodsNumber=${rDTO.goodsNumber}" onclick="doDelete(this)" class="btn btn-light-secondary me-1 mb-1">삭제</a></div>
+                                <div class="buttons" style="float: right"><a th:attr="data-goodsNumber=${rDTO.goodsNumber}" onclick="doEdit(this)" class="btn btn-primary">수정</a></div>
+                                <div class="buttons" style="float: right"><a th:attr="data-goodsNumber=${rDTO.goodsNumber}" onclick="review(this)" class="btn btn-primary">리뷰</a></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <footer>
+            <div class="footer clearfix mb-0 text-muted">
+                <div class="float-start">
+                    <p>2021 &copy; Mazer</p>
+                </div>
+                <div class="float-end">
+                    <p>Crafted with <span class="text-danger"><i class="bi bi-heart"></i></span> by <a href="http://ahmadsaugi.com">A. Saugi</a></p>
+                </div>
+            </div>
+        </footer>
+    </div>
+</div>
+    <!-- jQuery 라이브러리 추가 -->
+    <script src="/assets/js/jquery-3.6.0.min.js"></script>
+    <script src="/assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+    <script src="/assets/js/bootstrap.bundle.min.js"></script>
+    <script src="/assets/js/main.js"></script>
+<script src="/assets/js/move.js"></script>
+</body>
+
+</html>

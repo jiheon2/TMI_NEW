@@ -1,7 +1,7 @@
 package kopo.poly.controller;
 
 import kopo.poly.dto.*;
-import kopo.poly.service.IReviewService;
+import kopo.poly.service.IReservationService;
 import kopo.poly.service.IShopService;
 import kopo.poly.service.ITraderService;
 import kopo.poly.util.CmmUtil;
@@ -29,7 +29,12 @@ public class TraderController {
 
     private final ITraderService traderService;
     private final IShopService shopService;
+    private final IReservationService reservationService;
 
+    /*
+        로그인 페이지 코드
+        구현완료(10/24)
+     */
     @GetMapping(value = "/login")
     public String login() {
 
@@ -38,6 +43,10 @@ public class TraderController {
         return "/trader/login";
     }
 
+    /*
+        로그인 처리 로직코드
+        구현완료(11/10)
+     */
     @ResponseBody
     @PostMapping(value = "loginProc")
     public MsgDTO loginProc(HttpServletRequest request, HttpSession session) {
@@ -53,19 +62,19 @@ public class TraderController {
 
         try {
 
-            String id = CmmUtil.nvl(request.getParameter("id")); //아이디
-            String pw = CmmUtil.nvl(request.getParameter("pw")); //비밀번호
+            String traderId = CmmUtil.nvl(request.getParameter("traderId")); //아이디
+            String traderPw = CmmUtil.nvl(request.getParameter("traderPw")); //비밀번호
 
-            log.info("id : " + id);
-            log.info("pw : " + pw);
+            log.info("traderId : " + traderId);
+            log.info("traderPw : " + traderPw);
 
             //웹(회원정보 입력화면)에서 받는 정보를 저장할 변수를 메모리에 올리기
             pDTO = new TraderDTO();
 
-            pDTO.setId(id);
+            pDTO.setTraderId(traderId);
 
             //비밀번호는 절대로 복호화되지 않도록 해시 알고리즘으로 암호화함
-            pDTO.setPw(EncryptUtil.encHashSHA256(pw));
+            pDTO.setTraderPw(EncryptUtil.encHashSHA256(traderPw));
 
             log.info(pDTO.toString());
 
@@ -73,14 +82,14 @@ public class TraderController {
             TraderDTO rDTO = traderService.getLogin(pDTO);
 
             log.info(rDTO.toString());
-            if (CmmUtil.nvl(rDTO.getId()).length() > 0) { //로그인 성공
+            if (CmmUtil.nvl(rDTO.getTraderId()).length() > 0) { //로그인 성공
 
                 res = 1;
 
                 msg = "로그인이 성공했습니다.";
                 log.info("1");
 
-                session.setAttribute("SS_ID", CmmUtil.nvl(rDTO.getId()));
+                session.setAttribute("SS_ID", CmmUtil.nvl(rDTO.getTraderId()));
                 session.setAttribute("SS_TYPE", "Trader");
 
             } else {
@@ -106,47 +115,65 @@ public class TraderController {
 
         return dto;
     }
+
+    /*
+        회원가입 페이지 이동 코드
+        구현완료(11/08)
+     */
     @GetMapping(value = "/traderSignUp")
-    public String userSignUp() {
-        log.info(this.getClass().getName() + "userSignUp");
+    public String traderSignUp() {
+        log.info(this.getClass().getName() + "traderSignUp");
         return "/trader/traderSignUp";
     }
+    @GetMapping(value = "/findIdAndPw")
+    public String findIdAndPw(HttpSession session) {
+        session.setAttribute("NEW_PASSWORD", "");
+        session.removeAttribute("NEW_PASSWORD");
+        return "/trader/findIdAndPw";
+    }
 
+    // 회원가입 시 ID 중복 확인 코드
+    // 구현완료(11/10)
     @ResponseBody
-    @PostMapping(value = "getUserIdExists")
-    public TraderDTO getUserIdExists(HttpServletRequest request) throws Exception {
-        log.info(this.getClass().getName() + ".getUserIdExists Start!");
+    @PostMapping(value = "getTraderIdExists")
+    public TraderDTO getTraderIdExists(HttpServletRequest request) throws Exception {
+        log.info(this.getClass().getName() + ".getTraderIdExists Start!");
 
-        String id = CmmUtil.nvl(request.getParameter("id"));
+        String traderId = CmmUtil.nvl(request.getParameter("traderId"));
 
-        log.info("id : " + id);
+        log.info("traderId : " + traderId);
 
         TraderDTO pDTO = new TraderDTO();
 
-        pDTO.setId(id);
+        pDTO.setTraderId(traderId);
 
-        TraderDTO rDTO = Optional.ofNullable(traderService.getUserIdExists(pDTO)).orElseGet(TraderDTO::new);
-        log.info(this.getClass().getName() + ".getUserIdExists End!");
+        TraderDTO rDTO = Optional.ofNullable(traderService.getTraderIdExists(pDTO)).orElseGet(TraderDTO::new);
+        log.info(this.getClass().getName() + ".getTraderIdExists End!");
         return rDTO;
     }
+
+    // 사업자등록번호 중복확인 코드
+    // 구현완료(11/13)
     @ResponseBody
-    @PostMapping(value = "getBusinessNumExists")
-    public TraderDTO getBusinessNumExists(HttpServletRequest request) throws Exception {
-        log.info(this.getClass().getName() + ".getBusinessNum Start!");
+    @PostMapping(value = "getBusinessNumberExists")
+    public TraderDTO getBusinessNumberExists(HttpServletRequest request) throws Exception {
+        log.info(this.getClass().getName() + ".getBusinessNumber Start!");
 
-        String businessNum = CmmUtil.nvl(request.getParameter("businessNum"));
+        String businessNumber = CmmUtil.nvl(request.getParameter("businessNumber"));
 
-        log.info("businessNum : " + businessNum);
+        log.info("businessNumber : " + businessNumber);
 
         TraderDTO pDTO = new TraderDTO();
 
-        pDTO.setBusinessNum(businessNum);
+        pDTO.setBusinessNumber(businessNumber);
 
-        TraderDTO rDTO = Optional.ofNullable(traderService.getBusinessNumExists(pDTO)).orElseGet(TraderDTO::new);
-        log.info(this.getClass().getName() + ".getBusinessNumExists End!");
+        TraderDTO rDTO = Optional.ofNullable(traderService.getBusinessNumberExists(pDTO)).orElseGet(TraderDTO::new);
+        log.info(this.getClass().getName() + ".getBusinessNumberExists End!");
         return rDTO;
     }
 
+    // 상인정보 등록 로직코드
+    // 구현완료(11/13)
     @ResponseBody
     @PostMapping(value = "insertTrader")
     public MsgDTO insertTrader(HttpServletRequest request) throws Exception {
@@ -160,28 +187,43 @@ public class TraderController {
         TraderDTO pDTO = null;
 
         try {
-            String id = CmmUtil.nvl(request.getParameter("id"));
-            String pw = CmmUtil.nvl(request.getParameter("pw"));
-            String businessNum = CmmUtil.nvl(request.getParameter("businessNum"));
+            String traderId = CmmUtil.nvl(request.getParameter("traderId"));
+            String traderPw = CmmUtil.nvl(request.getParameter("traderPw"));
+            String businessNumber = CmmUtil.nvl(request.getParameter("businessNumber"));
+            String traderName = CmmUtil.nvl(request.getParameter("traderName"));
+            String traderPn = CmmUtil.nvl(request.getParameter("phoneNumber"));
+            String account = CmmUtil.nvl(request.getParameter("account"));
+            String bank = CmmUtil.nvl(request.getParameter("bank"));
+            String email = CmmUtil.nvl(request.getParameter("email"));
             String shopCode = CmmUtil.nvl(request.getParameter("shopCode"));
-            String name = CmmUtil.nvl(request.getParameter("name"));
-            String pn = CmmUtil.nvl(request.getParameter("pn"));
 
-            log.info("id : " + id);
-            log.info("pw : " + pw);
-            log.info("age : " + businessNum);
-            log.info("type : " + shopCode);
-            log.info("name : " + name);
-            log.info("pn : " + pn);
+            String[] result = shopCode.split("\\[");
+            String marketName = result[0];
+            String marketLocation = result[1].replace("]", "");
+
+
+
+            log.info("traderId : " + traderId);
+            log.info("traderPw : " + traderPw);
+            log.info("businessNumber : " + businessNumber);
+            log.info("traderName : " + traderName);
+            log.info("traderPn : " + traderPn);
+            log.info("account : " + account);
+            log.info("bank : " + bank);
+            log.info("email : " + email);
+            log.info("shopCode : " + result);
 
             pDTO = new TraderDTO();
 
-            pDTO.setId(id);
-            pDTO.setPw(EncryptUtil.encHashSHA256(pw));
-            pDTO.setPn(pn);
-            pDTO.setName(name);
-            pDTO.setBusinessNum(businessNum);
-            pDTO.setShopCode(shopCode);
+            pDTO.setTraderId(traderId);
+            pDTO.setTraderPw(EncryptUtil.encHashSHA256(traderPw));
+            pDTO.setPhoneNumber(traderPn);
+            pDTO.setTraderName(traderName);
+            pDTO.setBusinessNumber(businessNumber);
+            pDTO.setBank(bank);
+            pDTO.setAccount(account);
+            pDTO.setTraderEmail(email);
+            pDTO.setShopCode(result);
 
             log.info(pDTO.toString());
 
@@ -209,44 +251,65 @@ public class TraderController {
         return dto;
     }
 
+    // 상인 메인페이지 이동코드
+    // 구현 중
     @GetMapping(value = "/traderIndex")
     public String traderIndex(HttpSession session, ModelMap model) throws Exception{
         log.info(this.getClass().getName() + ".traderIndex Start!");
 
-        String id = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+        String traderId = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+        String type =  CmmUtil.nvl((String) session.getAttribute("SS_TYPE"));
+        if(!type.equals("Trader") || traderId == null) {
+            session.invalidate();
+            return  "/trader/login";
+        }
+
+        TraderDTO rDTO = new TraderDTO();
+        rDTO.setTraderId(traderId);
 
         ShopDTO pDTO1 = new ShopDTO();
 
-        pDTO1.setTid(id);
-        ShopDTO rDTO = Optional.ofNullable(shopService.getCount(pDTO1)).orElseGet(ShopDTO::new);
-        rDTO.setTid(id);
+        pDTO1.setTraderId(traderId);
+        ShopDTO sDTO = Optional.ofNullable(shopService.getCount(pDTO1)).orElseGet(ShopDTO::new);
+        rDTO.setTraderId(traderId);
 
-        ReserveDTO pDTO2 = new ReserveDTO();
-        pDTO2.setTid(id);
+        ReservationDTO pDTO2 = new ReservationDTO();
+        pDTO2.setTraderId(traderId);
         pDTO2.setState("1");
-        List<ReserveDTO> rList = Optional.ofNullable(shopService.goodsBuyInfo(pDTO2)).orElseGet(ArrayList::new);
+        List<ReservationDTO> rList = Optional.ofNullable(reservationService.goodsBuyInfo(pDTO2)).orElseGet(ArrayList::new);
+
+        log.info("rList : " + rList.toString());
 
         model.addAttribute("rDTO", rDTO);
         model.addAttribute("rList", rList);
+        model.addAttribute("sDTO", sDTO);
+
+        model.addAttribute("rDTO", rDTO);
 
         log.info(this.getClass().getName() + ".traderIndex End!");
         return "/trader/traderIndex";
     }
 
-
+    // 상인 정보 페이지 이동 코드
+    // 구현완료(11/10)
     @GetMapping(value = "/traderInfo")
     public String traderInfo(HttpSession session, ModelMap model) throws Exception{
         log.info(this.getClass().getName() + ".traderInfo start!");
 
-        String id = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+        String traderId = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+        String type =  CmmUtil.nvl((String) session.getAttribute("SS_TYPE"));
+        if(!type.equals("Trader") || traderId == null) {
+            session.invalidate();
+            return  "/trader/login";
+        }
 
-        log.info(id);
+        log.info(traderId);
 
         TraderDTO pDTO = new TraderDTO();
 
-        pDTO.setId(id);
+        pDTO.setTraderId(traderId);
 
-        TraderDTO rDTO = Optional.ofNullable(traderService.getUserInfo(pDTO)).orElseGet(TraderDTO::new);
+        TraderDTO rDTO = Optional.ofNullable(traderService.getTraderInfo(pDTO)).orElseGet(TraderDTO::new);
 
         model.addAttribute("rDTO", rDTO);
 
@@ -254,58 +317,66 @@ public class TraderController {
         return "/trader/traderInfo";
     }
 
+    // 상인정보 수정페이지 이동코드
+    // 구현완료(11/13)
+    @GetMapping(value = "/updateTraderInfo")
+    public String updateTraderInfo(HttpSession session, ModelMap model) throws Exception{
+        log.info(this.getClass().getName() + ".updateTraderInfo start!");
 
-    @GetMapping(value = "/reservMng")
-    public String reservMng() {
-        log.info("start");
+        String traderId = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+        String type =  CmmUtil.nvl((String) session.getAttribute("SS_TYPE"));
+        if(!type.equals("Trader") || traderId == null) {
+            session.invalidate();
+            return  "/trader/login";
+        }
 
-        return "/trader/reservMng";
-    }
-
-
-    @GetMapping(value = "/traderInfoChange")
-    public String traderInfoChange(HttpSession session, ModelMap model) throws Exception{
-        log.info(this.getClass().getName() + ".traderInfoChange start!");
-
-        String id = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
-
-        log.info(id);
+        log.info(traderId);
 
         TraderDTO pDTO = new TraderDTO();
 
-        pDTO.setId(id);
+        pDTO.setTraderId(traderId);
 
-        TraderDTO rDTO = Optional.ofNullable(traderService.getUserInfo(pDTO)).orElseGet(TraderDTO::new);
+        TraderDTO rDTO = Optional.ofNullable(traderService.getTraderInfo(pDTO)).orElseGet(TraderDTO::new);
 
         model.addAttribute("rDTO", rDTO);
 
-        log.info(this.getClass().getName() + ".traderInfo start!");
-        return "/trader/traderInfoChange";
+        log.info(this.getClass().getName() + ".updateTraderInfo End!");
+        return "/trader/updateTraderInfo";
     }
 
-    @GetMapping(value = "/changePw")
-    public String changePw(HttpSession session, ModelMap model) throws Exception{
-        log.info(this.getClass().getName() + ".changePw start!");
+    // 상인 비밀번호 수정페이지 이동 코드
+    // 구현완료(11/10)
+    @GetMapping(value = "/updateTraderPw")
+    public String updateTraderPw(HttpSession session, ModelMap model) throws Exception{
+        log.info(this.getClass().getName() + ".updateTraderPw start!");
 
-        String id = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+        String traderId = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+        String type =  CmmUtil.nvl((String) session.getAttribute("SS_TYPE"));
+        if(!type.equals("Trader") || traderId == null) {
+            session.invalidate();
+            return  "/trader/login";
+        }
 
-        log.info(id);
+        log.info(traderId);
 
         TraderDTO pDTO = new TraderDTO();
 
-        pDTO.setId(id);
+        pDTO.setTraderId(traderId);
 
-        TraderDTO rDTO = Optional.ofNullable(traderService.getUserInfo(pDTO)).orElseGet(TraderDTO::new);
+        TraderDTO rDTO = Optional.ofNullable(traderService.getTraderInfo(pDTO)).orElseGet(TraderDTO::new);
 
         model.addAttribute("rDTO", rDTO);
 
-        log.info(this.getClass().getName() + ".traderInfo start!");
-        return "/trader/changePw";
+        log.info(this.getClass().getName() + ".updateTraderPw End!");
+        return "/trader/updateTraderPw";
     }
+
+    // 상인정보 수정로직 코드
+    // 구현완료(11/13)
     @ResponseBody
-    @PostMapping(value = "changeTrader")
-    public MsgDTO changeTrader(HttpServletRequest request, HttpSession session) throws Exception {
-        log.info(this.getClass().getName() + ".changeTrader Start!");
+    @PostMapping(value = "updateInfo")
+    public MsgDTO updateInfo(HttpServletRequest request, HttpSession session) throws Exception {
+        log.info(this.getClass().getName() + ".updateTraderInfo Start!");
 
         // 성공이면 1, 실패면 0
         int res = 0;
@@ -315,33 +386,45 @@ public class TraderController {
         TraderDTO pDTO = null;
 
         try {
-            String id = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+            String traderId = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+            String traderName = CmmUtil.nvl(request.getParameter("traderName"));
+            String phoneNumber = CmmUtil.nvl(request.getParameter("phoneNumber"));
+            String account = CmmUtil.nvl(request.getParameter("account"));
+            String bank = CmmUtil.nvl(request.getParameter("bank"));
             String shopCode = CmmUtil.nvl(request.getParameter("shopCode"));
-            String name = CmmUtil.nvl(request.getParameter("name"));
-            String pn = CmmUtil.nvl(request.getParameter("pn"));
+            String email = CmmUtil.nvl(request.getParameter("email"));
+            String traderNotice = CmmUtil.nvl(request.getParameter("traderNotice"));
 
-            log.info("id : " + id);
-            log.info("type : " + shopCode);
-            log.info("name : " + name);
-            log.info("pn : " + pn);
+            log.info("traderId : " + traderId);
+            log.info("traderName : " + traderName);
+            log.info("phoneNumber : " + phoneNumber);
+            log.info("account : " + account);
+            log.info("bank : " + bank);
+            log.info("shopCode : " + shopCode);
+            log.info("email : " + email);
+            log.info("traderNotice : " + traderNotice);
 
             pDTO = new TraderDTO();
 
-            pDTO.setId(id);
-            pDTO.setPn(pn);
-            pDTO.setName(name);
+            pDTO.setTraderId(traderId);
+            pDTO.setPhoneNumber(phoneNumber);
+            pDTO.setTraderName(traderName);
+            pDTO.setBank(bank);
+            pDTO.setAccount(account);
             pDTO.setShopCode(shopCode);
+            pDTO.setTraderEmail(email);
+            pDTO.setTraderNotice(traderNotice);
 
             log.info(pDTO.toString());
 
-            res = traderService.changeTrader(pDTO);
+            res = traderService.updateTraderInfo(pDTO);
 
             log.info("res : " + res);
 
             if (res == 1) {
                 msg = "수정되었습니다";
             } else {
-                msg = "오류로 인해 회원가입에 실패하였습니다";
+                msg = "오류로 인해 수정에 실패하였습니다";
             }
         }catch (Exception e) {
             msg = "실패하였습니다 : " + e;
@@ -351,14 +434,17 @@ public class TraderController {
             dto = new MsgDTO();
             dto.setMsg(msg);
             dto.setResult(res);
-            log.info(this.getClass().getName() + ".changeTrader End!");
+            log.info(this.getClass().getName() + ".updateTraderInfo End!");
         }
         return dto;
     }
+
+    // 상인 비밀번호 수정로직 코드
+    // 구현완료(11/10)
     @ResponseBody
-    @PostMapping(value = "pwChange")
-    public MsgDTO pwChange(HttpServletRequest request, HttpSession session) throws Exception {
-        log.info(this.getClass().getName() + ".pwChange Start!");
+    @PostMapping(value = "updatePw")
+    public MsgDTO updatePw(HttpServletRequest request, HttpSession session) throws Exception {
+        log.info(this.getClass().getName() + ".updatePw Start!");
 
         // 성공이면 1, 실패면 0
         int res = 0;
@@ -368,44 +454,172 @@ public class TraderController {
         TraderDTO pDTO = null;
 
         try {
-            String id = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
-            String pw = CmmUtil.nvl(request.getParameter("npw"));
+            String traderId = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+            String traderPw = CmmUtil.nvl(request.getParameter("traderPw"));
+            String newTraderPw = CmmUtil.nvl(request.getParameter("npw"));
 
-            log.info("id : " + id);
-            log.info("pw : " + pw);
+            log.info("traderId : " + traderId);
+            log.info("traderPw : " + traderPw);
+            log.info("newTraderPw : " + newTraderPw);
+
+            if (traderPw.equals(newTraderPw)) {
+                msg = "같은 비밀번호를 입력하셨습니다.";
+                throw new Exception();
+            }
 
             pDTO = new TraderDTO();
 
-            pDTO.setId(id);
-            pDTO.setPw(EncryptUtil.encHashSHA256(pw));
+            pDTO.setTraderId(traderId);
+            pDTO.setTraderPw(EncryptUtil.encHashSHA256(newTraderPw));
             log.info(pDTO.toString());
 
-            res = traderService.changePw(pDTO);
+            res = traderService.updateTraderPw(pDTO);
 
             log.info("res : " + res);
 
             if (res == 1) {
                 msg = "수정되었습니다";
             } else {
-                msg = "오류로 인해 회원가입에 실패하였습니다";
+                msg = "오류로 인해 수정에 실패하였습니다";
             }
         }catch (Exception e) {
-            msg = "실패하였습니다 : " + e;
+            msg = "같은 비밀번호를 입력하셨습니다.";
             log.info(e.toString());
             e.printStackTrace();
         }finally {
             dto = new MsgDTO();
             dto.setMsg(msg);
             dto.setResult(res);
-            log.info(this.getClass().getName() + ".pwChange End!");
+            log.info(this.getClass().getName() + ".updatePw End!");
         }
         return dto;
     }
 
+    // 고객센터 페이지 이동코드
+    // 구현완료(10/30)
     @GetMapping(value = "/customerService")
-    public String customerService() {
+    public String customerService(HttpSession session) {
         log.info("start!");
 
+        String traderId = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+        String type =  CmmUtil.nvl((String) session.getAttribute("SS_TYPE"));
+        if(!type.equals("Trader") || traderId == null) {
+            session.invalidate();
+            return  "/trader/login";
+        }
+
         return "/trader/customerService";
+    }
+    @ResponseBody
+    @PostMapping(value = "searchEmail")
+    public TraderDTO searchEmail(HttpServletRequest request) throws Exception {
+
+        log.info(this.getClass().getName() + ".searchEmail Start!");
+
+        String email = CmmUtil.nvl(request.getParameter("email")); // 회원아이디
+
+        log.info("email : " + email);
+
+        TraderDTO pDTO = new TraderDTO();
+        pDTO.setTraderEmail(email);
+
+        // 입력된 이메일이 중복된 이메일인지 조회
+        TraderDTO rDTO = Optional.ofNullable(traderService.searchEmail(pDTO)).orElseGet(TraderDTO::new);
+
+        log.info(this.getClass().getName() + ".searchEmail End!");
+
+        return rDTO;
+    }
+    @ResponseBody
+    @PostMapping(value = "/showId")
+    public MsgDTO showId(HttpServletRequest request) throws Exception{
+
+        log.info(this.getClass().getName() + ".showId Start!");
+
+        int res = 0;
+        String msg = "";
+        MsgDTO dto = null;
+
+        String traderName = CmmUtil.nvl(request.getParameter("traderName")); // 이름
+        String email = CmmUtil.nvl(request.getParameter("traderEmailForId")); // 이메일
+
+
+        log.info("traderName : " + traderName);
+        log.info("email : " + email);
+
+
+        TraderDTO pDTO = new TraderDTO();
+        pDTO.setTraderName(traderName);
+        pDTO.setTraderEmail(email);
+
+        log.info(pDTO.toString());
+
+        TraderDTO rDTO = Optional.ofNullable(traderService.searchTraderId(pDTO)).orElseGet(TraderDTO::new);
+
+        log.info(rDTO.toString());
+
+        if (rDTO.getTraderId() == null) {
+            msg = "계정 정보가 맞지 않습니다";
+        } else {
+            msg = "고객님의 아이디는 " + rDTO.getTraderId() + "입니다";
+        }
+
+        dto = new MsgDTO();
+        dto.setMsg(msg);
+        dto.setResult(res);
+
+        log.info(dto.toString());
+
+        log.info(this.getClass().getName() + ".showId End!");
+
+
+        return dto;
+    }
+
+    @GetMapping(value="newPw")
+    public String newPw(HttpSession session) {
+        log.info(this.getClass().getName() + ".newPw Start!");
+
+        return "/trader/newPw";
+    }
+    @ResponseBody
+    @PostMapping(value = "newPwProd")
+    public MsgDTO newPwProd(HttpServletRequest request, HttpSession session) throws Exception {
+        log.info(this.getClass().getName() + ".newPwProd Start!");
+
+        int res = 0;
+        String msg = "";
+        MsgDTO dto = null;
+
+        TraderDTO pDTO = null;
+
+        String traderId = CmmUtil.nvl(request.getParameter("traderId"));
+        String email = CmmUtil.nvl(request.getParameter("traderEmailForPw"));
+
+        log.info("traderId : " + traderId);
+        log.info("email : " + email);
+
+        pDTO = new TraderDTO();
+
+        pDTO.setTraderId(traderId);
+        pDTO.setTraderEmail(email);
+
+        TraderDTO rDTO = Optional.ofNullable(traderService.searchTraderPw(pDTO)).orElseGet(TraderDTO::new);
+
+        if (rDTO.getTraderId() == null) {
+            msg = "계정 정보가 맞지 않습니다";
+        } else {
+            res = 1;
+            msg = "확인되었습니다";
+            session.setAttribute("NEW_PASSWORD", traderId);
+        }
+
+        dto = new MsgDTO();
+        dto.setMsg(msg);
+        dto.setResult(res);
+
+        log.info(this.getClass().getName() + ".newPwProd Start!");
+
+        return dto;
     }
 }

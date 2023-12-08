@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TMI - 상인 정보 수정</title>
+    <link rel="stylesheet" href="/assets/css/font.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/bootstrap.css">
+    <link rel="stylesheet" href="/assets/vendors/choices.js/choices.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/perfect-scrollbar/perfect-scrollbar.css">
+    <link rel="stylesheet" href="/assets/vendors/bootstrap-icons/bootstrap-icons.css">
+    <link rel="stylesheet" href="/assets/css/app.css">
+    <script src="/assets/js/jquery-3.6.0.min.js"></script>
+    <link rel="shortcut icon" href="/assets/images/favicon.svg" type="image/x-icon">
+    <script type="text/javascript">
+        $(document).ready(function () {
+            let f = document.getElementById("f");
+            $("#btnChange").on("click", function () {
+                updateTrader(f)
+            })
+
+            function updateTrader(f) {
+                $.ajax({
+                        url: "/trader/updateInfo",
+                        type: "post", // 전송방식은 Post
+                        dataType: "JSON", // 전송 결과는 JSON으로 받기
+                        data: $("#f").serialize(), // form 태그 내 input 등 객체를 자동으로 전송할 형태로 변경하기
+                        success: function (json) { // 호출이 성공했다면..
+
+                            if (json.result === 1) { // 수정 성공
+                                alert(json.msg); // 메시지 띄우기
+                                location.href = "/trader/traderInfo"; // 로그인 페이지 이동
+
+                            } else { // 수정 실패
+                                alert(json.msg); // 메시지 띄우기
+                            }
+                        }
+                    }
+                )
+                $("#cancel").on("click", function () {
+                    cancel()
+                })
+                function cancel() {
+                    location.href = "/trader/traderInfo";
+                }
+            }
+        })
+    </script>
+</head>
+
+<body>
+<div id="app">
+    <div th:replace="sidebar.html"></div>
+    <div id="main">
+        <header class="mb-3">
+            <a href="#" class="burger-btn d-block d-xl-none">
+                <i class="bi bi-justify fs-3"></i>
+            </a>
+        </header>
+
+        <div class="page-heading">
+            <div class="page-title">
+                <div class="row">
+                    <div class="col-12 col-md-6 order-md-1 order-last mx-auto text-center">
+                        <h3>비밀번호 변경</h3>
+                        <br>
+                    </div>
+                </div>
+            </div>
+            <section class="bootstrap-select">
+                <section class="section">
+                    <div class="card mx-auto">
+                        <div class="card-content">
+                            <div class="card-body">
+                                <form id="f" class="form form-horizontal">
+                                    <div class="form-body">
+                                        <div class="row" style="text-align: center">
+                                            <div class="col-md-4">
+                                                <label>이름</label>
+                                            </div>
+                                            <div class="col-md-8 form-group">
+                                                <input type="text" class="form-control" id="traderName" name="traderName" th:value="${rDTO.traderName}" />
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label>전화번호</label>
+                                            </div>
+                                            <div class="col-md-8 form-group">
+                                                <input type="tel"  class="form-control" name="phoneNumber" id="phoneNumber" th:value="${rDTO.phoneNumber}" />
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label>지역</label>
+                                            </div>
+                                            <div class="col-md-8 form-group">
+                                                <input type="text" class="form-control" id="shopCode" name="shopCode" th:value="${rDTO.shopCode}" />
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label>이메일</label>
+                                            </div>
+                                            <div class="col-md-8 form-group">
+                                                <input type="email"  class="form-control" name="email" id="email" th:value="${rDTO.traderEmail}" />
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label>계좌번호</label>
+                                            </div>
+                                            <div class="col-md-8 form-group">
+                                                <input type="text"  class="form-control" name="account" id="account" th:value="${rDTO.account}" />
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label>은행</label>
+                                            </div>
+                                            <div class="col-md-8 form-group">
+                                                <input type="text"  class="form-control" name="bank" id="bank" th:value="${rDTO.bank}" />
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label>상인의 말</label>
+                                            </div>
+                                            <div class="col-md-8 form-group">
+                                                <input type="text"  class="form-control" name="traderNotice" id="traderNotice" th:value="${rDTO.traderNotice}" />
+                                            </div>
+                                            <br>
+                                            <div class="col-sm-12 d-flex justify-content-end">
+                                                <button type="button" id="btnChange" class="btn btn-primary me-1 mb-1">수정</button>
+                                                <button type="button" id="cancel" class="btn btn-light-secondary me-1 mb-1">취소</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </section>
+        </div>
+        <footer>
+            <div class="footer clearfix mb-0 text-muted">
+                <div class="float-start">
+                    <p>2021 &copy; Mazer</p>
+                </div>
+                <div class="float-end">
+                    <p>Crafted with <span class="text-danger"><i class="bi bi-heart"></i></span> by <a href="http://ahmadsaugi.com">A. Saugi</a></p>
+                </div>
+            </div>
+        </footer>
+    </div>
+</div>
+<script src="/assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+<script src="/assets/js/bootstrap.bundle.min.js"></script>
+<!-- jQuery 라이브러리 추가 -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="/assets/js/main.js"></script>
+<script src="/assets/js/move.js"></script>
+</body></html>

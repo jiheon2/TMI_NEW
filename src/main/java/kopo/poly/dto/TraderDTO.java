@@ -8,12 +8,17 @@ import lombok.ToString;
 @Setter
 @ToString
 public class TraderDTO {
-    private String businessNum;
+    private String traderNumber;
+    private String traderId;
+    private String traderPw;
+    private String businessNumber;
+    private String traderName;
+    private String phoneNumber;
+    private String traderEmail;
     private String shopCode;
-    private String name;
-    private String pn;
-    private String id;
-    private String pw;
-    private String address;
-    private String existsYn; // 회원가입 시, 중복방지를 위한 변수(회원이 존재하면 Y)
+    private String account;
+    private String bank;
+    private String traderNotice;
+    private int authNumber;
+    private String existsYn;
 }

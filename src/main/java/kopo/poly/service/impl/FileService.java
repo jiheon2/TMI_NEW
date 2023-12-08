@@ -7,17 +7,14 @@ import com.amazonaws.client.builder.AwsClientBuilder;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.*;
-import kopo.poly.dto.NoticeDTO;
-import kopo.poly.persistance.mapper.INoticeMapper;
+import kopo.poly.persistance.mapper.IPostMapper;
 import kopo.poly.service.IFileService;
-import kopo.poly.service.INoticeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
-import java.net.URL;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -37,8 +34,9 @@ public class FileService implements IFileService {
             .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(endPoint, regionName))
             .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(accessKey, secretKey)))
             .build();
-    private final INoticeMapper noticeMapper;
+    private final IPostMapper noticeMapper;
 
+    /* 파일 업로드 */
     @Override
     public void upload(String fileName,String folderName, MultipartFile mf) throws Exception {
 
@@ -74,6 +72,8 @@ public class FileService implements IFileService {
             e.printStackTrace();
         }
     }
+
+    /* 파일 URL 조회 */
     @Override
     public String getFileURL(String folderName, String fileName) throws Exception {
         String url = null;
@@ -88,6 +88,8 @@ public class FileService implements IFileService {
 
         return url;
     }
+
+    /* 이건 뭔지 모름 */
     private File convert(MultipartFile file, String folderName) throws IOException {
         File convertFile = new File(System.getProperty(folderName) + file.getOriginalFilename());
         try (FileOutputStream fos = new FileOutputStream(convertFile)) { // FileOutputStream 데이터를 파일에 바이트 스트림으로 저장하기 위함

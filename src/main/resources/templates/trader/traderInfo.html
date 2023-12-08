@@ -9,18 +9,19 @@
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/bootstrap.css">
-    <link rel="stylesheet" href="/assets/vendors/choices.js/choices.min.css" />
+    <link rel="stylesheet" href="/assets/vendors/choices.js/choices.min.css"/>
     <link rel="stylesheet" href="/assets/vendors/perfect-scrollbar/perfect-scrollbar.css">
     <link rel="stylesheet" href="/assets/vendors/bootstrap-icons/bootstrap-icons.css">
     <link rel="stylesheet" href="/assets/css/app.css">
     <script src="/assets/js/jquery-3.6.0.min.js"></script>
     <link rel="shortcut icon" href="/assets/images/favicon.svg" type="image/x-icon">
     <script type="text/javascript">
-        function changePw() {
-            location.href = "/trader/changePw";
-            }
-        function infoChange() {
-            location.href = "/trader/traderInfoChange";
+        function updateTraderPw() {
+            location.href = "/trader/updateTraderPw";
+        }
+
+        function updateTraderInfo() {
+            location.href = "/trader/updateTraderInfo";
         }
     </script>
 </head>
@@ -34,7 +35,6 @@
                 <i class="bi bi-justify fs-3"></i>
             </a>
         </header>
-
         <div class="page-heading">
             <div class="page-title">
                 <div class="row">
@@ -56,30 +56,58 @@
                                                 <label>이름</label>
                                             </div>
                                             <div class="col-md-8 form-group">
-                                                <div class="form-control">[[${rDTO.name}]]</div>
+                                                <div class="form-control">[[${rDTO.traderName}]]</div>
                                             </div>
                                             <div class="col-md-4">
                                                 <label>전화번호</label>
                                             </div>
                                             <div class="col-md-8 form-group">
-                                                <div class="form-control">[[${rDTO.pn}]]</div>
+                                                <div class="form-control">[[${rDTO.phoneNumber}]]</div>
                                             </div>
                                             <div class="col-md-4">
                                                 <label>사업자 등록번호</label>
                                             </div>
                                             <div class="col-md-8 form-group">
-                                                <div class="form-control">[[${rDTO.businessNum}]]</div>
+                                                <div class="form-control">[[${rDTO.businessNumber}]]</div>
                                             </div>
                                             <div class="col-md-4">
-                                                <label>소속</label>
+                                                <label>EMAIL</label>
+                                            </div>
+                                            <div class="col-md-8 form-group">
+                                                <div class="form-control">[[${rDTO.traderEmail}]]</div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label>소속시장</label>
                                             </div>
                                             <div class="col-md-8 form-group">
                                                 <div class="form-control">[[${rDTO.shopCode}]]</div>
                                             </div>
+                                            <div class="col-md-4">
+                                                <label>은행</label>
+                                            </div>
+                                            <div class="col-md-8 form-group">
+                                                <div class="form-control">[[${rDTO.bank}]]</div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label>계좌번호</label>
+                                            </div>
+                                            <div class="col-md-8 form-group">
+                                                <div class="form-control">[[${rDTO.account}]]</div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label>상인의 말</label>
+                                            </div>
+                                            <div class="col-md-8 form-group">
+                                                <div class="form-control">[[${rDTO.traderNotice}]]</div>
+                                            </div>
                                             <br>
                                             <div class="col-sm-12 d-flex justify-content-end">
-                                                <button type="button" onclick="changePw()" class="btn btn-primary me-1 mb-1">비밀번호 변경</button>
-                                                <button type="button" onclick="infoChange()"  class="btn btn-primary me-1 mb-1">수정</button>
+                                                <button type="button" onclick="updateTraderPw()"
+                                                        class="btn btn-primary me-1 mb-1">비밀번호 변경
+                                                </button>
+                                                <button type="button" onclick="updateTraderInfo()"
+                                                        class="btn btn-primary me-1 mb-1">수정
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
@@ -96,17 +124,17 @@
                     <p>2021 &copy; Mazer</p>
                 </div>
                 <div class="float-end">
-                    <p>Crafted with <span class="text-danger"><i class="bi bi-heart"></i></span> by <a href="http://ahmadsaugi.com">A. Saugi</a></p>
+                    <p>Crafted with <span class="text-danger"><i class="bi bi-heart"></i></span> by <a
+                            href="http://ahmadsaugi.com">A. Saugi</a></p>
                 </div>
             </div>
         </footer>
     </div>
 </div>
-    <script src="/assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
-    <script src="/assets/js/bootstrap.bundle.min.js"></script>
-    <!-- jQuery 라이브러리 추가 -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="/assets/js/main.js"></script>
+<script src="/assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+<script src="/assets/js/bootstrap.bundle.min.js"></script>
+<!-- jQuery 라이브러리 추가 -->
+<script src="/assets/js/main.js"></script>
 <script src="/assets/js/move.js"></script>
 </body>
 </html>

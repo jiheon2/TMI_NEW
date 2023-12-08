@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- JAVA와 연결할 Mapper 파일 설정 -->
+<mapper namespace="kopo.poly.persistance.mapper.IBasketMapper">
+    <!-- 장바구니에 담기 쿼리 -->
+    <insert id="addBasket" parameterType="BasketDTO">
+        INSERT INTO BASKET (BASKET_NUMBER, CUSTOMER_ID, GOODS_NUMBER,PRICE, QUANTITY, GOODS_NAME, GOODS_IMAGE)
+        VALUES ((SELECT IFNULL(MAX(A.BASKET_NUMBER), 0) + 1 FROM BASKET A), #{customerId}, #{goodsNumber}, #{price}, #{quantity}, #{goodsName}, #{goodsImage})
+    </insert>
+
+    <!-- 장바구니 목록 조회 -->
+    <select id="getBasketList" parameterType="BasketDTO" resultType="BasketDTO">
+        SELECT BASKET_NUMBER, CUSTOMER_ID, GOODS_NUMBER, PRICE, QUANTITY, GOODS_NAME, GOODS_IMAGE
+        FROM BASKET
+        WHERE CUSTOMER_ID = #{customerId}
+        ORDER BY GOODS_NUMBER DESC
+    </select>
+
+    <!--  결제목록 담기  -->
+    <insert id="insertPayment" parameterType="PaymentDTO">
+        INSERT INTO PAYMENT (
+            customer_id,
+            apply_num,
+            bank_name,
+            buyer_addr,
+            buyer_email,
+            buyer_postcode,
+            buyer_tel,
+            card_name,
+            card_number,
+            card_quota,
+            currency,
+            custom_data,
+            imp_uid,
+            name,
+            paid_amount,
+            paid_at,
+            pay_method,
+            pg_provider,
+            pg_tid,
+            pg_type,
+            recipt_url,
+            status,
+            success
+        )
+        VALUES (
+                   #{customerId},
+                   #{applyNum},
+                   #{bankName},
+                   #{buyerAddr},
+                   #{buyerEmail},
+                   #{buyerPostcode},
+                   #{buyerTel},
+                   #{cardName},
+                   #{cardNumber},
+                   #{cardQuote},
+                   #{currency},
+                   #{customData},
+                   #{impUid},
+                   #{name},
+                   #{paidAmount},
+                   #{paidAt},
+                   #{payMethod},
+                   #{pgProvider},
+                   #{pgTid},
+                   #{pgType},
+                   #{reciptUrl},
+                   #{status},
+                   #{success}
+               )
+    </insert>
+    <!--  결제목록 보기  -->
+    <select id="getPayment" parameterType="PaymentDTO">
+        SELECT apply_num, buyer_email, name, paid_amount, currency,paid_at
+        FROM PAYMENT
+        WHERE CUSTOMER_ID = #{customerId}
+    </select>
+
+    <!--  결제목록 보기  -->
+    <select id="paymentInfo" parameterType="PaymentDTO">
+        SELECT apply_num, customer_Id, name, buyer_email, buyer_tel,paid_at, paid_amount, pay_method
+        FROM PAYMENT
+        WHERE apply_num = #{applyNum}
+        AND CUSTOMER_ID = #{customerId}
+    </select>
+
+    <!--  장바구니 삭제  -->
+    <delete id="deleteBuy" parameterType="BasketDTO">
+        DELETE
+        FROM BASKET
+        WHERE BASKET_NUMBER = #{basketNumber}
+    </delete>
+</mapper>

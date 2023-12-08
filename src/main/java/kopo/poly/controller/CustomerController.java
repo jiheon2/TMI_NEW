@@ -1,22 +1,23 @@
 package kopo.poly.controller;
 
-import kopo.poly.dto.CustomerDTO;
-import kopo.poly.dto.MsgDTO;
-import kopo.poly.service.ICustomerService;
+import kopo.poly.dto.*;
+import kopo.poly.persistance.mapper.IBasketMapper;
+import kopo.poly.service.*;
 import kopo.poly.util.CmmUtil;
 import kopo.poly.util.EncryptUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.Optional;
+import javax.swing.text.html.Option;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Controller
 @Slf4j
@@ -25,12 +26,23 @@ import java.util.Optional;
 public class CustomerController {
 
     private final ICustomerService customerService;
+    private final IShopService shopService;
+    private final IGoodsService goodsService;
+    private final IReviewService reviewService;
+    private final IBasketService basketService;
+    private final ITraderService traderService;
+    private final IPostService postService;
+    private final IReservationService reservationService;
+    private final ICouponService couponService;
+    private final IWishlistService wishlistService;
+
     @GetMapping(value = "/login")
     public String login(HttpSession session) {
-
-
         return "/customer/login";
     }
+
+    // 소비자 로그인 로직 코드
+    // 구현완료(11/10)
     @ResponseBody
     @PostMapping(value = "loginProc")
     public MsgDTO loginProc(HttpServletRequest request, HttpSession session) {
@@ -46,19 +58,19 @@ public class CustomerController {
 
         try {
 
-            String id = CmmUtil.nvl(request.getParameter("id")); //아이디
-            String pw = CmmUtil.nvl(request.getParameter("pw")); //비밀번호
+            String customerId = CmmUtil.nvl(request.getParameter("customerId")); //아이디
+            String customerPw = CmmUtil.nvl(request.getParameter("customerPw")); //비밀번호
 
-            log.info("id : " + id);
-            log.info("pw : " + pw);
+            log.info("customerId : " + customerId);
+            log.info("customerPw : " + customerPw);
 
             //웹(회원정보 입력화면)에서 받는 정보를 저장할 변수를 메모리에 올리기
             pDTO = new CustomerDTO();
 
-            pDTO.setId(id);
+            pDTO.setCustomerId(customerId);
 
             //비밀번호는 절대로 복호화되지 않도록 해시 알고리즘으로 암호화함
-            pDTO.setPw(EncryptUtil.encHashSHA256(pw));
+            pDTO.setCustomerPw(EncryptUtil.encHashSHA256(customerPw));
 
             log.info(pDTO.toString());
 
@@ -66,13 +78,17 @@ public class CustomerController {
             CustomerDTO rDTO = customerService.getLogin(pDTO);
 
             log.info(rDTO.toString());
-            if (CmmUtil.nvl(rDTO.getId()).length() > 0) { //로그인 성공
+            if (CmmUtil.nvl(rDTO.getCustomerId()).length() > 0) { //로그인 성공
 
                 res = 1;
 
                 msg = "로그인이 성공했습니다.";
 
-                session.setAttribute("SS_ID", CmmUtil.nvl(rDTO.getId()));
+                if(rDTO.getReward() == 0) {
+                    customerService.pointReward(pDTO); // 10포인트 추가
+                }
+
+                session.setAttribute("SS_ID", CmmUtil.nvl(rDTO.getCustomerId()));
 
                 session.setAttribute("SS_TYPE", "Customer");
 
@@ -100,44 +116,187 @@ public class CustomerController {
         return dto;
     }
 
+    // 소비자 메인페이지 이동코드
+    // 구현완료(11/13)
+    @GetMapping(value = "/customerIndex")
+    public String customerIndex(ModelMap model) throws Exception {
+        log.info(this.getClass().getName() + ".customerIndex Start!");
 
-    @GetMapping(value = "/userIndex")
-    public String customerIndex() {
-        log.info("start!");
+        String type = "verification";
+        String market = "";
 
-        return "/customer/userIndex";
+        List<PostDTO> pList = Optional.ofNullable(postService.getPostList(type)).orElseGet(ArrayList::new);
+        List<GoodsDTO> gList = Optional.ofNullable(reservationService.getPopularGoods(market)).orElseGet(ArrayList::new);
+        List<MarketDTO> mList = Optional.ofNullable(reservationService.getPopularMarket()).orElseGet(ArrayList::new);
+
+        log.info(pList.toString());
+        log.info(gList.toString());
+        log.info(mList.toString());
+
+        model.addAttribute("pList",pList);
+        model.addAttribute("gList",gList);
+        model.addAttribute("mList",mList);
+
+        return "/customer/customerIndex";
     }
 
+    // 소비자 장바구니 이동코드
     @GetMapping(value = "/cart")
-    public String cart() {
-        log.info("start!");
+    public String cart(HttpSession session, ModelMap model) throws Exception {
+        log.info(this.getClass().getName() + ".cart Start!");
+
+        String customerId = (String) session.getAttribute("SS_ID");
+        String type =  CmmUtil.nvl((String) session.getAttribute("SS_TYPE"));
+        if(!type.equals("Customer") || customerId == null) {
+            session.invalidate();
+            return  "/customer/login";
+        }
+
+        BasketDTO pDTO = new BasketDTO();
+
+        pDTO.setCustomerId(customerId);
+
+        List<BasketDTO> rList = Optional.ofNullable(basketService.getBasketList(pDTO)).orElseGet(ArrayList::new);
+        CustomerDTO pDTO1 = new CustomerDTO();
+        pDTO1.setCustomerId(customerId);
+        CustomerDTO rDTO = Optional.ofNullable(customerService.getCustomerInfo(pDTO1)).orElseGet(CustomerDTO::new);
+        CouponDTO pDTO2 = new CouponDTO();
+        pDTO2.setCustomerId(customerId);
+        List<CouponDTO> cList = Optional.ofNullable(couponService.getCustomerCouponCount(pDTO2)).orElseGet(ArrayList::new);
+
+        Date today = new Date();
+        Locale currentLocale = new Locale("KOREAN", "KOREA");
+        String pattern = "yyyyMMddHHmmss"; //hhmmss로 시간,분,초만 뽑기도 가능
+        SimpleDateFormat formatter = new SimpleDateFormat(pattern, currentLocale);
+        System.out.println(formatter.format(today));
+
+        log.info(rList.toString());
+        log.info(rDTO.toString());
+        log.info(cList.toString());
+
+        model.addAttribute("date", formatter.format(today));
+        model.addAttribute("rList", rList);
+        model.addAttribute("rDTO", rDTO);
+        model.addAttribute("cList", cList);
+
+        log.info(this.getClass().getName() + ".cart End!");
         return "/customer/cart";
     }
 
-    @GetMapping(value = "/userSignUp")
-    public String userSignUp() {
-        log.info(this.getClass().getName() + "userSignUp");
-        return "/customer/userSignUp";
+    // 소비자 장바구니 이동코드
+    @GetMapping(value = "/allGoodsInfo")
+    public String allGoodsInfo(ModelMap model) throws Exception {
+        log.info(this.getClass().getName() + ".allGoodsInfo Start!");
+        GoodsDTO pDTO = new GoodsDTO();
+
+
+        List<GoodsDTO> rList = Optional.ofNullable(goodsService.getGoodsAll()).orElseGet(ArrayList::new);
+
+        log.info(rList.toString());
+        String goodsCount;
+        if (!rList.isEmpty()) {
+            GoodsDTO firstGoods = rList.get(0);
+            goodsCount = firstGoods.getGoodsCount();
+        } else {
+            goodsCount = "0";
+        }
+
+        model.addAttribute("goodsCount", goodsCount);
+        model.addAttribute("rList", rList);
+        log.info(this.getClass().getName() + ".allGoodsInfo End!");
+        return "/goods/allGoodsInfo";
+    }
+    // 소비자 장바구니 이동코드
+    @GetMapping(value = "/paymentList")
+    public String paymentList(ModelMap model) throws Exception {
+        log.info(this.getClass().getName() + ".paymentList Start!");
+        GoodsDTO pDTO = new GoodsDTO();
+
+
+        List<GoodsDTO> rList = Optional.ofNullable(goodsService.getGoodsAll()).orElseGet(ArrayList::new);
+
+        log.info(rList.toString());
+        String goodsCount;
+        if (!rList.isEmpty()) {
+            GoodsDTO firstGoods = rList.get(0);
+            goodsCount = firstGoods.getGoodsCount();
+        } else {
+            goodsCount = "0";
+        }
+
+        model.addAttribute("goodsCount", goodsCount);
+        model.addAttribute("rList", rList);
+        log.info(this.getClass().getName() + ".allGoodsInfo End!");
+        return "/payment/paymentList";
+    }
+    @GetMapping(value = "/wishList")
+    public String wishList(HttpSession session, ModelMap model) throws Exception {
+        log.info(this.getClass().getName() + ".wishList Start!");
+
+        String customerId = (String) session.getAttribute("SS_ID");
+        String type =  CmmUtil.nvl((String) session.getAttribute("SS_TYPE"));
+        if(!type.equals("Customer") || customerId == null) {
+            session.invalidate();
+            return  "/customer/login";
+        }
+        log.info(customerId);
+
+        WishListDTO pDTO = new WishListDTO();
+
+        pDTO.setCustomerId(customerId);
+        log.info(pDTO.toString());
+
+        List<WishListDTO> rList = Optional.ofNullable(wishlistService.getWishList(pDTO)).orElseGet(ArrayList::new);
+        CustomerDTO pDTO1 = new CustomerDTO();
+        pDTO1.setCustomerId(customerId);
+        CustomerDTO rDTO = Optional.ofNullable(customerService.getCustomerInfo(pDTO1)).orElseGet(CustomerDTO::new);
+
+        log.info(rList.toString());
+        log.info(rDTO.toString());
+
+        model.addAttribute("rList", rList);
+        model.addAttribute("rDTO", rDTO);
+
+        log.info(this.getClass().getName() + ".wishList End!");
+        return "/customer/wishList";
     }
 
+
+    // 소비자 회원가입페이지 이동코드
+    // 구현완료(11/13)
+    @GetMapping(value = "/customerSignUp")
+    public String customerSignUp() {
+        log.info(this.getClass().getName() + "customerSignUp");
+
+        return "/customer/customerSignUp";
+    }
+
+    // 소비자 ID 중복확인 로직코드
+    // 구현완료(11/13)
     @ResponseBody
-    @PostMapping(value = "getUserIdExists")
-    public CustomerDTO getUserIdExists(HttpServletRequest request) throws Exception {
-        log.info(this.getClass().getName() + ".getUserIdExists Start!");
+    @PostMapping(value = "getCustomerIdExists")
+    public CustomerDTO getCustomerIdExists(HttpServletRequest request) throws Exception {
+        log.info(this.getClass().getName() + ".getCustomerIdExists Start!");
 
-        String id = CmmUtil.nvl(request.getParameter("id"));
+        String customerId = CmmUtil.nvl(request.getParameter("customerId"));
 
-        log.info("id : " + id);
+        log.info("customerId : " + customerId);
 
         CustomerDTO pDTO = new CustomerDTO();
 
-        pDTO.setId(id);
+        pDTO.setCustomerId(customerId);
 
-        CustomerDTO rDTO = Optional.ofNullable(customerService.getUserIdExists(pDTO)).orElseGet(CustomerDTO::new);
-        log.info(this.getClass().getName() + ".getUserIdExists End!");
+        CustomerDTO rDTO = Optional.ofNullable(customerService.getCustomerIdExists(pDTO)).orElseGet(CustomerDTO::new);
+        log.info(rDTO.toString());
+
+        log.info(this.getClass().getName() + ".getCustomerIdExists End!");
+
         return rDTO;
     }
 
+
+    // 소비자 회원가입로직 코드
+    // 구현완료(11/13)
     @ResponseBody
     @PostMapping(value = "insertCustomer")
     public MsgDTO insertCustomer(HttpServletRequest request) throws Exception {
@@ -151,28 +310,25 @@ public class CustomerController {
         CustomerDTO pDTO = null;
 
         try {
-            String id = CmmUtil.nvl(request.getParameter("id"));
-            String pw = CmmUtil.nvl(request.getParameter("pw"));
-            String pn = CmmUtil.nvl(request.getParameter("pn"));
-            String name = CmmUtil.nvl(request.getParameter("name"));
-            String age = CmmUtil.nvl(request.getParameter("age"));
-            String type = CmmUtil.nvl(request.getParameter("type"));
+            String customerId = CmmUtil.nvl(request.getParameter("customerId"));
+            String customerPw = CmmUtil.nvl(request.getParameter("customerPw"));
+            String customerPn = CmmUtil.nvl(request.getParameter("phoneNumber"));
+            String customerName = CmmUtil.nvl(request.getParameter("customerName"));
+            String customerEmail = CmmUtil.nvl(request.getParameter("customerEmail"));
 
-            log.info("id : " + id);
-            log.info("pw : " + pw);
-            log.info("pn : " + pn);
-            log.info("name : " + name);
-            log.info("age : " + age);
-            log.info("type : " + type);
+            log.info("customerId : " + customerId);
+            log.info("customerPw : " + customerPw);
+            log.info("customerPn : " + customerPn);
+            log.info("customerName : " + customerName);
+            log.info("customerEmail : " + customerEmail);
 
             pDTO = new CustomerDTO();
 
-            pDTO.setId(id);
-            pDTO.setPw(EncryptUtil.encHashSHA256(pw));
-            pDTO.setPn(pn);
-            pDTO.setName(name);
-            pDTO.setAge(age);
-            pDTO.setType(type);
+            pDTO.setCustomerId(customerId);
+            pDTO.setCustomerPw(EncryptUtil.encHashSHA256(customerPw));
+            pDTO.setPhoneNumber(customerPn);
+            pDTO.setCustomerName(customerName);
+            pDTO.setCustomerEmail(customerEmail);
 
             log.info(pDTO.toString());
 
@@ -187,11 +343,11 @@ public class CustomerController {
             } else {
                 msg = "오류로 인해 회원가입에 실패하였습니다";
             }
-        }catch (Exception e) {
+        } catch (Exception e) {
             msg = "실패하였습니다 : " + e;
             log.info(e.toString());
             e.printStackTrace();
-        }finally {
+        } finally {
             dto = new MsgDTO();
             dto.setMsg(msg);
             dto.setResult(res);
@@ -199,92 +355,182 @@ public class CustomerController {
         }
         return dto;
     }
+
+    // 상점정보 조회 코드
+    // 구현중(11/14)
     @GetMapping(value = "/shop")
-    public String shop() {
+    public String shop(HttpServletRequest request, ModelMap model) throws Exception{
         log.info(this.getClass().getName() + ".shop Start!");
+        String shopNumber = request.getParameter("shopNumber");
+
+        GoodsDTO pDTO = new GoodsDTO();
+
+        pDTO.setShopNumber(shopNumber);
+
+        List<GoodsDTO> rList = Optional.ofNullable(goodsService.getGoodsList(pDTO)).orElseGet(ArrayList::new);
+        List<ShopDTO> sList = Optional.ofNullable(reservationService.getPopularShop()).orElseGet(ArrayList::new);
+
+        log.info(rList.toString());
+        String shopName;
+        String shopDescription;
+        String market;
+        String goodsCount;
+        if (!rList.isEmpty()) {
+            GoodsDTO firstGoods = rList.get(0);
+            shopName = firstGoods.getShopName();
+            shopDescription = firstGoods.getShopDescription();
+            market = firstGoods.getMarketNumber();
+            goodsCount = firstGoods.getGoodsCount();
+        } else {
+            shopName = "아직 이 상점에는 상품이 없어요";
+            shopDescription = "";
+            market = "";
+            goodsCount = "0";
+        }
+
+        model.addAttribute("goodsCount", goodsCount);
+        model.addAttribute("rList", rList);
+        model.addAttribute("sList", sList);
+        model.addAttribute("shopName", shopName);
+        model.addAttribute("shopDescription", shopDescription);
+        model.addAttribute("market", market);
+        log.info(this.getClass().getName() + ".shop End!");
+
         return "/customer/shop";
     }
 
+
+    // 지도페이지 이동코드
+    // 구현완료(10/24)
     @GetMapping(value = "/map")
     public String map() {
         log.info("start!");
         return "/customer/map";
     }
 
+    // 시장정보 조회 코드
+    // 구현중 (11/14)
     @GetMapping(value = "/market")
-    public String market() {
+    public String market(HttpServletRequest request, ModelMap model) throws Exception{
         log.info("start!");
+
+        String market = request.getParameter("marketNumber");
+
+        log.info("marketNumber : " + market);
+
+        ShopDTO pDTO = new ShopDTO();
+
+        pDTO.setMarketNumber(market);
+
+        List<ShopDTO> rList = Optional.ofNullable(shopService.getShopList(pDTO)).orElseGet(ArrayList::new);
+
+        String marketName;
+        String shopCount;
+        if (!rList.isEmpty()) {
+            ShopDTO firstShop = rList.get(0);
+            marketName = firstShop.getMarketName();
+            shopCount = firstShop.getShopCount();
+        } else {
+            marketName = "아직 이 시장에는 상점이 없어요";
+            shopCount = "0";
+        }
+
+        model.addAttribute("shopCount", shopCount);
+        model.addAttribute("marketName", marketName);
+        model.addAttribute("rList", rList);
+
         return "/customer/market";
     }
 
+
+    // 채팅페이지 이동코드
     @GetMapping(value = "/chat")
     public String chat() {
         log.info("start!");
         return "/customer/chat";
     }
 
+    // 소비자 마이페이지 이동코드
+    // 구현완료(11/14)
     @GetMapping(value = "/customerInfo")
-    public String getCustomerInfo(HttpSession session, ModelMap model) throws Exception{
+    public String getCustomerInfo(HttpSession session, ModelMap model) throws Exception {
         log.info(this.getClass().getName() + ".customerLogin");
 
-        String type = (String) session.getAttribute("SS_TYPE");
-        String id = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
-
-        String url = "/customer/customerInfo";
-        if(!type.equals("Customer")) {
+        String customerId = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+        String type =  CmmUtil.nvl((String) session.getAttribute("SS_TYPE"));
+        if(!type.equals("Customer") || customerId == null) {
             session.invalidate();
-            url = "/customer/login";
+            return  "/customer/login";
         }
-        CustomerDTO pDTO = new CustomerDTO();
-        pDTO.setId(id);
-        CustomerDTO rDTO = Optional.ofNullable(customerService.getUserInfo(pDTO)).orElseGet(CustomerDTO::new);
-        model.addAttribute("rDTO", rDTO);
-        return url;
-
-    }
-    @GetMapping(value = "/customerInfoChange")
-    public String customerInfoChange(HttpSession session, ModelMap model) throws Exception{
-        log.info(this.getClass().getName() + ".customerInfoChange start!");
-
-        String id = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
-
-        log.info(id);
 
         CustomerDTO pDTO = new CustomerDTO();
-
-        pDTO.setId(id);
-
-        CustomerDTO rDTO = Optional.ofNullable(customerService.getUserInfo(pDTO)).orElseGet(CustomerDTO::new);
-
+        pDTO.setCustomerId(customerId);
+        CustomerDTO rDTO = Optional.ofNullable(customerService.getCustomerInfo(pDTO)).orElseGet(CustomerDTO::new);
         model.addAttribute("rDTO", rDTO);
+        return "/customer/customerInfo";
 
-        log.info(this.getClass().getName() + ".customerInfo start!");
-        return "/customer/customerInfoChange";
     }
 
-    @GetMapping(value = "/changePw")
-    public String changePw(HttpSession session, ModelMap model) throws Exception{
-        log.info(this.getClass().getName() + ".changePw start!");
+    // 소비자 정보 수정페이지 이동코드
+    // 구현완료(11/10)
+    @GetMapping(value = "/updateCustomerInfo")
+    public String updateCustomerInfo(HttpSession session, ModelMap model) throws Exception{
+        log.info(this.getClass().getName() + ".updateCustomerInfo start!");
 
-        String id = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+        String customerId = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+        String type =  CmmUtil.nvl((String) session.getAttribute("SS_TYPE"));
+        if(!type.equals("Customer") || customerId == null) {
+            session.invalidate();
+            return  "/customer/login";
+        }
 
-        log.info(id);
+        log.info(customerId);
 
         CustomerDTO pDTO = new CustomerDTO();
 
-        pDTO.setId(id);
+        pDTO.setCustomerId(customerId);
 
-        CustomerDTO rDTO = Optional.ofNullable(customerService.getUserInfo(pDTO)).orElseGet(CustomerDTO::new);
+        CustomerDTO rDTO = Optional.ofNullable(customerService.getCustomerInfo(pDTO)).orElseGet(CustomerDTO::new);
 
         model.addAttribute("rDTO", rDTO);
 
-        log.info(this.getClass().getName() + ".customerInfo start!");
-        return "/customer/changePw";
+        log.info(this.getClass().getName() + ".updateCustomerInfo start!");
+        return "/customer/updateCustomerInfo";
     }
+
+    // 소비자 비밀번호 수정 페이지 이동코드
+    // 구현완료(11/10)
+    @GetMapping(value = "/updateCustomerPw")
+    public String updateCustomerPw(HttpSession session, ModelMap model) throws Exception {
+        log.info(this.getClass().getName() + ".updateCustomerPw start!");
+
+        String customerId = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+        String type =  CmmUtil.nvl((String) session.getAttribute("SS_TYPE"));
+        if(!type.equals("Customer") || customerId == null) {
+            session.invalidate();
+            return  "/customer/login";
+        }
+
+        log.info(customerId);
+
+        CustomerDTO pDTO = new CustomerDTO();
+
+        pDTO.setCustomerId(customerId);
+
+        CustomerDTO rDTO = Optional.ofNullable(customerService.getCustomerInfo(pDTO)).orElseGet(CustomerDTO::new);
+
+        model.addAttribute("rDTO", rDTO);
+
+        log.info(this.getClass().getName() + ".updateCustomerPw End!");
+        return "/customer/updateCustomerPw";
+    }
+
+    // 소비자 정보 수정 로직코드
+    // 구현완료(11/10)
     @ResponseBody
-    @PostMapping(value = "changeCustomer")
-    public MsgDTO changeCustomer(HttpServletRequest request, HttpSession session) throws Exception {
-        log.info(this.getClass().getName() + ".changeCustomer Start!");
+    @PostMapping(value = "updateInfo")
+    public MsgDTO updateInfo(HttpServletRequest request, HttpSession session) throws Exception {
+        log.info(this.getClass().getName() + ".updateInfo Start!");
 
         // 성공이면 1, 실패면 0
         int res = 0;
@@ -294,99 +540,372 @@ public class CustomerController {
         CustomerDTO pDTO = null;
 
         try {
-            String id = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
-            String age = CmmUtil.nvl(request.getParameter("age"));
-            String type = CmmUtil.nvl(request.getParameter("type"));
-            String pn = CmmUtil.nvl(request.getParameter("pn"));
-            String name = CmmUtil.nvl(request.getParameter("name"));
+            String customerId = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+            String customerEmail = CmmUtil.nvl(request.getParameter("customerEmail"));
+            String customerPn = CmmUtil.nvl(request.getParameter("customerPn"));
+            String customerName = CmmUtil.nvl(request.getParameter("customerName"));
 
 
-            log.info("id : " + id);
-            log.info("age : " + age);
-            log.info("type : " + type);
-            log.info("pn : " + pn);
+            log.info("customerId : " + customerId);
+            log.info("customerEmail : " + customerEmail);
+            log.info("customerPn : " + customerPn);
 
             pDTO = new CustomerDTO();
 
-            pDTO.setId(id);
-            pDTO.setPn(pn);
-            pDTO.setName(name);
-            pDTO.setType(type);
-            pDTO.setAge(age);
+            pDTO.setCustomerId(customerId);
+            pDTO.setPhoneNumber(customerPn);
+            pDTO.setCustomerName(customerName);
+            pDTO.setCustomerEmail(customerEmail);
 
             log.info(pDTO.toString());
 
-            res = customerService.changeCustomer(pDTO);
+            res = customerService.updateCustomerInfo(pDTO);
 
             log.info("res : " + res);
 
             if (res == 1) {
                 msg = "수정되었습니다";
             } else {
-                msg = "오류로 인해 회원가입에 실패하였습니다";
+                msg = "오류로 인해 수정에 실패하였습니다";
             }
-        }catch (Exception e) {
+        } catch (Exception e) {
             msg = "실패하였습니다 : " + e;
             log.info(e.toString());
             e.printStackTrace();
-        }finally {
+        } finally {
             dto = new MsgDTO();
             dto.setMsg(msg);
             dto.setResult(res);
-            log.info(this.getClass().getName() + ".changeCustomer End!");
+            log.info(this.getClass().getName() + ".updateInfo End!");
         }
         return dto;
     }
+
+    // 소비자 비밀번호 수정 코드
+    // 구현완료(11/10)
     @ResponseBody
-    @PostMapping(value = "pwChange")
-    public MsgDTO pwChange(HttpServletRequest request, HttpSession session) throws Exception {
-        log.info(this.getClass().getName() + ".pwChange Start!");
+    @PostMapping(value = "updatePw")
+    public MsgDTO updatePw(HttpServletRequest request, HttpSession session) throws Exception {
+        log.info(this.getClass().getName() + ".updatePw Start!");
 
         // 성공이면 1, 실패면 0
         int res = 0;
+        int check = 1;
         String msg = "";
         MsgDTO dto = null;
 
         CustomerDTO pDTO = null;
+        CustomerDTO rDTO = null;
 
         try {
-            String id = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
-            String pw = CmmUtil.nvl(request.getParameter("npw"));
+            String customerId = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
 
-            log.info("id : " + id);
-            log.info("pw : " + pw);
+            if(customerId.isEmpty()) {
+                customerId = CmmUtil.nvl((String) session.getAttribute("NEW_PASSWORD"));
+            }
+            String customerPw = CmmUtil.nvl(request.getParameter("customerPw"));
+
+            String pw = CmmUtil.nvl(request.getParameter("pw"));
+
+            log.info("customerId : " + customerId);
+            log.info("customerPw : " + customerPw);
+            log.info("pw :" + pw);
 
             pDTO = new CustomerDTO();
+            rDTO = new CustomerDTO();
 
-            pDTO.setId(id);
-            pDTO.setPw(EncryptUtil.encHashSHA256(pw));
-            log.info(pDTO.toString());
-
-            res = customerService.changePw(pDTO);
-
-            log.info("res : " + res);
-
-            if (res == 1) {
-                msg = "수정되었습니다";
-            } else {
-                msg = "오류로 인해 회원가입에 실패하였습니다";
+            if(! pw.isEmpty()) {
+                pDTO.setCustomerId(customerId);
+                pDTO.setCustomerPw(EncryptUtil.encHashSHA256(pw));
+                log.info(pDTO.toString());
+                rDTO = customerService.getLogin(pDTO);
+                log.info(rDTO.toString());
+                try {
+                    log.info(rDTO.getCustomerId());
+                    if (rDTO.getCustomerId() != null) {
+                        check = 1;
+                    } else {
+                        check = 0;
+                        msg = "현재 비밀번호가 틀렸습니다";
+                    }
+                }catch (Exception e) {
+                    log.info("1");
+                }
             }
-        }catch (Exception e) {
+            log.info(pw);
+            log.info("check: " + check);
+            if(pw.isEmpty() || check == 1) {
+                pDTO.setCustomerId(customerId);
+                pDTO.setCustomerPw(EncryptUtil.encHashSHA256(customerPw));
+                log.info(pDTO.toString());
+
+                res = customerService.updateCustomerPw(pDTO);
+
+                log.info("res : " + res);
+
+                if (res == 1) {
+                    msg = "수정되었습니다";
+                } else {
+                    msg = "오류로 인해 비밀번호 변경에 실패하였습니다";
+                }
+            }
+        } catch (Exception e) {
             msg = "실패하였습니다 : " + e;
             log.info(e.toString());
             e.printStackTrace();
-        }finally {
+        } finally {
             dto = new MsgDTO();
             dto.setMsg(msg);
             dto.setResult(res);
-            log.info(this.getClass().getName() + ".pwChange End!");
+            log.info(this.getClass().getName() + ".updatePw End!");
         }
         return dto;
     }
 
+    // 상품 상세정보 조회페이지 이동코드
     @GetMapping(value = "/single-product")
-    public String singleProduct() {
-        log.info("start!");
+    public String singleProduct(HttpServletRequest request, ModelMap model,  @RequestParam(defaultValue = "1") int page, HttpSession session) throws Exception {
+        log.info(this.getClass().getName() + ".goodsMngInfo Start!");
+
+        String goodsNumber = request.getParameter("goodsNumber");
+        log.info("goodsNumber : " + goodsNumber);
+
+        GoodsDTO pDTO = new GoodsDTO();
+        pDTO.setGoodsNumber(goodsNumber);
+        GoodsDTO gDTO = Optional.ofNullable(goodsService.getGoodsInfo(pDTO)).orElseGet(GoodsDTO::new);
+        List<GoodsDTO> gList = Optional.ofNullable(reservationService.getPopularGoods(gDTO.getMarketNumber())).orElseGet(ArrayList::new);
+
+        ReviewDTO pDTO2 = new ReviewDTO();
+        pDTO2.setGoodsNumber(goodsNumber);
+        List<ReviewDTO> rDTO = Optional.ofNullable(reviewService.oneReviewList(pDTO2)).orElseGet(ArrayList::new);
+        List<ReviewDTO> cDTO = Optional.ofNullable(reviewService.getScore(pDTO2)).orElseGet(ArrayList::new);
+
+        String traderId = gDTO.getTraderId();
+        log.info("traderId : " + traderId);
+        TraderDTO nDTO = new TraderDTO();
+        nDTO.setTraderId(traderId);
+        TraderDTO tDTO = Optional.ofNullable(traderService.getTraderInfo(nDTO)).orElseGet(TraderDTO::new);
+
+        log.info("gDTO : " + gDTO.toString());
+        log.info("rDTO : " + rDTO.toString());
+        log.info("cDTO : " + cDTO.toString());
+        log.info("gList : " + gList.toString());
+        log.info("tDTO : " + tDTO.toString());
+
+        // 페이지당 보여줄 아이템 개수 정의
+       // int itemsPerPage = 3;
+
+        // 페이지네이션을 위해 전체 아이템 개수 구하기
+       // int totalItems = rDTO.size();
+
+        // 전체 페이지 개수 계산
+       // int totalPages = (int) Math.ceil((double) totalItems / itemsPerPage);
+//
+        // 현재 페이지에 해당하는 아이템들만 선택하여 rList에 할당
+       // int fromIndex = (page - 1) * itemsPerPage;
+    //    int toIndex = Math.min(fromIndex + itemsPerPage, totalItems);
+     //   rDTO = rDTO.subList(fromIndex, toIndex);
+
+      //  log.info(this.getClass().getName() + ".페이지 번호 : " + page);
+
+    //    model.addAttribute("currentPage", page);
+     //   model.addAttribute("totalPages", totalPages);
+        model.addAttribute("cDTO", cDTO);
+        model.addAttribute("rDTO", rDTO);
+        model.addAttribute("gDTO", gDTO);
+        model.addAttribute("gList", gList);
+        model.addAttribute("tDTO", tDTO);
+        model.addAttribute("goodsNumber", goodsNumber);
+
+        log.info(this.getClass().getName() + ".goodsMngInfo End!");
         return "/customer/single-product";
+    }
+    @GetMapping(value = "/findIdAndPw")
+    public String findIdAndPw(HttpSession session) {
+        session.setAttribute("NEW_PASSWORD", "");
+        session.removeAttribute("NEW_PASSWORD");
+        return "/customer/findIdAndPw";
+    }
+
+    @ResponseBody
+    @PostMapping(value = "searchEmail")
+    public CustomerDTO searchEmail(HttpServletRequest request) throws Exception {
+
+        log.info(this.getClass().getName() + ".searchEmail Start!");
+
+        String email = CmmUtil.nvl(request.getParameter("email")); // 회원아이디
+
+        log.info("email : " + email);
+
+        CustomerDTO pDTO = new CustomerDTO();
+        pDTO.setCustomerEmail(email);
+
+        // 입력된 이메일이 중복된 이메일인지 조회
+        CustomerDTO rDTO = Optional.ofNullable(customerService.searchEmail(pDTO)).orElseGet(CustomerDTO::new);
+
+        log.info(this.getClass().getName() + ".searchEmail End!");
+
+        return rDTO;
+    }
+
+    @ResponseBody
+    @PostMapping(value = "/showId")
+    public MsgDTO showId(HttpServletRequest request) throws Exception{
+
+        log.info(this.getClass().getName() + ".showId Start!");
+
+        int res = 0;
+        String msg = "";
+        MsgDTO dto = null;
+
+        String CustomerName = CmmUtil.nvl(request.getParameter("customerName")); // 이름
+        String email = CmmUtil.nvl(request.getParameter("customerEmailForId")); // 이메일
+
+
+        log.info("CustomerName : " + CustomerName);
+        log.info("email : " + email);
+
+
+        CustomerDTO pDTO = new CustomerDTO();
+        pDTO.setCustomerName(CustomerName);
+        pDTO.setCustomerEmail(email);
+
+        log.info(pDTO.toString());
+
+        CustomerDTO rDTO = Optional.ofNullable(customerService.searchCustomerId(pDTO)).orElseGet(CustomerDTO::new);
+
+        log.info(rDTO.toString());
+
+        if (rDTO.getCustomerId() == null) {
+            msg = "계정 정보가 맞지 않습니다";
+        } else {
+            msg = "고객님의 아이디는 " + rDTO.getCustomerId() + "입니다";
+        }
+
+        dto = new MsgDTO();
+        dto.setMsg(msg);
+        dto.setResult(res);
+
+        log.info(dto.toString());
+
+        log.info(this.getClass().getName() + ".showId End!");
+
+
+        return dto;
+    }
+
+    @GetMapping(value="newPw")
+    public String newPw() {
+        log.info(this.getClass().getName() + ".newPw Start!");
+
+
+
+        return "/customer/newPw";
+    }
+
+    @ResponseBody
+    @PostMapping(value = "newPwProd")
+    public MsgDTO newPwProd(HttpServletRequest request, HttpSession session) throws Exception {
+        log.info(this.getClass().getName() + ".newPwProd Start!");
+
+        int res = 0;
+        String msg = "";
+        MsgDTO dto = null;
+
+        CustomerDTO pDTO = null;
+
+        String customerId = CmmUtil.nvl(request.getParameter("customerId"));
+        String email = CmmUtil.nvl(request.getParameter("customerEmailForPw"));
+
+        log.info("customerId : " + customerId);
+        log.info("email : " + email);
+
+        pDTO = new CustomerDTO();
+
+        pDTO.setCustomerId(customerId);
+        pDTO.setCustomerEmail(email);
+
+        CustomerDTO rDTO = Optional.ofNullable(customerService.searchCustomerPw(pDTO)).orElseGet(CustomerDTO::new);
+
+        if (rDTO.getCustomerId() == null) {
+            msg = "계정 정보가 맞지 않습니다";
+        } else {
+            res = 1;
+            msg = "확인되었습니다";
+            session.setAttribute("NEW_PASSWORD", customerId);
+        }
+
+        dto = new MsgDTO();
+        dto.setMsg(msg);
+        dto.setResult(res);
+
+        log.info(this.getClass().getName() + ".newPwProd Start!");
+
+        return dto;
+    }
+
+    @GetMapping(value = "/reviewList")
+    public String getReviewList(HttpSession session, Model model,  @RequestParam(defaultValue = "1") int page) throws Exception {
+        log.info("getReviewList start");
+
+        String customerId = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+
+        ReviewDTO pDTO = new ReviewDTO();
+        pDTO.setCustomerId(customerId);
+
+        List<ReviewDTO> rList = Optional.ofNullable(reviewService.getCustomerReviewList(pDTO)).orElseGet(ArrayList::new);
+
+        // 페이지당 보여줄 아이템 개수 정의
+        int itemsPerPage = 3;
+
+        // 페이지네이션을 위해 전체 아이템 개수 구하기
+        int totalItems = rList.size();
+
+        // 전체 페이지 개수 계산
+        int totalPages = (int) Math.ceil((double) totalItems / itemsPerPage);
+
+        // 현재 페이지에 해당하는 아이템들만 선택하여 rList에 할당
+        int fromIndex = (page - 1) * itemsPerPage;
+        int toIndex = Math.min(fromIndex + itemsPerPage, totalItems);
+        rList = rList.subList(fromIndex, toIndex);
+
+        model.addAttribute("rList", rList);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
+
+        log.info(this.getClass().getName() + ".페이지 번호 : " + page);
+        log.info("getReviewList End");
+
+        return "/customer/reviewList";
+    }
+
+    @ResponseBody
+    @PostMapping(value = "/rotate")
+    public MsgDTO rotate(HttpSession session) throws Exception {
+        log.info("rotate start");
+
+        String msg = "";
+        int res = 0;
+
+        String customerId = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+
+        log.info("customerId : " + customerId);
+
+        CustomerDTO pDTO = new CustomerDTO();
+        pDTO.setCustomerId(customerId);
+
+        if (!(customerId == null)) {
+            customerService.rotate(pDTO);
+            res = 1;
+            msg = "오늘의 룰렛을 돌렸습니다.";
+        } else {
+            msg = "로그인 해주시길 바랍니다.";
+        }
+
+        MsgDTO dto = new MsgDTO();
+        dto.setResult(res);
+        dto.setMsg(msg);
+
+        return dto;
     }
 }

@@ -15,7 +15,7 @@
 /**************** common css start ****************/
 /* line 4, ../../01 cl html template/03_jun 2019/188_Aranoz shop_html/sass/_common.scss */
 body {
-  font-family: "Poppins", sans-serif;
+  font-family: 'BMJUA';
   padding: 0;
   margin: 0;
   font-size: 14px;
@@ -39,7 +39,7 @@ input:focus {
 
 /* line 24, ../../01 cl html template/03_jun 2019/188_Aranoz shop_html/sass/_common.scss */
 .section_padding {
-  padding: 140px 0px;
+  padding-top: 70px;
 }
 
 @media only screen and (min-width: 992px) and (max-width: 1200px) {
@@ -157,14 +157,14 @@ h4,
 h5,
 h6 {
   color: #000;
-  font-family: "Poppins", sans-serif;
+  font-family: 'BMJUA';
   -webkit-transition: 0.5s;
   transition: 0.5s;
 }
 
 /* line 105, ../../01 cl html template/03_jun 2019/188_Aranoz shop_html/sass/_common.scss */
 p {
-  font-family: "Poppins", sans-serif;
+  font-family: 'BMJUA';
   line-height: 2;
   font-size: 15px;
   margin-bottom: 0px;
@@ -302,7 +302,7 @@ button:focus,
   color: #556172;
   text-transform: capitalize;
   line-height: 30px;
-  font-family: "Poppins", sans-serif;
+  font-family: 'BMJUA';
 }
 
 @media (max-width: 576px) {
@@ -539,7 +539,7 @@ ul {
   border-radius: 5px;
   background-color: #ff3368;
   font-size: 15px;
-  font-family: "Poppins", sans-serif;
+  font-family: 'BMJUA';
   font-weight: 500;
   color: #fff;
   -o-transition: all .4s ease-in-out;
@@ -2125,7 +2125,7 @@ ul {
   color: #000;
   font-size: 15px;
   padding: 36px 23px;
-  font-family: "Poppins", sans-serif;
+  font-family: 'BMJUA';
   text-transform: capitalize;
   line-height: 12px;
   font-weight: 400;
@@ -2508,7 +2508,7 @@ ul {
 .banner_part .single_banner_slider .banner_text p {
   font-size: 15px;
   line-height: 1.8;
-  font-family: "Poppins", sans-serif;
+  font-family: 'BMJUA';
   margin-bottom: 70px;
   padding-right: 80px;
 }
@@ -2843,10 +2843,29 @@ ul {
   transition: 0.5s;
 }
 
+.goodsImage {
+  width: 100%; /* 부모 요소의 너비를 100%로 설정하여 가로로만 표시 */
+  padding-top: 100%; /* 부모 요소 너비의 비율을 유지하면서 높이를 설정 */
+  position: relative;
+  overflow: hidden; /* 이미지를 요소 내부에 숨김 */
+}
+
+.goodsImage img {
+  width: 100%; /* 이미지의 너비를 부모 요소에 맞게 조정 */
+  height: auto; /* 이미지의 비율 유지 */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* 이미지를 수직, 수평으로 가운데로 이동 */
+}
+
+
 @media (max-width: 991px) {
   /* line 58, ../../01 cl html template/03_jun 2019/188_Aranoz shop_html/sass/_product_list.scss */
   .single_product_item img {
     width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 }
 
@@ -2854,6 +2873,8 @@ ul {
   /* line 58, ../../01 cl html template/03_jun 2019/188_Aranoz shop_html/sass/_product_list.scss */
   .single_product_item img {
     width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 }
 
@@ -3082,7 +3103,7 @@ ul {
 /*************** subscribe now **********************/
 /* line 2, ../../01 cl html template/03_jun 2019/188_Aranoz shop_html/sass/_subscribe_area.scss */
 .subscribe_area {
-  background-image: url("../images/subscribe_area.png");
+  background-image: url("../img/subscribe_area.png");
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -3306,7 +3327,7 @@ ul {
 
 /* line 65, ../../01 cl html template/03_jun 2019/188_Aranoz shop_html/sass/_product.scss */
 .single-product .product-btm span {
-  font-family: "Poppins", sans-serif;
+  font-family: 'BMJUA';
   font-size: 20px;
   font-weight: 500;
   line-height: 16px;
@@ -3513,7 +3534,7 @@ ul {
 /* line 262, ../../01 cl html template/03_jun 2019/188_Aranoz shop_html/sass/_product.scss */
 .p_filter_widgets .list li a {
   font-size: 14px;
-  font-family: "Poppins", sans-serif;
+  font-family: 'BMJUA';
   font-weight: normal;
   color: #797979;
   position: relative;
@@ -3558,7 +3579,7 @@ ul {
 /* line 314, ../../01 cl html template/03_jun 2019/188_Aranoz shop_html/sass/_product.scss */
 .product_top_bar .left_dorp .sorting span {
   font-size: 14px;
-  font-family: "Poppins", sans-serif;
+  font-family: 'BMJUA';
   color: #555555;
 }
 
@@ -3571,7 +3592,7 @@ ul {
 /* line 324, ../../01 cl html template/03_jun 2019/188_Aranoz shop_html/sass/_product.scss */
 .product_top_bar .left_dorp .sorting .list li {
   font-size: 14px;
-  font-family: "Poppins", sans-serif;
+  font-family: 'BMJUA';
   color: #555555;
 }
 
@@ -3602,7 +3623,7 @@ ul {
 /* line 353, ../../01 cl html template/03_jun 2019/188_Aranoz shop_html/sass/_product.scss */
 .product_top_bar .left_dorp .show span {
   font-size: 14px;
-  font-family: "Poppins", sans-serif;
+  font-family: 'BMJUA';
   color: #555555;
 }
 
@@ -3615,7 +3636,7 @@ ul {
 /* line 363, ../../01 cl html template/03_jun 2019/188_Aranoz shop_html/sass/_product.scss */
 .product_top_bar .left_dorp .show .list li {
   font-size: 14px;
-  font-family: "Poppins", sans-serif;
+  font-family: 'BMJUA';
   color: #555555;
 }
 
@@ -3884,7 +3905,7 @@ ul {
 /* line 642, ../../01 cl html template/03_jun 2019/188_Aranoz shop_html/sass/_product.scss */
 .s_product_text .list li a {
   font-size: 14px;
-  font-family: "Poppins", sans-serif;
+  font-family: 'BMJUA';
   font-weight: normal;
   color: #555555;
 }
@@ -4119,7 +4140,7 @@ ul {
 .product_description_area .tab-content .total_rate .rating_list h3 {
   font-size: 18px;
   color: #2a2a2a;
-  font-family: "Poppins", sans-serif;
+  font-family: 'BMJUA';
   font-weight: 700;
   margin-bottom: 10px;
 }
@@ -4156,7 +4177,7 @@ ul {
 /* line 892, ../../01 cl html template/03_jun 2019/188_Aranoz shop_html/sass/_product.scss */
 .product_description_area .tab-content .table tbody tr td h5 {
   font-size: 14px;
-  font-family: "Poppins", sans-serif;
+  font-family: 'BMJUA';
   font-weight: normal;
   color: #797979;
   margin-bottom: 0px;
@@ -4204,7 +4225,7 @@ ul {
   margin-bottom: 0px;
   font-size: 14px;
   color: #2a2a2a;
-  font-family: "Poppins", sans-serif;
+  font-family: 'BMJUA';
   margin-bottom: 8px;
 }
 
@@ -4228,7 +4249,7 @@ ul {
   line-height: 32px;
   border-radius: 16px;
   font-size: 14px;
-  font-family: "Poppins", sans-serif;
+  font-family: 'BMJUA';
   color: #2a2a2a;
   position: absolute;
   right: 0px;
@@ -4322,7 +4343,7 @@ ul {
   border-top: 0px;
   font-size: 14px;
   font-weight: 500;
-  font-family: "Poppins", sans-serif;
+  font-family: 'BMJUA';
   color: #797979;
   border-bottom: 0px !important;
 }
@@ -4361,7 +4382,7 @@ ul {
 .cart_inner .table tbody tr td h5 {
   font-size: 14px;
   color: #2a2a2a;
-  font-family: "Poppins", sans-serif;
+  font-family: 'BMJUA';
   margin-bottom: 0px;
 }
 
@@ -4443,7 +4464,7 @@ ul {
   height: 40px;
   font-size: 14px;
   color: #cccccc;
-  font-family: "Poppins", sans-serif;
+  font-family: 'BMJUA';
   font-weight: normal;
   margin-right: -3px;
   outline: none;
@@ -4454,7 +4475,7 @@ ul {
 .cart_inner .table tbody tr.bottom_button td .cupon_text input.placeholder {
   font-size: 14px;
   color: #cccccc;
-  font-family: "Poppins", sans-serif;
+  font-family: 'BMJUA';
   font-weight: normal;
 }
 
@@ -4462,7 +4483,7 @@ ul {
 .cart_inner .table tbody tr.bottom_button td .cupon_text input:-moz-placeholder {
   font-size: 14px;
   color: #cccccc;
-  font-family: "Poppins", sans-serif;
+  font-family: 'BMJUA';
   font-weight: normal;
 }
 
@@ -4470,7 +4491,7 @@ ul {
 .cart_inner .table tbody tr.bottom_button td .cupon_text input::-moz-placeholder {
   font-size: 14px;
   color: #cccccc;
-  font-family: "Poppins", sans-serif;
+  font-family: 'BMJUA';
   font-weight: normal;
 }
 
@@ -4478,7 +4499,7 @@ ul {
 .cart_inner .table tbody tr.bottom_button td .cupon_text input::-webkit-input-placeholder {
   font-size: 14px;
   color: #cccccc;
-  font-family: "Poppins", sans-serif;
+  font-family: 'BMJUA';
   font-weight: normal;
 }
 
@@ -4564,7 +4585,7 @@ ul {
   font-size: 14px;
   font-weight: normal;
   color: #2a2a2a;
-  font-family: "Poppins", sans-serif;
+  font-family: 'BMJUA';
   margin-top: 20px;
   margin-bottom: 20px;
 }
@@ -4673,7 +4694,7 @@ ul {
 .check_title h2 {
   font-size: 14px;
   font-weight: normal;
-  font-family: "Poppins", sans-serif;
+  font-family: 'BMJUA';
   background: #ecfdff;
   line-height: 40px;
   padding-left: 30px;
@@ -4732,7 +4753,7 @@ ul {
   height: 40px;
   border-radius: 3px;
   font-size: 14px;
-  font-family: "Poppins", sans-serif;
+  font-family: 'BMJUA';
   color: #797979;
   font-weight: normal;
 }
@@ -4740,7 +4761,7 @@ ul {
 /* line 65, ../../01 cl html template/03_jun 2019/188_Aranoz shop_html/sass/_mixins.scss */
 .returning_customer .contact_form .form-group input.placeholder {
   font-size: 14px;
-  font-family: "Poppins", sans-serif;
+  font-family: 'BMJUA';
   color: #797979;
   font-weight: normal;
 }
@@ -4748,7 +4769,7 @@ ul {
 /* line 68, ../../01 cl html template/03_jun 2019/188_Aranoz shop_html/sass/_mixins.scss */
 .returning_customer .contact_form .form-group input:-moz-placeholder {
   font-size: 14px;
-  font-family: "Poppins", sans-serif;
+  font-family: 'BMJUA';
   color: #797979;
   font-weight: normal;
 }
@@ -4756,7 +4777,7 @@ ul {
 /* line 71, ../../01 cl html template/03_jun 2019/188_Aranoz shop_html/sass/_mixins.scss */
 .returning_customer .contact_form .form-group input::-moz-placeholder {
   font-size: 14px;
-  font-family: "Poppins", sans-serif;
+  font-family: 'BMJUA';
   color: #797979;
   font-weight: normal;
 }
@@ -4764,7 +4785,7 @@ ul {
 /* line 74, ../../01 cl html template/03_jun 2019/188_Aranoz shop_html/sass/_mixins.scss */
 .returning_customer .contact_form .form-group input::-webkit-input-placeholder {
   font-size: 14px;
-  font-family: "Poppins", sans-serif;
+  font-family: 'BMJUA';
   color: #797979;
   font-weight: normal;
 }
@@ -4791,7 +4812,7 @@ ul {
   display: block;
   margin-top: 20px;
   font-size: 14px;
-  font-family: "Poppins", sans-serif;
+  font-family: 'BMJUA';
   color: #797979;
   font-weight: normal;
 }
@@ -4881,7 +4902,7 @@ ul {
   padding: 0px 40px;
   color: #2a2a2a;
   text-transform: capitalize;
-  font-family: "Poppins", sans-serif;
+  font-family: 'BMJUA';
   font-weight: 500;
   border-radius: 50px;
 }
@@ -4958,7 +4979,7 @@ ul {
 /* line 1574, ../../01 cl html template/03_jun 2019/188_Aranoz shop_html/sass/_product.scss */
 .billing_details .contact_form .form-group .country_select .list li {
   font-size: 14px;
-  font-family: "Poppins", sans-serif;
+  font-family: 'BMJUA';
   font-weight: normal;
 }
 
@@ -5167,7 +5188,7 @@ ul {
   border-radius: 0px;
   font-size: 14px;
   color: #797979;
-  font-family: "Poppins", sans-serif;
+  font-family: 'BMJUA';
   font-weight: normal;
 }
 
@@ -5175,7 +5196,7 @@ ul {
 .tracking_box_area .tracking_box_inner .tracking_form .form-group input.placeholder {
   font-size: 14px;
   color: #797979;
-  font-family: "Poppins", sans-serif;
+  font-family: 'BMJUA';
   font-weight: normal;
 }
 
@@ -5183,7 +5204,7 @@ ul {
 .tracking_box_area .tracking_box_inner .tracking_form .form-group input:-moz-placeholder {
   font-size: 14px;
   color: #797979;
-  font-family: "Poppins", sans-serif;
+  font-family: 'BMJUA';
   font-weight: normal;
 }
 
@@ -5191,7 +5212,7 @@ ul {
 .tracking_box_area .tracking_box_inner .tracking_form .form-group input::-moz-placeholder {
   font-size: 14px;
   color: #797979;
-  font-family: "Poppins", sans-serif;
+  font-family: 'BMJUA';
   font-weight: normal;
 }
 
@@ -5199,7 +5220,7 @@ ul {
 .tracking_box_area .tracking_box_inner .tracking_form .form-group input::-webkit-input-placeholder {
   font-size: 14px;
   color: #797979;
-  font-family: "Poppins", sans-serif;
+  font-family: 'BMJUA';
   font-weight: normal;
 }
 
@@ -5246,7 +5267,7 @@ ul {
   z-index: 9;
   cursor: pointer;
   -webkit-transition: all 0.25s linear;
-  font-family: "Poppins", sans-serif;
+  font-family: 'BMJUA';
   font-weight: 500;
   color: #2a2a2a;
   font-size: 13px;
@@ -6551,7 +6572,7 @@ h6 {
 
 /* line 798, ../../01 cl html template/03_jun 2019/188_Aranoz shop_html/sass/_elements.scss */
 .primary-checkbox input:checked + label {
-  background: url(../images/elements/primary-check.png) no-repeat center center/cover;
+  background: url(../img/elements/primary-check.png) no-repeat center center/cover;
   border: none;
 }
 
@@ -6593,7 +6614,7 @@ h6 {
 
 /* line 835, ../../01 cl html template/03_jun 2019/188_Aranoz shop_html/sass/_elements.scss */
 .confirm-checkbox input:checked + label {
-  background: url(../images/elements/success-check.png) no-repeat center center/cover;
+  background: url(../img/elements/success-check.png) no-repeat center center/cover;
   border: none;
 }
 
@@ -6641,7 +6662,7 @@ h6 {
 
 /* line 876, ../../01 cl html template/03_jun 2019/188_Aranoz shop_html/sass/_elements.scss */
 .disabled-checkbox input:checked + label {
-  background: url(../images/elements/disabled-check.png) no-repeat center center/cover;
+  background: url(../img/elements/disabled-check.png) no-repeat center center/cover;
   border: none;
 }
 
@@ -6683,7 +6704,7 @@ h6 {
 
 /* line 913, ../../01 cl html template/03_jun 2019/188_Aranoz shop_html/sass/_elements.scss */
 .primary-radio input:checked + label {
-  background: url(../images/elements/primary-radio.png) no-repeat center center/cover;
+  background: url(../img/elements/primary-radio.png) no-repeat center center/cover;
   border: none;
 }
 
@@ -6725,7 +6746,7 @@ h6 {
 
 /* line 950, ../../01 cl html template/03_jun 2019/188_Aranoz shop_html/sass/_elements.scss */
 .confirm-radio input:checked + label {
-  background: url(../images/elements/success-radio.png) no-repeat center center/cover;
+  background: url(../img/elements/success-radio.png) no-repeat center center/cover;
   border: none;
 }
 
@@ -6773,7 +6794,7 @@ h6 {
 
 /* line 991, ../../01 cl html template/03_jun 2019/188_Aranoz shop_html/sass/_elements.scss */
 .disabled-radio input:checked + label {
-  background: url(../images/elements/disabled-radio.png) no-repeat center center/cover;
+  background: url(../img/elements/disabled-radio.png) no-repeat center center/cover;
   border: none;
 }
 
@@ -7412,7 +7433,7 @@ h6 {
 
 /* line 1, ../../01 cl html template/03_jun 2019/188_Aranoz shop_html/sass/_breadcrumb.scss */
 .breadcrumb_bg {
-  background-image: url("../images/breadcrumb.png");
+  background-image: url("../img/breadcrumb.png");
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
