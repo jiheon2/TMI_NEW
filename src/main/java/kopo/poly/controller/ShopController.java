@@ -28,6 +28,7 @@ public class ShopController {
 
     private final IShopService shopService;
     private final IFileService fileService;
+    private final IMarketService marketService;
     private final ITraderService traderService;
 
     // 상점 정보 페이지 이동코드
@@ -50,12 +51,24 @@ public class ShopController {
 
         ShopDTO rDTO = Optional.ofNullable(shopService.getShopInfo(pDTO)).orElseGet(ShopDTO::new);
         if (rDTO.getShopName() == null || rDTO.getShopName().isEmpty()) {
+            TraderDTO pDTO1 = new TraderDTO();
+            pDTO1.setTraderId(traderId);
+            TraderDTO tDTO = Optional.ofNullable(traderService.getTraderInfo(pDTO1)).orElseGet(TraderDTO::new);
+
+            MarketDTO pDTO2 = new MarketDTO();
+            pDTO2.setMarketNumber(tDTO.getShopCode());
+            log.info(tDTO.getShopCode());
+
+            MarketDTO mDTO = Optional.ofNullable(marketService.getMarket(pDTO2)).orElseGet(MarketDTO::new);
+
+            model.addAttribute("mDTO", mDTO);
+
             url = "/trader/insertShopInfo";
         } else {
+            model.addAttribute("rDTO", rDTO);
             url = "/trader/shopInfo";
         }
 
-        model.addAttribute("rDTO", rDTO);
 
         log.info(this.getClass().getName() + ".shopInfo End!");
 
@@ -99,10 +112,15 @@ public class ShopController {
 
         TraderDTO pDTO = new TraderDTO();
         pDTO.setTraderId(traderId);
+        TraderDTO tDTO = Optional.ofNullable(traderService.getTraderInfo(pDTO)).orElseGet(TraderDTO::new);
 
-        TraderDTO cDTO = Optional.ofNullable(traderService.getTraderInfo(pDTO)).orElseGet(TraderDTO::new);
+        MarketDTO pDTO2 = new MarketDTO();
+        pDTO2.setMarketNumber(tDTO.getShopCode());
+        log.info(tDTO.getShopCode());
 
-        model.addAttribute("cDTO", cDTO);
+        MarketDTO mDTO = Optional.ofNullable(marketService.getMarket(pDTO2)).orElseGet(MarketDTO::new);
+
+        model.addAttribute("mDTO", mDTO);
 
         log.info(this.getClass().getName() + ".insertShopInfo End!");
 
@@ -129,12 +147,14 @@ public class ShopController {
             String traderName = CmmUtil.nvl(request.getParameter("traderName"));
             String shopDescription = CmmUtil.nvl(request.getParameter("shopDescription"));
             String marketName = CmmUtil.nvl(request.getParameter("marketName"));
+            String marketNumber = CmmUtil.nvl(request.getParameter("marketNumber"));
 
             log.info("traderId : " + traderId);
             log.info("shopName : " + shopName);
             log.info("traderName : " + traderName);
             log.info("shopDescription : " + shopDescription);
             log.info("marketName : " + marketName);
+            log.info("marketNumber : " + marketNumber);
 
             pDTO = new ShopDTO();
 
@@ -144,6 +164,7 @@ public class ShopController {
             pDTO.setTraderName(traderName);
             pDTO.setImage("");
             pDTO.setMarketName(marketName);
+            pDTO.setMarketNumber(marketNumber);
 
 
             if (!mf.isEmpty()) {
@@ -198,13 +219,11 @@ public class ShopController {
             String shopName = CmmUtil.nvl(request.getParameter("shopName"));
             String traderName = CmmUtil.nvl(request.getParameter("traderName"));
             String shopDescription = CmmUtil.nvl(request.getParameter("shopDescription"));
-            String marketName = CmmUtil.nvl(request.getParameter("marketName"));
 
             log.info("traderId : " + traderId);
             log.info("shopName : " + shopName);
             log.info("traderName : " + traderName);
             log.info("shopDescription : " + shopDescription);
-            log.info("marketName : " + marketName);
             log.info("image : " + originImage);
 
             pDTO = new ShopDTO();
@@ -213,7 +232,6 @@ public class ShopController {
             pDTO.setShopName(shopName);
             pDTO.setShopDescription(shopDescription);
             pDTO.setTraderName(traderName);
-            pDTO.setMarketName(marketName);
 
             if (!mf.isEmpty()) {
                 String image = mf.getOriginalFilename();

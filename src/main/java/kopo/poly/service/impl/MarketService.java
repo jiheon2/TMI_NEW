@@ -1,6 +1,7 @@
 package kopo.poly.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jdk.vm.ci.code.site.Mark;
 import kopo.poly.dto.MarketDTO;
 import kopo.poly.persistance.mapper.IMarketMapper;
 import kopo.poly.service.IMarketService;
@@ -82,7 +83,7 @@ public class MarketService implements IMarketService {
 
             log.info("name : " + name);
             log.info("addr : " + addr);
-            if(marketMapper.checkMarket(addr) > 0){
+            if(marketMapper.checkMarket(addr) != null){
                 continue;
             }
 
@@ -155,6 +156,13 @@ public class MarketService implements IMarketService {
         log.info("getMarketName start");
 
         return marketMapper.getMarketName();
+    }
+    @Override
+    public MarketDTO getMarket(MarketDTO pDTO) throws Exception {
+
+        log.info("getMarket start");
+
+        return marketMapper.getMarket(pDTO);
     }
 }
 

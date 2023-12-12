@@ -16,7 +16,6 @@ public interface IReservationMapper {
     List<MarketDTO> getPopularMarket() throws Exception; // 인기 시장 조회
     List<ShopDTO> getPopularShop() throws Exception; // 인기 상점 조회
 
-
     void insertReservationInfo(ReservationDTO pDTO) throws Exception; // 예약 일정 등록 쿼리
     ReservationDTO getReservationInfo(ReservationDTO pDTO) throws Exception; // 예약 상세정보 조회 쿼리
     void updateReservationInfo(ReservationDTO pDTO) throws Exception; // 예약 수정 쿼리

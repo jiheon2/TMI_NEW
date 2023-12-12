@@ -198,7 +198,33 @@
         })
 
         function openUpdateInfoModal(reservationNumberInput) {
-            document.getElementById('updateReservationNumber').value = reservationNumberInput;
+
+            $.ajax({
+                url: "/reservation/getReservation",
+                type: "POST",
+                data: {reservationNumber : reservationNumberInput},
+                success: function (json) {
+                    document.getElementById('updateReservationContents').value = json.reservationContents;
+                    document.getElementById('updateReservationPrice').value = json.reservationPrice;
+                    document.getElementById('selectedNewDateInput').value = json.reservationDate;
+                    document.getElementById('updateReservationNumber').value = reservationNumberInput;
+                    var selectBox = document.getElementById('updateGoodsNumber');
+
+                    // 셀렉트 박스의 옵션 개수만큼 반복
+                    for (var i = 0; i < selectBox.options.length; i++) {
+                        // 현재 옵션
+                        var currentOption = selectBox.options[i];
+
+                        // 현재 옵션의 값과 입력한 예약 번호가 일치하는지 확인
+                        if (currentOption.value === json.goodsNumber) {
+                            // 일치하면 해당 옵션을 선택
+                            currentOption.selected = true;
+                            break; // 찾았으면 루프 중단
+                        }
+                    }
+                }
+            })
+
 
             $("#updateModal").modal("show");
             $("#infoModal").modal("hide");

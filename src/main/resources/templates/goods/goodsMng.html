@@ -81,19 +81,19 @@
                             <div class="pagination">
                                 <ul class="pagination pagination-primary" id="pagination">
                                     <li class="page-item">
-                                        <a class="page-link" th:href="@{/policy/getPolicyMainPage?page=1}">&laquo;</a>
+                                        <a class="page-link" th:href="@{/goods/goodsMng?page=1}">&laquo;</a>
                                     </li>
                                     <!-- 이전 페이지로 이동하는 링크 -->
                                     <li class="page-item" th:if="${currentPage > 1}">
                                         <a class="page-link"
-                                           th:href="@{/policy/getPolicyMainPage(page=${currentPage - 1})}">&lt;</a>
+                                           th:href="@{/goods/goodsMng(page=${currentPage - 1})}">&lt;</a>
                                     </li>
                                     <!-- 현재 페이지 주변에 페이지 번호 링크 표시 -->
                                     <th:block th:if="${currentPage + 9 <= totalPages}">
                                         <li class="page-item"
                                             th:each="pageNumber : ${#numbers.sequence(currentPage, currentPage + 9)}"
                                             th:class="${pageNumber == currentPage ? 'active' : ''}">
-                                            <a class="page-link" th:href="@{/policy/getPolicyMainPage(page=${pageNumber})}"
+                                            <a class="page-link" th:href="@{/goods/goodsMng(page=${pageNumber})}"
                                                th:text="${pageNumber}"></a>
                                         </li>
                                     </th:block>
@@ -102,17 +102,17 @@
                                         <li class="page-item"
                                             th:each="pageNumber : ${#numbers.sequence(currentPage, totalPages)}"
                                             th:class="${pageNumber == currentPage ? 'active' : ''}">
-                                            <a class="page-link" th:href="@{/policy/getPolicyMainPage(page=${pageNumber})}"
+                                            <a class="page-link" th:href="@{/goods/goodsMng(page=${pageNumber})}"
                                                th:text="${pageNumber}"></a>
                                         </li>
                                     </th:block>
                                     <!-- 다음 페이지로 이동하는 링크 -->
                                     <li class="page-item" th:if="${currentPage < totalPages}">
                                         <a class="page-link"
-                                           th:href="@{/policy/getPolicyMainPage(page=${currentPage + 1})}">&gt;</a>
+                                           th:href="@{/goods/goodsMng(page=${currentPage + 1})}">&gt;</a>
                                     </li>
                                     <li class="page-item">
-                                        <a class="page-link" th:href="@{/policy/getPolicyMainPage(page=${totalPages})}">&raquo;</a>
+                                        <a class="page-link" th:href="@{/goods/goodsMng(page=${totalPages})}">&raquo;</a>
                                     </li>
                                 </ul>
                             </div>

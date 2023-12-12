@@ -1,10 +1,10 @@
 package kopo.poly.service.impl;
 
-import kopo.poly.dto.CustomerDTO;
-import kopo.poly.dto.MailDTO;
-import kopo.poly.dto.TraderDTO;
+import kopo.poly.dto.*;
+import kopo.poly.persistance.mapper.IMarketMapper;
 import kopo.poly.persistance.mapper.ITraderMapper;
 import kopo.poly.service.IMailService;
+import kopo.poly.service.IMarketService;
 import kopo.poly.service.ITraderService;
 import kopo.poly.util.CmmUtil;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +20,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class TraderService implements ITraderService {
     private final ITraderMapper traderMapper;
     private final IMailService mailService;
+    private final IMarketMapper marketMapper;
 
     /* 상인 회원가입 코드 */
     @Override
@@ -130,6 +131,18 @@ public class TraderService implements ITraderService {
 
         //회원가입 성공시 1, 에러 0
         int res = 0;
+
+        String addr = pDTO.getShopCode();
+
+        log.info(addr);
+
+        MarketDTO rDTO = marketMapper.checkMarket(addr);
+
+        String marketNumber = rDTO.getMarketNumber();
+
+        log.info("marketNumber : " + marketNumber);
+
+        pDTO.setShopCode(marketNumber);
 
         int success = traderMapper.insertTrader(pDTO);
 

@@ -40,7 +40,17 @@ public class ChatController {
 
         log.info(rList.toString());
 
+        String home = "";
+
+
+        if (type.equals("Trader")) {
+            home = "/trader/traderIndex";
+        } else {
+            home = "/customer/customerIndex";
+        }
+
         model.addAttribute("rList", rList);
+        model.addAttribute("home", home);
 
         log.info(this.getClass().getName() + ".intro End!");
 
@@ -55,7 +65,7 @@ public class ChatController {
         String userName = CmmUtil.nvl(request.getParameter("userName"));
         String customerId = (String) session.getAttribute("SS_ID");
         String type =  CmmUtil.nvl((String) session.getAttribute("SS_TYPE"));
-        if(!type.equals("Customer") || customerId == null) {
+        if(customerId == null) {
             session.invalidate();
             return  "/customer/login";
         }

@@ -55,6 +55,13 @@
                 return;
             }
             var formData = new FormData($("#f")[0]);
+
+            var marketNumber = /*[[${mDTO.marketNumber}]]*/'';
+            var marketName = /*[[${mDTO.marketName}]]*/'';
+
+            formData.append("marketNumber", marketNumber);
+            formData.append("marketName", marketName);
+
             $.ajax({
                 url: "/trader/insertShop",
                 type: "POST",
@@ -95,7 +102,7 @@
                         <div class="row">
                             <div class="col-12 col-md-6 order-md-1 order-last mx-auto text-center">
                                 <h3>상점 정보</h3>
-                                <input type="text" class="text-subtitle text-muted" id="marketName" name="marketName" placeholder="시장명" th:value="${cDTO.shopCode}">
+                                <p class="text-subtitle text-muted">[[${mDTO.marketName}]]</p>
                             </div>
                         </div>
                     </div>
@@ -106,21 +113,14 @@
                                 <div class="card-body">
                                     <div class="col-md-6 mx-auto">
                                         <div class="form-group">
-                                            <input type="text" class="form-control" id="shopName" name="shopName" placeholder="상호명" >
+                                            <input type="text" class="form-control" id="shopName" name="shopName" placeholder="상호명">
                                         </div>
                                         <div class="form-group">
-                                            <input type="text" class="form-control" id="traderName" name="traderName" placeholder="상인명" >
+                                            <input type="text" class="form-control" id="traderName" name="traderName" placeholder="상인명">
                                         </div>
                                     </div>
                                 </div>
 
-                                <div id="carouselExampleSlidesOnly" class="carousel slide" data-bs-ride="carousel">
-                                    <div class="carousel-inner">
-                                        <div class="carousel-item active" th:if="${not #strings.isEmpty(rDTO.image)}">
-                                            <img th:src="${rDTO.image}" class="d-block w-100" style="height:380px">
-                                        </div>
-                                    </div>
-                                </div>
                                 <div class="col-md-6 mb-1 mx-auto" style="width: 80%">
                                     <fieldset>
                                         <br>
@@ -131,7 +131,7 @@
                                 </div>
                                 <div class="card-body">
                                     <div class="form-floating">
-                                        <textarea class="form-control" placeholder="상점 설명을 써주세요" name="shopDescription" id="shopDescription" style="height: 250px" th:field="*{rDTO.shopDescription}" th:text="${rDTO.shopDescription}"></textarea>
+                                        <textarea class="form-control" placeholder="상점 설명을 써주세요" name="shopDescription" id="shopDescription" style="height: 250px"></textarea>
                                     </div>
                                 </div>
                                 <div class="buttons" style="float: right"><a id="btnSend" type="submit" class="btn btn-primary">등록</a></div>

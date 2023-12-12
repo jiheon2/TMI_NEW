@@ -32,7 +32,7 @@
 
     <!-- 소비자 회원가입 쿼리 -->
     <insert id="insertCustomer" parameterType="CustomerDTO">
-        INSERT INTO CUSTOMER (CUSTOMER_ID, CUSTOMER_PW, CUSTOMER_NAME, PHONE_NUMBER, CUSTOMER_EMAIL, POINT, reword, rotate)
+        INSERT INTO CUSTOMER (CUSTOMER_ID, CUSTOMER_PW, CUSTOMER_NAME, PHONE_NUMBER, CUSTOMER_EMAIL, POINT, reward, rotate)
         VALUES (#{customerId}, #{customerPw}, #{customerName}, #{phoneNumber}, #{customerEmail}, 0, 0, 0)
     </insert>
 
@@ -74,7 +74,7 @@
         WHERE CUSTOMER_ID = #{customerId}
     </update>
 
-    <update id="resetReward">
+    <update id="resetRewardAndRotate">
         UPDATE CUSTOMER
         SET REWARD = 0
     </update>

@@ -194,14 +194,8 @@ public class TraderController {
             String traderPn = CmmUtil.nvl(request.getParameter("phoneNumber"));
             String account = CmmUtil.nvl(request.getParameter("account"));
             String bank = CmmUtil.nvl(request.getParameter("bank"));
-            String email = CmmUtil.nvl(request.getParameter("email"));
+            String traderEmail = CmmUtil.nvl(request.getParameter("traderEmail"));
             String shopCode = CmmUtil.nvl(request.getParameter("shopCode"));
-
-            String[] result = shopCode.split("\\[");
-            String marketName = result[0];
-            String marketLocation = result[1].replace("]", "");
-
-
 
             log.info("traderId : " + traderId);
             log.info("traderPw : " + traderPw);
@@ -210,8 +204,12 @@ public class TraderController {
             log.info("traderPn : " + traderPn);
             log.info("account : " + account);
             log.info("bank : " + bank);
-            log.info("email : " + email);
-            log.info("shopCode : " + result);
+            log.info("email : " + traderEmail);
+            log.info("shopCode : " + shopCode);
+
+            String addr = shopCode.substring(shopCode.indexOf("[")+1, shopCode.indexOf("]"));
+
+            log.info(addr);
 
             pDTO = new TraderDTO();
 
@@ -222,12 +220,13 @@ public class TraderController {
             pDTO.setBusinessNumber(businessNumber);
             pDTO.setBank(bank);
             pDTO.setAccount(account);
-            pDTO.setTraderEmail(email);
-            pDTO.setShopCode(result);
+            pDTO.setTraderEmail(traderEmail);
+            pDTO.setShopCode(addr);
 
             log.info(pDTO.toString());
 
             res = traderService.insertTrader(pDTO);
+
 
             log.info("res : " + res);
 
@@ -455,6 +454,11 @@ public class TraderController {
 
         try {
             String traderId = CmmUtil.nvl((String) session.getAttribute("SS_ID"));
+
+            if(traderId.isEmpty()) {
+                traderId = CmmUtil.nvl((String) session.getAttribute("NEW_PASSWORD"));
+            }
+
             String traderPw = CmmUtil.nvl(request.getParameter("traderPw"));
             String newTraderPw = CmmUtil.nvl(request.getParameter("npw"));
 

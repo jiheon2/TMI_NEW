@@ -6,7 +6,7 @@
     <!-- 찜목록에 담기 쿼리 -->
     <insert id="addWishlist" parameterType="WishListDTO">
         INSERT INTO WISHLIST (WISHLIST_NUMBER, CUSTOMER_ID, GOODS_NUMBER,SHOP_NAME, GOODS_NAME, GOODS_IMAGE)
-        VALUES ((SELECT IFNULL(MAX(A.BASKET_NUMBER), 0) + 1 FROM BASKET A), #{customerId}, #{goodsNumber}, #{shopName}, #{goodsName}, #{goodsImage})
+        VALUES ((SELECT IFNULL(MAX(A.WISHLIST_NUMBER), 0) + 1 FROM WISHLIST A), #{customerId}, #{goodsNumber}, #{shopName}, #{goodsName}, #{goodsImage})
     </insert>
     <!-- 찜 목록 조회 -->
     <select id="getWishList" parameterType="WishListDTO" resultType="WishListDTO">

@@ -36,15 +36,17 @@
     <!-- 상점 정보 수정 쿼리 -->
     <update id="updateShop" parameterType="ShopDTO">
         UPDATE SHOP
-        SET SHOP_NAME = #{shopName},
-            SHOP_DESCRIPTION = #{shopDescription},
-            IMAGE = #{image}
+        SET SHOP_DESCRIPTION = #{shopDescription},
+        <if test="image neq null and image neq ''">
+            IMAGE = #{image},
+        </if>
+            SHOP_NAME = #{shopName}
         WHERE TRADER_ID = #{traderId}
     </update>
 
     <!-- 상점 정보 등록 쿼리 -->
     <insert id="insertShop" parameterType="ShopDTO">
-        INSERT INTO SHOP (SHOP_NAME, SHOP_DESCRIPTION, IMAGE, MARKET_NAME, TRADER_ID, TRADER_NAME, market_number)
+        INSERT INTO SHOP (SHOP_NAME, SHOP_DESCRIPTION, IMAGE, MARKET_NAME, TRADER_ID, TRADER_NAME, MARKET_NUMBER)
         VALUES (#{shopName}, #{shopDescription}, #{image}, #{marketName}, #{traderId}, #{traderName}, #{marketNumber})
     </insert>
 

@@ -19,7 +19,7 @@
     <script src="/assets/js/jquery-3.6.0.min.js"></script>
 </head>
 
-<body>
+<body style="background-image: url('/assets/images/background1.jpg')">
 <div id="app">
     <div id="main" style="margin-right: 300px">
         <div class="page-heading">
@@ -33,7 +33,7 @@
                     <div class="col-12 col-md-6 order-md-2 order-first">
                         <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                             <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="/customer/customerIndex">뒤로가기</a></li>
+                                <li class="breadcrumb-item"><a th:href="${home}">뒤로가기</a></li>
                             </ol>
                         </nav>
                     </div>

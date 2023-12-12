@@ -10,8 +10,8 @@
     </insert>
 
     <!-- 시장 정보 삭제 쿼리 -->
-    <select id="checkMarket" parameterType="java.lang.String">
-        SELECT count(*)
+    <select id="checkMarket" parameterType="java.lang.String" resultType="MarketDTO">
+        SELECT MARKET_NUMBER
         FROM MARKET
         WHERE MARKET_LOCATION = #{addr}
     </select>
@@ -22,6 +22,12 @@
         FROM MARKET
         WHERE MARKET_NAME LIKE CONCAT('%',#{marketName},'%')
         ORDER BY MARKET_NUMBER
+    </select>
+
+    <select id="getMarket" resultType="MarketDTO" parameterType="MarketDTO">
+        SELECT MARKET_NUMBER, MARKET_LOCATION, MARKET_NAME, LATITUDE, LONGITUDE
+        FROM MARKET
+        WHERE MARKET_NUMBER = #{marketNumber}
     </select>
 
     <select id="getMarketName" resultType="MarketDTO">

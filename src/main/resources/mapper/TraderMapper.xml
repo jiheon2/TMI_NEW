@@ -40,7 +40,7 @@
     <!-- 상인 회원가입 쿼리 -->
     <insert id="insertTrader" parameterType="TraderDTO">
         INSERT INTO TRADER (TRADER_ID, TRADER_PW, BUSINESS_NUMBER, TRADER_NAME, PHONE_NUMBER, TRADER_EMAIL, SHOP_CODE, ACCOUNT, BANK, TRADER_NOTICE)
-        VALUES (#{traderId}, #{traderPw}, #{businessNumber}, #{traderName}, #{phoneNumber}, #{traderEmail}, #{shopCode}, #{account}, #{bank}, #{traderNotice})
+        VALUES (#{traderId}, #{traderPw}, #{businessNumber}, #{traderName}, #{phoneNumber}, #{traderEmail}, #{shopCode}, #{account}, #{bank}, "")
     </insert>
 
     <!-- 상인 정보 변경 쿼리 -->

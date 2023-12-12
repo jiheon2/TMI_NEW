@@ -3,6 +3,7 @@ package kopo.poly.controller;
 import kopo.poly.dto.GoodsDTO;
 import kopo.poly.dto.MsgDTO;
 import kopo.poly.dto.ReservationDTO;
+import kopo.poly.dto.ShopDTO;
 import kopo.poly.service.IFileService;
 import kopo.poly.service.IGoodsService;
 import kopo.poly.service.IReservationService;
@@ -11,6 +12,7 @@ import kopo.poly.util.CmmUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,6 +31,7 @@ public class GoodsController {
     private final IGoodsService goodsService;
     private final IFileService fileService;
     private final IReservationService reservationService;
+    private final IShopService shopService;
 
     /*
         상품 정보 관리 페이지 접속 코드
@@ -113,7 +116,11 @@ public class GoodsController {
         log.info(traderId);
 
         GoodsDTO pDTO = new GoodsDTO();
+        ShopDTO sDTO = new ShopDTO();
+        sDTO.setTraderId(traderId);
+        ShopDTO shopInfo = shopService.getShopInfo(sDTO);
 
+        pDTO.setShopNumber(shopInfo.getShopNumber());
         pDTO.setTraderId(traderId);
         pDTO.setGoodsNumber(goodsNumber);
 
@@ -332,5 +339,34 @@ public class GoodsController {
         }
 
         return dto;
+    }
+
+    @GetMapping(value = "/goods/allGoodsInfo")
+    public String getAllGoodsInfo(Model model, @RequestParam(defaultValue = "1") int page) throws Exception {
+        log.info("getAllgoodsInfo start");
+
+        List<GoodsDTO> rList = goodsService.getAllGoodsInfo();
+
+        // 페이지당 보여줄 아이템 개수 정의
+        int itemsPerPage = 16;
+
+        // 페이지네이션을 위해 전체 아이템 개수 구하기
+        int totalItems = rList.size();
+
+        // 전체 페이지 개수 계산
+        int totalPages = (int) Math.ceil((double) totalItems / itemsPerPage);
+
+        // 현재 페이지에 해당하는 아이템들만 선택하여 rList에 할당
+        int fromIndex = (page - 1) * itemsPerPage;
+        int toIndex = Math.min(fromIndex + itemsPerPage, totalItems);
+        rList = rList.subList(fromIndex, toIndex);
+
+        model.addAttribute("rList", rList);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
+
+        log.info("getAllGoodsInfo End");
+
+        return "/goods/allGoodsInfo";
     }
 }

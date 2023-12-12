@@ -19,10 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 @Controller
@@ -100,6 +97,24 @@ public class ReservationController {
         log.info("값4 : " + rDTO.getReservationNumber());
 
         return rList;
+    }
+
+    @ResponseBody
+    @PostMapping(value = "/reservation/getReservation")
+    public ReservationDTO getReservation(HttpServletRequest request) throws Exception {
+        log.info(this.getClass().getName() + ".getReservation Start!");
+
+        String reservationNumber = request.getParameter("reservationNumber");
+
+        ReservationDTO pDTO = new ReservationDTO();
+        pDTO.setReservationNumber(reservationNumber);
+
+        ReservationDTO rDTO = Optional.ofNullable(reservationService.getReservationInfo(pDTO)).orElseGet(ReservationDTO::new);
+
+        log.info("rDTO : " + rDTO);
+
+
+        return rDTO;
     }
 
     @ResponseBody
@@ -226,8 +241,8 @@ public class ReservationController {
             ShopDTO shopInfo = shopService.getShopInfo(sDTO);
 
             CustomerDTO cDTO = new CustomerDTO();
-            cDTO.setPhoneNumber(customerPhoneNumber);
-            CustomerDTO customerInfo = customerService.customerInfoForReservation(cDTO);
+            cDTO.setCustomerId(customerId);
+            CustomerDTO customerInfo = customerService.getCustomerInfo(cDTO);
 
             log.info("traderId : " + traderId);
             log.info("customerName : " + customerName);
@@ -258,7 +273,9 @@ public class ReservationController {
             pDTO.setCustomerPhoneNumber(customerPhoneNumber);
             pDTO.setState(state);
 
-            if (!customerName.equals(customerInfo.getCustomerName())) {
+            if (customerInfo.getCustomerName() == null) {
+                msg = "소비자 정보가 일치하지 않습니다";
+            } else if (!customerName.equals(customerInfo.getCustomerName())) {
                 msg = "소비자 정보가 일치하지 않습니다";
             } else if (!customerPhoneNumber.equals(customerInfo.getPhoneNumber())) {
                 msg = "소비자 정보가 일치하지 않습니다";
