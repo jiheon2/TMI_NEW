@@ -17,7 +17,7 @@
     <link rel="stylesheet" href="/assets/css/widgets/chat.css">
 </head>
 
-<body style="background-image: url('/assets/images/background4.jpg')">
+<body style="background-image: url('/assets/images/background1.jpg')">
 <div id="app">
     <div id="main" style="margin-right: 300px">
         <div class="page-heading">
@@ -127,7 +127,7 @@
         }
 
         // 접속 URL 예 : ws://localhost:10000/ws/테스트방/별명
-        ws = new WebSocket("ws://" + location.host + "/ws/" + roomName +  "/" + userName);
+        ws = new WebSocket("wss://" + location.host + "/ws/" + roomName +  "/" + userName);
 
         // 웹소켓 열기
         ws.onopen = function (event) {

@@ -58,9 +58,9 @@ public class ChatHandler extends TextWebSocketHandler {
 
         log.info("json : " + json);
 
-        cDTO.setRoomHash(roomNameHash);
-        cDTO.setRoomName(roomName);
-        mongoService.insertChat(cDTO);
+//        cDTO.setRoomHash(roomNameHash);
+//        cDTO.setRoomName(roomName);
+//        mongoService.insertChat(cDTO);
 
         // 웹소켓에 접속된 모든 사용자 검색
         clients.forEach(s -> {
